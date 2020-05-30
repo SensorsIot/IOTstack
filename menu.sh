@@ -63,7 +63,7 @@ declare -a armhf_keys=(
 	"adminer"
 	"openhab"
 	"zigbee2mqtt"
-  "deconz"
+	"deconz"
 	"pihole"
 	"plex"
 	"tasmoadmin"
@@ -78,7 +78,7 @@ declare -a armhf_keys=(
 	"python"
 	"gitea"
 	"dozzle"
-	"HDMI-CEC-MQTT-bridge"
+	"cec-mqtt-bridge"
 	# add yours here
 )
 sys_arch=$(uname -m)
