@@ -1,6 +1,7 @@
   cec-mqtt-bridge:
     image: jonaseck/rpi-cec-mqtt-bridge
     container_name: cec-mqtt-bridge
+    restart: unless-stopped
     devices:
       - '/dev/mem:/dev/mem'
       - /dev/vcsm
@@ -9,7 +10,7 @@
       - MQTT_BROKER=localhost
       - MQTT_PORT=1883
       - MQTT_PREFIX=media
-      - MQTT_USER=homeassistant
+      - MQTT_USER=username
       - MQTT_PASSWORD=password
       - CEC_ENABLED=1
       - CEC_ID=1
