@@ -46,6 +46,7 @@ declare -A cont_array=(
 	[python]="Python 3"
 	[gitea]="Gitea"
 	[dozzle]="Dozzle"
+	[cec-mqtt-bridge]="HDMI-CEC-MQTT-bridge"
 )
 
 declare -a armhf_keys=(
@@ -77,6 +78,7 @@ declare -a armhf_keys=(
 	"python"
 	"gitea"
 	"dozzle"
+	"HDMI-CEC-MQTT-bridge"
 	# add yours here
 )
 sys_arch=$(uname -m)
