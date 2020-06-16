@@ -440,6 +440,17 @@ case $mainmenu_selection in
 			echo "$container" >>./services/selection.txt
 		done
 
+		# add custom containers
+		if [ -f ./services/custom.txt ]; then
+			if (whiptail --title "Custom Container detected" --yesno "custom.txt has been detected do you want to add these containers to the stack?" 20 78); then
+				mapfile -t containers <<<$(cat ./services/custom.txt)
+				for container in "${containers[@]}"; do
+					echo "Adding $container container"
+					yml_builder "$container"
+				done
+			fi
+		fi
+
 		if [ -f "$DOCKER_COMPOSE_OVERRIDE_YML" ]; then
 			do_python3_pip
 			
