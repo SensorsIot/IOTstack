@@ -63,7 +63,7 @@ declare -a armhf_keys=(
 	"adminer"
 	"openhab"
 	"zigbee2mqtt"
-  "deconz"
+	"deconz"
 	"pihole"
 	"plex"
 	"tasmoadmin"
@@ -76,7 +76,7 @@ declare -a armhf_keys=(
 	"diyhue"
 	"homebridge"
 	"python"
-  "zigbee2mqttassistant"
+	"zigbee2mqttassistant"
 	"gitea"
 	"dozzle"
 	# add yours here
