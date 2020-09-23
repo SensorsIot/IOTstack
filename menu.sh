@@ -46,6 +46,7 @@ declare -A cont_array=(
 	[python]="Python 3"
 	[gitea]="Gitea"
 	[dozzle]="Dozzle"
+	[cec-mqtt-bridge]="HDMI-CEC-MQTT-bridge"
 )
 
 declare -a armhf_keys=(
@@ -62,7 +63,7 @@ declare -a armhf_keys=(
 	"adminer"
 	"openhab"
 	"zigbee2mqtt"
-  "deconz"
+	"deconz"
 	"pihole"
 	"plex"
 	"tasmoadmin"
@@ -77,6 +78,7 @@ declare -a armhf_keys=(
 	"python"
 	"gitea"
 	"dozzle"
+	"cec-mqtt-bridge"
 	# add yours here
 )
 sys_arch=$(uname -m)
