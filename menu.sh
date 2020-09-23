@@ -18,6 +18,7 @@ REQ_PYYAML_VERSION=5.3.1
 
 declare -A cont_array=(
 	[portainer]="Portainer"
+	[nginx-proxy]="Nginx Reverse Proxy"
 	[nodered]="Node-RED"
 	[influxdb]="InfluxDB"
 	[telegraf]="Telegraf (Requires InfluxDB and Mosquitto)"
@@ -50,6 +51,7 @@ declare -A cont_array=(
 
 declare -a armhf_keys=(
 	"portainer"
+  "nginx-proxy"
 	"nodered"
 	"influxdb"
 	"grafana"
