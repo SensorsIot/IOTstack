@@ -48,6 +48,12 @@ Select "Install Docker"
 
 Follow the prompts. The process finishes by asking you to reboot. Do that!
 
+:warning: If you get the message "Missing apparmor and network manager". Exit the menu and run the following commands (as suggested [here](https://sensorsiot.github.io/IOTstack/Containers/Home-Assistant/)):
+```
+$ sudo apt update
+$ sudo apt-get install network-manager apparmor-utils
+```
+
 ### Menu item: Build Stack
 
 `docker-compose` uses a `docker-compose.yml` file to configure all your services. The `docker-compose.yml` file is created by the menu:
