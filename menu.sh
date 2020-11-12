@@ -454,7 +454,7 @@ case $mainmenu_selection in
 
 		#check selection
 		if [ -f ./services/selection.txt ]; then
-			[ $(grep "$index" ./services/selection.txt) ] && entry_options+=("ON") || entry_options+=("OFF")
+			[ $(grep --line-regexp "$index" ./services/selection.txt) ] && entry_options+=("ON") || entry_options+=("OFF")
 		else
 			entry_options+=("OFF")
 		fi
