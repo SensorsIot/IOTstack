@@ -8,6 +8,6 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Berlin
-      - SERVERURL=heini.duckdns.org #optional
+      - SERVERURL=<yoururl>.duckdns.org #optional
       - SERVERPORT=51820 #optional
       - PEERS=10 #optional
