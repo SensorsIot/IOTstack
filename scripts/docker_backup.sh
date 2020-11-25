@@ -14,6 +14,10 @@ if [ -f "./compose-override.yml" ]; then
 	echo "./compose-override.yml" >>list.txt
 fi
 
+if [ -f "./docker-compose.override.yml" ]; then
+	echo "./docker-compose.override.yml" >>list.txt
+fi
+
 #if influxdb is running
 if [ $(docker ps | grep -c influxdb) -gt 0 ]; then
 	./scripts/backup_influxdb.sh
@@ -79,7 +83,7 @@ if [ -f ./backups/dropbox ]; then
 	echo "deleting old backups from dropbox if they exist - last 7 files are kept"
 
 	#check older files exist on dropbox, if yes then delete them
-	if [ $( echo "$files" | grep -c "backup") -ne 0 ] ; then	
+	if [ $( echo "$files" | grep -c "backup") -ne 0 ] ; then
 		input=$dropboxlog
 		while IFS= read -r file
 		do
