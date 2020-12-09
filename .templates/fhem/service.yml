@@ -1,0 +1,8 @@
+  fhem:
+    container_name: fhem
+    image: fhem/fhem
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./volumes/fhem:/opt/fhem
