@@ -155,7 +155,7 @@ function minimum_version_check() {
 	CURR_VERSION_MAJOR=$2
 	CURR_VERSION_MINOR=$3
 	CURR_VERSION_BUILD=$4
-	
+
 	VERSION_GOOD="Unknown"
 
 	if [ -z "$CURR_VERSION_MAJOR" ]; then
@@ -336,7 +336,7 @@ function yml_builder() {
 #---------------------------------------------------------------------------------------------------
 # Project updates
 echo "checking for project update"
-git fetch origin master
+git fetch origin swampify
 
 if [ $(git status | grep -c "Your branch is up to date") -eq 1 ]; then
 	#delete .outofdate if it exisist
@@ -367,7 +367,7 @@ if command_exists docker; then
 			sudo apt upgrade docker docker-compose
 		fi
 	fi
-	
+
 	requestRebootflag=0
 
 	for G in docker bluetooth ; do
@@ -387,7 +387,7 @@ if command_exists docker; then
 			sudo reboot
 		fi
 	fi
-	
+
 else
 	echo "docker not installed - you must choose Install Docker"
 fi
@@ -489,7 +489,7 @@ case $mainmenu_selection in
 
 		if [ -f "$DOCKER_COMPOSE_OVERRIDE_YML" ]; then
 			do_python3_pip
-			
+
 			if [ "$PYTHON_VERSION_GOOD" == "true" ] && [ "$PYYAML_VERSION_GOOD" == "true" ]; then
 				echo "merging docker overrides with docker-compose.yml"
 				python3 ./scripts/yaml_merge.py $TMP_DOCKER_COMPOSE_YML  $DOCKER_COMPOSE_OVERRIDE_YML $DOCKER_COMPOSE_YML
