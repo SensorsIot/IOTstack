@@ -1,0 +1,29 @@
+  samba:
+    image: dperson/samba:latest
+    container_name: samba
+    restart:  unless-stopped
+    env_file: ./services/samba/samba.env
+    ports:
+      - target: 137
+        published: 137
+        mode: host
+        protocol: udp
+      - target: 138
+        published: 138
+        mode: host
+        protocol: udp
+      - target: 139
+        published: 139
+        mode: host
+        protocol: tcp
+      - target: 445
+        published: 445
+        mode: host
+        protocol: tcp
+    read_only: true
+    tmpfs:
+      - /tmp
+#    stdin_open: true
+#    tty: true
+    volumes:
+      - ./:/mnt:z
