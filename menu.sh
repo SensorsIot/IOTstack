@@ -52,7 +52,7 @@ declare -A cont_array=(
 	[domoticz]="Domoticz"
 	[dozzle]="Dozzle"
 	[wireguard]="Wireguard"
-    [fhem]="Fhem"
+	[fhem]="Fhem"
 	# add yours here
 )
 
@@ -91,7 +91,7 @@ declare -a armhf_keys=(
 	"domoticz"
 	"dozzle"
 	"wireguard"
-    "fhem"
+	"fhem"
 	# add yours here
 )
 sys_arch=$(uname -m)
