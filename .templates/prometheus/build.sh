@@ -25,7 +25,7 @@ for option in "${selected_options[@]}"; do
 
   # include add-on in depends_on
   sed -i.bak -e "/depends_on:/a\\
-    \\ \\ \\ \\ \\ \\ - ${option}" $DOCKER_COMPOSE_PATH
+    \\ \\ - ${option}" $DOCKER_COMPOSE_PATH
 done
 
 # clean up
