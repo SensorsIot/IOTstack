@@ -1,0 +1,22 @@
+traefik:
+  image: "traefik:latest"
+  container_name: "traefik"
+  command:
+    #- "--log.level=DEBUG"
+    - "--api.insecure=true"
+    - "--providers.docker=true"
+    - "--providers.docker.exposedbydefault=false"
+    - "--entrypoints.web.address=:80"
+  ports:
+    - "80:80"
+    - "8080:8080"
+  volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock:ro"
+#    - ./volumes/traefik/config:/config
+  restart: unless-stopped
+  networks:
+    - iotstack_nw
+  logging:
+    options:
+      max-size: "5m"
+      max-file: "3"
