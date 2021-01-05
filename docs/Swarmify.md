@@ -70,6 +70,26 @@ networks:
 
 deploy one or more services deliberately to iot server (I use global deployments for dozzle and telegraf) to ensure attachable IOTstack_Net is available on all nodes.
 
+## Deployed portainer
+- global
+  - portainer agent
+- master
+  - portainer-ce
+
+## Deployed IOTstack
+- global
+  - dozzle
+  - telegraf
+- iot
+  - mqtt [doesn't have to be here]
+- heavy
+  - grafana
+  - heimdall
+  - openhab
+  - prometheus
+- dockdata (one of the heavy nodes)
+  - influxdb   
+
 ### Issues:
 
 #### Overall, crashes master or worker nodes eventually.
@@ -80,7 +100,7 @@ deploy one or more services deliberately to iot server (I use global deployments
 #### Containers:
 - Influxdb initially worked in glusterfs, then started creating NFS file errors. So have moved to local disk.
 - plex need to investigate more setup in config?
-- openhab crashes/config?
+
 - bkynk_server - java crash /data too big?
 
 #### scripts

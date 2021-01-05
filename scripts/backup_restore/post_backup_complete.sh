@@ -7,4 +7,5 @@ if [ -f "./post_backup.sh" ]; then
   bash ./post_backup.sh
 fi
 
-docker-compose up -d
+#docker-compose up -d
+docker stack deploy -c docker-compose.yml iotstack
