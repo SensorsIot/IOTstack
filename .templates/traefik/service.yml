@@ -12,7 +12,8 @@ traefik:
     - "8080:8080"
   volumes:
     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-#    - ./volumes/traefik/config:/config
+    - ./volumes/traefik/traefik.toml:/traefik.toml
+    - ./volumes/traefik/acme.json:/acme.json
   restart: unless-stopped
   networks:
     - iotstack_nw
