@@ -25,15 +25,18 @@
 #   sudo bash ./scripts/backup.sh 2 pi
 #     This will only produce a backup in the rollowing folder and change all the permissions to the 'pi' user.
 
-if [ -d "./menu.sh" ]; then
-	echo "./menu.sh file was not found. Ensure that you are running this from IOTstack's directory."
-  exit 1
+if [ ! -f "menu.sh" ]; then
+  cd "$HOME/IOTstack"
+  if [ ! -f "menu.sh" ]; then
+    echo "menu.sh file was not found from the current directory. Ensure that you are running this from IOTstack's directory."
+    exit 1
+  fi
 fi
 
 BACKUPTYPE=${1:-"3"}
 
 if [[ "$BACKUPTYPE" -ne "1" && "$BACKUPTYPE" -ne "2" && "$BACKUPTYPE" -ne "3" ]]; then
-	echo "Unknown backup type '$BACKUPTYPE', can only be 1, 2 or 3"
+  echo "Unknown backup type '$BACKUPTYPE', can only be 1, 2 or 3"
   exit 1
 fi
 
