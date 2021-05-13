@@ -26,7 +26,8 @@
 #     This will only produce a backup in the rollowing folder and change all the permissions to the 'pi' user.
 
 if [ ! -f "menu.sh" ]; then
-  cd "$HOME/IOTstack"
+  script_path=$(readlink -f "${BASH_SOURCE[0]}")
+  cd "${script_path%/*}/.."
   if [ ! -f "menu.sh" ]; then
     echo "menu.sh file was not found from the current directory. Ensure that you are running this from IOTstack's directory."
     exit 1
