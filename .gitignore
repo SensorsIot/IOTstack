@@ -6,6 +6,10 @@
 __pycache__
 docker-compose.yml
 compose-override.yml
+build-installer.sh
+docker-compose-base.yml
+build-options.json
+iotstack_build_*.zip
 postbuild.sh
 pre_backup.sh
 post_backup.sh
@@ -14,7 +18,7 @@ post_restore.sh
 .outofdate
 .docker_notinstalled
 .docker_outofdate
-.new_install
+.installed
 
 !.gitkeep
 

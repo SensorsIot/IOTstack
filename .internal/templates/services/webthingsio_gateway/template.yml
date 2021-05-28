@@ -1,0 +1,12 @@
+webthingsio_gateway:
+  image: webthingsio/gateway:latest
+  container_name: webthingsio_gateway
+  network_mode: host
+  environment:
+    - TZ=Etc/UTC
+  volumes:
+    - ./volumes/webthingsio_gateway/share:/home/node/.webthings/
+  logging:
+    options:
+      max-size: "5m"
+      max-file: "3"

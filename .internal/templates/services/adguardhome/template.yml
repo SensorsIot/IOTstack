@@ -1,0 +1,17 @@
+adguardhome:
+  container_name: adguardhome
+  image: adguard/adguardhome
+  restart: unless-stopped
+  environment:
+    - TZ=Etc/UTC
+  ports:
+    - "53:53/tcp"
+    - "53:53/udp"
+    - "8089:8089/tcp"
+    - "3001:3000/tcp"
+  volumes:
+     - ./volumes/adguardhome/workdir:/opt/adguardhome/work
+     - ./volumes/adguardhome/confdir:/opt/adguardhome/conf
+  networks:
+    - iotstack_nw
+    - vpn_nw

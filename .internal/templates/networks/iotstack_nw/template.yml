@@ -1,0 +1,9 @@
+iotstack_nw: # Exposed by your host.
+  # external: true
+  name: IOTstack_Net
+  driver: bridge
+  ipam:
+    driver: default
+    config:
+      - subnet: 10.77.60.0/24
+      # - gateway: 10.77.60.1

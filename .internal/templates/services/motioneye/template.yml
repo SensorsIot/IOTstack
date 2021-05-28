@@ -1,0 +1,21 @@
+motioneye:
+  image: "ccrisan/motioneye:master-armhf"
+  container_name: "motioneye"
+  restart: unless-stopped
+  ports:
+    - "8765:8765"
+    - "8081:60081"
+    - "8082:60082"
+    - "8083:60083"
+  volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - ./volumes/motioneye/etc_motioneye:/etc/motioneye
+    - ./volumes/motioneye/var_lib_motioneye:/var/lib/motioneye
+  devices:
+   - "/dev/video0"
+  networks:
+    - iotstack_nw
+  logging:
+    options:
+      max-size: "5m"
+      max-file: "3"

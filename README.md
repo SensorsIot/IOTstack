@@ -22,3 +22,8 @@ Please use the [issues](https://github.com/SensorsIot/IOTstack/issues) tab to re
 We have a Discord server setup for discussions: [IOTstack Discord channel](https://discord.gg/ZpKHnks) if you want to comment on features, suggest new container types, or ask the IOTstack community for help.
 
 If you use some of the tools in the project please consider donating or contributing on their projects. It doesn't have to be monetary. Reporting bugs and [creating Pull Requests](https://gist.github.com/Paraphraser/818bf54faf5d3b3ed08d16281f32297d) helps improve the projects for everyone.
+
+### Quick Install on fresh system
+```
+curl -fsSL https://raw.githubusercontent.com/SensorsIot/IOTstack/master/install.sh | bash
+```

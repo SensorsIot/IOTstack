@@ -1,0 +1,840 @@
+{
+	"info": {
+		"_postman_id": "9ccf19f7-fa69-4acb-b1ae-898fe7392ac1",
+		"name": "IOTstack",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Build",
+			"item": [
+				{
+					"name": "Build",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"buildOptions\": {\n\t\t\"selectedServices\": [],\n\t\t\"serviceOptions\": {}\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/build/save",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"build",
+								"save"
+							]
+						},
+						"description": "Create build"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Previous Build List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"buildOptions\": {\n\t\t\"selectedServices\": [],\n\t\t\"serviceOptions\": {}\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/build/list",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"build",
+								"list"
+							]
+						},
+						"description": "Get a list of previous builds stored on file"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Previous Build File Details",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"buildOptions\": {\n\t\t\"selectedServices\": [],\n\t\t\"serviceOptions\": {}\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/build/get/{{buildTime}}",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"build",
+								"get",
+								"{{buildTime}}"
+							]
+						},
+						"description": "Get a file list of specific build"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Previous Build File",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"buildOptions\": {\n\t\t\"selectedServices\": [],\n\t\t\"serviceOptions\": {}\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/build/get/{{buildTime}}/{{type}}",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"build",
+								"get",
+								"{{buildTime}}",
+								"{{type}}"
+							]
+						},
+						"description": "Get a file list of specific build file. Type can be one of: 'yaml', 'json', 'zip' or 'sh'."
+					},
+					"response": []
+				},
+				{
+					"name": "Dry Run (Check Issues)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"buildOptions\": {\n\t\t\"selectedServices\": [],\n\t\t\"configurations\": {}\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/build/dryrun",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"build",
+								"dryrun"
+							]
+						},
+						"description": "This checks for issues"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a build",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/build/delete/{{build}}",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"build",
+								"delete",
+								"{{build}}"
+							]
+						},
+						"description": "Deletes a build, and all associated files."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Configs",
+			"item": [
+				{
+					"name": "Get Service Config Options",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/config/{{serviceName}}/options",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"config",
+								"{{serviceName}}",
+								"options"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Services Config Options",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/config/options",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"config",
+								"options"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Service Help URIs",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/config/{{serviceName}}/help",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"config",
+								"{{serviceName}}",
+								"help"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Service Scripts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/config/{{serviceName}}/scripts",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"config",
+								"{{serviceName}}",
+								"scripts"
+							]
+						},
+						"description": "Get a list of scripts that could e useful for checking your system before building, or for debugging."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specific Service Script",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/config/{{serviceName}}/scripts/{{scriptName}}",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"config",
+								"{{serviceName}}",
+								"scripts",
+								"{{scriptName}}"
+							]
+						},
+						"description": "Get a specific script, if it exists, that can be piped into bash."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Service Metadata",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/config/{{serviceName}}/meta",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"config",
+								"{{serviceName}}",
+								"meta"
+							]
+						},
+						"description": "Get metadata about a service, such as its tags."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Services Metadata",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:32128/config/meta",
+							"host": [
+								"localhost"
+							],
+							"port": "32128",
+							"path": [
+								"config",
+								"meta"
+							]
+						},
+						"description": "Get metadata about all services, such as their tags."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Templates",
+			"item": [
+				{
+					"name": "Services",
+					"item": [
+						{
+							"name": "Get all services in YAML format",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/services/yaml",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"services",
+										"yaml"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific service in YAML format",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/services/yaml/{{serviceName}}",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"services",
+										"yaml",
+										"{{serviceName}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific service in JSON format",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/services/json/{{serviceName}}",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"services",
+										"json",
+										"{{serviceName}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all services in JSON format",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/services/json",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"services",
+										"json"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List all services",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/services/list",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"services",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Networks",
+					"item": [
+						{
+							"name": "Get all networks in JSON format",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/networks/json",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"networks",
+										"json"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific network in YAML format",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/networks/yaml/{{networkName}}",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"networks",
+										"yaml",
+										"{{networkName}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all networks in YAML format",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/networks/yaml",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"networks",
+										"yaml"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List all networks",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/networks/list",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"networks",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Scripts",
+					"item": [
+						{
+							"name": "Get script by name",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"options\": {}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/scripts/{scriptName}",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"scripts",
+										"{scriptName}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Download script by name",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"options\": {}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:32128/templates/scripts/download/{scriptName}",
+									"host": [
+										"localhost"
+									],
+									"port": "32128",
+									"path": [
+										"templates",
+										"scripts",
+										"download",
+										"{scriptName}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Get API State and Health",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:32128/health",
+					"host": [
+						"localhost"
+					],
+					"port": "32128",
+					"path": [
+						"health"
+					]
+				},
+				"description": "Get metadata about a service, such as its tags."
+			},
+			"response": []
+		}
+	]
+}

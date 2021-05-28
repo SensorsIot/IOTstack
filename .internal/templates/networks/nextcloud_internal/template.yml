@@ -1,0 +1,4 @@
+nextcloud_internal: # Network for NextCloud service
+  name: IOTstack_NextCloud
+  driver: bridge
+  internal: true

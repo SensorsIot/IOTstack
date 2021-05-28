@@ -1,0 +1,11 @@
+.sidebarWrapper {
+  display: 'block';
+  min-width: 40rem;
+  max-width: 50rem;
+  padding: 1rem;
+}
+
+.section {
+  padding-bottom: 2rem;
+  padding-top: 1rem;
+}

@@ -1,0 +1,10 @@
+.docsLink {
+  background: linear-gradient(45deg, #242424 30%, #282828 90%);
+  box-shadow: 0 4px 6px 3px rgba(0, 0, 0, 0.3);
+  color: 'white';
+}
+.docsInner {
+  background: linear-gradient(45deg, #242424 30%, #282828 90%);
+  box-shadow: 0 4px 6px 3px rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+}

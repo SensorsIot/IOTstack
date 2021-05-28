@@ -1,0 +1,17 @@
+{
+  "name": "iotstack_cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "neo-blessed": "^0.2.0",
+    "nodemon": "^2.0.7"
+  }
+}

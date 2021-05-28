@@ -73,7 +73,7 @@ sudo rm -rf ./post_restore.sh >> $LOGFILE 2>&1
 sudo rm -rf ./post_restore.sh >> $LOGFILE 2>&1
 
 sudo tar -zxvf \
-	$RESTOREFILE >> $LOGFILE 2>&1
+  $RESTOREFILE >> $LOGFILE 2>&1
 
 echo "" >> $LOGFILE
 

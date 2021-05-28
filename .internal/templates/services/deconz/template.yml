@@ -1,0 +1,24 @@
+deconz:
+  image: marthoc/deconz
+  container_name: deconz
+  restart: unless-stopped
+  ports:
+    - "8090:80"
+    - "443:443"
+    - "5901:5900"
+  volumes:
+    - ./volumes/deconz/:/root/.local/share/dresden-elektronik/deCONZ
+  devices: # This list is replaced during the build process. Modify the list in "config.js" to change it.
+    - "{$deconzSelectedDevice}"
+  environment:
+    - DECONZ_VNC_MODE=1
+    - DECONZ_VNC_PASSWORD=%randomPassword%
+    - DEBUG_INFO=1
+    - DEBUG_APS=0
+    - DEBUG_ZCL=0
+    - DEBUG_ZDP=0
+    - DEBUG_OTAU=0
+    - DECONZ_DEVICE=/dev/null # This is updated during the build process.
+  networks:
+    - iotstack_nw
+

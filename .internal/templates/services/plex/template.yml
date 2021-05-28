@@ -1,0 +1,31 @@
+plex:
+  image: linuxserver/plex
+  container_name: plex
+  network_mode: host
+  ports:
+    - "32400:32400"
+    - "1900:1900"
+    - "5353:5353"
+    - "8324:8324"
+    - "32469:32469"
+    - "32410:32410"
+    - "32412:32412"
+    - "32413:32413"
+    - "32414:32414"
+  # networks:
+  #   - hosts_nw
+  environment:
+    - PUID=1000
+    - PGID=1000
+    - VERSION=docker
+    #- UMASK_SET=022 #optional
+  volumes:
+    - ./volumes/plex/config:/config
+    #- ~/mnt/HDD/tvseries:/tv
+    #- ~/mnt/HDD/movies:/movies
+    - ./volumes/plex/transcode:/transcode
+  restart: unless-stopped
+  logging:
+    options:
+      max-size: "5m"
+      max-file: "3"

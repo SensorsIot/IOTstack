@@ -1,0 +1,13 @@
+homebridge:
+  container_name: homebridge
+  image: oznu/homebridge:no-avahi-arm32v6
+  restart: unless-stopped
+  environment:
+    - TZ=Etc/UTC
+    - PGID=1000
+    - PUID=1000
+    - HOMEBRIDGE_CONFIG_UI=1
+    - HOMEBRIDGE_CONFIG_UI_PORT=%WUIPort%
+  volumes:
+    - ./volumes/homebridge:/homebridge
+  network_mode: host

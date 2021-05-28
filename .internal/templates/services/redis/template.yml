@@ -1,0 +1,14 @@
+redis:
+  container_name: redis
+  image: redis:latest
+  ports:
+    - "6379:6379"
+  environment:
+    - TZ=Etc/UTC
+  restart: unless-stopped
+  networks:
+    - iotstack_nw
+  logging:
+    options:
+      max-size: "5m"
+      max-file: "3"

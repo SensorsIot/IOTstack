@@ -1,0 +1,9 @@
+iotstack_nw_internal: # For interservice communication. No access to outside
+  name: IOTstack_Net_Internal
+  driver: bridge
+  internal: true
+  ipam:
+    driver: default
+    config:
+      - subnet: 10.77.76.0/24
+      # - gateway: 10.77.76.1

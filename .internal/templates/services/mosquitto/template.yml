@@ -1,0 +1,19 @@
+mosquitto:
+  container_name: mosquitto
+  build: ./services/mosquitto/.
+  restart: unless-stopped
+  environment:
+    - TZ=Etc/UTC
+  ports:
+    - "1883:1883"
+  volumes:
+    - ./volumes/mosquitto/config:/mosquitto/config
+    - ./volumes/mosquitto/data:/mosquitto/data
+    - ./volumes/mosquitto/log:/mosquitto/log
+    - ./volumes/mosquitto/pwfile:/mosquitto/pwfile
+  networks:
+    - iotstack_nw
+  logging:
+    options:
+      max-size: "5m"
+      max-file: "3"

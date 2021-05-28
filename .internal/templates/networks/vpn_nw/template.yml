@@ -1,0 +1,8 @@
+vpn_nw: # Network specifically for VPN
+  name: IOTstack_VPN
+  driver: bridge
+  ipam:
+    driver: default
+    config:
+      - subnet: 10.77.88.0/24
+      # - gateway: 192.18.200.1

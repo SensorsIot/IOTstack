@@ -1,0 +1,4 @@
+*_build-installer.sh
+*_build-options.json
+*_build.zip
+*_docker-compose-base.yml
