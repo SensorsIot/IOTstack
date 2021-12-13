@@ -89,6 +89,7 @@ bash ./scripts/backup_restore/pre_backup_complete.sh >> $LOGFILE 2>&1
 
 echo "./services/" >> $BACKUPLIST
 echo "./volumes/" >> $BACKUPLIST
+echo "./duck/" >> $BACKUPLIST
 [ -f "./docker-compose.yml" ] && echo "./docker-compose.yml" >> $BACKUPLIST
 [ -f "./compose-override.yml" ] && echo "./compose-override.yml" >> $BACKUPLIST
 [ -f "./extra" ] && echo "./extra" >> $BACKUPLIST
