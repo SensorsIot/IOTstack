@@ -2,8 +2,8 @@ heimdall:
   image: ghcr.io/linuxserver/heimdall
   container_name: heimdall
   environment:
-    - PUID=1000
-    - PGID=1000
+    - PUID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+    - PGID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
     - TZ=Europe/Paris
   volumes:
     - ./volumes/heimdall/config:/config

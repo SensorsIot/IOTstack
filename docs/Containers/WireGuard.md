@@ -41,8 +41,8 @@ wireguard:
   image: ghcr.io/linuxserver/wireguard
   restart: unless-stopped
   environment:
-  - PUID=1000
-  - PGID=1000
+  - PUID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+  - PGID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
   - TZ=Etc/UTC
   - SERVERURL=your.dynamic.dns.name
   - SERVERPORT=51820
@@ -247,8 +247,8 @@ You will need to create the `compose-override.yml` **before** running the menu t
 	services:
 	  wireguard:
 	    environment:
-	    - PUID=1000
-	    - PGID=1000
+	    - PUID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+	    - PGID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
 	    - TZ=Australia/Sydney
 	    - SERVERURL=downunda.duckdns.org
 	    - SERVERPORT=51820

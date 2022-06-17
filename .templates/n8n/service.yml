@@ -21,9 +21,9 @@ n8n:
 #           - N8N_BASIC_AUTH_ACTIVE=true
 #           - N8N_BASIC_AUTH_USER=<USER>
 #           - N8N_BASIC_AUTH_PASSWORD=<PASSWORD>
-
-#            - PGID=1000
-#            - PUID=1000
-#            - USBDEVICES=/dev/ttyAMA0
-#            - PACKAGES=mc
+#
+#           - PGID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
+#           - PUID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+#           - USBDEVICES=/dev/ttyAMA0
+#           - PACKAGES=mc
 

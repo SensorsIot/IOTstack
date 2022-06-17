@@ -3,8 +3,8 @@
     container_name: syncthing
     hostname: raspberrypi #optional
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+      - PGID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
       - HOME=/app
       - TZ=Etc/UTC
     volumes:

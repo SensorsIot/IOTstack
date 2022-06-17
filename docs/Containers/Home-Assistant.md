@@ -124,8 +124,8 @@ your RPi hostname is raspberrypi)
 	    cap_add:
 	      - NET_ADMIN
 	    environment:
-	      - PUID=1000
-	      - PGID=1000
+	      - PUID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+	      - PGID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
 	      - TZ=Etc/UTC
 	      - URL=<yourdomain>.duckdns.org
 	      - SUBDOMAINS=wildcard

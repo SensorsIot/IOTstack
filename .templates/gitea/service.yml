@@ -6,8 +6,8 @@ gitea:
     - "7920:3000/tcp"
     - "2222:22/tcp"
   environment:
-    - USER_UID=1000
-    - USER_GID=1000
+    - USER_UID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+    - USER_GID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
   volumes:
     - ./volumes/gitea/data:/data
     - /etc/timezone:/etc/timezone:ro

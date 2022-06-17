@@ -17,9 +17,11 @@ IOTstack makes the following assumptions:
 1. Your hardware is a Raspberry Pi (typically a 3B+ or 4B).
 
 	* The Raspberry Pi Zero W2 has been tested with IOTstack. It works but the 512MB RAM means you should not try to run too many containers concurrently.
-    * Users have also [reported success
-      ](https://github.com/SensorsIot/IOTstack/issues/375) on Orange Pi
+	* Users have also [reported success](
+	  https://github.com/SensorsIot/IOTstack/issues/375) on Orange Pi
       Win/Plus.
+	* Most services will run on any Linux machine with Docker, but some have
+	  Raspberry Pi specific default configurations or dependencies.
 
 2. Your Raspberry Pi has a reasonably-recent version of 32-bit or 64-bit Raspberry Pi OS (aka "Raspbian") installed. You can download operating-system images:
 
@@ -28,21 +30,31 @@ IOTstack makes the following assumptions:
 	* [Prior releases](http://downloads.raspberrypi.org/raspios_armhf/images/)
       : This offers only "Raspberry Pi OS with desktop" images.
 
-3. Your operating system has been updated:
+3. You've done a "default" Raspberry Pi OS install, which automatically
+   satisfies:
+
+    - you log in as a regular user, not root. The actual username and its
+      numeric uid doesn't matter.
+    - this user has `sudo`-access, usually this is done by belonging to the
+      *sudo*-group.
+    - boot partition is mounted at `/boot`.
+
+4. Your operating system has been updated:
 
 	``` console
 	$ sudo apt update
 	$ sudo apt upgrade -y
 	```
 
-4. You are logged-in as the user "pi".
-5. User "pi" has the user ID 1000.
-6. The home directory for user "pi" is `/home/pi/`.
-7. IOTstack is installed at `/home/pi/IOTstack` (with that exact spelling).
+For brevity, this documentation also makes some guesses, but these aren't
+technical requirements. If you have a different choice, you'll just have to
+adjust the commands presented in these instructions to match the change. For
+first-time Linux users it's recommended to start with these:
 
-If the first three assumptions hold, assumptions four through six are Raspberry Pi defaults on a clean installation. The seventh is what you get if you follow these instructions faithfully.
-
-Please don't read these assumptions as saying that IOTstack will not run on other hardware, other operating systems, or as a different user. It is just that IOTstack gets most of its testing under these conditions. The further you get from these implicit assumptions, the more your mileage may vary.
+- You are logged-in as the user "pi".
+- The home directory for user "pi" is `/home/pi/`.
+- IOTstack is installed at `~/IOTstack` (with that exact spelling).
+- The system hostname is `raspberrypi`
 
 ## New installation
 

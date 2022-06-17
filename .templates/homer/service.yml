@@ -2,8 +2,8 @@ homer:
   image: b4bz/homer:latest
   container_name: homer
   environment:
-    - UID=1000
-    - GID=1000
+    - UID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+    - GID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
   volumes:
     - ./volumes/homer/assets:/www/assets
   ports:

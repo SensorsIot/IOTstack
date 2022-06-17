@@ -237,11 +237,11 @@ The IOTstack implementation of *Prometheus* supports two environment variables:
 
 ```yaml
 environment:
-  - IOTSTACK_UID=1000
-  - IOTSTACK_GID=1000
+  - IOTSTACK_UID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+  - IOTSTACK_GID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
 ```
 
-Those variables control ownership of the [Configuration directory](#configDir) and its contents. Those environment variables are present in the standard IOTstack service definition for *Prometheus* and have the effect of assigning ownership to "pi:pi".
+Those variables control ownership of the [Configuration directory](#configDir) and its contents. Those environment variables are present in the standard IOTstack service definition for *Prometheus* and have the effect of assigning ownership to your current user, e.g. "pi".
 
 If you delete those environment variables from your *Compose* file, the [Configuration directory](#configDir) will be owned by "nobody:nobody"; otherwise the directory and its contents will be owned by whatever values you pass for those variables.
 

@@ -27,8 +27,8 @@ nextcloud_db:
   restart: unless-stopped
   environment:
     - TZ=Etc/UTC
-    - PUID=1000
-    - PGID=1000
+    - PUID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+    - PGID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
     - MYSQL_ROOT_PASSWORD=«root_password»
     - MYSQL_PASSWORD=«user_password»
     - MYSQL_DATABASE=nextcloud

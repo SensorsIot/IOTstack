@@ -4,8 +4,8 @@ homebridge:
   restart: unless-stopped
   environment:
     - TZ=Etc/UTC
-    - PGID=1000
-    - PUID=1000
+    - PGID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
+    - PUID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
     - HOMEBRIDGE_CONFIG_UI=1
     - HOMEBRIDGE_CONFIG_UI_PORT=8581
   volumes:

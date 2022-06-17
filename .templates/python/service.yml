@@ -4,8 +4,8 @@ python:
   restart: unless-stopped
   environment:
     - TZ=Etc/UTC
-    - IOTSTACK_UID=1000
-    - IOTSTACK_GID=1000
+    - IOTSTACK_UID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+    - IOTSTACK_GID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
   # ports:
   #   - "external:internal"
   volumes:

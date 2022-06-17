@@ -17,6 +17,8 @@ do
         --no-ask) NOASKCONFIRM="true"
             ;;
         --*) echo "bad option $1"
+            echo "USAGE: $0 [--no-ask]"
+            exit 1
             ;;
     esac
     shift

@@ -34,8 +34,8 @@ When you select Python in the menu:
 	  restart: unless-stopped
 	  environment:
 	  - TZ=Etc/UTC
-	  - IOTSTACK_UID=1000
-	  - IOTSTACK_GID=1000
+	  - IOTSTACK_UID=${IOTSTACK_UID:?IOTSTACK_UID must be defined in ~/IOTstack/.env}
+	  - IOTSTACK_GID=${IOTSTACK_GID:?IOTSTACK_GID must be defined in ~/IOTstack/.env}
 	# ports:
 	#   - "external:internal"
 	  volumes:
@@ -48,18 +48,20 @@ The service definition contains a number of customisation points:
 
 1. `restart: unless-stopped` assumes your Python script will run in an infinite loop. If your script is intended to run once and terminate, you should remove this directive.
 2. `TZ=Etc/UTC` should be set to your local time-zone. Never use quote marks on the right hand side of a `TZ=` variable.
-3. If you are running as a different user ID, you may want to change both `IOTSTACK_UID` and `IOTSTACK_GID` to appropriate values.
+3.  If you need a different user ID, you may want to change both `IOTSTACK_UID`
+    and `IOTSTACK_GID` to appropriate values. By default they are defined to be
+    the same as the current user when you run the menu. Defaults are stored in
+    `~/IOTstack/.env`, but don't edit that file. Make your edits directly to
+    `docker-compose.yml`.
 
-	Notes:
+    !!! note
 
-	* Don't use user and group *names* because these variables are applied *inside* the container where those names are (probably) undefined.
-	* The only thing these variables affect is the ownership of:
-
-		```
-		~/IOTstack/volumes/python/app
-		```
-
-		and its contents. If you want everything to be owned by root, set both of these variables to zero (eg `IOTSTACK_UID=0`).
+        * Don't use user and group *names* because these variables are applied
+          *inside* the container where those names are (probably) undefined.
+        * The only thing these variables affect is the ownership of
+          `~/IOTstack/volumes/python/app` and its contents. If you want
+          everything to be owned by root, set both of these variables to zero
+          (e.g. `IOTSTACK_UID=0`).
 
 4. If your Python script listens to data-communications traffic, you can set up the port mappings by uncommenting the `ports:` directive.
 
@@ -444,8 +446,8 @@ Proceed like this:
 	  restart: unless-stopped                     restart: unless-stopped
 	  environment:                                environment:
 	    - TZ=Etc/UTC                                - TZ=Etc/UTC
-	    - IOTSTACK_UID=1000                         - IOTSTACK_UID=1000
-	    - IOTSTACK_GID=1000                         - IOTSTACK_GID=1000
+	    - IOTSTACK_UID=${IOTSTACK_UID:?...}         - IOTSTACK_UID=${IOTSTACK_UID:?...}
+	    - IOTSTACK_GID=${IOTSTACK_GID:?...}         - IOTSTACK_GID=${IOTSTACK_GID:?...}
 	  # ports:                                    # ports:
 	  #   - "external:internal"                   #   - "external:internal"
 	  volumes:                                    volumes:

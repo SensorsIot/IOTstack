@@ -14,7 +14,9 @@ There are 2 ways to run backups:
 
 The command that's run from the command line can also be executed from a cronjob:
 
-```0 2 * * * cd /home/pi/IOTstack && /bin/bash ./scripts/backup.sh```
+```
+0 2 * * * cd /home/pi/IOTstack && /bin/bash ./scripts/backup.sh
+```
 
 The current directory of bash must be in IOTstack's directory, to ensure that it can find the relative paths of the files it's meant to back up. In the example above, it's assume that it's inside the `pi` user's home directory.
 
@@ -60,7 +62,14 @@ There are 2 ways to run a restore:
 * From the menu: `Backup and Restore` > `Restore from backup`
 * Running the following command: `bash ./scripts/restore.sh`
 
-**Important**: The restore script assumes that the IOTstack directory is fresh, as if it was just cloned. If it is not fresh, errors may occur, or your data may not correctly be restored even if no errors are apparent.
+**Important**:
+
+* The restore script assumes that the IOTstack directory is fresh, as if it was
+  just cloned. If it's not clean git clone, errors may occur, or your data may
+  not be restored correctly even if no errors are apparent.
+* When reinstalling Raspberry or migrating to a new installation, use the same
+  user and ID (usually pi and 1000) as when you created the backup. Changing
+  to another user ID is explicitly NOT supported.
 
 *Note*: It is suggested that you test that your backups can be restored after initially setting up, and anytime you add or remove a service. Major updates to services can also break backups.
 

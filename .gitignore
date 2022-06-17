@@ -5,7 +5,9 @@
 /.tmp/*
 __pycache__
 docker-compose.yml
+docker-compose.override.yml
 compose-override.yml
+.env
 postbuild.sh
 pre_backup.sh
 post_backup.sh
