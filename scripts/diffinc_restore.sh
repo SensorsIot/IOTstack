@@ -95,7 +95,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then #spicy time
   #run pre-restore script
   if [ -f "./pre_restore.sh" ]; then
     echo "./pre_restore.sh file found, executing:" >> $LOGFILE
-    bash ./pre_restore.sh.sh
+    bash ./pre_restore.sh
   fi
   
   #remove old directories
@@ -113,7 +113,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then #spicy time
   #run post-restore script
   if [ -f "./post_restore.sh" ]; then
     echo "./post_restore.sh file found, executing:" >> $LOGFILE
-    bash ./post_restore.sh.sh
+    bash ./post_restore.sh
   fi
   
   echo "Finish restore at $(date +"%Y-%m-%d_%H:%M:%S")" >> $LOGFILE
