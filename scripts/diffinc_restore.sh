@@ -82,10 +82,10 @@ else
 fi
 
 #backup validated as far as possible, confirm user intent
-echo "Do you wish to continue  restoring from backup? This will delete the present data! (y/n)"
-read -p "Are you sure? " -n 1 -r
+echo "Do you wish to continue restoring from backup? Your options: remove current files now (r), move files to ./backup/.old (m) or abort (other key)"
+read -p "What to do? " -n 1 -r
 echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then #spicy time
+if [[ $REPLY =~ ^[Rr]$ ]] || [[ $REPLY =~ ^[Mm]$ ]]; then #spicy time
   cd "$IOTSTACK_DIR"
   mkdir -p "$IOTSTACK_DIR/backups/logs/"
   LOGFILE="$IOTSTACK_DIR/backups/logs/$BACKUP_TIME.log"
@@ -98,10 +98,19 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then #spicy time
     bash ./pre_restore.sh
   fi
   
-  #remove old directories
+  #remove/move old directories
+  if [[ $REPLY =~ ^[Mm]$ ]]; then
+    OLD_DATA_DIR="$IOTSTACK_DIR/backups/.old/$(date +"%Y-%m-%d_%H:%M:%S")"
+    mkdir -p "$OLD_DATA_DIR"
+    echo "Moving files to $OLD_DATA_DIR. If the script does not finish you can reinstate from there."
+  fi
   readarray -t BACKUPED_DIRECTORIES < "./scripts/backup_list.txt"
   for BACKUPED_DIRECTORY in ${BACKUPED_DIRECTORIES[@]}; do
-    sudo rm -rf "$BACKUPED_DIRECTORY" >> $LOGFILE 2>&1
+    if [[ $REPLY =~ ^[Mm]$ ]]; then
+      [ -f $BACKUPED_DIRECTORY ] || [ -d $BACKUPED_DIRECTORY ] && sudo mv "$BACKUPED_DIRECTORY" "$OLD_DATA_DIR"
+    else
+      sudo rm -rf "$BACKUPED_DIRECTORY" >> $LOGFILE 2>&1
+    fi
   done
   
   #clean slate, now extract all backups (sorted by level and service)
@@ -117,6 +126,17 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then #spicy time
   fi
   
   echo "Finish restore at $(date +"%Y-%m-%d_%H:%M:%S")" >> $LOGFILE
+  
+  if [[ $REPLY =~ ^[Mm]$ ]]; then
+    echo "Check the result. Should the old data (not the backup) be removed? (y/n)?"
+    read -p "What to do? " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      sudo rm -rf "$OLD_DATA_DIR"
+    else
+      echo "Data can be removed manually removed by calling rm -rf $OLD_DATA_DIR"
+    fi
+  fi
 fi
 
 
