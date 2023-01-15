@@ -1,5 +1,5 @@
 n8n:
-    container_name: "n8n"
+    container_name: n8n
     restart: unless-stopped
     ports:
         - "5678:5678"
