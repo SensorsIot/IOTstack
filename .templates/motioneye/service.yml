@@ -1,6 +1,6 @@
 motioneye:
   image: "ccrisan/motioneye:master-armhf"
-  container_name: "motioneye"
+  container_name: motioneye
   restart: unless-stopped
   ports:
     - "8765:8765"
