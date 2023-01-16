@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #This script provides full/differential/incremental backup for IOTstack. It aims to be conservative with disk space by only having minimum overhead (max. 1 differential backup) and to maximize uptime in cases of slow hardware like a Raspberry pi. To increase uptime services can be specified to be backuped in separate files which allows for the other services to be brought up while the separate services are backuped. This is useful if there is e.g. a nextcloud instance running which will take a long time to process.
-#usage diffinc_backup.sh [-t type=1] [-i /absolute/path/to/IOTstack] [-c] [-s list,of,services] [-p list,of,paused,services] [-e ./backup/excluded/*/paths] [-u user] [/absolute/path/to/target/directory=[IOTstack]/backups/diffincbackup]
+#usage diffinc_backup.sh [-t type=1] [-i /absolute/path/to/IOTstack] [-c] [-s list,of,services] [-p list,of,paused,services] [-e ./backup/excluded/*/paths] [-u user] [-y scp:path/to/copy/dir] [-z rsync:path/to/sync/dir] [/absolute/path/to/target/directory=[IOTstack]/backups/diffincbackup]
 #since many files may not accessible to the user run this script as root
 #arguments
 ##-t: type of backup, 0 full dump, 1 differential backup, 2 incremental backup. If no previous backup is found the script will do a full dump.
@@ -11,6 +11,8 @@
 ##-p: Comma separated list of services that should be paused during the whole backup time. It is recommended or even necessary to pause interacting services of separately backuped services (e.g. recommended: portainer to prevent the user from accidentally starting a service; necessary: nextcloud database container)
 ##-e: comma separated list of paths relative to the IOTstack directory always excluded from the backup, e.g. when using the preview app in nextcloud
 ##-u: user to change ownership to
+##-y: Directory to scp the backup files to. Multiple mentions of the option to copy to multiple locations are possible. Make sure the directory exists before running the command and keep in mind that only created/changed files in this run are transferred, and only if the connection holds. If you want to send the files to another machine in a cronjob you need to prevent the password promt. A great tutorial on how to do this can be found here: https://github.com/Paraphraser/IOTstackBackup/blob/master/ssh-tutorial.md
+##-z: Directory to rsync the backup target directory to. The usage is identical to scp, but rsync will synchronize the backup directory, not simply send new/changed backup files. This option is especially recommended for incremental backups so in case something goes temporarily wrong all the files are eventually transferred.
 ##if no target directory path is provided the script will use [IOTstack]/backups/diffincbackup
 #
 #migrating backups: If you do not want to update the backup you only need to transfer all *.tar* files from the base backup (backup_base-????-??-??_????_*) to the new location, otherwise you also need the .snar files. DO NOT RENAME the files! For a restore you need the files present in a directory with the original filenames to pass consistency checks!
@@ -22,9 +24,9 @@
 ###situation: large amount of data initially, especially in nextcloud and influxdb, small changes over time, should be saved on another disk due to size constraint --> differential backup ideal with nextcloud and influxdb backuped separately to keep other services online longer, file count remains low. Additionally activated preview app for nextcloud, those files do not need to be stored (add post-restore script to recompute previews)
 ####0 2 * * *  /home/[USER]/IOTstack/scripts/diffinc_backup.sh -t 1 -c -s influxdb2,nextcloud -p nextcloud,nextcloud_db,portainer-ce -e ./volumes/nextcloud/html/data/appdata_*/preview -u [USER] [absolute/path/to/another/disk/dir]
 ####[note: you can actually leave the * in the -e option]
-###situation: large amount of data in nextcloud, changes significantly over time. Daily backup wished. A possible compromise is to make differential backups mon-sat and an incremental backup on sun. Every week 2 files will be added to the backup (not counting snar files)
-####0 2 * * 1,2,3,4,5,6  /home/[USER]/IOTstack/scripts/diffinc_backup.sh -t 1 -c -s nextcloud -p nextcloud,nextcloud_db,portainer-ce -u [USER]
-####0 2 * * 0  /home/[USER]/IOTstack/scripts/diffinc_backup.sh -t 2 -c -s nextcloud -p nextcloud,nextcloud_db,portainer-ce -u [USER]
+###situation: large amount of data in nextcloud, changes significantly over time. Daily backup wished. A possible compromise is to make differential backups mon-sat and an incremental backup on sun. Additionally, the backups should be synchronized to another computer in the network (if you wish to use this as a template make sure you set up both machines as described in the -y documentation). Every week 2 files will be added to the backup (not counting snar files)
+####0 2 * * 1,2,3,4,5,6  /home/[USER]/IOTstack/scripts/diffinc_backup.sh -t 1 -c -s nextcloud -p nextcloud,nextcloud_db,portainer-ce -u [USER] -z user@192.168.0.10:backups/diffinc
+####0 2 * * 0  /home/[USER]/IOTstack/scripts/diffinc_backup.sh -t 2 -c -s nextcloud -p nextcloud,nextcloud_db,portainer-ce -u [USER] -z user@192.168.0.10:backups/diffinc
 
 
 #check if script is already running. Useful since it may be called automatically by cron.
@@ -37,8 +39,10 @@ fi
 
 COMPRESSION=false
 TYPE=1 #defaults to differential backup, seems most sensible to me
+SCP_PATHS=()
+RSYNC_PATHS=()
 
-while getopts 'i:ct:s:p:e:u:' OPTION; do
+while getopts 'i:ct:s:p:e:u:y:z:' OPTION; do
   case "$OPTION" in
     i)
       IOTSTACK_DIR="$OPTARG"
@@ -76,8 +80,14 @@ while getopts 'i:ct:s:p:e:u:' OPTION; do
         exit 1
       fi
       ;;
+    y)
+      SCP_PATHS+=("$OPTARG")
+      ;;
+    z)
+      RSYNC_PATHS+=("$OPTARG")
+      ;;
     ?)
-      echo "usage diffinc_backup.sh [-t type=1] [-i /absolute/path/to/IOTstack] [-c] [-s list,of,services] [-p list,of,paused,services] [-e ./backup/excluded/*/paths] [-u user] [/absolute/path/to/target/directory=[IOTstack]/backups/diffincbackup]" >&2
+      echo "usage diffinc_backup.sh [-t type=1] [-i /absolute/path/to/IOTstack] [-c] [-s list,of,services] [-p list,of,paused,services] [-e ./backup/excluded/*/paths] [-u user] [-y scp:path/to/copy/dir] [-z rsync:path/to/sync/dir] [/absolute/path/to/target/directory=[IOTstack]/backups/diffincbackup]" >&2
       exit 1
       ;;
   esac
@@ -101,6 +111,9 @@ fi
 #check of target directory was set and is valid
 TARGET_DIR="${IOTSTACK_DIR}/backups/diffincbackup"
 mkdir -p $TARGET_DIR #create default dir just in case
+if [ ! -z "${USER+x}" ]; then
+    chown $USER:$USER "$TARGET_DIR"
+  fi
 if [ ! -z "${1+x}" ]; then
   #set, use the user directory
   TARGET_DIR=$1
@@ -251,9 +264,12 @@ docker-compose stop
 
 TOTAL_SERVICES=("main" "${SEPARATE_SERVICES[@]}")
 
+SCP_FILES=() #List of files to SCP to the target
+
 for i in ${!TOTAL_SERVICES[@]}; do
   FILENAME="$TARGET_DIR/backup_"$NEW_BACKUP_DATE"_"${TOTAL_SERVICES[$i]}"_"$NEW_BACKUP_LEVEL"."$FILE_ENDING
   SNARNAME="$TARGET_DIR/backup_"$NEW_BACKUP_DATE"_"${TOTAL_SERVICES[$i]}"_"$NEW_BACKUP_LEVEL".snar"
+  SCP_FILES+=("$FILENAME") #SNAR files are not necessary for restore
   echo "Creating backup file $FILENAME" >> $LOGFILE
   if [[ $NEW_BACKUP_LEVEL -ge 1 ]]; then
     cp "$TARGET_DIR/backup_"$NEW_BACKUP_DATE"_"${TOTAL_SERVICES[$i]}"_"$((NEW_BACKUP_LEVEL - 1))".snar" $SNARNAME".tmp"
@@ -291,9 +307,30 @@ fi
 
 docker-compose up -d
 
+echo "All containers started at $(date +"%Y-%m-%d_%H:%M:%S")" >> $LOGFILE
+
 ##clean up files
 
 rm $BACKUP_LIST
+
+##Send backup files off
+if [ "${#SCP_PATHS[@]}" -gt 0 ]; then
+  echo "Sending backup files via SCP to: ${SCP_PATHS[@]}" | tee -a $LOGFILE
+  for SCP_PATH in "${SCP_PATHS[@]}"; do
+    #transfer every backup file created/changed to the new destination
+    for SCP_FILE in "${SCP_FILES[@]}"; do
+      scp "$SCP_FILE" "$SCP_PATH"
+    done
+    echo "Finished sending to ${SCP_PATH} at $(date +"%Y-%m-%d_%H:%M:%S")" | tee -a $LOGFILE
+  done
+fi
+
+if [ ${#RSYNC_PATHS[@]} -gt 0 ]; then
+  echo "Sending backup files via RSYNC to: ${RSYNC_PATHS[@]}" | tee -a $LOGFILE
+  for RSYNC_PATH in "${RSYNC_PATHS[@]}"; do
+    rsync -vrt --delete --exclude "${LOGFILE##*/}" --exclude "*.snar" "$TARGET_DIR/" "$RSYNC_PATH"
+  done
+fi
 
 echo "Finished at $(date +"%Y-%m-%d_%H:%M:%S")" >> $LOGFILE
 echo "########################################################################" >> $LOGFILE

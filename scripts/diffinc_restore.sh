@@ -1,18 +1,22 @@
 #!/bin/bash
 
 #restore script for the diffinc_backup.sh script.
-#usage: diffinc_restore.sh [-i /absolute/path/to/IOTstack] [filename=[IOTstack]/backups/diffincbackup/backup_*newest*]
+#usage: diffinc_restore.sh [-i /absolute/path/to/IOTstack] [-t /absolute/path/to/tmp/backup/copy/dir] [filename=[IOTstack]/backups/diffincbackup/backup_*newest*]
 #arguments
 ##-i: will user the user specified IOTstack directory. Otherwise the program will take the parent directory.
-##filename: absolute path to the filename to one of the backup files. 
+##-t: directory to temporarily copy the backup to. Use this option when bringing large files to another drive on this machine. The directory does not need to exist and SHOULD BE EMPTY (will be removed)
+##filename: absolute path to the filename to one of the backup files. If the backup lies on a remote machine you can use the scp-style format user@host:path/to/sample/file.tar. The script will transfer the relevant files to a temporary directory (see option -t), default [IOTstack]/.tmp/diffincrestore)
 
-while getopts 'i:' OPTION; do
+while getopts 'i:t:' OPTION; do
   case "$OPTION" in
     i)
-      IOTSTACK_DIR=$OPTARG
+      IOTSTACK_DIR="$OPTARG"
+      ;;
+    t)
+      TMP_DIR="$OPTARG"
       ;;
     ?)
-      echo "Unknown use of the script. Usage: diffinc_restore.sh [-i /absolute/path/to/IOTstack] [filename=[IOTstack]/backups/diffincbackup/backup_*newest*]" >&2
+      echo "Unknown use of the script. Usage: diffinc_restore.sh [-i /absolute/path/to/IOTstack] [-t /absolute/path/to/tmp/backup/copy/dir] [filename=[IOTstack]/backups/diffincbackup/backup_*newest*]" >&2
       exit 1
       ;;
   esac
@@ -45,14 +49,35 @@ if [ -z "${1+x}" ]; then
   fi
   
 else
-  if [ ! -f "$1" ]; then
+  #check if remote
+  if [ -z "${1##*:*}" ]; then
+    #backup lies on remote server, transfer directory to tmp folder
+    if [ -z "${TMP_DIR+x}" ]; then
+      #-t flag has not been provided, use default
+      TMP_DIR="$IOTSTACK_DIR/.tmp/diffincbackup"
+    fi
+    if [ -d $TMP_DIR ]; then
+      echo "Temporary directory already exists. This is a bad idea since it will be deleted. Stopping..."
+      exit 1
+    fi
+    echo $TMP_DIR
+    scp -r "${1%/*}" "$TMP_DIR"
+    BACKUP_SAMPLE_PATH="$TMP_DIR/${1##*/}"
+   else
+    BACKUP_SAMPLE_PATH="$1"
+  fi
+  if [ ! -f "$BACKUP_SAMPLE_PATH" ]; then
     echo "ERROR: supplied file $1 does not exist."
     exit 1
   fi
-  BACKUP_DIR=${1%/*}
-  SAMPLE_FILE="${1##*/}"
+  BACKUP_DIR="${BACKUP_SAMPLE_PATH%/*}"
+  SAMPLE_FILE="${BACKUP_SAMPLE_PATH##*/}"
   if [[ $SAMPLE_FILE != backup_base-????-??-??_????_*_*.tar* ]]; then
     echo "ERROR: filename of supplied file $SAMPLE_FILENAME is not the correct format."
+    #clean up temporary local backup copy
+    if [ -z "${1##*:*}" ]; then
+      rm -rf "$TMP_DIR"
+    fi
     exit 1
   fi
 fi
@@ -137,6 +162,11 @@ if [[ $REPLY =~ ^[Rr]$ ]] || [[ $REPLY =~ ^[Mm]$ ]]; then #spicy time
       echo "Data can be removed manually removed by calling rm -rf $OLD_DATA_DIR"
     fi
   fi
+fi
+
+#clean up temporary local backup copy
+if [ -z "${1##*:*}" ]; then
+  rm -rf "$TMP_DIR"
 fi
 
 

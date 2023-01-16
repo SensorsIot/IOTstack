@@ -1,10 +1,12 @@
 ./services/
 ./volumes/
-./compose-override.yml
-./docker-compose.yml
+./compose-override.*
+./docker-compose.*
 ./extra/
 ./postbuild.sh
 ./pre_backup.sh
 ./post_backup.sh
 ./post_restore.sh
 ./post_restore.sh
+./.env
+
