@@ -1,12 +1,15 @@
 motioneye:
-  image: "ccrisan/motioneye:master-armhf"
   container_name: motioneye
+  image: dontobi/motioneye.rpi:latest
   restart: unless-stopped
+  x-network_mode: host
   ports:
-    - "8765:8765"
-    - "8081:8081"
+  - 8765:8765
+  - 8766:8082
+  environment:
+  - TZ=Etc/UTC
   volumes:
-    - /etc/localtime:/etc/localtime:ro
-    - ./volumes/motioneye/etc_motioneye:/etc/motioneye
-    - ./volumes/motioneye/var_lib_motioneye:/var/lib/motioneye
-
+  - ./volumes/motioneye/etc_motioneye:/etc/motioneye
+  - ./volumes/motioneye/var_lib_motioneye:/var/lib/motioneye
+  - /etc/localtime:/etc/localtime:ro
+  - /etc/timezone:/etc/timezone:ro
