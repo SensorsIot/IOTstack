@@ -1,34 +1,35 @@
 #!/bin/bash
+# vim: sw=2
 
 # Usage:
-# ./scripts/backup.sh {TYPE=3} {USER=$(whoami)}
+# ./scripts/backup.sh {TYPE}
 #   Types:
 #     1 = Backup with Date
 #     2 = Rolling Date
 #     3 = Both
-#   User:
-#     This parameter only becomes active if run as root. This script will default to the current logged in user
-#       If this parameter is not supplied when run as root, the script will ask for the username as input
 #
 #   Backups:
-#     You can find the backups in the ./backups/ folder. With rolling being in ./backups/rolling/ and date backups in ./backups/backup/
-#     Log files can also be found in the ./backups/logs/ directory.
+#     You can find the backups in the ./backups/ folder. With rolling being in
+#     ./backups/rolling/ and date backups in ./backups/backup/ Log files can
+#     also be found in the ./backups/logs/ directory.
 #
 # Examples:
 #   ./scripts/backup.sh
 #   ./scripts/backup.sh 3
-#     Either of these will run both backups.
+#     Both of these will run both backups.
 #
 #   ./scripts/backup.sh 2
-#     This will only produce a backup in the rollowing folder. It will be called 'backup_XX.tar.gz' where XX is the current day of the week (as an int)
+#     This will only produce a backup into ~/IOTstack/backup/rolling/. It will
+#     be called 'backup_XX.tar.gz' where XX is the current day of the week (as
+#     an int)
 #
 #   sudo bash ./scripts/backup.sh 2 pi
-#     This will only produce a backup in the rollowing folder and change all the permissions to the 'pi' user.
+#     This will only produce a backup in the rolling folder and change all
+#     the permissions to the 'pi' user. This is for expert use, usually this
+#     script should be executed without sudo using your regular user.
 
-if [ -d "./menu.sh" ]; then
-	echo "./menu.sh file was not found. Ensure that you are running this from IOTstack's directory."
-  exit 1
-fi
+# Allow running from everywhere, but change folder to script's IOTstack
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
 
 BACKUPTYPE=${1:-"3"}
 
@@ -39,13 +40,15 @@ fi
 
 if [[ "$EUID" -eq 0 ]]; then
   if [ -z ${2+x} ]; then
-    echo "Enter username to chown (change ownership) files to"
-    read USER;
+    echo "Error: this script shouldn't be run as root"
+    exit 1
   else
     USER=$2
   fi
 else
-  USER=$(whoami)
+  # re-run script using sudo, to avoid any permission problems
+  sudo ${BASH_SOURCE[0]} $BACKUPTYPE ${2:-$(whoami)}
+  exit $?
 fi
 
 BASEDIR=./backups
@@ -83,13 +86,20 @@ fi
 
 echo "" >> $BACKUPLIST
 
-echo "" >> $LOGFILE
-echo "Executing prebackup scripts" >> $LOGFILE
-bash ./scripts/backup_restore/pre_backup_complete.sh >> $LOGFILE 2>&1
+echo "Stopping stack to get consistent database backups" >> $LOGFILE
+docker-compose stop >> $LOGFILE
+
+if [ -f "./pre_backup.sh" ]; then
+  echo "" >> $LOGFILE
+  echo "./pre_backup.sh file found, executing:" >> $LOGFILE
+  bash ./pre_backup.sh >> $LOGFILE 2>&1
+fi
 
 echo "./services/" >> $BACKUPLIST
 echo "./volumes/" >> $BACKUPLIST
 [ -f "./docker-compose.yml" ] && echo "./docker-compose.yml" >> $BACKUPLIST
+[ -f "./docker-compose.override.yml" ] && echo "./docker-compose.override.yml" >> $BACKUPLIST
+[ -f "./.env" ] && echo "./.env" >> $BACKUPLIST
 [ -f "./compose-override.yml" ] && echo "./compose-override.yml" >> $BACKUPLIST
 [ -f "./extra" ] && echo "./extra" >> $BACKUPLIST
 [ -f "./.tmp/databases_backup" ] && echo "./.tmp/databases_backup" >> $BACKUPLIST
@@ -101,7 +111,7 @@ sudo tar -czf $TMPBACKUPFILE -T $BACKUPLIST >> $LOGFILE 2>&1
 
 [ -f "$ROLLING" ] && ROLLINGOVERWRITTEN=1 && rm -rf $ROLLING
 
-sudo chown -R $USER:$USER $TMPDIR/backup* >> $LOGFILE 2>&1
+sudo chown -R $USER:$(id -g $USER) $TMPDIR/backup* >> $LOGFILE 2>&1
 
 if [[ "$BACKUPTYPE" -eq "1" || "$BACKUPTYPE" -eq "3" ]]; then
   cp $TMPBACKUPFILE $BACKUPFILE
@@ -121,9 +131,14 @@ fi
 echo "Backup Size (bytes): $(stat --printf="%s" $TMPBACKUPFILE)" >> $LOGFILE
 echo "" >> $LOGFILE
 
-echo "Executing postbackup scripts" >> $LOGFILE
-bash ./scripts/backup_restore/post_backup_complete.sh >> $LOGFILE 2>&1
-echo "" >> $LOGFILE
+echo "Starting stack back up" >> $LOGFILE
+docker-compose start
+
+if [ -f "./post_backup.sh" ]; then
+  echo "./post_backup.sh file found, executing it at $(date +"%Y-%m-%dT%H-%M-%S")" >> $LOGFILE
+  bash ./post_backup.sh $TMPBACKUPFILE 2>&1 >> $LOGFILE
+  echo "" > $LOGFILE
+fi
 
 echo "Finished At: $(date +"%Y-%m-%dT%H-%M-%S")" >> $LOGFILE
 echo "" >> $LOGFILE
@@ -141,6 +156,8 @@ else
   echo "Files: "
   echo "  $BACKUPLIST"
 fi
+
+sudo chown -R $USER:$(id -g $USER) "$BASEDIR" >> $LOGFILE 2>&1
 
 echo "" >> $LOGFILE
 echo "### End of log ###" >> $LOGFILE
