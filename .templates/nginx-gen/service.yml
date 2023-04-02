@@ -1,0 +1,12 @@
+nginx-gen:
+  image: ajoubert/docker-gen-arm
+  command: -notify-sighup nginx-proxy -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+  container_name: nginx-gen
+  restart: unless-stopped
+  volumes:
+    - /var/run/docker.sock:/tmp/docker.sock:ro
+    - "./volumes/nginx-proxy/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro"
+    - "./volumes/nginx-proxy/nginx-conf:/etc/nginx/conf.d"
+    - "./volumes/nginx-proxy/nginx-vhost:/etc/nginx/vhost.d"
+    - "./volumes/nginx-proxy/html:/usr/share/nginx/html"
+    - "./volumes/nginx-proxy/certs:/etc/nginx/certs:ro"

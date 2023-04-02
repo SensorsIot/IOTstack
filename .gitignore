@@ -20,4 +20,4 @@ post_restore.sh
 
 .vscode
 *.code-workspace
-
+.idea

@@ -5,13 +5,13 @@ comment: "Addons available for NodeRed"
 dockerFileInstallCommand: "RUN cd /usr/src/node-red && npm install --save "
 addons:
   default_on:
-    - "node-red-node-pi-gpiod"
     - "node-red-contrib-influxdb"
     - "node-red-contrib-boolean-logic"
     - "node-red-node-rbe"
     - "node-red-configurable-ping"
     - "node-red-dashboard"
   default_off:
+    - "node-red-node-pi-gpiod"
     - "node-red-node-openweathermap"
     - "node-red-contrib-discord"
     - "node-red-node-email"

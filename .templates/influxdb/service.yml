@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 influxdb:
   container_name: influxdb
   image: "influxdb:1.8"
@@ -25,3 +26,21 @@ influxdb:
     retries: 3
     start_period: 30s
 
+=======
+  influxdb:
+    container_name: influxdb
+    image: "influxdb:latest"
+    restart: unless-stopped
+    ports:
+      - 8086:8086
+      - 8083:8083
+      - 2003:2003
+    env_file:
+      - ./services/influxdb/influxdb.env
+    environment:
+      - VIRTUAL_HOST=~^influxdb\..*\.xip\.io
+      - VIRTUAL_PORT=8086
+    volumes:
+      - ./volumes/influxdb/data:/var/lib/influxdb
+      - ./backups/influxdb/db:/var/lib/influxdb/backup
+>>>>>>> other-IOTstack/feature/AddNginxProxy

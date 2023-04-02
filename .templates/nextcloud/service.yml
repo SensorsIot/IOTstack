@@ -16,6 +16,9 @@ nextcloud:
   networks:
     - default
     - nextcloud
+  environment:
+    - VIRTUAL_HOST=~^nextcloud\..*\.xip\.io
+    - VIRTUAL_PORT=9321
 
 nextcloud_db:
   container_name: nextcloud_db

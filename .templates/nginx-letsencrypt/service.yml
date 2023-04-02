@@ -1,0 +1,13 @@
+nginx-letsencrypt:
+  image: budry/jrcs-letsencrypt-nginx-proxy-companion-arm
+  container_name: nginx-letsencrypt
+  restart: unless-stopped
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - "./volumes/nginx-proxy/nginx-conf:/etc/nginx/conf.d"
+    - "./volumes/nginx-proxy/nginx-vhost:/etc/nginx/vhost.d"
+    - "./volumes/nginx-proxy/html:/usr/share/nginx/html"
+    - "./volumes/nginx-proxy/certs:/etc/nginx/certs:rw"
+  environment:
+    NGINX_DOCKER_GEN_CONTAINER: "nginx-gen"
+    NGINX_PROXY_CONTAINER: "nginx-proxy"

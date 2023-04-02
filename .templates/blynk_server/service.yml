@@ -16,4 +16,7 @@ blynk_server:
   volumes:
     - ./volumes/blynk_server/data:/data
     - ./volumes/blynk_server/config:/config
+  environment:
+    - VIRTUAL_HOST=~^blynk\..*\.xip\.io
+    - VIRTUAL_PORT=8180
 

@@ -18,4 +18,6 @@ grafana:
     timeout: 10s
     retries: 3
     start_period: 30s
-
+  environment:
+    - VIRTUAL_HOST=~^grafana\..*\.xip\.io
+    - VIRTUAL_PORT=3000

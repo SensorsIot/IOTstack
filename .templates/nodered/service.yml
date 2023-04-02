@@ -16,8 +16,10 @@ nodered:
     - ./volumes/nodered/ssh:/root/.ssh
     - /var/run/docker.sock:/var/run/docker.sock
     - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
-  devices:
-    - "/dev/ttyAMA0:/dev/ttyAMA0"
-    - "/dev/vcio:/dev/vcio"
-    - "/dev/gpiomem:/dev/gpiomem"
-
+#  devices:
+#    - "/dev/ttyAMA0:/dev/ttyAMA0"
+#    - "/dev/vcio:/dev/vcio"
+#    - "/dev/gpiomem:/dev/gpiomem"
+  environment:
+    - VIRTUAL_HOST=~^nodered\..*\.xip\.io
+    - VIRTUAL_PORT=1880

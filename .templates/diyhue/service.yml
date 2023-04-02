@@ -12,4 +12,6 @@ diyhue:
   volumes:
       - ./volumes/diyhue:/opt/hue-emulator/export
   restart: unless-stopped
-
+  environment:
+    - VIRTUAL_HOST=~^diyhue\..*\.xip\.io
+    - VIRTUAL_PORT=8070

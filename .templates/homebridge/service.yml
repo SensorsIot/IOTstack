@@ -11,4 +11,6 @@ homebridge:
   volumes:
     - ./volumes/homebridge:/homebridge
   network_mode: host
-
+  environment:
+    - VIRTUAL_HOST=~^homebridge\..*\.xip\.io
+    - VIRTUAL_PORT=8380
