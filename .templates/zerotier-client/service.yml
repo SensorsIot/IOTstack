@@ -4,10 +4,10 @@
     restart: unless-stopped
     network_mode: host
     volumes:
-    - ./volumes/zerotier-one:/var/lib/zerotier-one
+      - ./volumes/zerotier-one:/var/lib/zerotier-one
     devices:
-    - "/dev/net/tun:/dev/net/tun"
+      - "/dev/net/tun:/dev/net/tun"
     cap_add:
-    - NET_ADMIN
-    - SYS_ADMIN
+      - NET_ADMIN
+      - SYS_ADMIN
 

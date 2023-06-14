@@ -10,5 +10,6 @@
     env_file:
       - ./services/diyhue/diyhue.env
     volumes:
-       - ./volumes/diyhue:/opt/hue-emulator/export
+      - ./volumes/diyhue:/opt/hue-emulator/export
     restart: unless-stopped
+
