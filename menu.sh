@@ -486,7 +486,8 @@ case $mainmenu_selection in
 	if [ -n "$container_selection" ]; then
 		touch $TMP_DOCKER_COMPOSE_YML
 
-		echo "version: '$COMPOSE_VERSION'" > $TMP_DOCKER_COMPOSE_YML
+		echo "---" > $TMP_DOCKER_COMPOSE_YML
+		echo "version: '$COMPOSE_VERSION'" >> $TMP_DOCKER_COMPOSE_YML
 		echo "services:" >> $TMP_DOCKER_COMPOSE_YML
 
 		#set the ACL for the stack
