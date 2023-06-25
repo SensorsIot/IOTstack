@@ -21,7 +21,7 @@ node_selection=$(whiptail --title "Node-RED nodes" --checklist --separate-output
 	"node-red-node-smooth" " " "OFF" \
 	"node-red-node-darksky" " " "OFF" \
 	"node-red-node-sqlite" " " "OFF" \
-	"node-red-node-serialport" " " "OFF" \
+	"node-red-node-serialport@0.15.0" " " "OFF" \
 	"node-red-contrib-config" " " "OFF" \
 	"node-red-contrib-grove" " " "OFF" \
 	"node-red-contrib-diode" " " "OFF" \
