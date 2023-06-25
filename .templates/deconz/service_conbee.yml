@@ -9,8 +9,8 @@
     volumes:
       - ./volumes/deconz:/opt/deCONZ
     devices:
-      #ConBee:
-      - /dev/ttyUSB0
+      # ConBee:
+      - "${DECONZ_DEVICE_PATH:?eg echo DECONZ_DEVICE_PATH=/dev/ttyUSB0 >>~/IOTstack/.env}:/dev/ttyUSB0"
     environment:
       - DECONZ_VNC_MODE=1
       - DECONZ_VNC_PASSWORD=changeme

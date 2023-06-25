@@ -9,8 +9,8 @@
     volumes:
       - ./volumes/deconz:/opt/deCONZ
     devices:
-      #ConBee II:
-      - /dev/ttyACM0
+      # ConBee II:
+      - "${DECONZ_DEVICE_PATH:?eg echo DECONZ_DEVICE_PATH=/dev/ttyACM0 >>~/IOTstack/.env}:/dev/ttyACM0"
     environment:
       - DECONZ_VNC_MODE=1
       - DECONZ_VNC_PASSWORD=changeme
