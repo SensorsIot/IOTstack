@@ -66,6 +66,7 @@ declare -A cont_array=(
 	[heimdall]="Heimdall Application Dashboard"
 	[dashmachine]="DashMachine"
 	[homer]="Homer"
+	[mjpg-streamer]="MJPG Streamer"
 	[home_assistant]="Home Assistant Container"
 	# add yours here
 )
@@ -116,6 +117,7 @@ declare -a keylist=(
 	"heimdall"
 	"dashmachine"
 	"homer"
+	"mjpg-streamer"
 	"home_assistant"
 	# add yours here
 )
