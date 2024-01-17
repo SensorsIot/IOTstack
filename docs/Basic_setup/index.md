@@ -14,7 +14,8 @@ IOTstack is not a *system.* It is a set of *conventions* for assembling arbitrar
 	
 2. To the maximum extent possible, network port conflicts have been sorted out in advance.
 
-	Sometimes this is not possible. For example, Pi-hole and AdGuardHome both offer Domain Name System services. The DNS relies on port 53. You can't have two containers claiming port 53 so the only way to avoid this is to pick *either* Pi-hole *or* AdGuardHome.
+	> Sometimes this is not possible. For example, Pi-hole and AdGuardHome both offer Domain Name System services. The DNS relies on port 53. You can't have two containers claiming port 53 so the only way to avoid this is to pick *either* Pi-hole *or* AdGuardHome.
+
 3. Where multiple containers are needed to implement a single user-facing service, the IOTstack service definition will include everything needed. A good example is NextCloud which relies on MariaDB. IOTstack implements MariaDB as a private instance which is only available to NextCloud. This strategy ensures that you are able to run your own separate MariaDB container without any risk of interference with your NextCloud service. 
 
 ## Requirements
