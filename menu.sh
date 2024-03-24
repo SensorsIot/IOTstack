@@ -14,7 +14,6 @@ DOCKER_COMPOSE_YML=./docker-compose.yml
 DOCKER_COMPOSE_OVERRIDE_YML=./compose-override.yml
 
 # Minimum Software Versions
-COMPOSE_VERSION="3.6"
 REQ_DOCKER_VERSION=18.2.0
 REQ_PYTHON_VERSION=3.6.9
 REQ_PYYAML_VERSION=5.3.1
@@ -489,7 +488,6 @@ case $mainmenu_selection in
 		touch $TMP_DOCKER_COMPOSE_YML
 
 		echo "---" > $TMP_DOCKER_COMPOSE_YML
-		echo "version: '$COMPOSE_VERSION'" >> $TMP_DOCKER_COMPOSE_YML
 		echo "services:" >> $TMP_DOCKER_COMPOSE_YML
 
 		#set the ACL for the stack
