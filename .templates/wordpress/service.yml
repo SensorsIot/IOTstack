@@ -1,0 +1,36 @@
+  wordpress:
+    container_name: wordpress
+    image: wordpress
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      WORDPRESS_DB_HOST: wordpress_db
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD:?eg echo WORDPRESS_DB_PASSWORD=userPassword >>~/IOTstack/.env}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME:-wordpress}
+    volumes:
+      - ./volumes/wordpress/html:/var/www/html
+    ports:
+      - "8084:80"
+    hostname: ${WORDPRESS_HOSTNAME:?eg echo WORDPRESS_HOSTNAME=hostname >>~/IOTstack/.env}
+    networks:
+      - default
+      - nextcloud
+    depends_on:
+      - wordpress_db
+
+  wordpress_db:
+    container_name: wordpress_db
+    build: ./.templates/mariadb/.
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      MYSQL_ROOT_PASSWORD: ${WORDPRESS_ROOT_PASSWORD:?eg echo WORDPRESS_ROOT_PASSWORD=rootPassword >>~/IOTstack/.env}
+      MYSQL_USER: ${WORDPRESS_DB_USER:-wordpress}
+      MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD:?eg echo WORDPRESS_DB_PASSWORD=userPassword >>~/IOTstack/.env}
+      MYSQL_DATABASE: ${WORDPRESS_DB_NAME:-wordpress}
+    volumes:
+      - ./volumes/wordpress/db:/config
+      - ./volumes/wordpress/db_backup:/backup
+    networks:
+      - nextcloud

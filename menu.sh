@@ -68,6 +68,7 @@ declare -A cont_array=(
 	[homer]="Homer"
 	[mjpg-streamer]="MJPG Streamer"
 	[home_assistant]="Home Assistant Container"
+	[wordpress]="Web content management"
 	# add yours here
 )
 
@@ -119,6 +120,7 @@ declare -a keylist=(
 	"homer"
 	"mjpg-streamer"
 	"home_assistant"
+	"wordpress"
 	# add yours here
 )
 
