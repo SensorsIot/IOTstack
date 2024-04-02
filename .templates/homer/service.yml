@@ -6,5 +6,5 @@
     volumes:
       - ./volumes/homer/assets:/www/assets
     ports:
-      - 8881:8080
+      - "8881:8080"
     restart: unless-stopped
