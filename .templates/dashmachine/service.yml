@@ -4,5 +4,5 @@
     volumes:
       - ./volumes/dashmachine/user_data:/dashmachine/dashmachine/user_data
     ports:
-      - 5000:5000
+      - "5000:5000"
     restart: unless-stopped
