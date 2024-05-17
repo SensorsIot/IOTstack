@@ -379,6 +379,10 @@ Enabling this feature is a two-step process:
 		6. Turn the connection off.
 		7. Turn the connection on again.
 
+		Once the client has been configured like this, the "Enable Default Route" setting will stick. Subsequent connections will follow the *managed* default route.
+		
+		If you wish to turn the setting off again, you need to repeat the same series of steps, turning "Enable Default Route" off at Step 4.
+
 	- Linux clients: execute the command:
 
 		``` console
@@ -790,6 +794,9 @@ A /22 is sufficient for 1,021 containers. That may seem like overkill but it doe
 Note:
 
 * If you are never going to run NextCloud on your Raspberry Pi, you can omit that network definition entirely. Doing so will silence unnecessary messages from docker-compose.
+* The `172.30.0.0/22` and `172.30.4.0/22` subnets (or whatever alternative ranges you choose) are *private* to the host where IOTstack is installed. That means you can re-use these same subnets on multiple hosts (Raspberry Pis or other supported platforms), irrespective of whether those hosts are at the same site (like <mark>A</mark> and <mark>B</mark>) or distributed across multiple sites (like <mark>A</mark> and <mark>F</mark>).
+
+	> The only time you would need to consider adjusting the subnet ranges is if you happened to be running two or more instances of IOTstack on the same host, simultaneously.
 
 ## Global addressing { #globalAddressing }
 
