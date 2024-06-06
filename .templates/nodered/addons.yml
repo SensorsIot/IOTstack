@@ -12,6 +12,7 @@ addons:
     - "node-red-configurable-ping"
     - "node-red-dashboard"
   default_off:
+    - "@flowfuse/node-red-dashboard"
     - "node-red-node-openweathermap"
     - "node-red-contrib-discord"
     - "node-red-node-email"
