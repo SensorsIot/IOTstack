@@ -68,6 +68,7 @@ declare -A cont_array=(
 	[mjpg-streamer]="MJPG Streamer"
 	[home_assistant]="Home Assistant Container"
 	[wordpress]="Web content management"
+	[esphome]="ESPHome device provisioning"
 	# add yours here
 )
 
@@ -120,6 +121,7 @@ declare -a keylist=(
 	"mjpg-streamer"
 	"home_assistant"
 	"wordpress"
+	"esphome"
 	# add yours here
 )
 
