@@ -8,7 +8,6 @@ node_selection=$(whiptail --title "Node-RED nodes" --checklist --separate-output
 	"node-red-dashboard" " " "ON" \
 	"node-red-contrib-influxdb" " " "ON" \
 	"node-red-contrib-boolean-logic" " " "ON" \
-	"node-red-node-rbe" " " "ON" \
 	"node-red-configurable-ping" " " "ON" \
 	"node-red-node-openweathermap" " " "OFF" \
 	"node-red-contrib-discord" " " "OFF" \
@@ -46,11 +45,17 @@ node_selection=$(whiptail --title "Node-RED nodes" --checklist --separate-output
 	"node-red-contrib-generic-ble" " " "OFF" \
 	"node-red-contrib-zigbee2mqtt" " " "OFF" \
 	"node-red-contrib-vcgencmd" " " "OFF" \
-	"node-red-contrib-themes/midnight-red" " " "OFF" \
 	"node-red-contrib-tf-function" " " "OFF" \
 	"node-red-contrib-tf-model" " " "OFF" \
 	"node-red-contrib-post-object-detection" " " "OFF" \
 	"node-red-contrib-bert-tokenizer" " " "OFF" \
+	"node-red-contrib-boolean-logic-ultimate" " " "OFF" \
+	"node-red-contrib-chartjs" " " "OFF" \
+	"node-red-contrib-md5" " " "OFF" \
+	"node-red-contrib-pushsafer" " " "OFF" \
+	"node-red-node-tail" " " "OFF" \
+	"@flowfuse/node-red-dashboard" " " "OFF" \
+	"@node-red-contrib-themes/theme-collection" " " "OFF" \
 	3>&1 1>&2 2>&3)
 
 ##echo "$check_selection"
@@ -70,19 +75,15 @@ FROM nodered/node-red:${DOCKERHUB_TAG}
 
 # reference argument - omitted defaults to null
 ARG EXTRA_PACKAGES
-ENV EXTRA_PACKAGES=${EXTRA_PACKAGES}
 
 # default user is node-red - need to be root to install packages
 USER root
 
 # install packages
-RUN apk update && apk add --no-cache eudev-dev ${EXTRA_PACKAGES}
+RUN apk add --no-cache eudev-dev ${EXTRA_PACKAGES}
 
 # switch back to default user
 USER node-red
-
-# variable not needed inside running container
-ENV EXTRA_PACKAGES=
 
 # add-on nodes follow
 
