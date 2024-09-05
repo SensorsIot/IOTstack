@@ -1,0 +1,47 @@
+# Assumptions:
+#
+# 1. The ESPhome container is running with the container-name "esphome".
+#
+# 2. The service definition for the ESPhome container includes:
+#
+#        device_cgroup_rules:
+#          - 'c 188:* rw'
+#
+#    This clause permits the container to access any device with a major
+#    number 188, which captures most USB-to-serial adapters that are
+#    found on ESP32 dev boards or equivalent off-board adapters such as
+#    those made by Future Technology Devices International (FTDI) and
+#    Silicon Laboratories Incorporated. The major number 188 also shows
+#    up in the UDEV rules below. 
+#
+# 3. The ESP device to be managed is mounted and/or unmounted WHILE the
+#    container is running. In other words, all bets are off if the host
+#    system reboots or the container starts while the USB device is
+#    connected. You will likely need to unplug/replug the device to
+#    get the container back in sync.
+#
+# The rules do NOT check if the container is running and do NOT check
+# for errors. All that will happen is errors in the system log.
+#
+# Removing ESPhome from your stack does NOT remove this rules file. It
+# does not matter whether you accomplish removal by editing your compose
+# file or via the IOTstack menu, this rule will be left in place and it
+# will generate an error every time it fires in response to insertion
+# or removal of a matching USB device.
+#
+# It is perfectly safe to remove this rules file yourself:
+#
+#   sudo rm /etc/udev/rules.d/88-tty-iotstack-esphome.rules
+#
+# That's all you have to do. UDEV is dynamic and, despite what you read
+# on the web, does NOT have to be restarted or reloaded.
+
+# Upon insertion of a matching USB device, mount the same device inside the container
+ACTION=="add", \
+  SUBSYSTEM=="tty", ENV{MAJOR}=="188", \
+  RUN+="/usr/bin/docker exec esphome mknod %E{DEVNAME} c %M %m"
+
+# Upon removal of a matching USB device, remove the same device inside the container
+ACTION=="remove", \
+  SUBSYSTEM=="tty", ENV{MAJOR}=="188", \
+  RUN+="/usr/bin/docker exec esphome rm -f %E{DEVNAME}"

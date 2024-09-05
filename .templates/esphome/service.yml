@@ -1,0 +1,15 @@
+  esphome:
+    container_name: esphome
+    image: esphome/esphome
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-Etc/UTC}
+      - USERNAME=${ESPHOME_USERNAME:-esphome}
+      - PASSWORD=${ESPHOME_PASSWORD:?eg echo ESPHOME_PASSWORD=ChangeMe >>~/IOTstack/.env}
+    network_mode: host
+    x-ports:
+      - "6052:6052"
+    volumes:
+      - ./volumes/esphome/config:/config
+    device_cgroup_rules:
+      - 'c 188:* rw'
