@@ -1,0 +1,11 @@
+version: 1
+application: "IOTstack"
+service: "obtr"
+comment: "Thread Hardware"
+hardwareList:
+  - "/dev/ttyACM0"
+  - "/dev/ttyACM1"
+  - "/dev/ttyACM2"
+  - "/dev/ttyUSB0"
+  - "/dev/ttyUSB1"
+  - "/dev/ttyUSB2"

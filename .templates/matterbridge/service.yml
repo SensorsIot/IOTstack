@@ -1,0 +1,9 @@
+matterbridge:
+  container_name: matterbridge
+  image: "luligu/matterbridge:1.6.1"
+  restart: unless-stopped
+  ports:
+    - "8284:8283"
+  volumes:
+    - ./volumes/matterbridge/data:/root/.matterbridge
+    - ./volumes/matterbridge/plugins:/root/Matterbridge
