@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # version - MUST be exactly 7 characters!
-UPDATE="2024v02"
+UPDATE="2024v03"
 
 echo "                                         "
 echo "  _____ ____ _______  _  installer  _    "
@@ -335,7 +335,6 @@ if [ ! -d "$IOTSTACK" ] ; then
 	fi
 	if [ $? -eq 0 -a -d "$IOTSTACK" ] ; then
 		echo "IOTstack cloned successfully into $IOTSTACK"
-		mkdir -p "$IOTSTACK/backups" "$IOTSTACK/services"
 	else
 		echo "Unable to clone IOTstack (likely a git or network error)"
 		handle_exit 1
@@ -343,6 +342,13 @@ if [ ! -d "$IOTSTACK" ] ; then
 else
 	echo -e "\n$IOTSTACK already exists - no need to clone from GitHub"
 fi
+
+# ensure backups and services directories exist and are owned by $USER
+# https://github.com/SensorsIot/IOTstack/issues/651#issuecomment-2525347511
+mkdir -p "$IOTSTACK/backups" "$IOTSTACK/services"
+sudo chown -R "$USER:$USER" "$IOTSTACK/backups" "$IOTSTACK/services"
+# but, if the influxdb backup dir already exists, put it back to root
+[ -d "$IOTSTACK/backups/influxdb" ] && sudo chown -R "root:root" "$IOTSTACK/backups/influxdb"
 
 # initialise docker-compose global environment file with system timezone
 if [ ! -f "$IOTSTACK_ENV" ] || [ $(grep -c "^TZ=" "$IOTSTACK_ENV") -eq 0 ] ; then
