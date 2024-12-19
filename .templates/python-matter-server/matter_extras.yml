@@ -1,0 +1,7 @@
+version: 1
+application: "IOTstack"
+service: "python-matter-server"
+comment: "Python Matter Server Extras"
+extrasList:
+  - "Mount Bluetooth: /run/dbus"
+  - "Enabled Root Certificates"

@@ -1,0 +1,23 @@
+otbr:
+  container_name: otbr
+  image: openthread/otbr:latest
+  restart: unless-stopped
+  # network_mode: host
+  privileged: true
+  sysctls:
+    net.ipv6.conf.all.disable_ipv6: 0
+    net.ipv4.conf.all.forwarding: 1
+    net.ipv6.conf.all.forwarding: 1
+  dns:
+    - 127.0.0.1
+  stdin_open: true
+  tty: true
+  volumes:
+    - ./volumes/otbr/data:/var/lib/otbr
+    - ./volumes/otbr/wpantund:/etc/wpantund.conf
+    - ./volumes/otbr/config:/etc/otbr
+  ports:
+    - "8283:80"
+  command: >
+    --radio-url spinel+hdlc+uart:///dev/ttyX # Example
+
