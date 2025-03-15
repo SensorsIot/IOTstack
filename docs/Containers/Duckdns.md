@@ -12,10 +12,10 @@ First, register an account, add your subdomain and get your token from
 [http://www.duckdns.org/](http://www.duckdns.org/)
 
 Either edit `~/IOTstack/docker-compose.yml` or create a file
-`~/IOTstack/docker-compose.override.yml`. Place your Duckdns token and
+`~/IOTstack/compose-override.yml`. Place your Duckdns token and
 subdomain name (without .duckdns.org) there:
 
-``` yaml title="docker-compose.override.yml"
+``` yaml title="compose-override.yml"
 version: '3.6'
 services:
   duckdns:
