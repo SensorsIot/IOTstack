@@ -8,6 +8,15 @@ Pi-hole is a fantastic utility to reduce ads.
 * [Pi-hole on Dockerhub](https://hub.docker.com/r/pihole/pihole)
 * [Pi-hole environment variables](https://github.com/pi-hole/docker-pi-hole#environment-variables)
 
+## Definitions { #definitions }
+
+Although this documentation assumes you will be running the Pi-hole service on a Raspberry Pi, there is nothing stopping you from running Pi-hole on other platforms (eg Intel Nuc, Proxmox-VE) or Linux distributions (eg Debian or Ubuntu). This document uses the definition below to try to encompass all those possibilities:
+
+<dl>
+	<dt><!--left d-quote-->&#x201C;<b>Pi-hole system</b><!--right d-quote-->&#x201D;</dt>
+		<dd><i>The host platform where the Pi-hole service is running.</i></dd>
+</dl>
+
 ## Environment variables  { #envVars }
 
 In conjunction with controls in Pi-hole's web GUI, environment variables govern much of Pi-hole's behaviour.
@@ -129,7 +138,7 @@ Tip:
 	``` console
 	$ sqlite3 ~/IOTstack/volumes/pihole/etc-pihole/pihole-FTL.db "vacuum;"
 	```
-	
+
 	The command should not need `sudo` because `pi` is the owner by default. There is no need to terminate Pi-hole before running this command (SQLite handles any contention).
 
 ### Recursive resolvers { #upstreamDNS }
@@ -245,9 +254,9 @@ http://«your_ip»:8089/admin
 
 where «your_ip» can be:
 
-* The IP address of the Raspberry Pi running Pi-hole.
-* The domain name of the Raspberry Pi running Pi-hole.
-* The multicast DNS name (eg "raspberrypi.local") of the Raspberry Pi running Pi-hole.
+* The IP address of the *Pi-hole&nbsp;system*.
+* The domain name of the *Pi-hole&nbsp;system*.
+* The multicast DNS name (eg "raspberrypi.local") of the *Pi-hole&nbsp;system*.
 
 ### Adding local domain names { #localNames }
 
@@ -270,9 +279,73 @@ devices, provided they too have static IPs.
 
 ## Configure your Pi to use Pi-hole { #rpiDNS }
 
-The Raspberry Pi itself does **not** have to use the Pi-hole container for its own DNS services. Some chicken-and-egg situations can exist if, for example, the Pi-hole container is down when another process (eg `apt` or `docker-compose`) needs to do something that depends on DNS services being available.
+Your Pi-hole *system* does not have to use the Pi-hole *container* for its own DNS services and, in many ways, it is better if it does not. That's because the arrangement creates some chicken-and-egg situations. Examples:
 
-Nevertheless, if you configure Pi-hole to be local DNS resolver, then you will probably want to configure your Raspberry Pi to use the Pi-hole container in the first instance, and then fall back to a public DNS server if the container is down. As a beginner, this is probably what you want regardless. Do this by running the commands:
+* If the Pi-hole *system* needs DNS services at boot time before the Pi-hole *container* is running, the boot may stall;
+* If the Pi-hole container is down when another process (eg `apt` or `docker-compose`) needs to do something that depends on DNS services being available.
+
+If you decide to use the Pi-hole *container* to provide DNS services to your Pi-hole *system* then you should also set up a fall-back to at least one well-known public DNS server that will kick in whenever your Pi-hole *container* is down.
+
+Please note that this only helps the Pi-hole *system*. It does not help *other* clients in your network to obtain DNS services when your Pi-hole *container* is down. The intention is to mitigate the chicken-and-egg situations mentioned above so that your Pi-hole *container* maintains high availability.
+
+First, determine whether Network Manager is running on your system:
+
+``` console
+$ systemctl is-active NetworkManager
+```
+
+If the response is:
+
+* `active` then follow the [NetworkManager](#nmiDNS) instructions;
+* otherwise follow the [non-NetworkManager](#tradDNS) instructions
+
+### NetworkManager { #nmiDNS }
+
+The first step is to determine the `«connection»` name for each physical network interface that is active on your *Pi-hole&nbsp;system*. For example, if your Pi is connected to Ethernet the physical interface is likely to be defined as `eth0`:
+
+```
+$ nmcli -g GENERAL.CONNECTION dev show "eth0"
+Wired connection 1
+```
+
+"Wired connection 1" is the name of the `«connection»`.
+
+If your Pi is also connected to WiFi, substitute `wlan0`, re-run the command, and make a note of the `«connection»` name.
+
+Run the following command for **each** physical interface, substituting `«connection»`:
+
+``` console
+$ sudo nmcli con mod "«connection»" ipv4.dns "127.0.0.1,8.8.8.8"
+```
+
+Once you have run that command for each physical interface, activate the change(s) by running:
+
+``` console
+$ sudo systemctl restart NetworkManager
+```
+
+You can check your work by running:
+
+``` console
+$ nmcli -g ipv4.dns con show "«connection»"
+```
+
+??? info "Detailed explanations of these commands"
+
+	1. In the `sudo nmcli con mod` command, `"127.0.0.1,8.8.8.8"` is an ordered, comma- (or space-) separated list:
+
+		- The `127.0.0.1` substring instructs the *Pi-hole&nbsp;system* to direct DNS queries to the loopback address. Port 53 is implied. If the Pi-hole container is running in:
+
+			- non-host mode, Docker is listening to port 53 and forwards the queries to the Pi-hole container;
+			- host mode, the Pi-hole container is listening to port 53.
+
+		- if there is no response from the Pi-hole container, the `8.8.8.8` substring instructs the *Pi-hole&nbsp;system* to forward the query to that IP address, which is a well-known DNS service provided by Google. Although queries for *local* domain names will not resolve if your Pi-hole container is down, Google's DNS will resolve global domain names.
+
+	2. The `systemctl restart NetworkManager ` command instructs the operating system running on your *Pi-hole&nbsp;system* to apply your changes by rebuilding the active resolver configuration.
+
+### non-NetworkManager { #tradDNS }
+
+Run these commands:
 
 ``` console
 $ echo "name_servers=127.0.0.1" | sudo tee -a /etc/resolvconf.conf
@@ -281,17 +354,14 @@ $ echo "resolv_conf_local_only=NO" | sudo tee -a /etc/resolvconf.conf
 $ sudo resolvconf -u
 ```
 
-This results in a configuration that will continue working, even if the Pi-hole
-container isn't running.
-
 ??? info "Detailed explanations of these commands"
 
-    1. `name_servers=127.0.0.1` instructs the Raspberry Pi to direct DNS queries to the loopback address. Port 53 is implied. If the Pi-hole container is running in:
+    1. `name_servers=127.0.0.1` instructs the *Pi-hole&nbsp;system* to direct DNS queries to the loopback address. Port 53 is implied. If the Pi-hole container is running in:
 
         - non-host mode, Docker is listening to port 53 and forwards the queries to the Pi-hole container;
         - host mode, the Pi-hole container is listening to port 53.
 
-    2. `name_servers_append=8.8.8.8` instructs the Raspberry Pi to fail-over to 8.8.8.8 if Pi-hole does not respond. You can replace `8.8.8.8` (a Google service) with:
+    2. `name_servers_append=8.8.8.8` instructs the *Pi-hole&nbsp;system* to fail-over to 8.8.8.8 if Pi-hole does not respond. You can replace `8.8.8.8` (a Google service) with:
 
         * Another well-known public DNS server like `1.1.1.1` (Cloudflare).
         * The IP address(es) of your ISP's DNS hosts (generally available from your ISP's web site).
@@ -305,7 +375,7 @@ container isn't running.
         ```
 
     3. `resolv_conf_local_only=NO` is needed so that 127.0.0.1 and 8.8.8.8 can coexist.
-    4. The `resolvconf -u` command instructs Raspberry Pi OS to rebuild the active resolver configuration. In principle, that means parsing `/etc/resolvconf.conf` to derive `/etc/resolv.conf`. This command can sometimes return the error "Too few arguments". You should ignore that error.
+    4. The `resolvconf -u` command instructs the operating system running on your *Pi-hole&nbsp;system* to rebuild the active resolver configuration. In principle, that means parsing `/etc/resolvconf.conf` to derive `/etc/resolv.conf`. This command can sometimes return the error "Too few arguments". You should ignore that error.
 
     ``` mermaid
     flowchart LR
@@ -318,7 +388,7 @@ container isn't running.
 
 ??? note "Advanced options: ignoring DHCP provided DNS-servers, local domain name search"
 
-    * If you wish to prevent the Raspberry Pi from including the address(es) of DNS servers learned from DHCP, you can instruct the DHCP client running on the Raspberry Pi to ignore the information coming from the DHCP server:
+    * If you wish to prevent the *Pi-hole&nbsp;system* from including the address(es) of DNS servers learned from DHCP, you can instruct the DHCP client running on the *Pi-hole&nbsp;system* to ignore the information coming from the DHCP server:
 
         ``` console
         $ echo 'nooption domain_name_servers' | sudo tee -a /etc/dhcpcd.conf
@@ -326,7 +396,7 @@ container isn't running.
         $ sudo resolvconf -u
         ```
 
-    * If you have followed the steps in [Adding local domain names](#localNames) to define names for your local hosts, you can inform the Raspberry Pi of that fact like this:
+    * If you have followed the steps in [Adding local domain names](#localNames) to define names for your local hosts, you can inform the *Pi-hole&nbsp;system* of that fact like this:
 
         ``` console
         $ echo 'search_domains=home.arpa' | sudo tee -a /etc/resolvconf.conf
@@ -339,26 +409,15 @@ container isn't running.
         search home.arpa
         ```
 
-        Then, when you refer to a host by a short name (eg "fred") the Raspberry Pi will also consider "fred.home.arpa" when trying to discover the IP address.
-
-??? note "Interaction with other containers"
-
-    Docker provides a special IP 127.0.0.11, which listens to DNS queries and
-    resolves them according to the host RPi's resolv.conf. Containers usually
-    rely on this to perform DNS lookups. This is nice as it won't present any
-    surprises as DNS lookups on both the host and in the containers will yeild
-    the same results.
-
-    It's possible to make DNS queries directly cross-container, and even
-    supported in some [rare use-cases](WireGuard.md#customContInit).
+        Then, when you refer to a host by a short name (eg "fred") the *Pi-hole&nbsp;system* will also consider "fred.home.arpa" when trying to discover the IP address.
 
 ## Using Pi-hole as your local DNS
 
-To use the Pi-hole in your LAN, you need to assign the Raspberry Pi a fixed IP-address and configure this IP as your DNS server.
+To use the Pi-hole container to provide DNS services in your LAN, you need to assign the *Pi-hole&nbsp;system* a fixed IP-address and configure this IP as your DNS server.
 
 ### Fixed IP address for Pi-hole { #rpiFixedIP }
 
-If you want clients on your network to use Pi-hole for their DNS, the Raspberry Pi running Pi-hole **must** have a fixed IP address. It does not have to be a *static* IP address (in the sense of being hard-coded into the Raspberry Pi). The Raspberry Pi can still obtain its IP address from DHCP at boot time, providing your DHCP server (usually your home router) always returns the same IP address. This is usually referred to as a *static binding* and associates the Raspberry Pi's MAC address with a fixed IP address.
+If you want clients on your network to use Pi-hole for their DNS, the *Pi-hole&nbsp;system* **must** have a fixed IP address. It does not have to be a *static* IP address (in the sense of being hard-coded into the *Pi-hole&nbsp;system*). The *Pi-hole&nbsp;system* can still obtain its IP address from DHCP at boot time, providing your DHCP server (usually your home router) always returns the same IP address. This is usually referred to as a *static binding* and associates the *Pi-hole&nbsp;system's* MAC address with a fixed IP address.
 
 Keep in mind that many Raspberry Pis have both Ethernet and WiFi interfaces. It is generally prudent to establish static bindings for *both* network interfaces in your DHCP server.
 
@@ -383,10 +442,10 @@ If a physical interface does not exist, the command returns "Device does not exi
 
 In order for Pi-hole to block ads or resolve anything, clients need to be told to use it as their DNS server. You can either:
 
-1. Adopt a whole-of-network approach and edit the DNS settings in your DHCP server so that all clients are given the IP address of the Raspberry Pi running Pi-hole to use for DNS services when a lease is issued.
-2. Adopt a case-by-case (manual) approach where you instruct particular clients to obtain DNS services from the IP address of the Raspberry Pi running Pi-hole.
+1. Adopt a whole-of-network approach and edit the DNS settings in your DHCP server so that all clients are given the IP address of the *Pi-hole&nbsp;system* to use for DNS services when a lease is issued.
+2. Adopt a case-by-case (manual) approach where you instruct particular clients to obtain DNS services from the IP address of the *Pi-hole&nbsp;system*.
 
-Option 1 (whole-of-network) is the simplest approach. Assuming your Raspberry Pi has the static IP `192.168.1.10`:
+Option 1 (whole-of-network) is the simplest approach. Assuming your *Pi-hole&nbsp;system* has the static IP `192.168.1.10`:
 
 1. Go to your network's DHCP server. In most home networks, this will be your Wireless Access Point/WLAN Router:
 
@@ -407,6 +466,12 @@ Option 2 (case-by-case) generally involves finding the IP configuration options 
 
     If you need help, try asking questions on the [IOTstack Discord channel](https://discord.gg/ZpKHnks).
 
+### other containers { #otherContainers }
+
+Docker provides a special IP 127.0.0.11, which listens to DNS queries and resolves them according to the host RPi's resolv.conf. Containers usually rely on this to perform DNS lookups. This is nice as it won't present any surprises as DNS lookups on both the host and in the containers will yield the same results.
+
+It's possible to make DNS queries directly cross-container, and even supported in some [rare use-cases](WireGuard.md#customContInit).
+
 ## Testing and Troubleshooting { #debugging }
 
 Make these assumptions:
@@ -419,7 +484,7 @@ Make these assumptions:
 	resolv_conf_local_only=NO
 	```
 
-2. The Raspberry Pi running Pi-hole has the IP address 192.168.1.10 which it obtains as a static assignment from your DHCP server.
+2. The *Pi-hole&nbsp;system* has the IP address 192.168.1.10 which it obtains as a static assignment from your DHCP server.
 3. You have configured your DHCP server to provide 192.168.1.10 for client devices to use to obtain DNS services (ie, you are saying clients should use Pi-hole for DNS).
 
 The result of the configuration appears in `/etc/resolv.conf`:
@@ -438,7 +503,7 @@ Interpretation:
 * `nameserver 192.168.1.10` is present because it was learned from DHCP
 * `nameserver 8.8.8.8` is present because of `name_servers_append=8.8.8.8`
 
-The fact that the Raspberry Pi is effectively represented twice (once as 127.0.0.1, and again as 192.168.1.10) does not matter. If the Pi-hole container stops running, the Raspberry Pi will bypass 192.168.1.10 and fail over to 8.8.8.8, failing back to 127.0.0.1 when the Pi-hole container starts again.
+The fact that the *Pi-hole&nbsp;system* is effectively represented twice (once as 127.0.0.1, and again as 192.168.1.10) does not matter. If the Pi-hole container stops running, the *Pi-hole&nbsp;system* will bypass 192.168.1.10 and fail over to 8.8.8.8, failing back to 127.0.0.1 when the Pi-hole container starts again.
 
 Install dig:
 
@@ -469,9 +534,7 @@ and revisit [Pi-hole as DNS](#rpiConfig).
 
 ## Microcontrollers { #iotConfig }
 
-If you want to avoid hardcoding your Raspberry Pi IP to your ESPhome devices,
-you need a DNS server that will do the resolving. This can be done using the
-Pi-hole container as described above.
+If you want to avoid hardcoding your *Pi-hole&nbsp;system's* IP address into your ESPhome devices, you need a DNS server that will do the resolving. This can be done using the Pi-hole container as described above.
 
 ### `*.local` won't work for ESPhome { #esp32mDNS }
 
@@ -500,7 +563,7 @@ The recommended approach is:
 	$ sudo rm -rf ./volumes/pihole
 	$ docker-compose up -d pihole
 	```
-	
+
 	> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
 
 5. Login to Pi-hole's web GUI and navigate to Settings » Teleporter.
@@ -514,4 +577,4 @@ It appears that Docker Desktop for macOS interposes an additional level of Netwo
 
 It is not known whether this is peculiar to Docker Desktop for macOS or also affects other variants of Docker Desktop.
 
-This problem does not affect Pi-hole running in a container on a Raspberry Pi.
+This problem is peculiar to Docker Desktop. It does not affect Pi-hole running in a container on other systems (eg Raspberry Pi,  Proxmox-VE guest).
