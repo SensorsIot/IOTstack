@@ -12,7 +12,10 @@
       - GITEA__database__NAME=${GITEA_DB_NAME:-gitea}
       - GITEA__database__USER=${GITEA_DB_USER:-gitea}
       - GITEA__database__PASSWD=${GITEA_DB_PASSWORD:?eg echo GITEA_DB_PASSWORD=userPassword >>~/IOTstack/.env}
+      - GITEA__server__PROTOCOL=${GITEA_WEB_PROTOCOL:-http}
       - GITEA__server__ROOT_URL=${GITEA_ROOT_URL}
+    # - GITEA__server__KEY_FILE=/data/git/key.pem
+    # - GITEA__server__CERT_FILE=/data/git/cert.pem
       - GITEA__security__INSTALL_LOCK=true
       - GITEA__security__SECRET_KEY=${GITEA_SECRET_KEY}
     healthcheck:
