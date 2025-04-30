@@ -20,7 +20,8 @@
       - GITEA__security__SECRET_KEY=${GITEA_SECRET_KEY}
       - GITEA__security__INTERNAL_TOKEN=${GITEA_INTERNAL_TOKEN}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-sf4", "-o", "/dev/null", "http://gitea:3000"]
+    # test: ["CMD", "curl", "-sf4", "--cacert", "/data/git/cert.pem", "-o", "/dev/null", "https://gitea:3000"]
       interval: 30s
       timeout: 10s
       retries: 5
