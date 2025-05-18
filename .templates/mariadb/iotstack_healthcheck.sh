@@ -7,16 +7,22 @@ HEALTHCHECK_PORT="${MYSQL_TCP_PORT:-3306}"
 # the expected response is?
 EXPECTED="mysqld is alive"
 
-# run the check
-if [ -z "$MYSQL_ROOT_PASSWORD" ] ; then
-   RESPONSE=$(mysqladmin ping -h localhost)
-else
-   # note - there is NO space between "-p" and the password. This is
-   # intentional. It is part of the mysql and mysqladmin API.
-   RESPONSE=$(mysqladmin -p${MYSQL_ROOT_PASSWORD} ping -h localhost)
+# handle root password presence/absence
+unset ARGUMENT
+if [ -n "${MYSQL_ROOT_PASSWORD}" ] ; then
+   if ! $(mariadb -u root -e 'quit' &> /dev/null) ; then
+      ARGUMENT="-p${MYSQL_ROOT_PASSWORD}"
+   fi
 fi
 
-# did the mysqladmin command succeed?
+# run the check
+if [ -n "$(which mariadb-admin)" ] ; then
+   RESPONSE=$(mariadb-admin ping ${ARGUMENT})
+else
+   RESPONSE=$(mysqladmin ping ${ARGUMENT})
+fi
+
+# did the ping succeed?
 if [ $? -eq 0 ] ; then
 
    # yes! is the response as expected?
