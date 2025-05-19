@@ -1,7 +1,8 @@
   influxdb:
     container_name: influxdb
-    image: "influxdb:1.8"
+    image: "influxdb:1.11"
     restart: unless-stopped
+    user: "0"
     ports:
       - "8086:8086"
       - "8083:8083"
