@@ -13,16 +13,16 @@ InfluxDB has configurable aggregation and retention policies allowing measuremen
 
 - [DockerHub](https://hub.docker.com/_/influxdb/tags)
 - [GitHub home page](https://github.com/influxdata/influxdata-docker) (for the container)
-- [InfluxDB 1.8 documentation](https://docs.influxdata.com/influxdb/v1.8/)
-- [InfluxDB 1.8 configuration reference](https://docs.influxdata.com/influxdb/v1.8/administration/config)
+- [InfluxDB 1 documentation](https://docs.influxdata.com/influxdb/v1/)
+- [InfluxDB 1 configuration reference](https://docs.influxdata.com/influxdb/v1/administration/config)
 
 Note:
 
-* 	IOTstack uses the `influxdb:1.8` image. Substituting the `:latest` tag will get you InfluxDB version 2 and *will* create a mess.
+* 	IOTstack uses the `influxdb:1.x` image. Substituting the `:latest` tag will get you InfluxDB version 2 and *will* create a mess.
 
 ## Configuration { #configuration }
 
-All InfluxDB [settings](https://docs.influxdata.com/influxdb/v1.8/administration/config) can be applied using environment variables. Environment variables override any settings in the [InfluxDB configuration file](#configFile):
+All InfluxDB [settings](https://docs.influxdata.com/influxdb/v1/administration/config) can be applied using environment variables. Environment variables override any settings in the [InfluxDB configuration file](#configFile):
 
 * Under "new menu" (master branch), environment variables are stored inline in
 
@@ -152,8 +152,8 @@ You can open the `influx` CLI interactive shell by:
 
 ``` console
 $ docker exec -it influxdb influx
-Connected to http://localhost:8086 version 1.8.10
-InfluxDB shell version: 1.8.10
+Connected to http://localhost:8086 version 1.x.x
+InfluxDB shell version: 1.x.x
 >
 ```
 
