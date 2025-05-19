@@ -13,23 +13,23 @@
 	- DockerHub does not have a 32-bit image for InfluxDB&nbsp;2 so you can't run this container until you have upgraded.
 	- Running full 64-bit is **not** the same as enabling the 64-bit kernel in `/boot/config.txt`. User-mode needs to be 64-bit capable as well. You must start from a [full 64-bit image](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit).
 
-2. Node-RED is your principal mechanism for feeding data to InfluxDB&nbsp;1.8.
+2. Node-RED is your principal mechanism for feeding data to InfluxDB&nbsp;1.
 
-	- You may have other services feeding data to InfluxDB&nbsp;1.8 (eg Telegraf). The steps documented here will migrate all your existing data but do not discuss how to adapt services other than Node-RED to feed new data to InfluxDB&nbsp;2.
+	- You may have other services feeding data to InfluxDB&nbsp;1 (eg Telegraf). The steps documented here will migrate all your existing data but do not discuss how to adapt services other than Node-RED to feed new data to InfluxDB&nbsp;2.
 
-3. Grafana is your principle mechanism for creating dashboards based on data stored in InfluxDB&nbsp;1.8.
+3. Grafana is your principle mechanism for creating dashboards based on data stored in InfluxDB&nbsp;1.
 
 	- You may have other visualisation tools. You may gain insights from studying how Grafana needs to be changed to run Flux queries against InfluxDB&nbsp;2 buckets but this documentation does not explore alternatives.
 
-4. Node-RED, InfluxDB&nbsp;1.8 and Grafana are all running in *non-host* mode on the same Docker instance, and that it is your intention to deploy InfluxDB&nbsp;2 in *non-host* mode as well.
+4. Node-RED, InfluxDB&nbsp;1 and Grafana are all running in *non-host* mode on the same Docker instance, and that it is your intention to deploy InfluxDB&nbsp;2 in *non-host* mode as well.
 
 	- If you are running any containers in *host* mode or have distributed the services across multiple Docker instances, you will have to adapt appropriately.
 
 ## terminology: *database* vs *bucket*
 
-InfluxDB&nbsp;1.8 and InfluxDB&nbsp;2 are both database management systems (DBMS), sometimes referred to as "engines", optimised for storage and retrieval of time-series data. InfluxDB&nbsp;1.8 uses the term *database* to mean a collection of *measurements*. InfluxDB&nbsp;2 uses the term *bucket* to mean the same thing.
+InfluxDB&nbsp;1 and InfluxDB&nbsp;2 are both database management systems (DBMS), sometimes referred to as "engines", optimised for storage and retrieval of time-series data. InfluxDB&nbsp;1 uses the term *database* to mean a collection of *measurements*. InfluxDB&nbsp;2 uses the term *bucket* to mean the same thing.
 
-When an InfluxDB&nbsp;1.8 *database* is migrated, it becomes an InfluxDB&nbsp;2 *bucket*. You will see this change in terminology in various places, such as the InfluxDB-out node in Node-RED. When that node is set to:
+When an InfluxDB&nbsp;1 *database* is migrated, it becomes an InfluxDB&nbsp;2 *bucket*. You will see this change in terminology in various places, such as the InfluxDB-out node in Node-RED. When that node is set to:
 
 * Version 1.x, the user interface has a "Database" field which travels with the *connection*. For example:
 
@@ -175,20 +175,20 @@ To initialise InfluxDB&nbsp;2:
 	$ docker logs influxdb2
 	```
 
-If you don't need to migrate any data from InfluxDB&nbsp;1.8 you can go straight to [running InfluxDB&nbsp;2](#runContainer), otherwise follow the [data-migration procedure](#migrateContainer) instructions below.
+If you don't need to migrate any data from InfluxDB&nbsp;1 you can go straight to [running InfluxDB&nbsp;2](#runContainer), otherwise follow the [data-migration procedure](#migrateContainer) instructions below.
 
 ## <a name="migrateContainer"></a>data-migration procedure
 
 Successful migration depends on the following assumptions being true:
 
 * The InfluxDB&nbsp;2 container is running and has just been initialised as per [initialising InfluxDB&nbsp;2](#initContainer).
-* The InfluxDB&nbsp;1.8 container is running, and is based on the IOTstack service definition (or reasonable facsimile) at:
+* The InfluxDB&nbsp;1 container is running, and is based on the IOTstack service definition (or reasonable facsimile) at:
 
 	```
 	~/IOTstack/.templates/influxdb/service.yml
 	```  
 
-To migrate your InfluxDB&nbsp;1.8 data:
+To migrate your InfluxDB&nbsp;1 data:
 
 1. Be in the correct directory (assumed throughout):
 
@@ -196,9 +196,9 @@ To migrate your InfluxDB&nbsp;1.8 data:
 	$ cd ~/IOTstack
 	```
 
-2. InfluxDB&nbsp;1.8 runs as root and its persistent store is owned by root but not all files and folders in the persistent store are *group* or *world* readable. InfluxDB&nbsp;2 runs as user ID 1000 (user "influxdb" inside the container). Because of this, you need to give InfluxDB&nbsp;2 permission to read the InfluxDB&nbsp;1.8 persistent store.
+2. InfluxDB&nbsp;1 runs as root and its persistent store is owned by root but not all files and folders in the persistent store are *group* or *world* readable. InfluxDB&nbsp;2 runs as user ID 1000 (user "influxdb" inside the container). Because of this, you need to give InfluxDB&nbsp;2 permission to read the InfluxDB&nbsp;1 persistent store.
 
-	It is not a good idea to interfere with a persistent store while a container is running so best practice is to stop InfluxDB&nbsp;1.8 for long enough to make a copy of its persistent store:
+	It is not a good idea to interfere with a persistent store while a container is running so best practice is to stop InfluxDB&nbsp;1 for long enough to make a copy of its persistent store:
 
 	```bash
 	$ sudo rm -rf ./volumes/influxdb.migrate
@@ -213,10 +213,10 @@ To migrate your InfluxDB&nbsp;1.8 data:
 	In words:
 
 	1. Ensure any previous attempts at migration are removed. Always be *extremely* careful with any `sudo rm` command. Check your work **before** you press <kbd>return</kbd>.
-	2. Stop InfluxDB&nbsp;1.8.
-	3. Make a copy of the InfluxDB&nbsp;1.8 persistent store.
-	4. Start InfluxDB&nbsp;1.8 again.
-	5. Change ownership of the **copy** of the InfluxDB&nbsp;1.8 persistent store.
+	2. Stop InfluxDB&nbsp;1.
+	3. Make a copy of the InfluxDB&nbsp;1 persistent store.
+	4. Start InfluxDB&nbsp;1 again.
+	5. Change ownership of the **copy** of the InfluxDB&nbsp;1 persistent store.
 
 3. Edit your compose file as per the "upgrade" column of [Table 1](#svcDefVars). The changes you need to make are:
 
@@ -236,7 +236,7 @@ To migrate your InfluxDB&nbsp;1.8 data:
 			    - DOCKER_INFLUXDB_INIT_MODE=upgrade
 			```
 
-	2. Activate the volume mapping to give InfluxDB&nbsp;2 read-only access to the **copy** of the InfluxDB&nbsp;1.8 persistent store that you made in step 2:
+	2. Activate the volume mapping to give InfluxDB&nbsp;2 read-only access to the **copy** of the InfluxDB&nbsp;1 persistent store that you made in step 2:
 
 		- before editing:
 
@@ -270,9 +270,9 @@ To migrate your InfluxDB&nbsp;1.8 data:
 	DOCKER_INFLUXDB_INIT_MODE=upgrade
 	```
 
-	This, combined with the absence of the "bolt" file, starts the migration process. You need to wait until the migration is complete. The simplest way to do that is to watch the size of the persistent store for InfluxDB&nbsp;2 until it stops increasing. Experience suggests that the InfluxDB&nbsp;2 persistent store will usually be a bit larger than InfluxDB&nbsp;1.8. For example:
+	This, combined with the absence of the "bolt" file, starts the migration process. You need to wait until the migration is complete. The simplest way to do that is to watch the size of the persistent store for InfluxDB&nbsp;2 until it stops increasing. Experience suggests that the InfluxDB&nbsp;2 persistent store will usually be a bit larger than InfluxDB&nbsp;1. For example:
 
-	* reference size for an InfluxDB&nbsp;1.8 installation:
+	* reference size for an InfluxDB&nbsp;1 installation:
 
 		```bash
 		$ sudo du -sh ./volumes/influxdb
@@ -330,7 +330,7 @@ The container now needs to be instructed to run in normal mode.
 	
 	The absence of an active `DOCKER_INFLUXDB_INIT_MODE` variable places InfluxDB&nbsp;2 into normal run mode.
 
-4. If you have just performed a data migration, you can remove the **copy** of the InfluxDB&nbsp;1.8 persistent store:
+4. If you have just performed a data migration, you can remove the **copy** of the InfluxDB&nbsp;1 persistent store:
 
 	```bash
 	$ sudo rm -rf ./volumes/influxdb.migrate
@@ -396,14 +396,14 @@ Go to [initialising InfluxDB&nbsp;2](#initContainer).
 	```
 
 2. Sign in to the InfluxDB&nbsp;2 instance using your [«username»](#influxUsername) and [«password»](#influxPassword).
-3. Click on "Explore" in the left-hand tool strip. That is marked [A] in the screen shot. In the area marked [B] you should be able to see a list of the *buckets* that were migrated from InfluxDB&nbsp;1.8 *databases*.
+3. Click on "Explore" in the left-hand tool strip. That is marked [A] in the screen shot. In the area marked [B] you should be able to see a list of the *buckets* that were migrated from InfluxDB&nbsp;1 *databases*.
 
 	In the screen shot, I clicked on other fields to create a query:
 
 	- In area <a name="influxExplorer-B"></a>[B], I selected the "power/autogen" *bucket*;
 	- In area <a name="influxExplorer-C"></a>[C], I selected the "hiking2" (electricity meter) *measurement*;
 	- In area <a name="influxExplorer-D"></a>[D], I selected the "voltage" *field*;
-	- The bucket in this test is a migrated copy of an InfluxDB&nbsp;1.8 database. It was not ingesting live data so I also needed to change the duration popup menu [E] to a time-span that included the most-recent insertions;
+	- The bucket in this test is a migrated copy of an InfluxDB&nbsp;1 database. It was not ingesting live data so I also needed to change the duration popup menu [E] to a time-span that included the most-recent insertions;
 	- Then I clicked the "Submit" button [F]; and
 	- The result was the graph in [G].
 
@@ -435,7 +435,7 @@ Two important things to note here are:
 
 ![Node-RED flow models](./images/influxdb2-nodered-flow-models.jpeg)
 
-1. Assume you have an existing flow (eg a fairly standard [3-node flow](https://gist.github.com/Paraphraser/c9db25d131dd4c09848ffb353b69038f)) which is logging to an InfluxDB&nbsp;1.8 database. Your goal is to modify the flow to log the same data to the recently-migrated InfluxDB&nbsp;2 bucket. 
+1. Assume you have an existing flow (eg a fairly standard [3-node flow](https://gist.github.com/Paraphraser/c9db25d131dd4c09848ffb353b69038f)) which is logging to an InfluxDB&nbsp;1 database. Your goal is to modify the flow to log the same data to the recently-migrated InfluxDB&nbsp;2 bucket. 
 
 2. Start Node-RED if it is not running:
 
@@ -447,7 +447,7 @@ Two important things to note here are:
 3. Use a web browser to connect to your Node-RED instance.
 4. Drag a **new** InfluxDB-out node onto the canvas:
 
-	- This is exactly the same InfluxDB-out node that you have been using to write to your InfluxDB&nbsp;1.8 databases. There isn't a different node or package for InfluxDB&nbsp;2.
+	- This is exactly the same InfluxDB-out node that you have been using to write to your InfluxDB&nbsp;1 databases. There isn't a different node or package for InfluxDB&nbsp;2.
 	- Always drag a **new** InfluxDB-out node from the palette onto the canvas. Do not make the mistake of re-using an existing InfluxDB-out node (eg via copy and paste) because that is a very good way of breaking your flows.
 
 5. Double-click the InfluxDB-out node to open it:
@@ -552,7 +552,7 @@ Two important things to note here are:
 7. Click the Refresh button.
 8. Click Apply.
 
-In the side-by-side screen shots below, observations before the straight-line (missing data) segment were imported from InfluxDB&nbsp;1.8 while observations after the straight-line segment were inserted by the new InfluxDB-out node in Node-RED.
+In the side-by-side screen shots below, observations before the straight-line (missing data) segment were imported from InfluxDB&nbsp;1 while observations after the straight-line segment were inserted by the new InfluxDB-out node in Node-RED.
 
 ![compare results](./images/influxdb2-chart-vs-grafana.jpeg)
 
@@ -585,8 +585,8 @@ In the side-by-side screen shots below, observations before the straight-line (m
 
 ## migration strategy
 
-From the fact that both InfluxDB&nbsp;1.8 and InfluxDB&nbsp;2 can run in parallel, with Node-RED feeding the same data to both, it should be self-evident that you can repeat the data-migration as often as necessary, simply by starting from [re-initialising InfluxDB&nbsp;2](#reinitContainer).
+From the fact that both InfluxDB&nbsp;1 and InfluxDB&nbsp;2 can run in parallel, with Node-RED feeding the same data to both, it should be self-evident that you can repeat the data-migration as often as necessary, simply by starting from [re-initialising InfluxDB&nbsp;2](#reinitContainer).
 
-This implies that you can concentrate on one database at a time, adjusting Node-RED so that it writes each row of sensor data to both the InfluxDB&nbsp;1.8 database and corresponding InfluxDB&nbsp;2 bucket.
+This implies that you can concentrate on one database at a time, adjusting Node-RED so that it writes each row of sensor data to both the InfluxDB&nbsp;1 database and corresponding InfluxDB&nbsp;2 bucket.
 
 Having the data going to both engines means you can take your time adjusting your Grafana dashboards to be based on Flux queries. You can either retrofit InfluxDB&nbsp;2 bucket sources and Flux queries to existing dashboards, or build parallel dashboards from the ground up.
