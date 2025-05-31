@@ -45,7 +45,7 @@ Environment variables need to be set in several stages:
 		$ echo "GITEA_DB_ROOT_PASSWORD=$(uuidgen)" >>~/IOTstack.env
 		```
 
-		If omitted, the container will not start. See [note below](#rootpw).
+		If omitted, the container will not start.
 
 	You (the human user) will **never** need to know the username and passwords set here. You will not need to use these values in practice.
 
@@ -169,24 +169,6 @@ Environment variables need to be set in several stages:
 		In words, run the command "at five minutes after midnight on the first of January and the first of July".
 
 	* Gitea also supports LetsEncrypt. See [using ACME with Let's Encrypt](https://docs.gitea.com/administration/https-setup#using-acme-default-lets-encrypt).
-
-## database root password  { #rootpw }
-
-At the time of writing (April 2025), the MariaDB instance was not respecting the environment variable being used to pass the root password into the container.
-
-> See [MariaDB issue 163](https://github.com/linuxserver/docker-mariadb/issues/163)
-
-You can ensure that the root password is set by running the following command:
-
-``` console
-$ docker exec gitea_db bash -c 'mariadb-admin -u root password $MYSQL_ROOT_PASSWORD'
-```
-
-If this command returns an error, it means that the root password was already set (presumably because Issue 163 has been resolved).
-
-If this command succeeds without error, it means that the root password was not set but is now set.
-
-Also notice that you did not need to know or copy/paste the root password to run the above command. It was sufficient to know the name of the environment variable containing the database root password.
 
 ## default ports
 

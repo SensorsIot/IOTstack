@@ -16,6 +16,10 @@ RUN for CNF in ${CANDIDATES} ; do [ -f ${CNF} ] && break ; done ; \
         -e "s/^read_buffer_size/# read_buffer_size/" \
         ${CNF}
 
+# copy the root password check+fix into place
+# https://github.com/linuxserver/docker-mariadb/issues/163
+COPY iotstack_check-root-password.sh /etc/periodic/15min/iotstack_check-root-password.sh
+
 # copy the health-check script into place
 ENV HEALTHCHECK_SCRIPT="iotstack_healthcheck.sh"
 COPY ${HEALTHCHECK_SCRIPT} /usr/local/bin/${HEALTHCHECK_SCRIPT}
