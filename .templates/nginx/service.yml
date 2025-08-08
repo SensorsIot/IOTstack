@@ -1,0 +1,19 @@
+nginx:
+  container_name: nginx
+  image: jc21/nginx-proxy-manager:latest
+  restart: unless-stopped
+  environment:
+    - TZ=${TZ:-Etc/UTC}
+    - INITIAL_ADMIN_EMAIL=admin@example.com
+    - INITIAL_ADMIN_PASSWORD=changeme
+    - DISABLE_IPV6=true
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  ports:
+    - "80:80"   # HTTP reverse proxy service
+    - "81:81"   # HTTP admin console
+    - "443:443" # HTTPS reverse proxy service
+  volumes:
+    - ./volumes/nginx/data:/data
+    - ./volumes/nginx/letsencrypt:/etc/letsencrypt
+    - /var/run/docker.sock:/var/run/docker.sock
