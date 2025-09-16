@@ -20,18 +20,6 @@ function command_exists() {
 	command -v "$@" > /dev/null 2>&1
 }
 
-function user_in_group()
-{
-    # see if the group exists
-    grep -q "^$1:" /etc/group;
-
-    # sense that the group does not exist
-    if [ $? -ne 0 ]; then return 0; fi
-
-    # group exists - now check that the user is a member
-    groups | grep -q "\b$1\b"
-}
-
 function minimum_version_check() {
 	# Usage: minimum_version_check required_version current_major current_minor current_build
 	# Example: minimum_version_check "1.2.3" 1 2 3
@@ -104,19 +92,6 @@ function minimum_version_check() {
 	echo "$VERSION_GOOD"
 }
 
-function user_in_group()
-{
-	if grep -q $1 /etc/group ; then
-		if id -nGz "$USER" | grep -qzxF "$1";	then
-				echo "true"
-		else
-				echo "false"
-		fi
-	else
-		echo "notgroup"
-	fi
-}
-
 function check_git_updates()
 {
 	UPSTREAM=${1:-'@{u}'}
@@ -134,6 +109,7 @@ function check_git_updates()
 			echo "Diverged"
 	fi
 }
+
 function install_python3_and_deps() {
 	CURR_PYTHON_VER="${1:-Unknown}"
 	CURR_VIRTUALENV="${2:-Unknown}"
@@ -190,20 +166,30 @@ function do_python3_checks() {
 	fi
 }
 
-function do_env_setup() {
-	echo "Setting up environment:"
-	if [[ ! "$(user_in_group bluetooth)" == "notgroup" ]] && [[ ! "$(user_in_group bluetooth)" == "true" ]]; then
-    echo "User is NOT in 'bluetooth' group. Adding:" >&2
-    echo "sudo usermod -G bluetooth -a $USER" >&2
-		echo "You will need to restart your system before the changes take effect."
-		sudo usermod -G "bluetooth" -a $USER
-	fi
+function should_add_user_to_group()
+{
+	# sense group does not exist
+	grep -q "^$1:" /etc/group || return 1
+	# sense group exists and user is already a member
+	groups | grep -q "\b$1\b" && return 1
+	# group exists, user should be added
+	return 0
+}
 
-	if [ ! "$(user_in_group docker)" == "true" ]; then
-    echo "User is NOT in 'docker' group. Adding:" >&2
-    echo "sudo usermod -G docker -a $USER" >&2
-		echo "You will need to restart your system before the changes take effect."
-		sudo usermod -G "docker" -a $USER
+function do_required_groups_checks() {
+	# best-practice for group membership
+	local DESIRED_GROUPS="docker bluetooth dialout"
+	local LOGOUT_REQUIRED=false
+	local GROUP
+	for GROUP in $DESIRED_GROUPS ; do
+		if should_add_user_to_group $GROUP ; then
+			echo "sudo /usr/sbin/usermod -G $GROUP -a $USER" >&2
+			sudo /usr/sbin/usermod -G $GROUP -a $USER
+			LOGOUT_REQUIRED=true
+		fi
+	done
+	if [ "$LOGOUT_REQUIRED" = "true" ] ; then
+		echo "You will need to logout and login again before the changes take effect."
 	fi
 }
 
@@ -256,19 +242,7 @@ function do_docker_checks() {
 			if (whiptail --title "Docker and Docker-Compose" --yesno "Docker is not currently installed, and is required to run IOTstack. Would you like to install docker and docker-compose now?\nYou will not be prompted again." 20 78); then
 					[ -f .docker_notinstalled ] && rm .docker_notinstalled
 					echo "Setting up environment:"
-					if [[ ! "$(user_in_group bluetooth)" == "notgroup" ]] && [[ ! "$(user_in_group bluetooth)" == "true" ]]; then
-						echo "User is NOT in 'bluetooth' group. Adding:" >&2
-						echo "sudo usermod -G bluetooth -a $USER" >&2
-						echo "You will need to restart your system before the changes take effect."
-						sudo usermod -G "bluetooth" -a $USER
-					fi
-
-					if [ ! "$(user_in_group docker)" == "true" ]; then
-						echo "User is NOT in 'docker' group. Adding:" >&2
-						echo "sudo usermod -G docker -a $USER" >&2
-						echo "You will need to restart your system before the changes take effect."
-						sudo usermod -G "docker" -a $USER
-					fi
+					do_required_groups_checks
 					install_docker
 				else
 					touch .docker_notinstalled
@@ -296,22 +270,34 @@ function do_project_checks() {
 	fi
 }
 
-function do_env_checks() {
-	GROUPSGOOD=0
 
-	if [[ ! "$(user_in_group bluetooth)" == "notgroup" ]] && [[ ! "$(user_in_group bluetooth)" == "true" ]]; then
-	  GROUPSGOOD=1
-    echo "User is NOT in 'bluetooth' group" >&2
+function do_installer_checks() {
+
+	# expected location of installer script is
+	local INSTALLER_SCRIPT="${PWD}/install.sh"
+
+	# sense not present
+	[ -x "${INSTALLER_SCRIPT}" ] || return
+
+	# ask installer if it should be re-run
+	if [ "$(${INSTALLER_SCRIPT} should_run_installer)" = "true" ] ; then
+
+		# yes! seek permission to do that from the user
+		"whiptail" \
+			"--title" "Installer Update" \
+			"--yesno" "The IOTstack installer has been updated. Re-run it now?" \
+			7 78 3>&1 1>&2 2>&3 ; RC=$?
+
+		# did the user agree?
+		if [ ${RC} -eq 0 ] ; then
+
+			# yes! run the installer without arguments
+			${INSTALLER_SCRIPT}
+
+		fi
+
 	fi
 
-	if [[ ! "$(user_in_group docker)" == "true" ]]; then
-	  GROUPSGOOD=1
-    echo "User is NOT in 'docker' group" >&2
-	fi
-
-	if [ "$GROUPSGOOD" == 1 ]; then
-		echo "!! You might experience issues with docker or bluetooth. To fix run: ./menu.sh --run-env-setup"
-	fi
 }
 
 # ----------------------------------------------
@@ -322,10 +308,11 @@ if [[ "$*" == *"--no-check"* ]]; then
 	echo "Skipping preflight checks."
 else
 	do_project_checks
-	do_env_checks
+	do_required_groups_checks
 	do_python3_checks
 	echo "Please enter sudo pasword if prompted"
 	do_docker_checks
+	do_installer_checks
 
 	if [[ "$DOCKER_VERSION_GOOD" == "true" ]] && \
 		[[ "$PYTHON_VERSION_GOOD" == "true" ]]; then
@@ -348,19 +335,7 @@ do
 			;;
 		--run-env-setup) # Sudo cannot be run from inside functions.
 				echo "Setting up environment:"
-				if [[ ! "$(user_in_group bluetooth)" == "notgroup" ]] && [[ ! "$(user_in_group bluetooth)" == "true" ]]; then
-					echo "User is NOT in 'bluetooth' group. Adding:" >&2
-					echo "sudo usermod -G bluetooth -a $USER" >&2
-					echo "You will need to restart your system before the changes take effect."
-					sudo usermod -G "bluetooth" -a $USER
-				fi
-
-				if [ ! "$(user_in_group docker)" == "true" ]; then
-					echo "User is NOT in 'docker' group. Adding:" >&2
-					echo "sudo usermod -G docker -a $USER" >&2
-					echo "You will need to restart your system before the changes take effect."
-					sudo usermod -G "docker" -a $USER
-				fi
+				do_required_groups_checks
 			;;
 		--encoding) ENCODING_TYPE=$2
 			;;

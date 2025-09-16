@@ -1,17 +1,7 @@
 #!/usr/bin/env bash
 
 # version - MUST be exactly 7 characters!
-UPDATE="2024v03"
-
-echo "                                         "
-echo "  _____ ____ _______  _  installer  _    "
-echo " |_   _/ __ \\__   __|| |  $UPDATE  | |  "
-echo "   | || |  | | | |___| |_ __ _  ___| | __"
-echo "   | || |  | | | / __| __/ _\` |/ __| |/ /"
-echo "  _| || |__| | | \\__ \\ || (_| | (__|   < "
-echo " |_____\\____/  |_|___/\\__\\__,_|\\___|_|\\_\\"
-echo "                                         "
-echo "                                         "
+UPDATE="2025v01"
 
 #----------------------------------------------------------------------
 # The intention of this script is that it should be able to be run
@@ -24,11 +14,15 @@ echo "                                         "
 # overuse of sudo is a very common problem among new IOTstack users
 [ "$EUID" -eq 0 ] && echo "This script should NOT be run using sudo" && exit 1
 
-# this script should be run without arguments
-[ $# -ne 0 ] && echo "command line argument(s) $@ ignored"
+# where is this script is running?
+WHERE=$(dirname "$(realpath "$0")")
 
-# assumption(s) which can be overridden
-IOTSTACK=${IOTSTACK:-"$HOME/IOTstack"}
+# if this script looks like it is running in a clone (or unzip) of
+# IOTstack then base operations there, otherwise default to the
+# standard location of ~/IOTstack. Either way, permit override by
+# prepending IOTSTACK=path to the script call.
+[ -d "$WHERE/.templates" -a -d "$WHERE/docs" ] && PROJECT="$WHERE" || PROJECT="$HOME/IOTstack"
+IOTSTACK=${IOTSTACK:-"$PROJECT"}
 
 # derived path(s) - note that the menu knows about most of these so
 # they can't just be changed without a lot of care.
@@ -53,7 +47,7 @@ COMPOSE_SYMLINK_PATH="/usr/local/bin/docker-compose"
 CMDLINE_OPTIONS="cgroup_memory=1 cgroup_enable=memory"
 
 # dependencies installed via apt
-APT_DEPENDENCIES="curl git jq python3-pip python3-dev python3-virtualenv uuid-runtime whiptail"
+APT_DEPENDENCIES="curl git jq pwgen python3-pip python3-dev python3-virtualenv uuid-runtime whiptail"
 
 # minimum version requirements
 DOCKER_VERSION_MINIMUM="24"
@@ -61,11 +55,130 @@ COMPOSE_VERSION_MINIMUM="2.20"
 PYTHON_VERSION_MINIMUM="3.9"
 
 # best-practice for group membership
-DESIRED_GROUPS="docker bluetooth"
+DESIRED_GROUPS="docker bluetooth dialout"
 
 # what to do at script completion (reboot takes precedence)
 REBOOT_REQUIRED=false
 LOGOUT_REQUIRED=false
+
+#----------------------------------------------------------------------
+# versioning functions
+#----------------------------------------------------------------------
+
+# version_json()
+#
+# Arguments
+#    $1 exit code
+# Returns:
+#    JSON string with version, commit ID and exit code
+# Note:
+#    If $0 is not under Git control (eg a zip download of IOTstack) then
+#    the commit field will be an empty string.
+#
+version_json() {
+	echo "{\"version\": \"${UPDATE}\", \"commit\": \"$(git log -n 1 --pretty=format:%H -- "${0}" 2>/dev/null)\", \"exitCode\": ${1}}"
+}
+
+
+# should_run_installer()
+#
+# Arguments
+#    none
+# Returns
+#    "false" or "true"
+# Theory:
+#    Under normal conditions, running install.sh will result in the
+#    hint file (.new_install) having the JSON string returned by
+#    version_json(), which contains the current version number and
+#    current commit ID of install.sh, plus an exit code of zero.
+#
+#    If IOTstack is downloaded as a zip rather than a clone, the commit
+#    ID will be null but, other than placing a heavier reliance on the
+#    version number **changing**, that does not actually matter.
+#
+#    Historically, .new_install has evolved through three generations:
+#
+#    Gen 1: A touch file where its mere existence signalled that
+#           install.sh had been run.
+#    Gen 2: A file recording the exit code of the most-recent run. The
+#           menu has never actually taken advantage of this.
+#    Gen 3: The JSON string returned by version_json().
+#
+#    This function will return "true" if any of the following is true:
+#
+#    1. install.sh has never been run to perform an installation (or
+#       PiBuilder has not faked things on this script's behalf). In
+#       other words, this is the situation where .new_install is absent.
+#    2. The last run of install.sh either produced a Gen 2 file
+#       (irrespective of the exit code value) or a Gen 3 file with a
+#       non-zero exit code.
+#    3. Either/both the embedded version number or commit ID have
+#       changed as a result of an update.
+#
+should_run_installer() {
+	# does the hint file exist and is it non-empty?
+	if [ -s "${IOTSTACK_INSTALLER_HINT}" ] ; then
+		# yes! compare content
+		if [ "$(cat "${IOTSTACK_INSTALLER_HINT}")" = "$(version_json 0)" ] ; then
+			echo "false"
+			return
+		fi
+	fi
+	echo "true"
+}
+
+
+#----------------------------------------------------------------------
+# arguments
+#----------------------------------------------------------------------
+
+# any arguments passed on command-line?
+if [ $# -gt 0 ] ; then
+
+	# vector on command verb
+	case "${1}" in
+
+		"version" )
+			echo "$(version_json 0)"
+		;;
+
+		"should_run_installer" )
+			echo "$(should_run_installer)"
+		;;
+
+		*)
+			cat <<-HELP
+
+				Usage:
+				  ${SCRIPT} (with no arguments runs the installer)
+				  ${SCRIPT} version - returns JSON version string
+				  ${SCRIPT} should_run_installer - returns "false" or "true"
+				  ${SCRIPT} help - displays this menu
+
+			HELP
+		;;
+
+	esac
+
+	# normal exit (ie does not fall through to the menu)
+	exit 0
+
+fi
+
+
+#----------------------------------------------------------------------
+# main installer code
+#----------------------------------------------------------------------
+
+echo "                                         "
+echo "  _____ ____ _______  _  installer  _    "
+echo " |_   _/ __ \\__   __|| |  $UPDATE  | |  "
+echo "   | || |  | | | |___| |_ __ _  ___| | __"
+echo "   | || |  | | | / __| __/ _\` |/ __| |/ /"
+echo "  _| || |__| | | \\__ \\ || (_| | (__|   < "
+echo " |_____\\____/  |_|___/\\__\\__,_|\\___|_|\\_\\"
+echo "                                         "
+echo "                                         "
 
 #----------------------------------------------------------------------
 #						Check script dependencies
@@ -107,7 +220,7 @@ fi
 function handle_exit() {
 
 	# record the exit condition (if possible)
-	[ -d "$IOTSTACK" ] && echo "$1" >"$IOTSTACK_INSTALLER_HINT"
+	[ -d "$IOTSTACK" ] && echo "$(version_json $1)" >"$IOTSTACK_INSTALLER_HINT"
 
 	# inform the user
 	echo -n "install.sh completed"
@@ -351,8 +464,9 @@ sudo chown -R "$USER:$USER" "$IOTSTACK/backups" "$IOTSTACK/services"
 [ -d "$IOTSTACK/backups/influxdb" ] && sudo chown -R "root:root" "$IOTSTACK/backups/influxdb"
 
 # initialise docker-compose global environment file with system timezone
+# see https://git.gsi.de/chef/cookbooks/sys/-/issues/54
 if [ ! -f "$IOTSTACK_ENV" ] || [ $(grep -c "^TZ=" "$IOTSTACK_ENV") -eq 0 ] ; then
-	echo "TZ=$(cat /etc/timezone)" >>"$IOTSTACK_ENV"
+	echo "TZ=$(timedatectl show --value --property=Timezone)" >>"$IOTSTACK_ENV"
 fi
 
 #----------------------------------------------------------------------
