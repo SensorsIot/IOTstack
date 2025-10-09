@@ -1,6 +1,7 @@
 postgres:
   container_name: postgres
-  image: postgres
+  image: postgres:18
+  x-comment: Please READ the Postgres document in the IOTstack Wiki BEFORE changing the "18"
   restart: unless-stopped
   environment:
     - TZ=${TZ:-Etc/UTC}
@@ -10,6 +11,5 @@ postgres:
   ports:
     - "5432:5432"
   volumes:
-    - ./volumes/postgres/data:/var/lib/postgresql/data
+    - ./volumes/postgres/data:/var/lib/postgresql
     - ./volumes/postgres/db_backup:/backup
-
