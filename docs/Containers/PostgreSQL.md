@@ -76,7 +76,7 @@ Notes:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d postgresql
+	$ docker compose up -d postgres
 	```
 
 ## Postgres v17 to v18 migration  { #v1718migration }
@@ -131,7 +131,7 @@ To resolve that error and restore access to your database, you need to revert to
 2. Stop the (broken) container:
 
 	``` console
-	$ docker compose down postgresql
+	$ docker compose down postgres
 	```
 
 3. Use your favourite text editor to open `docker-compose.yml`.
@@ -147,7 +147,7 @@ To resolve that error and restore access to your database, you need to revert to
 4. Start the container again:
 
 	``` console
-	$ docker compose up -d postgresql
+	$ docker compose up -d postgres
 	```
 
 	The container should start normally and you regain access to your databases.
