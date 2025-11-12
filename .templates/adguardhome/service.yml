@@ -10,7 +10,7 @@
       - "53:53/udp"       # regular DNS
       - "3001:3000/tcp"   # only active until port 8089 becomes active
       - "8089:8089/tcp"   # regular administrative interface
-    # - "443:443/tcp"     # HTTPS/DNS-over-HTTPS
+    # - "4443:443/tcp"    # HTTPS/DNS-over-HTTPS
     # - "784:784/udp"     # DNS-over-QUIC
     # - "853:853/tcp"     # DNS-over-TLS
     # - "5443:5443/tcp"   # DNSCrypt
