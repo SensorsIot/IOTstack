@@ -1,6 +1,28 @@
-# Pi-hole
+# Pi-hole version 5
 
 Pi-hole is a fantastic utility to reduce ads.
+
+## Pi-hole variants { #variants }
+
+In early 2025, Pi-hole underwent some major changes which broke compatibility with previous versions. In particular, the naming scheme for environment variables changed drastically. For IOTstack users, the immediate result of "pulling" the `latest` image from DockerHub was silent behavioural changes by the container.
+
+IOTstack reacted to this problem by pinning to version 2024.07.0. This was to "hold the ring" pending a solution. The solution is that the IOTstack menu now supports two variants:
+
+* **Pi-hole&nbsp;5**
+
+	The IOTstack menu refers to this as `pihole`. It is pinned to version [2024.07.0](https://github.com/pi-hole/docker-pi-hole/releases/tag/2024.07.0) which is the final release of version 5. This document describes version 5.
+
+* **Pi-hole&nbsp;6**
+
+	The IOTstack menu refers to this as `pihole6`. That variant tracks DockerHub images with the `latest` tag so it will keep updating as later versions are released. See [Pi-hole version 6](./Pi-hole6.md).
+
+If you are installing Pi-hole for the first time, you should choose `pihole6` from the menu.
+
+See [migration](#migration) if you are currently running Pi-hole&nbsp;5 and want to upgrade to Pi-hole&nbsp;6.
+
+Note:
+
+* You can't run both versions at the same time. That is because they both claim the same network ports.
 
 ## References { #references }
 

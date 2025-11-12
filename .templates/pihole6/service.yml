@@ -1,0 +1,28 @@
+pihole6:
+  # see https://sensorsiot.github.io/IOTstack/Containers/Pi-hole/
+  container_name: pihole6
+  image: pihole/pihole:latest
+  restart: unless-stopped
+  x-network_mode: host
+  ports:
+    - "8089:80/tcp"
+    - "53:53/tcp"
+    - "53:53/udp"
+    - "67:67/udp"
+  # - "4443:443/tcp"
+  environment:
+    # see https://docs.pi-hole.net/docker/configuration/
+    TZ: ${TZ:-Etc/UTC}
+    FTLCONF_webserver_api_password: '${PIHOLE_ADMIN_PASSWORD:-}'
+    FTLCONF_dns_interface: eth0
+    FTLCONF_database_maxDBdays: 365
+    FTLCONF_dns_upstreams: 8.8.8.8;8.8.4.4
+  volumes:
+    - ./volumes/pihole6/etc-pihole:/etc/pihole
+    - ./volumes/pihole6/etc-dnsmasq.d:/etc/dnsmasq.d
+  dns:
+    - 127.0.0.1
+    - 1.1.1.1
+  cap_add:
+    - NET_ADMIN
+
