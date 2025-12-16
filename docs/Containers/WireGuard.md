@@ -128,6 +128,7 @@ You have several options for how your remote peers resolve DNS requests:
 		``` console
 		$ cd ~/IOTstack
 		$ sudo cp ./.templates/wireguard/use-container-dns.sh ./volumes/wireguard/custom-cont-init.d/
+		$ sudo chmod 755 ./volumes/wireguard/custom-cont-init.d/use-container-dns.sh
 		$ docker-compose restart wireguard
 		```
 
@@ -149,6 +150,18 @@ You have several options for how your remote peers resolve DNS requests:
 	$ sudo rm ./volumes/wireguard/custom-cont-init.d/use-container-dns.sh
 	$ docker-compose restart wireguard
 	```
+	
+	Notes:
+	
+	* the `use-container-dns.sh` script contains comments which explain the theory of operation.
+	* if you are using an older service definition for WireGuard, you may need to add:
+
+		``` yaml
+		extra_hosts:
+		  - "host.docker.internal:host-gateway"
+		```
+		
+		See `./.templates/wireguard/service.yml` for an example.
 
 * `PEERDNS=«ip address»`
 
