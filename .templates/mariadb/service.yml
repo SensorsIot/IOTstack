@@ -5,10 +5,10 @@ mariadb:
     - TZ=${TZ:-Etc/UTC}
     - PUID=1000
     - PGID=1000
-    - MYSQL_ROOT_PASSWORD=%randomAdminPassword%
-    - MYSQL_DATABASE=default
-    - MYSQL_USER=mariadbuser
-    - MYSQL_PASSWORD=%randomPassword%
+    - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:?eg echo MARIADB_ROOT_PASSWORD=%randomAdminPassword% >>~/IOTstack/.env}
+    - MYSQL_DATABASE=${MARIADB_DATABASE:-default}
+    - MYSQL_USER=${MARIADB_USER:-mariadbuser}
+    - MYSQL_PASSWORD=${MARIADB_USER_PASSWORD:?eg echo MARIADB_USER_PASSWORD=%randomPassword% >>~/IOTstack/.env}
   volumes:
     - ./volumes/mariadb/config:/config
     - ./volumes/mariadb/db_backup:/backup

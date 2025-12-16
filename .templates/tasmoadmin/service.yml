@@ -3,7 +3,7 @@ tasmoadmin:
   image: ghcr.io/tasmoadmin/tasmoadmin:latest
   restart: unless-stopped
   environment:
-    - TZ=Etc/UTC
+    - TZ=${TZ:-Etc/UTC}
   ports:
     - "8088:80"
   volumes:

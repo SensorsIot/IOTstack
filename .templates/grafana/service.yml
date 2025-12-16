@@ -6,7 +6,7 @@ grafana:
   ports:
     - "3000:3000"
   environment:
-    - TZ=Etc/UTC
+    - TZ=${TZ:-Etc/UTC}
     - GF_PATHS_DATA=/var/lib/grafana
     - GF_PATHS_LOGS=/var/log/grafana
   volumes:
