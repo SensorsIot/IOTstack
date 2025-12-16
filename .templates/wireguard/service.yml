@@ -6,11 +6,13 @@
       - PUID=1000
       - PGID=1000
       - TZ=${TZ:-Etc/UTC}
-      - SERVERURL=your.dynamic.dns.name
+      - SERVERURL=${WIREGUARD_SERVERURL:-your.dynamic.dns.name}
       - SERVERPORT=51820
-      - PEERS=laptop,phone,tablet
+      - PEERS=${WIREGUARD_PEERS:-laptop,phone,tablet}
       - PEERDNS=auto
       - ALLOWEDIPS=0.0.0.0/0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "51820:51820/udp"
     volumes:
