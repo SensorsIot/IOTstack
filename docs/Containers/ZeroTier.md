@@ -461,7 +461,7 @@ The diagram above for Topology 4 does not include a default route in ZeroTier Ce
 * traffic between <mark>G</mark> and your sites will travel via the ZeroTier Cloud (tunnelled, encrypted); but
 * traffic between <mark>G</mark> and the wider Internet will not be tunnelled, will not be encrypted by ZeroTier, and will reach the Internet via the ISP or cellular carrier.
 
-If you want remote clients like <mark>G</mark> to use full tunnelling, you can follow the same approach as for [Topology 3](#topology3). You simply need to decide which site should used by <mark>G</mark> to reach the Internet. Having made your decision, define an appropriate default route in ZeroTier Central. For example, if <mark>G</mark> should reach the Internet via:
+If you want remote clients like <mark>G</mark> to use full tunnelling, you can follow the same approach as for [Topology 3](#topology3). You simply need to decide which site should be used by <mark>G</mark> to reach the Internet. Having made your decision, define an appropriate default route in ZeroTier Central. For example, if <mark>G</mark> should reach the Internet via:
 
 - the left-hand site, the default route should point to the ZeroTier-router running on <mark>A</mark>:
 
