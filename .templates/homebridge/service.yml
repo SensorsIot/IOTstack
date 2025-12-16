@@ -1,9 +1,8 @@
   homebridge:
     container_name: homebridge
-    image: oznu/homebridge:latest
+    image: homebridge/homebridge:latest
     restart: unless-stopped
     network_mode: host
     env_file: ./services/homebridge/homebridge.env
     volumes:
       - ./volumes/homebridge:/homebridge
-
