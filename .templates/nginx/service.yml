@@ -4,8 +4,8 @@
     restart: unless-stopped
     environment:
       - TZ=${TZ:-Etc/UTC}
-      - INITIAL_ADMIN_EMAIL=admin@example.com
-      - INITIAL_ADMIN_PASSWORD=changeme
+      - INITIAL_ADMIN_EMAIL=${NGINX_INITIAL_ADMIN_EMAIL:-admin@example.com}
+      - INITIAL_ADMIN_PASSWORD=${NGINX_INITIAL_ADMIN_PASSWORD:?eg echo NGINX_INITIAL_ADMIN_PASSWORD=changeme >>~/IOTstack/.env}
       - DISABLE_IPV6=true
     extra_hosts:
       - "host.docker.internal:host-gateway"
