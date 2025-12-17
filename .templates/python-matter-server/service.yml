@@ -3,13 +3,13 @@ python-matter-server:
   image: ghcr.io/home-assistant-libs/python-matter-server:stable
   restart: unless-stopped
   network_mode: host
+  x-ports: # For reference only. Matter requires these ports.
+    - "5580:5580"
+    - "5080:5080"
   security_opt:
     - apparmor=unconfined
   volumes:
     - ./volumes/python-matter-server/data:/data
-  # ports: # For reference only. Matter requires these ports.
-  #   - "5580:5580"
-  #   - "5080:5080"
   command: >
     --storage-path /data
 

@@ -18,4 +18,4 @@ chronograf:
     - ./volumes/chronograf:/var/lib/chronograf
   depends_on:
     - influxdb
-    # - kapacitor
+    - kapacitor

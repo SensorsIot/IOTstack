@@ -6,9 +6,9 @@ kapacitor:
     - TZ=${TZ:-Etc/UTC}
     # see https://docs.influxdata.com/kapacitor/v1.6/administration/configuration/#kapacitor-environment-variables
     - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
-    # - KAPACITOR_INFLUXDB_USERNAME=
-    # - KAPACITOR_INFLUXDB_PASSWORD=
-    # - KAPACITOR_HOSTNAME=kapacitor
+    # - KAPACITOR_INFLUXDB_USERNAME=${INFLUXDB1_USERNAME:-dba}
+    # - KAPACITOR_INFLUXDB_PASSWORD=${INFLUXDB1_PASSWORD}
+    # - KAPACITOR_HOSTNAME=${KAPACITOR_HOSTNAME:-kapacitor}
     # - KAPACITOR_LOGGING_LEVEL=INFO
     # - KAPACITOR_REPORTING_ENABLED=false
   ports:
