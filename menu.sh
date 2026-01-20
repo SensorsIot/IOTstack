@@ -268,6 +268,8 @@ function do_project_checks() {
 		[ -f .project_outofdate ] && rm .project_outofdate
 		echo "Project is up to date" >&2
 	fi
+	# volumes shouldn't be owned by root, change it to the current user
+	[[ $(id -u) != "0" ]] && sudo chown $(id -u):$(id -g) volumes
 }
 
 

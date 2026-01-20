@@ -1,6 +1,6 @@
 #ignore data folders for containers
 /services/
-/volumes/
+/volumes/*
 /backups/
 /.tmp/*
 __pycache__
