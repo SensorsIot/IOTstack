@@ -34,7 +34,7 @@ IOTstack makes the following assumptions:
 
 2. Your host or guest system is running a reasonably-recent version of Debian or an operating system which is downstream of Debian in the Linux family tree, such as Raspberry Pi OS (aka "Raspbian") or Ubuntu.
 
-	IOTstack is known to work in 32-bit mode but not all containers have images on DockerHub that support 320bit mode. If you are setting up a new system from scratch, you should choose a 64-bit option.
+	IOTstack is known to work in 32-bit mode but not all containers have images on DockerHub that support 32-bit mode. If you are setting up a new system from scratch, you should choose a 64-bit option.
 
 	IOTstack was known to work with Buster but it has not been tested recently. Bullseye is known to work but if you are setting up a new system from scratch, you should choose Bookworm.
 	
