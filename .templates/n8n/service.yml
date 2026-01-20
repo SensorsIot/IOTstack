@@ -1,19 +1,27 @@
+
 n8n:
   container_name: "n8n"
   restart: unless-stopped
   ports:
-    - "5678:5678"
-  image: n8nio/n8n
+    - 5678:5678
+  image: docker.n8n.io/n8nio/n8n
   stdin_open: true
   volumes:
     - ./volumes/n8n:/home/node/.n8n
   environment:
     - TZ=${TZ:-Etc/UTC}
-    # - PGID=1000
-    # - PUID=1000
     # - USBDEVICES=/dev/ttyAMA0
     # - PACKAGES=mc
     # Optional DB and Timezone configs.
+
+    #- DB_TYPE=postgresdb
+    #- DB_POSTGRESDB_DATABASE=postdb
+    #- DB_POSTGRESDB_HOST=localhost
+    #- DB_POSTGRESDB_PORT=5432
+    #- DB_POSTGRESDB_USER=postuser
+    #- DB_POSTGRESDB_SCHEMA=<schema>
+    #- DB_POSTGRESDB_PASSWORD=<pwd>
+
     # - DB_TYPE=mysqldb
     # - DB_MYSQLDB_DATABASE=<MYSQLDB_DATABASE>
     # - DB_MYSQLDB_HOST=<MYSQLDB_HOST>
@@ -26,3 +34,5 @@ n8n:
     # - N8N_BASIC_AUTH_USER=<USER>
     # - N8N_BASIC_AUTH_PASSWORD=<PASSWORD>
 
+    # Disable https requirement.
+    - N8N_SECURE_COOKIE=false

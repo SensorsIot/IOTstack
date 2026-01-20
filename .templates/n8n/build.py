@@ -14,7 +14,7 @@ def main():
   from blessed import Terminal
   
   from deps.chars import specialChars, commonTopBorder, commonBottomBorder, commonEmptyLine, padText
-  from deps.consts import servicesDirectory, templatesDirectory
+  from deps.consts import volumesDirectory, servicesDirectory, templatesDirectory
   from deps.common_functions import getExternalPorts, getInternalPorts, checkPortConflicts, enterPortNumberWithWhiptail
 
   yaml = ruamel.yaml.YAML()
@@ -27,10 +27,11 @@ def main():
   global issues # Returned issues dict
   global haltOnErrors # Turn on to allow erroring
   global hideHelpText # Showing and hiding the help controls text
-  global serviceService
+  global serviceService, serviceVolume
 
   serviceService = servicesDirectory + currentServiceName
   serviceTemplate = templatesDirectory + currentServiceName
+  serviceVolume  = volumesDirectory +  currentServiceName
 
   try: # If not already set, then set it.
     hideHelpText = hideHelpText
@@ -97,8 +98,9 @@ def main():
     # Setup service directory
     if not os.path.exists(serviceService):
       os.makedirs(serviceService, exist_ok=True)
-      os.makedirs(serviceService + '/etc_n8n', exist_ok=True)
-      os.makedirs(serviceService + '/var_lib_n8n', exist_ok=True)
+    # Create volume folder and set GID and UID to docker Node user can write.
+    os.makedirs(serviceVolume , exist_ok=True)
+    os.chown(serviceVolume, 1000, 1000)
     return True
 
   # #####################################
