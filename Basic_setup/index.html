@@ -1,0 +1,4222 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="Accessing-your-Device-from-the-internet/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Getting Started - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../style.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../Containers/AdGuardHome/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../Developers/" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../Updates/" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        About IOTstack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addonInstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add-on method
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pibuilderInstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PiBuilder method
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-system-patches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required system patches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Required system patches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#patch-1-restrict-dhcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        patch 1 – restrict DHCP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patch-2-update-libseccomp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        patch 2 – update libseccomp2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patch-3-kernel-control-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        patch 3 - kernel control groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iotstackMenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        the IOTstack menu
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="the IOTstack menu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buildStack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        menu item: Build Stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menu-item-docker-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        menu item: Docker commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-menu-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        other menu items
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-commands-docker-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        useful commands: docker &amp; docker-compose
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="useful commands: docker &amp; docker-compose">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-your-iotstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        starting your IOTstack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="starting your IOTstack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-journald-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        logging journald errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starting-an-individual-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        starting an individual container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopping-your-iotstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stopping your IOTstack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopping-an-individual-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stopping an individual container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-container-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        checking container status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewing-container-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        viewing container logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restarting-a-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        restarting a container
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistent-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        persistent data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="persistent data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deleting-persistent-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        deleting persistent data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stack-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stack maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stack maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-raspberry-pi-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update Raspberry Pi OS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-pull" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git pull
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-image-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        container image updates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="container image updates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#updating-images-not-built-from-dockerfiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        updating images not built from Dockerfiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updating-images-built-from-dockerfiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        updating images built from Dockerfiles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="updating images built from Dockerfiles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-dockerfile-changes-local-image-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        when Dockerfile changes (local image only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-dockerhub-updates-base-and-local-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        when DockerHub updates (base and local images)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deleting-unused-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        deleting unused images
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pinning-to-specific-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pinning to specific versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom overrides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Menu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/InfluxDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/MJPEG-Streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Node-RED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Pi-hole6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Plex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/ZeroTier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Zigbee2MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/BuildStack-RandomPassword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Random Services Password
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/Menu-System/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/PostBuild-Script/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Postbuild BASH Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updating the project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Updates/Changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Updates/New-Menu-Release-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New IOTstack Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Updates/gcgarner-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from gcgarner to SensorsIot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Updates/migration-network-change/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration: network change
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        About IOTstack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addonInstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add-on method
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pibuilderInstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PiBuilder method
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-system-patches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required system patches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Required system patches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#patch-1-restrict-dhcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        patch 1 – restrict DHCP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patch-2-update-libseccomp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        patch 2 – update libseccomp2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patch-3-kernel-control-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        patch 3 - kernel control groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iotstackMenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        the IOTstack menu
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="the IOTstack menu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buildStack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        menu item: Build Stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#menu-item-docker-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        menu item: Docker commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-menu-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        other menu items
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-commands-docker-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        useful commands: docker &amp; docker-compose
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="useful commands: docker &amp; docker-compose">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-your-iotstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        starting your IOTstack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="starting your IOTstack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-journald-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        logging journald errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starting-an-individual-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        starting an individual container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopping-your-iotstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stopping your IOTstack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopping-an-individual-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stopping an individual container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-container-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        checking container status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewing-container-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        viewing container logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restarting-a-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        restarting a container
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistent-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        persistent data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="persistent data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deleting-persistent-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        deleting persistent data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stack-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stack maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stack maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-raspberry-pi-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update Raspberry Pi OS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-pull" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git pull
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-image-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        container image updates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="container image updates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#updating-images-not-built-from-dockerfiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        updating images not built from Dockerfiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updating-images-built-from-dockerfiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        updating images built from Dockerfiles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="updating images built from Dockerfiles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-dockerfile-changes-local-image-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        when Dockerfile changes (local image only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-dockerhub-updates-base-and-local-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        when DockerHub updates (base and local images)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deleting-unused-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        deleting unused images
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pinning-to-specific-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pinning to specific versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h1>
+<h2 id="conventions">About IOTstack<a class="headerlink" href="#conventions" title="Permanent link">&para;</a></h2>
+<p>IOTstack is not a <em>system.</em> It is a set of <em>conventions</em> for assembling arbitrary collections of containers into something that has a reasonable chance of working out-of-the-box. The three most important conventions are:</p>
+<ol>
+<li>
+<p>If a container needs information to persist across restarts (and most containers do) then the container's <em>persistent store</em> will be found at:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/«container»
+</code></pre></div>
+<p>Most <em>service definitions</em> examples found on the web have a scattergun approach to this problem. IOTstack imposes order on this chaos.</p>
+</li>
+<li>
+<p>To the maximum extent possible, network port conflicts have been sorted out in advance.</p>
+<blockquote>
+<p>Sometimes this is not possible. For example, Pi-hole and AdGuardHome both offer Domain Name System services. The DNS relies on port 53. You can't have two containers claiming port 53 so the only way to avoid this is to pick <em>either</em> Pi-hole <em>or</em> AdGuardHome.</p>
+</blockquote>
+</li>
+<li>
+<p>Where multiple containers are needed to implement a single user-facing service, the IOTstack service definition will include everything needed. A good example is NextCloud which relies on MariaDB. IOTstack implements MariaDB as a private instance which is only available to NextCloud. This strategy ensures that you are able to run your own separate MariaDB container without any risk of interference with your NextCloud service. </p>
+</li>
+</ol>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<p>IOTstack makes the following assumptions:</p>
+<ol>
+<li>
+<p>Your hardware is capable of running Debian or one of its derivatives. Examples that are known to work include:</p>
+<ul>
+<li>
+<p>a Raspberry Pi (typically a 3B+ or 4B)</p>
+<blockquote>
+<p>The Raspberry Pi Zero W2 has been tested with IOTstack. It works but the 512MB RAM means you should not try to run too many containers concurrently.</p>
+</blockquote>
+</li>
+<li>
+<p>Orange Pi Win/Plus <a href="https://github.com/SensorsIot/IOTstack/issues/375">see also issue 375</a></p>
+</li>
+<li>an Intel-based Mac running macOS plus Parallels with a Debian guest.</li>
+<li>an Intel-based platform running Proxmox with a Debian guest.</li>
+</ul>
+</li>
+<li>
+<p>Your host or guest system is running a reasonably-recent version of Debian or an operating system which is downstream of Debian in the Linux family tree, such as Raspberry Pi OS (aka "Raspbian") or Ubuntu.</p>
+<p>IOTstack is known to work in 32-bit mode but not all containers have images on DockerHub that support 320bit mode. If you are setting up a new system from scratch, you should choose a 64-bit option.</p>
+<p>IOTstack was known to work with Buster but it has not been tested recently. Bullseye is known to work but if you are setting up a new system from scratch, you should choose Bookworm.</p>
+<p>Please don't waste your own time trying Linux distributions from outside the Debian family tree. They are unlikely to work.</p>
+</li>
+<li>
+<p>You are logged-in as the default user (ie not root). In most cases, this is the user with ID=1000 and is what you get by default on either a Raspberry Pi OS or Debian installation.</p>
+<p>This assumption is not really an IOTstack requirement as such. However, many containers assume UID=1000 exists and you are less likely to encounter issues if this assumption holds.</p>
+</li>
+</ol>
+<p>Please don't read these assumptions as saying that IOTstack will not run on other hardware, other operating systems, or as a different user. It is just that IOTstack gets most of its testing under these conditions. The further you get from these implicit assumptions, the more your mileage may vary.</p>
+<h2 id="new-installation">New installation<a class="headerlink" href="#new-installation" title="Permanent link">&para;</a></h2>
+<p>You have two choices:</p>
+<ol>
+<li>If you have an <strong>existing</strong> system and you want to add IOTstack to it, then the <a href="#addonInstall">add-on</a> method is your best choice.</li>
+<li>If you are setting up a <strong>new</strong> system from scratch, then <a href="#pibuilderInstall">PiBuilder</a> is probably your best choice. You can, however, also use the <a href="#addonInstall">add-on</a> method in a green-fields installation.</li>
+</ol>
+<h3 id="addonInstall">add-on method<a class="headerlink" href="#addonInstall" title="Permanent link">&para;</a></h3>
+<p>This method assumes an <strong>existing</strong> system rather than a green-fields installation. The script uses the principle of least interference. It only installs the bare minimum of prerequisites and, with the exception of adding some boot time options to your Raspberry Pi (but not any other kind of hardware), makes no attempt to tailor your system.</p>
+<p>To use this method:</p>
+<ol>
+<li>
+<p>Install <code>curl</code>:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl
+</code></pre></div>
+</li>
+<li>
+<p>Run the following command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/SensorsIot/IOTstack/master/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</code></pre></div>
+</li>
+</ol>
+<p>The <code>install.sh</code> script is <em>designed</em> to be run multiple times. If the script discovers a problem, it will explain how to fix that problem and, assuming you follow the instructions, you can safely re-run the script. You can repeat this process until the script completes normally.</p>
+<h3 id="pibuilderInstall">PiBuilder method<a class="headerlink" href="#pibuilderInstall" title="Permanent link">&para;</a></h3>
+<p>Compared with the <a href="#addonInstall">add-on method</a>, PiBuilder is far more comprehensive. PiBuilder:</p>
+<ol>
+<li>Does everything the <a href="#addonInstall">add-on method</a> does.</li>
+<li>Adds support packages and debugging tools that have proven useful in the IOTstack context.</li>
+<li>Installs all required system patches (see next section).</li>
+<li>
+<p>In addition to cloning IOTstack (this repository), PiBuilder also clones:</p>
+<ul>
+<li><a href="https://github.com/Paraphraser/IOTstackBackup">IOTstackBackup</a> which is an alternative to the backup script supplied with IOTstack but does not require your stack to be taken down to perform backups; and</li>
+<li><a href="https://github.com/Paraphraser/IOTstackAliases">IOTstackAliases</a> which provides shortcuts for common IOTstack operations.</li>
+</ul>
+</li>
+<li>
+<p>Performs extra tailoring intended to deliver a rock-solid platform for IOTstack.</p>
+</li>
+</ol>
+<p>PiBuilder does, however, assume a <strong>green fields</strong> system rather than an existing installation. Although the PiBuilder scripts will <em>probably</em> work on an existing system, that scenario has never been tested so it's entirely at your own risk. </p>
+<p>PiBuilder actually has two specific use-cases:</p>
+<ol>
+<li>A first-time build of a system to run IOTstack; and</li>
+<li>The ability to create your own customised version of PiBuilder so that you can quickly rebuild your Raspberry Pi or Proxmox guest after a disaster. Combined with IOTstackBackup, you can go from bare metal to a running system with data restored in about half an hour.</li>
+</ol>
+<h2 id="required-system-patches">Required system patches<a class="headerlink" href="#required-system-patches" title="Permanent link">&para;</a></h2>
+<p>You can skip this section if you used <a href="https://github.com/Paraphraser/PiBuilder">PiBuilder</a> to construct your system. That's because PiBuilder installs all necessary patches automatically.</p>
+<p>If you used the <a href="#addonInstall">add-on method</a>, you should consider applying these patches by hand. Unless you know that a patch is <strong>not</strong> required, assume that it is needed.</p>
+<h3 id="patch-1-restrict-dhcp">patch 1 – restrict DHCP<a class="headerlink" href="#patch-1-restrict-dhcp" title="Permanent link">&para;</a></h3>
+<p>Run the following commands:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;[ $(egrep -c &quot;^allowinterfaces eth\*,wlan\*&quot; /etc/dhcpcd.conf) -eq 0 ] &amp;&amp; echo &quot;allowinterfaces eth*,wlan*&quot; &gt;&gt; /etc/dhcpcd.conf&#39;</span>
+</code></pre></div>
+<p>This patch prevents the <code>dhcpcd</code> daemon from trying to allocate IP addresses to Docker's <code>docker0</code> and <code>veth</code> interfaces. Docker assigns the IP addresses itself and <code>dhcpcd</code> trying to get in on the act can lead to a deadlock condition which can freeze your Pi.</p>
+<p>See <a href="https://github.com/SensorsIot/IOTstack/issues/219">Issue 219</a> and <a href="https://github.com/SensorsIot/IOTstack/issues/253">Issue 253</a> for more information.</p>
+<h3 id="patch-2-update-libseccomp2">patch 2 – update libseccomp2<a class="headerlink" href="#patch-2-update-libseccomp2" title="Permanent link">&para;</a></h3>
+<p>This patch is <strong>ONLY</strong> for Raspbian Buster. Do <strong>NOT</strong> install this patch if you are running Raspbian Bullseye or Bookworm.</p>
+<ol>
+<li>
+<p>check your OS release</p>
+<p>Run the following command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>grep<span class="w"> </span><span class="s2">&quot;PRETTY_NAME&quot;</span><span class="w"> </span>/etc/os-release
+<span class="go">PRETTY_NAME=&quot;Raspbian GNU/Linux 10 (buster)&quot;</span>
+</code></pre></div>
+<p>If you see the word "buster", proceed to step 2. Otherwise, skip this patch.</p>
+</li>
+<li>
+<p>if you are indeed running "buster"</p>
+<p>Without this patch on Buster, Docker images will fail if:</p>
+<ul>
+<li>the image is based on Alpine and the image's maintainer updates to <a href="https://wiki.alpinelinux.org/wiki/Release_Notes_for_Alpine_3.13.0#time64_requirement">Alpine 3.13</a>; and/or</li>
+<li>an image's maintainer updates to a library that depends on 64-bit values for <em>Unix epoch time</em> (the so-called Y2038 problem).</li>
+</ul>
+<p>To install the patch:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>apt-key<span class="w"> </span>adv<span class="w"> </span>--keyserver<span class="w"> </span>hkps://keyserver.ubuntu.com:443<span class="w"> </span>--recv-keys<span class="w"> </span>04EE7237B7D453EC<span class="w"> </span>648ACFD622F3D138
+<span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb http://httpredir.debian.org/debian buster-backports main contrib non-free&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;/etc/apt/sources.list.d/debian-backports.list&quot;</span>
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libseccomp2<span class="w"> </span>-t<span class="w"> </span>buster-backports
+</code></pre></div>
+</li>
+</ol>
+<h3 id="patch-3-kernel-control-groups">patch 3 - kernel control groups<a class="headerlink" href="#patch-3-kernel-control-groups" title="Permanent link">&para;</a></h3>
+<p>Kernel control groups need to be enabled in order to monitor container specific
+usage. This makes commands like <code>docker stats</code> fully work. Also needed for full
+monitoring of docker resource usage by the telegraf container.</p>
+<p>Enable by running (takes effect after reboot):</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nv">CMDLINE</span><span class="o">=</span><span class="s2">&quot;/boot/firmware/cmdline.txt&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CMDLINE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">CMDLINE</span><span class="o">=</span><span class="s2">&quot;/boot/cmdline.txt&quot;</span>
+<span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="k">$(</span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CMDLINE</span><span class="s2">&quot;</span><span class="k">)</span><span class="w"> </span><span class="nv">cgroup_memory</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">cgroup_enable</span><span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CMDLINE</span><span class="s2">&quot;</span>
+<span class="gp">$ </span>sudo<span class="w"> </span>reboot
+</code></pre></div>
+<h2 id="iotstackMenu">the IOTstack menu<a class="headerlink" href="#iotstackMenu" title="Permanent link">&para;</a></h2>
+<p>The menu is used to construct your <code>docker-compose.yml</code> file. That file is read by <code>docker-compose</code> which issues the instructions necessary for starting your stack.</p>
+<p>The menu is a great way to get started quickly but it is only an aid. It is a good idea to learn the various <code>docker</code> and <code>docker-compose</code> commands so you can use them outside the menu. It is also a good idea to study the <code>docker-compose.yml</code> generated by the menu to see how everything is put together. You will gain a lot of flexibility if you learn how to add containers by hand.</p>
+<p>In essence, the menu is a concatenation tool which appends <em>service definitions</em> that exist inside the hidden <code>~/IOTstack/.templates</code> folder to your <code>docker-compose.yml</code>.</p>
+<p>Once you understand what the menu does (and, more importantly, what it doesn't do), you will realise that the real power of IOTstack lies not in its menu system but resides in its <a href="#conventions">conventions</a>.</p>
+<h3 id="buildStack">menu item: Build Stack<a class="headerlink" href="#buildStack" title="Permanent link">&para;</a></h3>
+<p>To create your first <code>docker-compose.yml</code>:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>./menu.sh
+<span class="go">Select &quot;Build Stack&quot;</span>
+</code></pre></div>
+<p>Follow the on-screen prompts and select the containers you need.</p>
+<blockquote>
+<p>The best advice we can give is "start small". Limit yourself to the core containers you actually need (eg Mosquitto, Node-RED, InfluxDB, Grafana, Portainer). You can always add more containers later. Some users have gone overboard with their initial selections and have run into what seem to be Raspberry Pi OS limitations.</p>
+</blockquote>
+<p>Key point:</p>
+<ul>
+<li>If you are running "new menu" (master branch) and you select Node-RED, you <strong>must</strong> press the right-arrow and choose at least one add-on node. If you skip this step, Node-RED will not build properly.</li>
+<li>Old menu forces you to choose add-on nodes for Node-RED.</li>
+</ul>
+<p>The process finishes by asking you to bring up the stack:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>The first time you run <code>up</code> the stack docker will download all the images from DockerHub. How long this takes will depend on how many containers you selected and the speed of your internet connection.</p>
+<p>Some containers also need to be built locally. Node-RED is an example. Depending on the Node-RED nodes you select, building the image can also take a very long time. This is especially true if you select the SQLite node.</p>
+<p>Be patient (and, if you selected the SQLite node, ignore the huge number of warnings).</p>
+<h3 id="menu-item-docker-commands">menu item: Docker commands<a class="headerlink" href="#menu-item-docker-commands" title="Permanent link">&para;</a></h3>
+<p>The commands in this menu execute shell scripts in the root of the project.</p>
+<h3 id="other-menu-items">other menu items<a class="headerlink" href="#other-menu-items" title="Permanent link">&para;</a></h3>
+<p>The old and new menus differ in the options they offer. You should come back and explore them once your stack is built and running.</p>
+<h2 id="useful-commands-docker-docker-compose">useful commands: docker &amp; docker-compose<a class="headerlink" href="#useful-commands-docker-docker-compose" title="Permanent link">&para;</a></h2>
+<p>Handy rules:</p>
+<ul>
+<li><code>docker</code> commands can be executed from anywhere, but</li>
+<li><code>docker-compose</code> commands need to be executed from within <code>~/IOTstack</code></li>
+</ul>
+<h3 id="starting-your-iotstack">starting your IOTstack<a class="headerlink" href="#starting-your-iotstack" title="Permanent link">&para;</a></h3>
+<p>To start the stack:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Once the stack has been brought up, it will stay up until you take it down. This includes shutdowns and reboots of your Raspberry Pi. If you do not want the stack to start automatically after a reboot, you need to stop the stack before you issue the reboot command.</p>
+<h4 id="logging-journald-errors">logging journald errors<a class="headerlink" href="#logging-journald-errors" title="Permanent link">&para;</a></h4>
+<p>If you get docker logging error like:</p>
+<div class="language-text highlight"><pre><span></span><code>Cannot create container for service [service name here]: unknown log opt &#39;max-file&#39; for journald log driver
+</code></pre></div>
+<ol>
+<li>
+<p>Run the command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/docker/daemon.json
+</code></pre></div>
+</li>
+<li>
+<p>change:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="nt">&quot;log-driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;journald&quot;</span><span class="p">,</span>
+</code></pre></div>
+<p>to:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="nt">&quot;log-driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;json-file&quot;</span><span class="p">,</span>
+</code></pre></div>
+</li>
+</ol>
+<p>Logging limits were added to prevent Docker using up lots of RAM if log2ram is enabled, or SD cards being filled with log data and degraded from unnecessary IO. See <a href="https://docs.docker.com/config/containers/logging/configure/">Docker Logging configurations</a></p>
+<p>You can also turn logging off or set it to use another option for any service by using the IOTstack <code>docker-compose-override.yml</code> file mentioned at <a href="Custom/">IOTstack/Custom</a>.</p>
+<p>Another approach is to change <code>daemon.json</code> to be like this:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;log-driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;local&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;log-opts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;max-size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1m&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The <code>local</code> driver is specifically designed to prevent disk exhaustion. Limiting log size to one megabyte also helps, particularly if you only have a limited amount of storage.</p>
+<p>If you are familiar with system logging where it is best practice to retain logs spanning days or weeks, you may feel that one megabyte is unreasonably small. However, before you rush to increase the limit, consider that each container is the equivalent of a small computer dedicated to a single task. By their very nature, containers tend to either work as expected or fail outright. That, in turn, means that it is usually only recent container logs showing failures as they happen that are actually useful for diagnosing problems.</p>
+<h3 id="starting-an-individual-container">starting an individual container<a class="headerlink" href="#starting-an-individual-container" title="Permanent link">&para;</a></h3>
+<p>To start a particular container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>«container»
+</code></pre></div>
+<h3 id="stopping-your-iotstack">stopping your IOTstack<a class="headerlink" href="#stopping-your-iotstack" title="Permanent link">&para;</a></h3>
+<p>Stopping aka "downing" the stack stops and deletes all containers, and removes the internal network:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>down
+</code></pre></div>
+<p>To stop the stack without removing containers, run:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>stop
+</code></pre></div>
+<h3 id="stopping-an-individual-container">stopping an individual container<a class="headerlink" href="#stopping-an-individual-container" title="Permanent link">&para;</a></h3>
+<p><code>stop</code> can also be used to stop individual containers, like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>stop<span class="w"> </span>«container»
+</code></pre></div>
+<p>This puts the container in a kind of suspended animation. You can resume the container with</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>start<span class="w"> </span>«container»
+</code></pre></div>
+<p>You can also <code>down</code> a container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>down<span class="w"> </span>«container»
+</code></pre></div>
+<p><a name="downContainer"></a>Note:</p>
+<ul>
+<li>
+<p>If the <code>down</code> command returns an error suggesting that you can't use it to down a container, it actually means that you have an obsolete version of <code>docker-compose</code>. You should upgrade your system. The workaround is to you the old syntax:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>rm<span class="w"> </span>--force<span class="w"> </span>--stop<span class="w"> </span>-v<span class="w"> </span>«container»
+</code></pre></div>
+</li>
+</ul>
+<p>To reactivate a container which has been stopped and removed:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>«container»
+</code></pre></div>
+<h3 id="checking-container-status">checking container status<a class="headerlink" href="#checking-container-status" title="Permanent link">&para;</a></h3>
+<p>You can check the status of containers with:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>ps
+</code></pre></div>
+<p>or</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>ps
+</code></pre></div>
+<h3 id="viewing-container-logs">viewing container logs<a class="headerlink" href="#viewing-container-logs" title="Permanent link">&para;</a></h3>
+<p>You can inspect the logs of most containers like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>logs<span class="w"> </span>«container»
+</code></pre></div>
+<p>for example:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>logs<span class="w"> </span>nodered
+</code></pre></div>
+<p>You can also follow a container's log as new entries are added by using the <code>-f</code> flag:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>nodered
+</code></pre></div>
+<p>Terminate with a Control+C. Note that restarting a container will also terminate a followed log.</p>
+<h3 id="restarting-a-container">restarting a container<a class="headerlink" href="#restarting-a-container" title="Permanent link">&para;</a></h3>
+<p>You can restart a container in several ways:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>«container»
+</code></pre></div>
+<p>This kind of restart is the least-powerful form of restart. A good way to think of it is "the container is only restarted, it is not rebuilt".</p>
+<p>If you change a <code>docker-compose.yml</code> setting for a container and/or an environment variable file referenced by <code>docker-compose.yml</code> then a <code>restart</code> is usually not enough to bring the change into effect. You need to make <code>docker-compose</code> notice the change:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>«container»
+</code></pre></div>
+<p>This type of "restart" rebuilds the container.</p>
+<p>Alternatively, to force a container to rebuild (without changing either <code>docker-compose.yml</code> or an environment variable file):</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--force-recreate<span class="w"> </span>«container»
+</code></pre></div>
+<p>See also <a href="#updating-images-not-built-from-dockerfiles">updating images built from Dockerfiles</a> if you need to force <code>docker-compose</code> to notice a change to a Dockerfile.</p>
+<h2 id="persistent-data">persistent data<a class="headerlink" href="#persistent-data" title="Permanent link">&para;</a></h2>
+<p>Docker allows a container's designer to map folders inside a container to a folder on your disk (SD, SSD, HD). This is done with the "volumes" key in <code>docker-compose.yml</code>. Consider the following snippet for Node-RED:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./volumes/nodered/data:/data</span>
+</code></pre></div>
+<p>You read this as two paths, separated by a colon. The:</p>
+<ul>
+<li>external path is <code>./volumes/nodered/data</code></li>
+<li>internal path is <code>/data</code></li>
+</ul>
+<p>In this context, the leading "." means "the folder containing<code>docker-compose.yml</code>", so the external path is actually:</p>
+<ul>
+<li><code>~/IOTstack/volumes/nodered/data</code></li>
+</ul>
+<p>This type of volume is a
+<a href="https://docs.docker.com/storage/bind-mounts/">bind-mount</a>, where the
+container's internal path is directly linked to the external path. All
+file-system operations, reads and writes, are mapped to directly to the files
+and folders at the external path.</p>
+<h3 id="deleting-persistent-data">deleting persistent data<a class="headerlink" href="#deleting-persistent-data" title="Permanent link">&para;</a></h3>
+<p>If you need a "clean slate" for a container, you can delete its volumes. Using InfluxDB as an example:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>rm<span class="w"> </span>--force<span class="w"> </span>--stop<span class="w"> </span>-v<span class="w"> </span>influxdb
+<span class="gp">$ </span>sudo<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>./volumes/influxdb
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>influxdb
+</code></pre></div>
+<p>When <code>docker-compose</code> tries to bring up InfluxDB, it will notice this volume mapping in <code>docker-compose.yml</code>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./volumes/influxdb/data:/var/lib/influxdb</span>
+</code></pre></div>
+<p>and check to see whether <code>./volumes/influxdb/data</code> is present. Finding it not there, it does the equivalent of:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>./volumes/influxdb/data
+</code></pre></div>
+<p>When InfluxDB starts, it sees that the folder on right-hand-side of the volumes mapping (<code>/var/lib/influxdb</code>) is empty and initialises new databases.</p>
+<p>This is how <strong>most</strong> containers behave. There are exceptions so it's always a good idea to keep a backup.</p>
+<h2 id="stack-maintenance">stack maintenance<a class="headerlink" href="#stack-maintenance" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Breaking update</p>
+<p>Recent changes will require <a href="../Updates/migration-network-change/">manual steps</a>
+or you may get an error like:<br />
+<code>ERROR: Service "influxdb" uses an undefined network "iotstack_nw"</code></p>
+</div>
+<h3 id="update-raspberry-pi-os">update Raspberry Pi OS<a class="headerlink" href="#update-raspberry-pi-os" title="Permanent link">&para;</a></h3>
+<p>You should keep your Raspberry Pi up-to-date. Despite the word "container" suggesting that <em>containers</em> are fully self-contained, they sometimes depend on operating system components ("WireGuard" is an example).</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>upgrade<span class="w"> </span>-y
+</code></pre></div>
+<h3 id="git-pull">git pull<a class="headerlink" href="#git-pull" title="Permanent link">&para;</a></h3>
+<p>Although the menu will generally do this for you, it does not hurt to keep your local copy of the IOTstack repository in sync with the master version on GitHub.</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>git<span class="w"> </span>pull
+</code></pre></div>
+<h3 id="container-image-updates">container image updates<a class="headerlink" href="#container-image-updates" title="Permanent link">&para;</a></h3>
+<p>There are two kinds of images used in IOTstack:</p>
+<ul>
+<li>Those not built using Dockerfiles (the majority)</li>
+<li>
+<p>Those built using Dockerfiles (special cases)</p>
+<blockquote>
+<p>A Dockerfile is a set of instructions designed to customise an image before it is instantiated to become a running container.</p>
+</blockquote>
+</li>
+</ul>
+<p>The easiest way to work out which type of image you are looking at is to inspect the container's service definition in your <code>docker-compose.yml</code> file. If the service definition contains the:</p>
+<ul>
+<li><code>image:</code> keyword then the image is <strong>not</strong> built using a Dockerfile.</li>
+<li><code>build:</code> keyword then the image <strong>is</strong> built using a Dockerfile.</li>
+</ul>
+<h4 id="updating-images-not-built-from-dockerfiles">updating images not built from Dockerfiles<a class="headerlink" href="#updating-images-not-built-from-dockerfiles" title="Permanent link">&para;</a></h4>
+<p>If new versions of this type of image become available on DockerHub, your local IOTstack copies can be updated by a <code>pull</code> command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>pull
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune
+</code></pre></div>
+<p>The <code>pull</code> downloads any new images. It does this without disrupting the running stack.</p>
+<p>The <code>up -d</code> notices any newly-downloaded images, builds new containers, and swaps old-for-new. There is barely any downtime for affected containers.</p>
+<h4 id="updating-images-built-from-dockerfiles">updating images built from Dockerfiles<a class="headerlink" href="#updating-images-built-from-dockerfiles" title="Permanent link">&para;</a></h4>
+<p>Containers built using Dockerfiles have a two-step process:</p>
+<ol>
+<li>A <em>base</em> image is downloaded from from DockerHub; and then</li>
+<li>The Dockerfile "runs" to build a <em>local</em> image.</li>
+</ol>
+<p>Node-RED is a good example of a container built from a Dockerfile. The Dockerfile defines some (or possibly all) of your add-on nodes, such as those needed for InfluxDB or Tasmota.</p>
+<p>There are two separate update situations that you need to consider:</p>
+<ul>
+<li>If your Dockerfile changes; or</li>
+<li>If a newer base image appears on DockerHub</li>
+</ul>
+<p>Node-RED also provides a good example of why your Dockerfile might change: if you decide to add or remove add-on nodes.</p>
+<p>Note:</p>
+<ul>
+<li>You can also add nodes to Node-RED using Manage Palette.</li>
+</ul>
+<h5 id="when-dockerfile-changes-local-image-only">when Dockerfile changes (<em>local</em> image only)<a class="headerlink" href="#when-dockerfile-changes-local-image-only" title="Permanent link">&para;</a></h5>
+<p>When your Dockerfile changes, you need to rebuild like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d<span class="w"> </span>«container»
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune
+</code></pre></div>
+<p>This only rebuilds the <em>local</em> image and, even then, only if <code>docker-compose</code> senses a <em>material</em> change to the Dockerfile.</p>
+<p>If you are trying to force the inclusion of a later version of an add-on node, you need to treat it like a <a href="#updating-images-built-from-dockerfiles">DockerHub update</a>.</p>
+<p>Key point:</p>
+<ul>
+<li>The <em>base</em> image is not affected by this type of update.</li>
+</ul>
+<p>Note:</p>
+<ul>
+<li>
+<p>You can also use this type of build if you get an error after modifying Node-RED's environment:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d<span class="w"> </span>nodered
+</code></pre></div>
+</li>
+</ul>
+<h5 id="when-dockerhub-updates-base-and-local-images">when DockerHub updates (<em>base</em> and <em>local</em> images)<a class="headerlink" href="#when-dockerhub-updates-base-and-local-images" title="Permanent link">&para;</a></h5>
+<p>When a newer version of the <em>base</em> image appears on DockerHub, you need to rebuild like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>build<span class="w"> </span>--no-cache<span class="w"> </span>--pull<span class="w"> </span>«container»
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>«container»
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune
+</code></pre></div>
+<p>This causes DockerHub to be checked for the later version of the <em>base</em> image, downloading it as needed.</p>
+<p>Then, the Dockerfile is run to produce a new <em>local</em> image. The Dockerfile run happens even if a new <em>base</em> image was not downloaded in the previous step.</p>
+<h3 id="deleting-unused-images">deleting unused images<a class="headerlink" href="#deleting-unused-images" title="Permanent link">&para;</a></h3>
+<p>As your system evolves and new images come down from DockerHub, you may find that more disk space is being occupied than you expected. Try running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune
+</code></pre></div>
+<p>This recovers anything no longer in use. Sometimes multiple <code>prune</code> commands are needed (eg the first removes an old <em>local</em> image, the second removes the old <em>base</em> image).</p>
+<p>If you add a container via <code>menu.sh</code> and later remove it (either manually or via <code>menu.sh</code>), the associated images(s) will probably persist. You can check which images are installed via:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>images
+
+<span class="go">REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE</span>
+<span class="go">influxdb                 latest              1361b14bf545        5 days ago          264MB</span>
+<span class="go">grafana/grafana          latest              b9dfd6bb8484        13 days ago         149MB</span>
+<span class="go">iotstack_nodered         latest              21d5a6b7b57b        2 weeks ago         540MB</span>
+<span class="go">portainer/portainer-ce   latest              5526251cc61f        5 weeks ago         163MB</span>
+<span class="go">eclipse-mosquitto        latest              4af162db6b4c        6 weeks ago         8.65MB</span>
+<span class="go">nodered/node-red         latest              fa3bc6f20464        2 months ago        376MB</span>
+<span class="go">portainer/portainer      latest              dbf28ba50432        2 months ago        62.5MB</span>
+</code></pre></div>
+<p>Both "Portainer CE" and "Portainer" are in that list. Assuming "Portainer" is no longer in use, it can be removed by using either its repository name or its Image ID. In other words, the following two commands are synonyms:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>rmi<span class="w"> </span>portainer/portainer
+<span class="gp">$ </span>docker<span class="w"> </span>rmi<span class="w"> </span>dbf28ba50432
+</code></pre></div>
+<p>In general, you can use the repository name to remove an image but the Image ID is sometimes needed. The most common situation where you are likely to need the Image ID is after an image has been updated on DockerHub and pulled down to your Raspberry Pi. You will find two containers with the same name. One will be tagged "latest" (the running version) while the other will be tagged "\&lt;none&gt;" (the prior version). You use the Image ID to resolve the ambiguity.</p>
+<h3 id="pinning-to-specific-versions">pinning to specific versions<a class="headerlink" href="#pinning-to-specific-versions" title="Permanent link">&para;</a></h3>
+<p>See <a href="#container-image-updates">container image updates</a> to understand how to tell the difference between images that are used "as is" from DockerHub versus those that are built from local Dockerfiles.</p>
+<p>Note:</p>
+<ul>
+<li>You should <strong>always</strong> visit an image's DockerHub page before pinning to a specific version. This is the only way to be certain that you are choosing the appropriate version suffix.</li>
+</ul>
+<p>To pin an image to a specific version:</p>
+<ul>
+<li>
+<p>If the image comes straight from DockerHub, you apply the pin in <code>docker-compose.yml</code>. For example, to pin Grafana to version 7.5.7, you change:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="w">  </span><span class="nt">grafana</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:latest</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">…</span>
+</code></pre></div>
+<p>to:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="w">  </span><span class="nt">grafana</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:7.5.7</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">…</span>
+</code></pre></div>
+<p>To apply the change, "up" the container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>grafana
+</code></pre></div>
+</li>
+<li>
+<p>If the image is built using a local Dockerfile, you apply the pin in the Dockerfile. For example, to pin Mosquitto to version 1.6.15, edit <code>~/IOTstack/.templates/mosquitto/Dockerfile</code> to change:</p>
+<div class="language-dockerfile highlight"><pre><span></span><code><span class="c"># Download base image</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">eclipse-mosquitto:latest</span>
+…
+</code></pre></div>
+<p>to:</p>
+<div class="language-dockerfile highlight"><pre><span></span><code><span class="c"># Download base image</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">eclipse-mosquitto:1.6.15</span>
+…
+</code></pre></div>
+<p>To apply the change, "up" the container and pass the <code>--build</code> flag:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build<span class="w"> </span>mosquitto
+</code></pre></div>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>

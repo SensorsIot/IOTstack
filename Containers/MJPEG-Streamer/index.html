@@ -1,0 +1,3513 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="../Kapacitor/">
+      
+      
+        <link rel="next" href="../MariaDB/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Motion JPEG Streamer - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#motion-jpeg-streamer" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Motion JPEG Streamer
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Basic_setup/" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../AdGuardHome/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Developers/" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Updates/" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom overrides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Menu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#raspberry-pi-ribbon-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raspberry Pi Ribbon Camera
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Raspberry Pi Ribbon Camera">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparing-your-raspberry-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        preparing your Raspberry Pi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#third-party-cameras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third-party cameras
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#container-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Container variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        environment variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#device-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        device variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-your-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting your variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting your variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alternative approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#about-variable-substitution-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        about variable substitution syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starting-the-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting the container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting-the-camera-to-motioneye" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting the camera to MotionEye
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Node-RED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-RandomPassword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Random Services Password
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Menu-System/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/PostBuild-Script/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Postbuild BASH Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updating the project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/Changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/New-Menu-Release-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New IOTstack Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/gcgarner-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from gcgarner to SensorsIot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/migration-network-change/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration: network change
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#raspberry-pi-ribbon-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raspberry Pi Ribbon Camera
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Raspberry Pi Ribbon Camera">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparing-your-raspberry-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        preparing your Raspberry Pi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#third-party-cameras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third-party cameras
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#container-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Container variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        environment variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#device-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        device variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-your-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting your variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting your variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alternative approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#about-variable-substitution-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        about variable substitution syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starting-the-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting the container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting-the-camera-to-motioneye" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting the camera to MotionEye
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="motion-jpeg-streamer">Motion JPEG Streamer<a class="headerlink" href="#motion-jpeg-streamer" title="Permanent link">&para;</a></h1>
+<p>The <code>mjpg-streamer</code> container lets you pass a video stream from a local camera to a <code>motioneye</code> container. The <code>mjpg-streamer</code> and <code>motioneye</code> containers can be running on the <em>same</em> or <em>different</em> hosts.</p>
+<p>Each <code>mjpg-streamer</code> container can process a stream from an official Raspberry Pi "ribbon cable" camera, or from a third-party USB-connected camera, such as those from <a href="https://www.logitech.com/en-au/products/webcams.html">Logitech</a>.</p>
+<p>Using <code>mjpg-streamer</code> to handle your video streams gives you a consistent approach to supporting multiple cameras and camera types. You do not need to care about distinctions between "ribbon" or USB cameras, nor which hosts are involved.</p>
+<h2 id="raspberry-pi-ribbon-camera">Raspberry Pi Ribbon Camera<a class="headerlink" href="#raspberry-pi-ribbon-camera" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>This section is only relevant if you are trying to use a camera that connects to your Raspberry Pi via a ribbon cable.</p>
+</blockquote>
+<p>Beginning with Raspberry Pi OS Bullseye, the Raspberry Pi Foundation introduced the <a href="https://www.raspberrypi.com/documentation/computers/camera_software.html">LibCamera</a> subsystem and withdrew support for the earlier <code>raspistill</code> and <code>raspivid</code> mechanisms which then became known as the <em>legacy</em> camera system.</p>
+<p>The introduction of the <em>LibCamera</em> subsystem triggered quite a few articles (and videos) on the topic, of which this is one example:</p>
+<ul>
+<li><a href="https://core-electronics.com.au/guides/raspberry-pi-bullseye-camera-commands/">How to use Raspberry Pi Cameras with Bullseye OS Update</a></li>
+</ul>
+<p>Although the <em>LibCamera</em> subsystem works quite well with "native" applications, it has never been clear whether it supports passing camera streams to Docker containers. At the time of writing (2023-10-23), this author has never been able to find any examples which demonstrate that such support exists.</p>
+<p>It is important to understand that:</p>
+<ol>
+<li>This <strong>only</strong> applies to the Raspberry Pi Ribbon Camera;</li>
+<li>In order to access a Raspberry Pi Ribbon Camera, the <code>mjpg-streamer</code> container depends on the <em>legacy</em> camera system; and</li>
+<li>The <em>LibCamera</em> subsystem and the <em>legacy</em> camera system are mutually exclusive.</li>
+</ol>
+<p>In other words, if you want to use the <code>mjpg-streamer</code> container to process a stream from a Raspberry Pi Ribbon Camera, you have to forgo using the <em>LibCamera</em> subsystem.</p>
+<h3 id="preparing-your-raspberry-pi">preparing your Raspberry Pi<a class="headerlink" href="#preparing-your-raspberry-pi" title="Permanent link">&para;</a></h3>
+<p>If you have a Raspberry Pi Ribbon Camera, prepare your system like this:</p>
+<ol>
+<li>
+<p>Check the version of your system by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>grep<span class="w"> </span><span class="s2">&quot;VERSION_CODENAME&quot;</span><span class="w"> </span>/etc/os-release
+</code></pre></div>
+<p>The answer should be one of "buster", "bullseye" or "bookworm".</p>
+</li>
+<li>
+<p>Configure camera support:</p>
+<ul>
+<li>
+<p>if your system is running Buster, run this command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>raspi-config<span class="w"> </span>nonint<span class="w"> </span>do_camera<span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<p>Buster pre-dates <em>LibCamera</em> so this is the same as enabling the <em>legacy</em> camera system. In this context, <code>0</code> means "enable" and <code>1</code> means "disable".</p>
+</li>
+<li>
+<p>if your system is running Bullseye or Bookworm, run these commands:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>raspi-config<span class="w"> </span>nonint<span class="w"> </span>do_camera<span class="w"> </span><span class="m">1</span>
+<span class="gp">$ </span>sudo<span class="w"> </span>raspi-config<span class="w"> </span>nonint<span class="w"> </span>do_legacy<span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<p>The first command is protective and turns off the <em>LibCamera</em> subsystem, while the second command enables the <em>legacy</em> camera system.</p>
+<blockquote>
+<p>When executed from the command line, both the <code>do_camera</code> and <code>do_legacy</code> commands are supported in the Bookworm version of <code>raspi-config</code>. However, neither command is available when <code>raspi-config</code> is invoked as a GUI in a Bookworm system. This likely implies that the commands have been deprecated and will be removed, in which case this documentation will break.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>
+<p>Reboot your system:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>reboot
+</code></pre></div>
+</li>
+<li>
+<p>Make a note that your ribbon camera will be accessible on <code>/dev/video0</code>.</p>
+</li>
+</ol>
+<h2 id="third-party-cameras">Third-party cameras<a class="headerlink" href="#third-party-cameras" title="Permanent link">&para;</a></h2>
+<p>The simplest approach is:</p>
+<ol>
+<li>Connect your camera to a USB port.</li>
+<li>
+<p>Run: </p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>ls<span class="w"> </span>-l<span class="w"> </span>/dev/v4l/by-id
+</code></pre></div>
+<p>This is an example of the response with a LogiTech "C920 PRO FHD Webcam 1080P" camera connected:</p>
+<div class="language-text highlight"><pre><span></span><code>lrwxrwxrwx 1 root root 12 Oct 23 15:42 usb-046d_HD_Pro_Webcam_C920-video-index0 -&gt; ../../video1
+lrwxrwxrwx 1 root root 12 Oct 23 15:42 usb-046d_HD_Pro_Webcam_C920-video-index1 -&gt; ../../video2
+</code></pre></div>
+<p>In general, the device at <code>index0</code> is where your camera will be accessible, as in:</p>
+<div class="language-text highlight"><pre><span></span><code>/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920-video-index0
+</code></pre></div>
+</li>
+</ol>
+<p>If you don't get a sensible response to the <code>ls</code> command then try disconnecting and reconnecting your camera, and rebooting your system.</p>
+<h2 id="container-variables">Container variables<a class="headerlink" href="#container-variables" title="Permanent link">&para;</a></h2>
+<h3 id="environment-variables">environment variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>variable</th>
+<th style="text-align: center;">default</th>
+<th>remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MJPG_STREAMER_USERNAME</code></td>
+<td style="text-align: center;">container ID</td>
+<td><em>changes each time the container is recreated</em></td>
+</tr>
+<tr>
+<td><code>MJPG_STREAMER_PASSWORD</code></td>
+<td style="text-align: center;">random UUID</td>
+<td><em>changes each time the container restarts</em></td>
+</tr>
+<tr>
+<td><code>MJPG_STREAMER_SIZE</code></td>
+<td style="text-align: center;"><code>640x480</code></td>
+<td>should be one of your camera's natural resolutions</td>
+</tr>
+<tr>
+<td><code>MJPG_STREAMER_FPS</code></td>
+<td style="text-align: center;"><code>5</code></td>
+<td>frames per second</td>
+</tr>
+</tbody>
+</table>
+<h3 id="device-variable">device variable<a class="headerlink" href="#device-variable" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>variable</th>
+<th style="text-align: center;">default</th>
+<th>remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MJPG_STREAMER_EXTERNAL_DEVICE</code></td>
+<td style="text-align: center;"><code>/dev/video0</code></td>
+<td>must be set to your video device</td>
+</tr>
+</tbody>
+</table>
+<h2 id="setting-your-variables">Setting your variables<a class="headerlink" href="#setting-your-variables" title="Permanent link">&para;</a></h2>
+<p>To initialise your environment, begin by using a text editor (eg <code>vim</code>, <code>nano</code>) to edit <code>~/IOTstack/.env</code> (which may or may not already exist):</p>
+<ol>
+<li>
+<p>If your <code>.env</code> file does not already define your time-zone, take the opportunity to set it. For example:</p>
+<div class="language-text highlight"><pre><span></span><code>TZ=Australia/Sydney
+</code></pre></div>
+</li>
+<li>
+<p>The access credentials default to random values which change each time the container starts. This is reasonably secure but is unlikely to be useful in practice, so you need to invent some credentials of your own. Example:</p>
+<div class="language-text highlight"><pre><span></span><code>MJPG_STREAMER_USERNAME=streamer
+MJPG_STREAMER_PASSWORD=oNfDG-d1kgzC
+</code></pre></div>
+</li>
+<li>
+<p>Define the <strong>external</strong> device path to your camera. Two examples have been given above:</p>
+<ul>
+<li>
+<p>a ribbon camera:</p>
+<div class="language-text highlight"><pre><span></span><code>MJPG_STREAMER_EXTERNAL_DEVICE=/dev/video0
+</code></pre></div>
+</li>
+<li>
+<p>a Logitech C920 USB camera:</p>
+<div class="language-text highlight"><pre><span></span><code>MJPG_STREAMER_EXTERNAL_DEVICE=/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920-video-index
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>If you know your camera supports higher resolutions, you can also set the size. Examples:</p>
+<ul>
+<li>
+<p>the ribbon camera can support:</p>
+<div class="language-text highlight"><pre><span></span><code>MJPG_STREAMER_SIZE=1152x648
+</code></pre></div>
+</li>
+<li>
+<p>the Logitech C920 can support:</p>
+<div class="language-text highlight"><pre><span></span><code>MJPG_STREAMER_SIZE=1920x1080
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>If the <code>mjpg-streamer</code> and <code>motioneye</code> containers are going to be running on:</p>
+<ul>
+<li>
+<p>the <strong>same</strong> host, you can consider increasing the frame rate:</p>
+<div class="language-text highlight"><pre><span></span><code>MJPG_STREAMER_FPS=30
+</code></pre></div>
+<p>Even though we are setting up a <em>web</em> camera, the traffic will never leave the host and will not traverse your Ethernet or WiFi networks.</p>
+</li>
+<li>
+<p><strong>different</strong> hosts, you should probably leave the rate at 5 frames per second until you understand the impact on network traffic.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Save your work.</p>
+</li>
+</ol>
+<p>Tip:</p>
+<ul>
+<li>Do <strong>not</strong> use quote marks (either single or double quotes) to surround the values of your environment variables. This is because docker-compose treats the quotes as part of the string. If you used quotes, please go back and remove them.</li>
+</ul>
+<h3 id="alternative-approach">alternative approach<a class="headerlink" href="#alternative-approach" title="Permanent link">&para;</a></h3>
+<p>It is still a good idea to define <code>TZ</code> in your <code>.env</code> file. Most IOTstack containers now use the <code>TZ=${TZ:-Etc/UTC}</code> syntax so a single entry in your <code>.env</code> sets the timezone for all of your containers.</p>
+<p>However, if you prefer to keep most of your environment variables inline in your <code>docker-compose.yml</code> rather than in <code>.env</code>, you can do that. Example:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TZ=${TZ:-Etc/UTC}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MJPG_STREAMER_USERNAME=streamer</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MJPG_STREAMER_PASSWORD=oNfDG-d1kgzC</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MJPG_STREAMER_SIZE=1152x648</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MJPG_STREAMER_FPS=5</span>
+</code></pre></div>
+<p>Similarly for the camera device mapping:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">devices</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920-video-index:/dev/video0&quot;</span>
+</code></pre></div>
+<h3 id="about-variable-substitution-syntax">about variable substitution syntax<a class="headerlink" href="#about-variable-substitution-syntax" title="Permanent link">&para;</a></h3>
+<p>If you're wondering about the syntax used for environment variables:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MJPG_STREAMER_USERNAME=${MJPG_STREAMER_USERNAME:-}</span>
+</code></pre></div>
+<p>it means that <code>.env</code> will be checked for the presence of <code>MJPG_STREAMER_USERNAME=value</code>. If the key is found, its value will be used. If the key is not found, the value will be set to a null string. Then, inside the container, a null string is used as the trigger to apply the defaults listed in the table above.</p>
+<p>In the case of the camera device mapping, this syntax:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;${MJPG_STREAMER_EXTERNAL_DEVICE:-/dev/video0}:/dev/video0&quot;</span>
+</code></pre></div>
+<p>means that <code>.env</code> will be checked for the presence of <code>MJPG_STREAMER_EXTERNAL_DEVICE=path</code>. If the key is found, the path will be used. If the key is not found, the path will be set to <code>/dev/video0</code> on the assumption that a camera is present and the device exists.</p>
+<p>Regardless of whether a device path comes from <code>.env</code>, or is defined inline, or defaults to <code>/dev/video0</code>, if the device does not actually exist then <code>docker-compose</code> will refuse to start the container with the following error:</p>
+<div class="language-text highlight"><pre><span></span><code>Error response from daemon: error gathering device information while adding custom device &quot;«path»&quot;: no such file or directory
+</code></pre></div>
+<h2 id="starting-the-container">Starting the container<a class="headerlink" href="#starting-the-container" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Start the container like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>mjpg-streamer
+</code></pre></div>
+<p>The first time you do this triggers a fairly long process. First, a basic operating system image is downloaded from DockerHub, then a Dockerfile is run to add the streamer software and construct a local image, after which the local image is instantiated as your running container. Subsequent launches use the local image so the container starts immediately. See also <a href="#maintenance">container maintenance</a>.</p>
+</li>
+<li>
+<p>Once the container is running, make sure it is behaving normally and has not gone into a restart loop:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>ps<span class="w"> </span>-a<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;table {{.Names}}\t{{.RunningFor}}\t{{.Status}}&quot;</span>
+</code></pre></div>
+<blockquote>
+<p>The <code>docker ps</code> command produces a lot of output which generally results in line-wrapping and can be hard to read. The <code>--format</code> argument reduces this clutter by focusing on the interesting columns. If you have <a href="https://github.com/Paraphraser/IOTstackAliases">IOTstackAliases</a> installed, you can use <code>DPS</code> instead of copy/pasting the above command.</p>
+</blockquote>
+<p>If the container is restarting, you will see evidence of that in the STATUS column. If that happens, re-check the values set in the <code>.env</code> file and "up" the container again. The container's log (see below) may also be helpful.</p>
+</li>
+<li>
+<p>Check the container's log:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>logs<span class="w"> </span>mjpg-streamer
+<span class="go"> i: Using V4L2 device.: /dev/video0</span>
+<span class="go"> i: Desired Resolution: 1152 x 648</span>
+<span class="go"> i: Frames Per Second.: 5</span>
+<span class="go"> i: Format............: JPEG</span>
+<span class="go"> i: TV-Norm...........: DEFAULT</span>
+<span class="go"> o: www-folder-path......: /usr/local/share/mjpg-streamer/www/</span>
+<span class="go"> o: HTTP TCP port........: 80</span>
+<span class="go"> o: HTTP Listen Address..: (null)</span>
+<span class="go"> o: username:password....: streamer:oNfDG-d1kgzC</span>
+<span class="go"> o: commands.............: enabled</span>
+</code></pre></div>
+<p>Many of the values you set earlier using environment variables show up here so viewing the log is a good way of making sure everything is being passed to the container.</p>
+<p>Note:</p>
+<ul>
+<li>The <code>/dev/video0</code> in the first line of output is the <strong>internal</strong> device path (inside the container). This is <strong>not</strong> the same as the <strong>external</strong> device path associated with <code>MJPG_STREAMER_EXTERNAL_DEVICE</code>. The container doesn't know about the <strong>external</strong> device path so it has no way to display it.</li>
+</ul>
+</li>
+</ol>
+<h2 id="connecting-the-camera-to-motioneye">Connecting the camera to MotionEye<a class="headerlink" href="#connecting-the-camera-to-motioneye" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Use a browser to connect with MotionEye on port 8765.</li>
+<li>Authenticate as an administrator (the default is "admin" with no password).</li>
+<li>Click the &#x2630; icon at the top, left of the screen so that it rotates 90° and exposes the "Camera" popup menu.</li>
+<li>In the "Camera" popup menu field, click the &#x25BE; and choose "Add&nbsp;Camera…".</li>
+<li>Change the "Camera Type" field to "Network Camera".</li>
+<li>
+<p>If the <code>motioneye</code> and <code>mjpg-streamer</code> containers are running on:</p>
+<ul>
+<li>
+<p>the <strong>same</strong> host, the URL should be:</p>
+<div class="language-text highlight"><pre><span></span><code>http://mjpg-streamer:80/?action=stream
+</code></pre></div>
+<p>Here:</p>
+<ul>
+<li><code>mjpg-streamer</code> is the name of the <strong>container</strong>. Technically, it is a <strong>host</strong> name (rather than a domain name); and</li>
+<li>
+<p>port 80 is the <strong>internal</strong> port that the streamer process running inside the container is listening to. It comes from the <em>right</em> hand side of the port mapping in the service definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">ports</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8980:80&quot;</span>
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>different</strong> hosts, the URL should be in this form:</p>
+<div class="language-text highlight"><pre><span></span><code>http://«name-or-ip»:8980/?action=stream
+</code></pre></div>
+<p>Here:</p>
+<ul>
+<li>
+<p><code>«name-or-ip»</code> is the domain name or IP address of the host on which the <code>mjpg-streamer</code> container is running. Examples:</p>
+<div class="language-text highlight"><pre><span></span><code>http://raspberrypi.local:8980/?action=stream
+http://my-spy.domain.com:8980/?action=stream
+http://192.168.200.200:8980/?action=stream
+</code></pre></div>
+</li>
+<li>
+<p>port 8980 is the <strong>external</strong> port that the host where the <code>mjpg-streamer</code> container is running is listening on behalf of the container. It comes from the <em>left</em> hand side of the port mapping in the service definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">ports</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8980:80&quot;</span>
+</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Enter the Username ("streamer" in this example).</p>
+</li>
+<li>Enter the Password ("oNfDG-d1kgzC" in this example).</li>
+<li>Click in the Username field again. This causes MotionEye to retry the connection, after which the camera should appear in the Camera field.</li>
+<li>Click OK. The camera feed should start working.</li>
+</ol>
+<h2 id="maintenance">Container maintenance<a class="headerlink" href="#maintenance" title="Permanent link">&para;</a></h2>
+<p>Because it is built from a local Dockerfile, the <code>mjpg-streamer</code> does not get updated in response to a normal "pull". If you want to rebuild the container, proceed like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>build<span class="w"> </span>--no-cache<span class="w"> </span>--pull<span class="w"> </span>mjpg-streamer
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>mjpg-streamer
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-f
+</code></pre></div>
+<p>If you have <a href="https://github.com/Paraphraser/IOTstackAliases">IOTstackAliases</a> installed, the above is:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>REBUILD<span class="w"> </span>mjpg-streamer
+<span class="gp">$ </span>UP<span class="w"> </span>mjpg-streamer
+<span class="gp">$ </span>PRUNE
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>

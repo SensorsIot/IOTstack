@@ -1,0 +1,5823 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="../Nginx/">
+      
+      
+        <link rel="next" href="../Octoprint/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Node-RED - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#node-red" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Node-RED
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Basic_setup/" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../AdGuardHome/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Developers/" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Updates/" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom overrides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Menu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MJPEG-Streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#significant-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Significant files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iotstackBuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Node-RED gets built for IOTstack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Node-RED gets built for IOTstack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gitHubSource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node-RED source code (GitHub)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dockerHubImages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node-RED images (DockerHub)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iotstackMenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IOTstack menu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iotstackFirstRun" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IOTstack first run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securingNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Securing Node-RED
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Securing Node-RED">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#encryptionKey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting an encryption key for your credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting a username and password for Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#containerNames" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referring to other containers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referring to other containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nonHostMode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Node-RED is not in host mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hostmode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Node-RED is in host mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hostReference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referring to the host
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referring to the host">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defaultBridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridge network - default gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessGPIO" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPIO Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessSerial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serial Devices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Serial Devices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usbSerial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        USB devices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nodeSerial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        node-red-node-serialport
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#piSerial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hardware serial port
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bluetoothSupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bluetooth device
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fileSharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sharing files between Node-RED and the Raspberry Pi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sshOutside" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executing commands outside the Node-RED container
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Executing commands outside the Node-RED container">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sshTaskGoal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshAssumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dockerExec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executing commands "inside" a container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshStep1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Generate SSH key-pair for Node-RED (one time)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshStep2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Exchange keys with target hosts (once per target host)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshStep3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Perform the recommended test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshWhatsWhere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding what's where and what each file does
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding what&#39;s where and what each file does">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sshFileLocations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What files are where
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshFilePurpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What each file does
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config file (optional)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Config file (optional)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sshConfigTest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-test with config file in place
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshTestFlow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A test flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintainNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintaining Node-RED
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Maintaining Node-RED">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#startNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stopping Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restartNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restarting Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuildNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-building the local image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updateNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking for Node-RED updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgradeNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#containerVersions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node-RED and node.js versions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node-RED and node.js versions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkingVersions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versionControl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controlling versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#componentManagement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#viaDockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        via Dockerfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viaManagePalette" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        via Manage Palette
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viaNPM" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        via npm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viaWhich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison of methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#componentPrecedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component precedence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixDuplicateNodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolving node duplication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packageManagement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#july2022syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating to July 2022 syntax
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Updating to July 2022 syntax">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#july2022compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating your Compose file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#july2022dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating your Dockerfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#july2022build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the new syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linuxDistro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alpine vs Debian
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-RandomPassword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Random Services Password
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Menu-System/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/PostBuild-Script/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Postbuild BASH Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updating the project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/Changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/New-Menu-Release-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New IOTstack Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/gcgarner-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from gcgarner to SensorsIot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/migration-network-change/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration: network change
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#significant-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Significant files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iotstackBuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Node-RED gets built for IOTstack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Node-RED gets built for IOTstack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gitHubSource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node-RED source code (GitHub)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dockerHubImages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node-RED images (DockerHub)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iotstackMenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IOTstack menu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iotstackFirstRun" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IOTstack first run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securingNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Securing Node-RED
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Securing Node-RED">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#encryptionKey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting an encryption key for your credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting a username and password for Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#containerNames" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referring to other containers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referring to other containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nonHostMode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Node-RED is not in host mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hostmode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Node-RED is in host mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hostReference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referring to the host
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referring to the host">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defaultBridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridge network - default gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessGPIO" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPIO Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessSerial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serial Devices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Serial Devices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usbSerial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        USB devices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nodeSerial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        node-red-node-serialport
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#piSerial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hardware serial port
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bluetoothSupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bluetooth device
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fileSharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sharing files between Node-RED and the Raspberry Pi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sshOutside" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executing commands outside the Node-RED container
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Executing commands outside the Node-RED container">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sshTaskGoal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshAssumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dockerExec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executing commands "inside" a container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshStep1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Generate SSH key-pair for Node-RED (one time)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshStep2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Exchange keys with target hosts (once per target host)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshStep3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Perform the recommended test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshWhatsWhere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding what's where and what each file does
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding what&#39;s where and what each file does">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sshFileLocations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What files are where
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshFilePurpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What each file does
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config file (optional)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Config file (optional)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sshConfigTest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-test with config file in place
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sshTestFlow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A test flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintainNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintaining Node-RED
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Maintaining Node-RED">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#startNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stopping Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restartNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restarting Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuildNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-building the local image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updateNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking for Node-RED updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgradeNodeRed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading Node-RED
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#containerVersions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node-RED and node.js versions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node-RED and node.js versions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkingVersions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versionControl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controlling versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#componentManagement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#viaDockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        via Dockerfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viaManagePalette" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        via Manage Palette
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viaNPM" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        via npm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viaWhich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison of methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#componentPrecedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component precedence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixDuplicateNodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolving node duplication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packageManagement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#july2022syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating to July 2022 syntax
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Updating to July 2022 syntax">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#july2022compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating your Compose file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#july2022dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating your Dockerfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#july2022build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the new syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linuxDistro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alpine vs Debian
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="node-red">Node-RED<a class="headerlink" href="#node-red" title="Permanent link">&para;</a></h1>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://nodered.org/">nodered.org home</a></li>
+<li><a href="https://github.com/node-red/node-red-docker">GitHub: node-red/node-red-docker</a></li>
+<li><a href="https://hub.docker.com/r/nodered/node-red">DockerHub: nodered/node-red</a></li>
+<li><a href="https://gist.github.com/Paraphraser/c9db25d131dd4c09848ffb353b69038f">Tutorial: from MQTT to InfluxDB via Node-Red</a></li>
+</ul>
+<h2 id="significant-files">Significant files<a class="headerlink" href="#significant-files" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack
+├── .templates
+│   └── nodered
+│       └── service.yml ❶
+├── services
+│   └── nodered
+│       ├── Dockerfile ❷
+│       └── service.yml ❸
+├── docker-compose.yml ❹
+└── volumes
+    └── nodered ❺
+        ├── data ❻
+        └── ssh ❼
+</code></pre></div>
+<ol>
+<li>Template <em>service definition</em>.</li>
+<li>The <em>Dockerfile</em>.</li>
+<li>Working <em>service definition</em> (old-menu only, copied from ❶).</li>
+<li>The <em>Compose</em> file (includes ❶)</li>
+<li>Persistent storage area.</li>
+<li>Data directory (mapped volume).</li>
+<li>SSH directory (mapped volume).</li>
+</ol>
+<h2 id="iotstackBuild">How Node-RED gets built for IOTstack<a class="headerlink" href="#iotstackBuild" title="Permanent link">&para;</a></h2>
+<h3 id="gitHubSource">Node-RED source code (<a href="https://github.com">GitHub</a>)<a class="headerlink" href="#gitHubSource" title="Permanent link">&para;</a></h3>
+<p>The source code for Node-RED lives at <a href="https://github.com/node-red/node-red-docker">GitHub node-red/node-red-docker</a>.</p>
+<h3 id="dockerHubImages">Node-RED images (<a href="https://hub.docker.com">DockerHub</a>)<a class="headerlink" href="#dockerHubImages" title="Permanent link">&para;</a></h3>
+<p>Periodically, the source code is recompiled and pushed to <a href="https://hub.docker.com/r/nodered/node-red/tags?page=1&amp;ordering=last_updated">nodered/node-red</a> on <em>DockerHub</em>. See <a href="#containerVersions">Node-RED and <code>node.js</code> versions</a> for an explanation of the versioning tags associated with images on <em>DockerHub</em>.</p>
+<h3 id="iotstackMenu">IOTstack menu<a class="headerlink" href="#iotstackMenu" title="Permanent link">&para;</a></h3>
+<p>When you select Node-RED in the IOTstack menu, the <em>template service definition</em> ❶ is copied into the <em>Compose</em> file ❹.</p>
+<blockquote>
+<p>Under old menu, it is also copied to the <em>working service definition</em> ❸ and then not really used.</p>
+</blockquote>
+<p>You choose add-on nodes from a supplementary menu. We recommend accepting the default nodes, and adding others that you think you are likely to need. Node-RED will not build if you do not select at least one add-on node.</p>
+<p>Key points: </p>
+<ul>
+<li>Under new menu, you must press the right arrow to access the supplementary menu. Under old menu, the list of add-on nodes is displayed automatically. </li>
+<li>Do not be concerned if you can't find an add-on node you need in the list. You can also add nodes via Manage Palette once Node-RED is running. See <a href="#componentManagement">component management</a>.</li>
+</ul>
+<p>Choosing add-on nodes in the menu causes the <em>Dockerfile</em> ❷ to be created.</p>
+<h3 id="iotstackFirstRun">IOTstack first run<a class="headerlink" href="#iotstackFirstRun" title="Permanent link">&para;</a></h3>
+<p>On a first install of IOTstack, you are told to do this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p><code>docker-compose</code> reads the <em>Compose</em> file ❹. When it arrives at the <code>nodered</code> service definition, it finds <a name="serviceBuildFragment"><a>:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">  </span><span class="nt">nodered</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodered</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services/nodered/.</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKERHUB_TAG=latest</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_PACKAGES=</span>
+</code></pre></div></td></tr></table></div>
+<p>Note:</p>
+<ul>
+<li>
+<p>Prior to July 2022, IOTstack used the following one-line syntax for the <code>build</code> directive:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services/nodered/.</span>
+</code></pre></div></td></tr></table></div>
+<p>The older syntax meant all local customisations (version-pinning and adding extra packages) needed manual edits to the <em>Dockerfile</em> ❷. Those edits would be overwritten each time the menu was re-run to alter the selected add-on nodes. The newer multi-line syntax avoids that problem.</p>
+<p>See also <a href="#july2022syntax">updating to July 2022 syntax</a>.</p>
+</li>
+</ul>
+<p>In either case, the path <code>./services/nodered/.</code> tells <code>docker-compose</code> to look for ❷:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/services/nodered/Dockerfile
+</code></pre></div>
+<p>which contains instructions to download a <em>base</em> image from <a href="https://hub.docker.com"><em>DockerHub</em></a> and then apply local customisations such as the add-on nodes you chose in the IOTstack menu. The result is a <em>local</em> image which is instantiated to become your running container.</p>
+<p>Notes:</p>
+<ol>
+<li>During the build you may see warnings and deprecation notices. You may also see messages about "vulnerabilities" along with recommendations to run <code>npm audit fix</code>. You should ignore all such messages. There is no need to take any action.</li>
+<li>
+<p>If SQLite is in your list of nodes, be aware that it needs to be compiled from its source code. It takes a <em>long</em> time, outputs an astonishing number of warnings and, from time to time, will look as if it has gotten stuck. Be patient.</p>
+<blockquote>
+<p>Acknowledgement: Successful installation of the SQLite node is thanks to @fragolinux.</p>
+</blockquote>
+</li>
+</ol>
+<p>When you run the <code>docker images</code> command after Node-RED has been built, you will see something like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>images
+<span class="go">REPOSITORY               TAG       IMAGE ID       CREATED        SIZE</span>
+<span class="go">iotstack-nodered         latest    9feeb87019cd   11 days ago    945MB</span>
+</code></pre></div>
+<p>The image name <code>iotstack-nodered</code> is the concatenation of two components:</p>
+<ol>
+<li>The <code>docker-compose</code> <em>project</em> name. This is the all-lower-case representation of the name of the folder containing <code>docker-compose.yml</code>. In a default clone of IOTstack, the folder name is <code>IOTstack</code> so the project name is <code>iotstack</code>.</li>
+<li>The name of the service definition which, for Node-RED is <code>nodered</code>.</li>
+</ol>
+<p>When you install Node-RED for the first time, the entire process of downloading a <em>base</em> image from Dockerhub, building a <em>local</em> image by running your local Dockerfile ❷, and then instantiating that <em>local</em> image as your running container, is all completely automatic.</p>
+<p>However, <em>after</em> that first build, your <em>local</em> image is essentially frozen and it needs special action on your part to keep it up-to-date. See <a href="#maintainNodeRed">maintaining Node-RED</a> and, in particular:</p>
+<ul>
+<li><a href="#rebuildNodeRed">Re-building the local image</a> if you change the Dockerfile; and</li>
+<li><a href="#upgradeNodeRed">Upgrading Node-RED</a> if you want to reconstruct your <em>local</em> image based on an updated <em>base</em> image which has become available on <a href="https://hub.docker.com/r/nodered/node-red/tags">DockerHub</a>.</li>
+</ul>
+<h2 id="securingNodeRed">Securing Node-RED<a class="headerlink" href="#securingNodeRed" title="Permanent link">&para;</a></h2>
+<h3 id="encryptionKey">Setting an encryption key for your credentials<a class="headerlink" href="#encryptionKey" title="Permanent link">&para;</a></h3>
+<p>After you install Node-RED, you should set an encryption key. Completing this step will silence the warning you will see when you run:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>logs<span class="w"> </span>nodered
+<span class="go">…</span>
+<span class="go">---------------------------------------------------------------------</span>
+<span class="go">Your flow credentials file is encrypted using a system-generated key.</span>
+
+<span class="go">If the system-generated key is lost for any reason, your credentials</span>
+<span class="go">file will not be recoverable, you will have to delete it and re-enter</span>
+<span class="go">your credentials.</span>
+
+<span class="go">You should set your own key using the &#39;credentialSecret&#39; option in</span>
+<span class="go">your settings file. Node-RED will then re-encrypt your credentials</span>
+<span class="go">file using your chosen key the next time you deploy a change.</span>
+<span class="go">---------------------------------------------------------------------</span>
+<span class="go">…</span>
+</code></pre></div>
+<p>Setting an encryption key also means that any credentials you create will be <em>portable</em>, in the sense that you can backup Node-RED on one machine and restore it on another.</p>
+<p>The encryption key can be any string. For example, if you have UUID support installed (<code>sudo apt install -y uuid-runtime</code>), you could generate a UUID as your key:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>uuidgen
+<span class="go">2deb50d4-38f5-4ab3-a97e-d59741802e2d</span>
+</code></pre></div>
+<p>Once you have defined your encryption key, use <code>sudo</code> and your favourite text editor to open this file:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/nodered/data/settings.js
+</code></pre></div>
+<p>Search for <code>credentialSecret</code>:</p>
+<div class="language-text highlight"><pre><span></span><code>    //credentialSecret: &quot;a-secret-key&quot;,
+</code></pre></div>
+<p>Un-comment the line and replace <code>a-secret-key</code> with your chosen key. Do not remove the comma at the end of the line. The result should look something like this:</p>
+<div class="language-text highlight"><pre><span></span><code>    credentialSecret: &quot;2deb50d4-38f5-4ab3-a97e-d59741802e2d&quot;,
+</code></pre></div>
+<p>Save the file and then restart Node-RED:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>nodered
+</code></pre></div>
+<h3 id="credentials">Setting a username and password for Node-RED<a class="headerlink" href="#credentials" title="Permanent link">&para;</a></h3>
+<p>To secure Node-RED you need a password hash. Run the following command, replacing <code>PASSWORD</code> with your own password:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nodered<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;console.log(require(&#39;bcryptjs&#39;).hashSync(process.argv[1], 8));&quot;</span><span class="w"> </span>PASSWORD
+</code></pre></div>
+<p>You will get an answer that looks something like this:</p>
+<div class="language-text highlight"><pre><span></span><code>$2a$08$gTdx7SkckJVCw1U98o4r0O7b8P.gd5/LAPlZI6geg5LRg4AUKuDhS
+</code></pre></div>
+<p>Copy that text to your clipboard, then follow the instructions at <a href="https://nodered.org/docs/user-guide/runtime/securing-node-red#usernamepassword-based-authentication">Node-RED User Guide - Securing Node-RED - Username &amp; Password-based authentication</a>.</p>
+<h2 id="containerNames">Referring to other containers<a class="headerlink" href="#containerNames" title="Permanent link">&para;</a></h2>
+<p>Node-RED can run in two modes. By default, it runs in "non-host mode" but you can also move the container to "host mode" by editing the Node-RED service definition in your <em>Compose</em> file to:</p>
+<ol>
+<li>
+<p>Add the following directive:</p>
+<div class="language-text highlight"><pre><span></span><code>network_mode: host
+</code></pre></div>
+</li>
+<li>
+<p>Remove the <code>ports</code> directive and the mapping of port 1880.</p>
+</li>
+</ol>
+<h3 id="nonHostMode">When Node-RED is not in host mode<a class="headerlink" href="#nonHostMode" title="Permanent link">&para;</a></h3>
+<p>Most examples on the web assume Node-RED and other services in the MING (Mosquitto, InfluxDB, Node-RED, Grafana) stack have been installed natively, rather than in Docker containers. Those examples typically include the loopback address + port syntax, like this:</p>
+<div class="language-text highlight"><pre><span></span><code>127.0.0.1:1883
+</code></pre></div>
+<p>The loopback address will not work when Node-RED is in non-host mode. This is because each container behaves like a self-contained computer. The loopback address means "this container". It does not mean "this Raspberry Pi".</p>
+<p>You refer to other containers by their container name. For example, a flow subscribing to an MQTT feed provided by the mosquitto container uses:</p>
+<div class="language-text highlight"><pre><span></span><code>mosquitto:1883
+</code></pre></div>
+<p>Similarly, if a flow writes to an InfluxDB database maintained by the influxdb container, the flow uses:</p>
+<div class="language-text highlight"><pre><span></span><code>influxdb:8086
+</code></pre></div>
+<p>Behind the scenes, Docker maintains a table, similar to an <code>/etc/hosts</code> file, mapping container names to the IP addresses on the internal bridged network that are assigned, dynamically, by Docker, when it spins up each container.</p>
+<h3 id="hostmode">When Node-RED is in host mode<a class="headerlink" href="#hostmode" title="Permanent link">&para;</a></h3>
+<p>This is where you use loopback+port syntax, such as the following to communicate with Mosquitto:</p>
+<div class="language-text highlight"><pre><span></span><code>127.0.0.1:1883
+</code></pre></div>
+<p>What actually occurs is that Docker is listening to external port 1883 on behalf of Mosquitto. It receives the packet and routes it (layer three) to the internal bridged network, performing network address translation (NAT) along the way to map the external port to the internal port. Then the packet is delivered to Mosquitto. The reverse happens when Mosquitto replies. It works but is less efficient than when all containers are in non-host mode. </p>
+<h2 id="hostReference">Referring to the host<a class="headerlink" href="#hostReference" title="Permanent link">&para;</a></h2>
+<p>When the container is running in non-host mode, there are several ways in which it can refer to the host on which the container is running:</p>
+<ol>
+<li>via the IP address of one of the host's interfaces;</li>
+<li>via the fully-qualified domain name of the host (ie same as the above but via the Domain Name System)</li>
+<li>via the default gateway on the Docker bridge network.</li>
+</ol>
+<p>The problem with the first two is that they tie your flows to the specific host.</p>
+<p>The third method is <em>portable</em>, meaning a flow can conceptually refer to "this" host and be independent of the actual host on which the container is running.</p>
+<h3 id="defaultBridge">Bridge network - default gateway<a class="headerlink" href="#defaultBridge" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>Method 1</p>
+<p>The default gateway on the Docker bridge network is <em>usually</em> "172.17.0.1". You can confirm the IP address by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>network<span class="w"> </span>inspect<span class="w"> </span>bridge<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.<span class="o">[</span><span class="m">0</span><span class="o">]</span>.IPAM.Config<span class="o">[</span><span class="m">0</span><span class="o">]</span>.Gateway
+<span class="go">&quot;172.17.0.1&quot;</span>
+</code></pre></div>
+<blockquote>
+<p>If <code>jq</code> is not installed on your system, you can install it by running <code>sudo apt install -y jq</code>.</p>
+</blockquote>
+<p>If you use this method, your flows can refer to "this" host using the IP address "172.17.0.1".</p>
+</li>
+<li>
+<p>Method 2</p>
+<p>Alternatively, you can add the following lines to your Node-RED service definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">extra_hosts</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;host.docker.internal:host-gateway&quot;</span>
+</code></pre></div>
+<p>If you use this method, your flows can refer to "this" host using the domain name "host.docker.internal".</p>
+<p>Generally the second method is recommended for IOTstack. That is because your flows will continue to work even if the 172.17.0.1 IP address changes. However, it does come with the disadvantage that, if you publish a flow containing this domain name, the flow will not work unless the recipient also adds the <code>extra_hosts</code> clause.</p>
+</li>
+</ul>
+<h2 id="accessGPIO">GPIO Access<a class="headerlink" href="#accessGPIO" title="Permanent link">&para;</a></h2>
+<p>To communicate with your Raspberry Pi's GPIO you need to do the following:</p>
+<ol>
+<li>
+<p>Install dependencies:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>pigpio<span class="w"> </span>python-pigpio<span class="w"> </span>python3-pigpio
+</code></pre></div>
+<p>Notes:</p>
+<ul>
+<li><code>pigpio</code> and <code>python3-pigpio</code> are usually installed by default in standard releases of Raspberry Pi OS.</li>
+<li>Only <code>pigpio</code> is actually <em>required</em>.</li>
+<li>The Python packages are <em>optional</em>.</li>
+</ul>
+</li>
+<li>
+<p>Install the <code>node-red-node-pi-gpiod</code> node. See <a href="#componentManagement">component management</a>. It allows you to connect to multiple Pis from the same Node-RED service.</p>
+<p>Note:</p>
+<ul>
+<li>Unless you explicitly removed <code>node-red-node-pi-gpiod</code> from the list of add-on nodes added to your <a href="#viaDockerfile">Dockerfile</a> by the IOTstack menu, it will be installed already. You can confirm this by examining your Node-RED Dockerfile&nbsp;❷.</li>
+</ul>
+</li>
+<li>
+<p>Configure the <code>pigpdiod</code> daemon:</p>
+<ul>
+<li>
+<p>copy the following text to the clipboard:</p>
+<div class="language-ini highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Requires</span><span class="o">=</span><span class="s">default.target</span>
+<span class="na">After</span><span class="o">=</span><span class="s">default.target</span>
+<span class="k">[Service]</span>
+<span class="na">ExecStart</span><span class="o">=</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/pigpiod</span>
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<p>Acknowledgement: some of the above from <a href="https://github.com/joan2937/pigpio/issues/554#issuecomment-1405364041">joan2937/pigpio issue 554</a></p>
+</blockquote>
+</li>
+<li>
+<p>execute the following commands:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>pigpiod
+<span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>revert<span class="w"> </span>pigpiod
+<span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>edit<span class="w"> </span>pigpiod
+</code></pre></div>
+</li>
+<li>
+<p>follow the on-screen instructions and paste the contents of the clipboard into the blank area between the lines. The final result should be (lines 4…12 are the pasted material):</p>
+<div class="language-ini highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">### Editing /etc/systemd/system/pigpiod.service.d/override.conf</span>
+<span class="c1">### Anything between here and the comment below will become the new contents of the file</span>
+
+<span class="k">[Unit]</span>
+<span class="na">Requires</span><span class="o">=</span><span class="s">default.target</span>
+<span class="na">After</span><span class="o">=</span><span class="s">default.target</span>
+<span class="k">[Service]</span>
+<span class="na">ExecStart</span><span class="o">=</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/pigpiod</span>
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
+
+<span class="c1">### Lines below this comment will be discarded</span>
+
+<span class="c1">### /lib/systemd/system/pigpiod.service</span>
+<span class="c1"># [Unit]</span>
+<span class="c1"># Description=Daemon required to control GPIO pins via pigpio</span>
+<span class="c1"># [Service]</span>
+<span class="c1"># ExecStart=/usr/bin/pigpiod -l</span>
+<span class="c1"># ExecStop=/bin/systemctl kill pigpiod</span>
+<span class="c1"># Type=forking</span>
+<span class="c1"># [Install]</span>
+<span class="c1"># WantedBy=multi-user.target</span>
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Save your work by pressing:</p>
+<ul>
+<li><kbd>control</kbd>+<kbd>O</kbd> (letter O not zero)</li>
+<li><kbd>return</kbd></li>
+<li><kbd>control</kbd>+<kbd>X</kbd></li>
+</ul>
+</li>
+<li>
+<p>Check your work by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>cat<span class="w"> </span>pigpiod
+</code></pre></div>
+<p>The expected result is:</p>
+<div class="language-ini highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># /lib/systemd/system/pigpiod.service</span>
+<span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Daemon required to control GPIO pins via pigpio</span>
+<span class="k">[Service]</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/pigpiod -l</span>
+<span class="na">ExecStop</span><span class="o">=</span><span class="s">/bin/systemctl kill pigpiod</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">forking</span>
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+
+<span class="c1"># /etc/systemd/system/pigpiod.service.d/override.conf</span>
+<span class="k">[Unit]</span>
+<span class="na">Requires</span><span class="o">=</span><span class="s">default.target</span>
+<span class="na">After</span><span class="o">=</span><span class="s">default.target</span>
+<span class="k">[Service]</span>
+<span class="na">ExecStart</span><span class="o">=</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/pigpiod</span>
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
+</code></pre></div></td></tr></table></div>
+<p>Lines 12…20 should be those you copied to the clipboard at the start of this step. If you do not see the expected result, go back and start from the beginning of this step.</p>
+</li>
+<li>
+<p>Activate the daemon:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>pigpiod
+<span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>pigpiod
+</code></pre></div>
+</li>
+<li>
+<p>Reboot.</p>
+</li>
+<li>
+<p>Check that the daemon is running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>pigpiod
+</code></pre></div>
+<p>Once you have configured <code>pigpiod</code> correctly and it has come up after a reboot, you should not need to worry about it again.</p>
+<p><code>pigpiod</code> provides open access to your Raspberry Pi's GPIO via port 8888. Consult the <code>man</code> pages if you want to make it more secure. Once you have decided what to do, start over from the beginning of this step, and add your parameters to the line:</p>
+<div class="language-ini highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/pigpiod</span>
+</code></pre></div></td></tr></table></div>
+</li>
+</ul>
+</li>
+<li>
+<p>Drag a <code>pi gpio</code> node onto the canvas. Configure it according to your needs.</p>
+<p>The <code>Host</code> field should be set to one of:</p>
+<ul>
+<li><code>172.17.0.1</code>; or</li>
+<li><code>host.docker.internal</code></li>
+</ul>
+<p>See also <a href="#defaultBridge">Bridge network - default gateway</a>.</p>
+<p>Don't try to use 127.0.0.1 because that is the loopback address of the Node-RED container.</p>
+</li>
+</ol>
+<h2 id="accessSerial">Serial Devices<a class="headerlink" href="#accessSerial" title="Permanent link">&para;</a></h2>
+<h3 id="usbSerial">USB devices<a class="headerlink" href="#usbSerial" title="Permanent link">&para;</a></h3>
+<p>Node-RED running in a container <em>can</em> communicate with serial devices attached to your Raspberry Pi's USB ports. However, it does not work "out of the box". You need to set it up.</p>
+<p>Let's make an assumption. A device connected to one of your Raspberry Pi's USB ports presents itself as:</p>
+<div class="language-text highlight"><pre><span></span><code>/dev/ttyUSB0
+</code></pre></div>
+<p>You have three basic options:</p>
+<ol>
+<li>
+<p>You can map the device into the container using that name:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">devices</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/dev/ttyUSB0:/dev/ttyUSB0&quot;</span>
+</code></pre></div>
+<p>This is simple and effective but it suffers from a few problems:</p>
+<ul>
+<li>If the device is disconnected while the container is running, there's a good chance the container will crash.</li>
+<li><code>docker-compose</code> will not start your container if the device is not present when you bring up your stack.</li>
+<li>You can't guarantee that the device will <em>always</em> enumerate as "ttyUSB0". It might come up as "ttyUSB1".</li>
+</ul>
+<p>You can deal with the last problem by using the device's "by-id" path. There's an example of this in the <a href="https://sensorsiot.github.io/IOTstack/Containers/Zigbee2MQTT/#identifyAdapter">Zigbee2MQTT</a> documentation.</p>
+<p>Options 2 and 3 (below) deal with the first two problems in the sense that:</p>
+<ul>
+<li>a device disconnection is unlikely to cause the container to crash (the flow might);</li>
+<li><code>docker-compose</code> will always start the container, irrespective of whether devices are actually attached to your USB ports.</li>
+</ul>
+<p>Options 2 and 3 (below) can't provide a workaround for devices being given different names via enumeration but you can still deal with that by using the device's "by-id" path (as explained above).</p>
+</li>
+<li>
+<p>You can map a <em>class</em> of devices:</p>
+<ul>
+<li>
+<p>modify the <code>volumes</code> clause to add a read-only mapping for <code>/dev</code>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev:/dev:ro</span>
+</code></pre></div>
+<blockquote>
+<p>The "read-only" flag (<code>:ro</code>) prevents the container from doing dangerous things like destroying your Raspberry Pi's SD or SSD. Please don't omit that flag!</p>
+</blockquote>
+</li>
+<li>
+<p>discover the major number for your device:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>ls<span class="w"> </span>-l<span class="w"> </span>/dev/ttyUSB0
+<span class="go">crw-rw---- 1 root dialout 188, 0 Feb 18 15:30 /dev/ttyUSB0</span>
+</code></pre></div>
+<p>In the above, the <code>188, 0</code> string means the major number for ttyUSB0 is "188" and "0" the minor number.</p>
+</li>
+<li>
+<p>add two device CGroup rules:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">device_cgroup_rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;c</span><span class="nv"> </span><span class="s">1:*</span><span class="nv"> </span><span class="s">rw&#39;</span><span class="w"> </span><span class="c1"># access to devices like /dev/null</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;c</span><span class="nv"> </span><span class="s">188:*</span><span class="nv"> </span><span class="s">rmw&#39;</span><span class="w"> </span><span class="c1"># change numbers to your device</span>
+</code></pre></div>
+<p>In the above:</p>
+<ul>
+<li>
+<p>"188" is the major number for ttyUSB0 and you should substitute accordingly if your device has a different major number.</p>
+</li>
+<li>
+<p>the "*" is a wildcard for the minor number.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Use the "privileged" flag by adding the following to your Node-RED service definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">privileged</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p>Please make sure you read the following references <strong>BEFORE</strong> you select this option:</p>
+<ul>
+<li><a href="https://www.howtogeek.com/devops/privileged-vs-root-in-docker-whats-the-difference/">Privileged vs root</a></li>
+<li><a href="https://betterprogramming.pub/docker-tips-mind-the-privileged-flag-d6e2ae71bdb4">Mind the 'privileged' flag</a></li>
+</ul>
+</li>
+</ol>
+<h3 id="nodeSerial">node-red-node-serialport<a class="headerlink" href="#nodeSerial" title="Permanent link">&para;</a></h3>
+<p>At the time of writing (Feb 2023), it was not possible to add <code>node-red-node-serialport</code> to the list of nodes in your Dockerfile. Attempting to do so crashed the Node-RED container with a <em>segmentation fault.</em> The workaround is to build the node from source by adding an extra line at the <em>end</em> of your Dockerfile: </p>
+<div class="language-Dockerfile highlight"><pre><span></span><code><span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span>node-red-node-serialport<span class="w"> </span>--build-from-source
+</code></pre></div>
+<h3 id="piSerial">hardware serial port<a class="headerlink" href="#piSerial" title="Permanent link">&para;</a></h3>
+<p>Historically, <code>/dev/ttyAMA0</code> referred to the Raspberry Pi's serial port. The situation became less straightforward once Pis gained Bluetooth capabilities:</p>
+<ul>
+<li>
+<p>On Pis <em>without</em> Bluetooth hardware:</p>
+<ul>
+<li><code>/dev/ttyAMA0</code> means the serial port; and</li>
+<li><code>/dev/serial0</code> is a symlink to <code>/dev/ttyAMA0</code></li>
+</ul>
+</li>
+<li>
+<p>On Pis <em>with</em> Bluetooth capabilities:</p>
+<ul>
+<li><code>/dev/ttyS0</code> means the serial port; and</li>
+<li><code>/dev/serial0</code> is a symlink to <code>/dev/ttyS0</code></li>
+</ul>
+<p>In addition, whether <code>/dev/ttyS0</code> (and, therefore, <code>/dev/serial0</code>) are present at runtime depends on adding the following line to <code>config.txt</code>:</p>
+<div class="language-text highlight"><pre><span></span><code>enable_uart=1
+</code></pre></div>
+<p>And, if that isn't sufficiently confusing, the location of <code>config.txt</code> depends on the OS version:</p>
+<ul>
+<li>Bullseye (and earlier): <code>/boot/config.txt</code></li>
+<li>Bookworm: <code>/boot/firmware/config.txt</code></li>
+</ul>
+</li>
+</ul>
+<p>Rolling all that together, if you want access to the hardware serial port from Node-RED, you need to:</p>
+<ol>
+<li>Add <code>enable_uart=1</code> to <code>config.txt</code>.</li>
+<li>Reboot.</li>
+<li>
+<p>Add a device-mapping to Node-RED's service definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">devices</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/serial0:/dev/«internalDevice»</span>
+</code></pre></div>
+<p>where <code>«internalDevice»</code> is whatever device the add-on node you're using is expecting, such as <code>ttyAMA0</code>.</p>
+</li>
+<li>
+<p>Recreate the Node-RED container by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>nodered
+</code></pre></div>
+</li>
+</ol>
+<h3 id="bluetoothSupport">Bluetooth device<a class="headerlink" href="#bluetoothSupport" title="Permanent link">&para;</a></h3>
+<p>If you enable the <code>node-red-contrib-generic-ble</code> add on node, you will also need to make the following changes:</p>
+<ol>
+<li>
+<p>If you are running Bookworm, you will need to use <code>sudo</code> to edit this file:</p>
+<div class="language-text highlight"><pre><span></span><code>/boot/firmware/config.txt
+</code></pre></div>
+<p>You need to add this line to the end of the file:</p>
+<div class="language-text highlight"><pre><span></span><code>dtparam=krnbt=off
+</code></pre></div>
+<p>You then need to reboot. This adds the Bluetooth device to <code>/dev</code>.</p>
+</li>
+<li>
+<p>Find the the Node-RED service definition in your <code>docker-compose.yml</code>:</p>
+<ul>
+<li>
+<p>Add the following mapping to the <code>volumes:</code> clause:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket</span>
+</code></pre></div>
+</li>
+<li>
+<p>Add the following <code>devices:</code> clause:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">devices</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/dev/serial1:/dev/serial1&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/dev/vcio:/dev/vcio&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/dev/gpiomem:/dev/gpiomem&quot;</span>
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>Recreate the Node-RED container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>nodered
+</code></pre></div>
+</li>
+</ol>
+<p>Notes:</p>
+<ul>
+<li>These changes are <em>specific</em> to the Raspberry Pi. If you need Bluetooth support on non-Pi hardware, you will need to figure out the details for your chosen platform.</li>
+<li>
+<p>Historically, <code>/dev/ttyAMA0</code> meant the serial interface. Subsequently, it came to mean the Bluetooth interface but only where Bluetooth hardware was present, otherwise it still meant the serial interface.</p>
+<p>On Bookworm and later, if it is present, <code>/dev/ttyAMA1</code> means the Bluetooth Interface.</p>
+<p>On Bullseye and later, <code>/dev/serial1</code> is a symbolic link pointing to whichever of <code>/dev/ttyAMA0</code> or <code>/dev/ttyAMA1</code> means the Bluetooth interface. This means that <code>/dev/serial1</code> is the most reliable way of referring to the Bluetooth Interface. That's why it appears in the <code>devices:</code> clause above.</p>
+</li>
+</ul>
+<h2 id="fileSharing">Sharing files between Node-RED and the Raspberry Pi<a class="headerlink" href="#fileSharing" title="Permanent link">&para;</a></h2>
+<p>Containers run in a sandboxed environment. A process running inside a container can't see the Raspberry Pi's file system. Neither can a process running outside a container access files inside the container.</p>
+<p>This presents a problem if you want write to a file outside a container, then read from it inside the container, or vice-versa.</p>
+<p>IOTstack containers have been set up with shared volume mappings. Each volume mapping associates a specific directory in the Raspberry Pi file system with a specific directory inside the container. If you write to files in a shared directory (or one of its sub-directories), both the host and the container can see the same sub-directories and files.</p>
+<p>Key point:</p>
+<ul>
+<li>Files and directories in the shared volume are persistent between restarts. If you save your data anywhere else inside the container, it will be lost when the container is rebuilt.</li>
+</ul>
+<p>The Node-RED service definition in the <em>Compose</em> file includes the following:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./volumes/nodered/data:/data</span>
+</code></pre></div>
+<p>That decomposes into:</p>
+<ul>
+<li>external path = <code>./volumes/nodered/data</code></li>
+<li>internal path = <code>/data</code></li>
+</ul>
+<p>The leading "." on the external path implies "the folder containing the <em>Compose</em> file so it actually means:</p>
+<ul>
+<li>external path = <code>~/IOTstack/volumes/nodered/data</code></li>
+<li>internal path = <code>/data</code></li>
+</ul>
+<p>If you write to the <strong>internal</strong> path from <strong>inside</strong> the Node-RED container, the Raspberry Pi will see the results at the <strong>external</strong> path, and vice versa. Example:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nodered<span class="w"> </span>bash
+<span class="gp"># </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The time now is </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>&gt;/data/example.txt
+<span class="gp"># </span>cat<span class="w"> </span>/data/example.txt<span class="w"> </span>
+<span class="go">The time now is Thu Apr  1 11:25:56 AEDT 2021</span>
+<span class="gp"># </span><span class="nb">exit</span>
+<span class="gp">$ </span>cat<span class="w"> </span>~/IOTstack/volumes/nodered/data/example.txt<span class="w"> </span>
+<span class="go">The time now is Thu Apr  1 11:25:56 AEDT 2021</span>
+<span class="gp">$ </span>sudo<span class="w"> </span>rm<span class="w"> </span>~/IOTstack/volumes/nodered/data/example.txt
+</code></pre></div>
+<p>In words:</p>
+<ol>
+<li>
+<p>Open a shell into the Node-RED container. Two things happen:</p>
+<ul>
+<li>You are now <strong>inside</strong> the container. Any commands you execute while in this shell are run <strong>inside</strong> the container; and</li>
+<li>The prompt changes to a "#" indicating that you are running as the "root" user, meaning you don't need <code>sudo</code> for anything.</li>
+</ul>
+</li>
+<li>
+<p>Use the <code>echo</code> command to create a small file which embeds the current timestamp. The path is in the <code>/data</code> directory which is mapped to the Raspberry Pi's file system.</p>
+</li>
+<li>Show that the file has been created inside the container.</li>
+<li>Exit the shell:<ul>
+<li>You can either type the <code>exit</code> command and press <kbd>return</kbd>, or press <kbd>Control</kbd>+<kbd>D</kbd>.</li>
+<li>Exiting the shell drops you out of the container so the "$" prompt returns, indicating that you are <strong>outside</strong> the Node-Red container, running as a non-root user ("pi").</li>
+</ul>
+</li>
+<li>Show that the same file can be seen from <strong>outside</strong> the container.</li>
+<li>Tidy-up by removing the file. You need <code>sudo</code> to do that because the persistent storage area at the <strong>external</strong> path is owned by root, and you are running as user "pi".</li>
+</ol>
+<p>You can do the same thing from within a Node-RED flow.</p>
+<p><img alt="image" src="../images/nodered-flow-write-persistent-file.png" /></p>
+<p>The flow comprises:</p>
+<ul>
+<li>
+<p>An Inject node, wired to a Template node.</p>
+<ul>
+<li><em>When an Inject node's input tab is clicked, it sets the message payload to the number of seconds since 1/1/1970 UTC and triggers the flow.</em></li>
+</ul>
+</li>
+<li>
+<p>A Template node, wired to both a Debug node and a File node. The template field is set to:</p>
+<div class="language-text highlight"><pre><span></span><code>The time at the moment is {{payload}} seconds since 1/1/1970 UTC !
+</code></pre></div>
+<ul>
+<li><em>When this node runs, it replaces <code>{{payload}}</code> with the seconds value supplied by the Inject node.</em></li>
+</ul>
+</li>
+<li>
+<p>A Debug node.</p>
+<ul>
+<li><em>When this node runs, it displays the payload in the debug window on the right hand side of the Node-RED GUI.</em></li>
+</ul>
+</li>
+<li>
+<p>A File node. The "Filename" field of the node is set to write to the path:</p>
+<div class="language-text highlight"><pre><span></span><code>/data/flow-example.txt
+</code></pre></div>
+<ul>
+<li><em>When this node runs, it writes the payload to the specified file. Remember that <code>/data</code> is an internal path within the Node-RED container.</em></li>
+</ul>
+</li>
+</ul>
+<p>Deploying the flow and clicking on the Inject node results in the debug message shown on the right hand side of the screen shot. The embedded terminal window shows that the same information is accessible from outside the container.</p>
+<p>You can reverse this process. Any file you place within the path <code>~/IOTstack/volumes/nodered/data</code> can be read by a "File in" node.</p>
+<h2 id="sshOutside">Executing commands outside the Node-RED container<a class="headerlink" href="#sshOutside" title="Permanent link">&para;</a></h2>
+<p>A reasonably common requirement in a Node-RED flow is the ability to execute a command on the host system. The standard tool for this is an "exec" node.</p>
+<p>An "exec" node works as expected when Node-RED is running as a native service but not when Node-RED is running in a container. That's because the command spawned by the "exec" node runs <strong>inside</strong> the container.</p>
+<p>To help you understand the difference, consider this command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>grep<span class="w"> </span><span class="s2">&quot;^PRETTY_NAME=&quot;</span><span class="w"> </span>/etc/os-release
+</code></pre></div>
+<p>When you run that command on a Raspberry Pi <strong>outside</strong> container-space, the answer will be something like:</p>
+<div class="language-text highlight"><pre><span></span><code>PRETTY_NAME=&quot;Debian GNU/Linux 11 (bullseye)&quot;
+</code></pre></div>
+<p>If you run the same command <strong>inside</strong> a Node-RED container, the output will reflect the operating system upon which the container is based, such as:</p>
+<div class="language-text highlight"><pre><span></span><code>PRETTY_NAME=&quot;Alpine Linux v3.16&quot;
+</code></pre></div>
+<p>The same thing will happen if a Node-RED "exec" node executes that <code>grep</code> command when Node-RED is running in a container. It will see the "Alpine Linux" answer.</p>
+<p>Docker doesn't provide any mechanism for a container to execute an arbitrary command <strong>outside</strong> of its container. A workaround is to utilise SSH. This remainder of this section explains how to set up the SSH scaffolding so that "exec" nodes running in a Node-RED container can invoke arbitrary commands <strong>outside</strong> container-space.</p>
+<h3 id="sshTaskGoal">Task Goal<a class="headerlink" href="#sshTaskGoal" title="Permanent link">&para;</a></h3>
+<p>Be able to use a Node-RED "exec" node to perform the equivalent of:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>ssh<span class="w"> </span>host.docker.internal<span class="w"> </span>«COMMAND»
+</code></pre></div>
+<p>where <code>«COMMAND»</code> is any command known to the target host.</p>
+<p>This section uses <code>host.docker.internal</code> throughout. That name comes from method 2 of <a href="#defaultBridge">bridge network - default gateway</a> but, in principle, you can refer to the host using any mechanism described in <a href="#hostReference">referring to the host</a>.</p>
+<h3 id="sshAssumptions">Assumptions<a class="headerlink" href="#sshAssumptions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/SensorsIot/IOTstack">SensorsIot/IOTstack</a> is installed on your Raspberry Pi.</li>
+<li>The Node-RED container is running.</li>
+<li>The user name of the account on the host where you want Node-RED flows to be able to run commands is "pi". This user name is not mandatory. Simply substitute your own user name wherever you see "pi" in these examples.</li>
+</ul>
+<p>These instructions are specific to IOTstack but the underlying concepts should apply to any installation of Node-RED in a Docker container. </p>
+<h3 id="dockerExec">Executing commands "inside" a container<a class="headerlink" href="#dockerExec" title="Permanent link">&para;</a></h3>
+<p>These instructions make frequent use of the ability to run commands "inside" the Node-RED container. For example, suppose you want to execute:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>grep<span class="w"> </span><span class="s2">&quot;^PRETTY_NAME=&quot;</span><span class="w"> </span>/etc/os-release
+</code></pre></div>
+<p>You have several options:</p>
+<ol>
+<li>
+<p>You can do it from the normal Raspberry Pi command line using a Docker command. The basic syntax is:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span><span class="o">{</span>-it<span class="o">}</span><span class="w"> </span>«containerName»<span class="w"> </span>«command<span class="w"> </span>and<span class="w"> </span>parameters»
+</code></pre></div>
+<p>The actual command you would need would be:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nodered<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;^PRETTY_NAME=&quot;</span><span class="w"> </span>/etc/os-release
+</code></pre></div>
+<p>Note:</p>
+<ul>
+<li>The <code>-it</code> flags are <em>optional</em>. They mean "interactive" and "allocate pseudo-TTY". Their presence tells Docker that the command may need user interaction, such as entering a password or typing "yes" to a question.</li>
+</ul>
+</li>
+<li>
+<p>You can open a shell into the container, run as many commands as you like inside the container, and then exit. For example:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nodered<span class="w"> </span>bash
+<span class="gp"># </span>grep<span class="w"> </span><span class="s2">&quot;^PRETTY_NAME=&quot;</span><span class="w"> </span>/etc/os-release
+<span class="gp"># </span>whoami
+<span class="gp"># </span><span class="nb">exit</span>
+<span class="gp">$</span>
+</code></pre></div>
+<p>In words:</p>
+<ul>
+<li>Run the <code>bash</code> shell inside the Node-RED container. You need to be able to interact with the shell to type commands so the <code>-it</code> flag is required.</li>
+<li>The "#" prompt is coming from <code>bash</code> running inside the container. It also signals that you are running as the root user inside the container.</li>
+<li>You run the <code>grep</code>, <code>whoami</code> and any other commands.</li>
+<li>You finish with the <code>exit</code> command (or <kbd>Control</kbd>+<kbd>D</kbd>).</li>
+<li>The "$" prompt means you have left the container and are back at the normal Raspberry Pi command line.</li>
+</ul>
+</li>
+<li>
+<p>Run the command from Portainer by selecting the container, then clicking the "&gt;_ console" link. This is identical to opening a shell.</p>
+</li>
+</ol>
+<h3 id="sshStep1">Step 1: <em>Generate SSH key-pair for Node-RED</em> (one time)<a class="headerlink" href="#sshStep1" title="Permanent link">&para;</a></h3>
+<p>Create a key-pair for Node-RED. This is done by executing the <code>ssh-keygen</code> command <strong>inside</strong> the container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nodered<span class="w"> </span>ssh-keygen<span class="w"> </span>-q<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;Node-RED container key-pair&quot;</span><span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
+</code></pre></div>
+<p>Notes:</p>
+<ul>
+<li>The "ed25519" elliptic curve algorithm is recommended (generally described as quicker and more secure than RSA) but you can use the default RSA algorithm if you prefer.</li>
+<li>Respond to the "Enter file in which to save the key" prompt by pressing <kbd>return</kbd> to accept the default location.</li>
+<li>If <code>ssh-keygen</code> displays an "Overwrite (y/n)?" message, it implies that a key-pair already exists. You will need to decide what to do:<ul>
+<li>press <kbd>y</kbd> to overwrite (and lose the old keys)</li>
+<li>press <kbd>n</kbd> to terminate the command, after which you can investigate why a key-pair already exists.</li>
+</ul>
+</li>
+</ul>
+<h3 id="sshStep2">Step 2: <em>Exchange keys with target hosts</em> (once per target host)<a class="headerlink" href="#sshStep2" title="Permanent link">&para;</a></h3>
+<p>Node-RED's public key needs to be copied to the "pi" user account on the host where you want a Node-RED "exec" node to be able to execute commands. At the same time, the Node-RED container needs to learn the host's public key. The <code>ssh-copy-id</code> command does both steps. The command is:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nodered<span class="w"> </span>ssh-copy-id<span class="w"> </span>pi@host.docker.internal
+</code></pre></div>
+<p>The output will be something similar to the following:</p>
+<div class="language-text highlight"><pre><span></span><code>/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: &quot;/root/.ssh/id_ed25519.pub&quot;
+The authenticity of host &#39;host.docker.internal (172.17.0.1)&#39; can&#39;t be established.
+ED25519 key fingerprint is SHA256:gHMlhvArbUPJ807vh5qNEuyRCeNUQQTKEkmDS6qKY6c.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+</code></pre></div>
+<p>Respond to the prompt by typing "yes" and pressing <kbd>return</kbd>.</p>
+<p>The output continues:</p>
+<p><div class="language-text highlight"><pre><span></span><code>/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+expr: warning: &#39;^ERROR: &#39;: using &#39;^&#39; as the first character
+of a basic regular expression is not portable; it is ignored
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+pi@host.docker.internal&#39;s password: 
+</code></pre></div>
+The response may look like it contains errors but those can be ignored. </p>
+<p>Enter the password you use to login as "pi" on the host and press <kbd>return</kbd>.</p>
+<p>Normal completion looks similar to this:</p>
+<div class="language-text highlight"><pre><span></span><code>Number of key(s) added: 1
+
+Now try logging into the machine, with:   &quot;ssh &#39;pi@host.docker.internal&#39;&quot;
+and check to make sure that only the key(s) you wanted were added.
+</code></pre></div>
+<p>If you do not see an indication that a key has been added, you may need to retrace your steps.</p>
+<h3 id="sshStep3">Step 3: <em>Perform the recommended test</em><a class="headerlink" href="#sshStep3" title="Permanent link">&para;</a></h3>
+<p>The output above recommends a test. The test needs to be run <strong>inside</strong> the Node-RED container so the syntax is:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nodered<span class="w"> </span>ssh<span class="w"> </span>pi@host.docker.internal<span class="w"> </span>ls<span class="w"> </span>-1<span class="w"> </span>/home/pi/IOTstack
+</code></pre></div>
+<p>You should not be prompted for a password. If you are, you may need to retrace your steps.</p>
+<p>If everything works as expected, you should see a list of the files in your IOTstack folder.</p>
+<p>Assuming success, think about what just happened? You told SSH <strong>inside</strong> the Node-RED container to run the <code>ls</code> command <strong>outside</strong> the container on your Raspberry Pi. You broke through the containerisation.</p>
+<h3 id="sshWhatsWhere">Understanding what's where and what each file does<a class="headerlink" href="#sshWhatsWhere" title="Permanent link">&para;</a></h3>
+<h4 id="sshFileLocations">What files are where<a class="headerlink" href="#sshFileLocations" title="Permanent link">&para;</a></h4>
+<p>Six files are relevant to Node-RED's ability to execute commands outside of container-space:</p>
+<ul>
+<li>
+<p>in <code>/etc/ssh</code>:</p>
+<ul>
+<li><code>ssh_host_ed25519_key</code> is the Raspberry Pi's private host key</li>
+<li>
+<p><code>ssh_host_ed25519_key.pub</code> is the Raspberry Pi's public host key</p>
+<p>Those keys were created when your Raspberry Pi was initialised. They are unique to the host.</p>
+<p>Unless you take precautions, those keys will change whenever your Raspberry Pi is rebuilt from scratch and that <strong>will</strong> prevent a Node-RED "exec" node from being able to invoke SSH to call out of the container.</p>
+<p>You can recover by re-running <a href="#sshStep2"><code>ssh-copy-id</code></a>.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>in <code>~/IOTstack/volumes/nodered/ssh</code>:</p>
+<ul>
+<li><code>id_ed25519</code> is the Node-RED container's private key </li>
+<li>
+<p><code>id_ed25519.pub</code> is the Node-RED container's public key</p>
+<p>Those keys were created when you generated the SSH key-pair for Node-RED.</p>
+<p>They are unique to Node-RED but will follow the container in backups and will work on the same machine, or other machines, if you restore the backup.</p>
+<p>It does not matter if the Node-RED container is rebuilt or if a new version of Node-RED comes down from DockerHub. These keys will remain valid until lost or overwritten.</p>
+<p>If you lose or destroy these keys, that <strong>will</strong> prevent a Node-RED "exec" node from being able to invoke SSH to call out of the container.</p>
+<p>You can recover by <a href="#sshStep1">generating new keys</a> and then re-running <a href="#sshStep2"><code>ssh-copy-id</code></a>.</p>
+</li>
+<li>
+<p><code>known_hosts</code></p>
+<p>The <code>known_hosts</code> file contains a copy of the Raspberry Pi's public host key. It was put there by <code>ssh-copy-id</code>.</p>
+<p>If you lose this file or it gets overwritten, invoking SSH inside the container <strong>will</strong> still work but it will re-prompt for authorisation to connect. You will see the prompt if you run commands via <code>docker exec -it</code> but not when invoking SSH from an "exec" node.</p>
+<p>Note that authorising the connection at the command line ("Are you sure you want to continue connecting?") will auto-repair the <code>known_hosts</code> file.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>in <code>~/.ssh/</code>:</p>
+<ul>
+<li>
+<p><code>authorized_keys</code></p>
+<p>That file contains a copy of the Node-RED container's public key. It was put there by <code>ssh-copy-id</code>.</p>
+<p>Pay attention to the path. It implies that there is one <code>authorized_keys</code> file per user, per target host.</p>
+<p>If you lose this file or it gets overwritten, SSH <strong>will</strong> still work but will ask for the password for "pi". This works when you are running commands from <code>docker exec -it</code> but not when invoking SSH from an "exec" node.</p>
+<p>Note that providing the correct password at the command line will auto-repair the <code>authorized_keys</code> file.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="sshFilePurpose">What each file does<a class="headerlink" href="#sshFilePurpose" title="Permanent link">&para;</a></h4>
+<p>SSH running <strong>inside</strong> the Node-RED container uses the Node-RED container's private key to provide assurance to SSH running <strong>outside</strong> the container that it (the Node-RED container) is who it claims to be.</p>
+<p>SSH running <strong>outside</strong> container-space verifies that assurance by using its copy of the Node-RED container's public key in <code>authorized_keys</code>.</p>
+<p>SSH running <strong>outside</strong> container-space uses the Raspberry Pi's private host key to provide assurance to SSH running <strong>inside</strong> the Node-RED container that it (the RPi) is who it claims to be.</p>
+<p>SSH running <strong>inside</strong> the Node-RED container verifies that assurance by using its copy of the Raspberry Pi's public host key stored in <code>known_hosts</code>.</p>
+<h3 id="sshConfig">Config file (optional)<a class="headerlink" href="#sshConfig" title="Permanent link">&para;</a></h3>
+<p>You don't <strong>have</strong> to do this step but it will simplify your exec node commands and reduce your maintenance problems if you do.</p>
+<p>At this point, SSH commands can be executed from <strong>inside</strong> the container using this syntax:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp"># </span>ssh<span class="w"> </span>pi@host.docker.internal<span class="w"> </span>«COMMAND»
+</code></pre></div>
+<p>A <code>config</code> file is needed to achieve the task goal of the simpler syntax:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp"># </span>ssh<span class="w"> </span>host.docker.internal<span class="w"> </span>«COMMAND»
+</code></pre></div>
+<p>The goal is to set up this file:</p>
+<div class="language-text highlight"><pre><span></span><code>-rw-r--r-- 1 root root ~/IOTstack/volumes/nodered/ssh/config
+</code></pre></div>
+<p>The file needs the ownership and permissions shown. There are several ways of going about this and you are free to choose the one that works for you. The method described here creates the file first, then sets correct ownership and permissions, and then moves the file into place.</p>
+<p>Start in a directory where you can create a file without needing <code>sudo</code>. The IOTstack folder is just as good as anywhere else:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>touch<span class="w"> </span>config
+</code></pre></div>
+<p>Select the following text, copy it to the clipboard.</p>
+<div class="language-text highlight"><pre><span></span><code>host host.docker.internal
+  user pi
+  IdentitiesOnly yes
+  IdentityFile /root/.ssh/id_ed25519
+</code></pre></div>
+<p>Open <code>~/IOTstack/config</code> in your favourite text editor and paste the contents of the clipboard. Save the file. Change the config file's ownership and permissions, and move it into the correct directory:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>config
+<span class="gp">$ </span>sudo<span class="w"> </span>chown<span class="w"> </span>root:root<span class="w"> </span>config
+<span class="gp">$ </span>sudo<span class="w"> </span>mv<span class="w"> </span>config<span class="w"> </span>./volumes/nodered/ssh
+</code></pre></div>
+<h4 id="sshConfigTest">Re-test with config file in place<a class="headerlink" href="#sshConfigTest" title="Permanent link">&para;</a></h4>
+<p>The previous test used this syntax:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nodered<span class="w"> </span>ssh<span class="w"> </span>pi@host.docker.internal<span class="w"> </span>ls<span class="w"> </span>-1<span class="w"> </span>/home/pi/IOTstack
+</code></pre></div>
+<p>Now that the config file is in place, the syntax changes to:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nodered<span class="w"> </span>ssh<span class="w"> </span>host.docker.internal<span class="w"> </span>ls<span class="w"> </span>-1<span class="w"> </span>/home/pi/IOTstack
+</code></pre></div>
+<p>The result should be the same as the earlier test. </p>
+<h3 id="sshTestFlow">A test flow<a class="headerlink" href="#sshTestFlow" title="Permanent link">&para;</a></h3>
+<p><img alt="node-red-exec-node-ssh-test" src="../images/nodered-exec-node-ssh-test.jpeg" /></p>
+<p>In the Node-RED GUI:</p>
+<ol>
+<li>Click the "+" to create a new, empty flow.</li>
+<li>Drag the following nodes onto the canvas:<ul>
+<li>One "inject" node</li>
+<li>Two "exec" nodes</li>
+<li>Two "debug" nodes</li>
+</ul>
+</li>
+<li>Wire the outlet of the "inject" node to the inlet of both "exec" nodes.</li>
+<li>Wire the uppermost "stdout" outlet of the first "exec" node to the inlet of the first "debug" node.</li>
+<li>Repeat step 4 with the other "exec" and "debug" node.</li>
+<li>
+<p>Open the first "exec" node and:</p>
+<ul>
+<li>
+<p>set the "command" field to:</p>
+<p><div class="language-text highlight"><pre><span></span><code>grep &quot;^PRETTY_NAME=&quot; /etc/os-release
+</code></pre></div>
+    - turn off the "append msg.payload" checkbox
+    - set the timeout to a reasonable value (eg 10 seconds)
+    - click "Done".
+7. Repeat step 6 with the other "exec" node, with one difference:
+    - set the "command" field to:</p>
+<div class="language-text highlight"><pre><span></span><code>ssh host.docker.internal grep &quot;^PRETTY_NAME=&quot; /etc/os-release
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>Click the Deploy button.</p>
+</li>
+<li>Set the right hand panel to display debug messages.</li>
+<li>Click the touch panel of the "inject" node to trigger the flow.</li>
+<li>
+<p>Inspect the result in the debug panel. You should see payload differences similar to the following:</p>
+<div class="language-text highlight"><pre><span></span><code>PRETTY_NAME=&quot;Alpine Linux v3.16&quot;&quot;
+PRETTY_NAME=&quot;Debian GNU/Linux 11 (bullseye)&quot;
+</code></pre></div>
+<p>The first line is the result of running the command inside the Node-RED container. The second line is the result of running the same command outside the Node-RED container on the Raspberry Pi.</p>
+</li>
+</ol>
+<h2 id="maintainNodeRed">Maintaining Node-RED<a class="headerlink" href="#maintainNodeRed" title="Permanent link">&para;</a></h2>
+<h3 id="startNodeRed">Starting Node-RED<a class="headerlink" href="#startNodeRed" title="Permanent link">&para;</a></h3>
+<p>Use these commands to:</p>
+<ol>
+<li>Start the container; or</li>
+<li>Re-create the container if you have made a material change to the container's service definition in your <em>Compose</em> file.</li>
+</ol>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>nodered
+</code></pre></div>
+<p>The first time you execute this command, the <em>base</em> image of Node-RED is downloaded from DockerHub, and then the <em>Dockerfile</em> is run to produce a <em>local</em> image. The <em>local</em> image is then instantiated to become the running container.</p>
+<h3 id="stopNodeRed">Stopping Node-RED<a class="headerlink" href="#stopNodeRed" title="Permanent link">&para;</a></h3>
+<p>To stop the running container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>down<span class="w"> </span>nodered
+</code></pre></div>
+<blockquote>
+<p>see also <a href="../../Basic_setup/#downContainer">if downing a container doesn't work</a></p>
+</blockquote>
+<p>Alternatively, you can stop the entire stack:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>down
+</code></pre></div>
+<h3 id="restartNodeRed">Restarting Node-RED<a class="headerlink" href="#restartNodeRed" title="Permanent link">&para;</a></h3>
+<p>The <code>restart</code> command sends a signal to the processes running within the container. The container itself does not stop.</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>nodered
+</code></pre></div>
+<h3 id="rebuildNodeRed">Re-building the local image<a class="headerlink" href="#rebuildNodeRed" title="Permanent link">&para;</a></h3>
+<p>You need to rebuild the <em>local</em> image if you do any of the following:</p>
+<ol>
+<li>Change either of the build arguments (<code>DOCKERHUB_TAG</code> or <code>EXTRA_PACKAGES</code>) in your <em>Compose</em> file.</li>
+<li>Make a material change to your Node-RED <em>Dockerfile</em>, such as re-running the menu to change your selection of add-on nodes.</li>
+</ol>
+<p>To rebuild your <em>local</em> image:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d<span class="w"> </span>nodered
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-f
+</code></pre></div>
+<p>Think of these commands as "re-running the <em>Dockerfile</em>". The only time a <em>base</em> image will be downloaded from <em>DockerHub is when a </em>base* image with a tag matching the value of <code>DOCKERHUB_TAG</code> can't be found on your Raspberry Pi.</p>
+<p>Your existing Node-RED container continues to run while the rebuild proceeds. Once the freshly-built <em>local</em> image is ready, the <code>up</code> tells <code>docker-compose</code> to do a new-for-old swap. There is barely any downtime for your Node-RED service.</p>
+<h3 id="updateNodeRed">Checking for Node-RED updates<a class="headerlink" href="#updateNodeRed" title="Permanent link">&para;</a></h3>
+<p>IOTstack provides a convenience script which can help you work out if a new version of Node-RED is available. You can run it like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>~/IOTstack/scripts/nodered_version_check.sh
+</code></pre></div>
+<p>The script is not infallible. It works by comparing the version number in the Node-RED image on your system with a version number stored on GitHub.</p>
+<p>GitHub is always updated <em>before</em> a new image appears on <em>DockerHub</em>. Sometimes there is a delay of weeks between the two events. For that reason, the script should be viewed more like a meteorological forecast than hard fact.</p>
+<p>The script assumes that your local image builds as <code>iotstack-nodered:latest</code>. If you use different tags, you can pass that information to the script. Example:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>~/IOTstack/scripts/nodered_version_check.sh<span class="w"> </span>iotstack-nodered:3.0.2
+</code></pre></div>
+<h3 id="upgradeNodeRed">Upgrading Node-RED<a class="headerlink" href="#upgradeNodeRed" title="Permanent link">&para;</a></h3>
+<p>The only way to know, for certain, when an update to Node-RED is available is to check the <a href="https://hub.docker.com/r/nodered/node-red/tags?page=1&amp;ordering=last_updated">nodered/node-red tags page</a> on <em>DockerHub</em>.</p>
+<p>Once a new version appears on <a href="https://hub.docker.com"><em>DockerHub</em></a>, you can upgrade Node-RED like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>build<span class="w"> </span>--no-cache<span class="w"> </span>--pull<span class="w"> </span>nodered
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>nodered
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-f
+</code></pre></div>
+<p>Breaking it down into parts:</p>
+<ul>
+<li><code>build</code> causes the named container to be rebuilt;</li>
+<li><code>--no-cache</code> tells the Dockerfile process that it must not take any shortcuts. It really <strong>must</strong> rebuild the <em>local image</em>;</li>
+<li><code>--pull</code> tells the Dockerfile process to actually check with <a href="https://hub.docker.com"><em>DockerHub</em></a> to see if there is a later version of the <em>base image</em> and, if so, to download it before starting the build;</li>
+<li><code>nodered</code> is the named container argument required by the <code>build</code> command.</li>
+</ul>
+<p>Your existing Node-RED container continues to run while the rebuild proceeds. Once the freshly-built <em>local</em> image is ready, the <code>up</code> tells <code>docker-compose</code> to do a new-for-old swap. There is barely any downtime for your Node-RED service.</p>
+<p>The <code>prune</code> is the simplest way of cleaning up old images. Sometimes you need to run this twice, the first time to clean up the old <em>local</em> image, the second time for the old <em>base</em> image. Whether an old <em>base</em> image exists depends on the version of <code>docker-compose</code> you are using and how your version of <code>docker-compose</code> builds local images.</p>
+<h2 id="containerVersions">Node-RED and <code>node.js</code> versions<a class="headerlink" href="#containerVersions" title="Permanent link">&para;</a></h2>
+<h3 id="checkingVersions">Checking versions<a class="headerlink" href="#checkingVersions" title="Permanent link">&para;</a></h3>
+<p>You can use the <code>npm version</code> command to check which versions of Node-RED and <code>node.js</code> are running in your container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nodered<span class="w"> </span>npm<span class="w"> </span>version
+<span class="go">{</span>
+<span class="go">  &#39;node-red-docker&#39;: &#39;2.2.2&#39;,</span>
+<span class="go">  npm: &#39;6.14.15&#39;,</span>
+<span class="go">  ares: &#39;1.18.1&#39;,</span>
+<span class="go">  brotli: &#39;1.0.9&#39;,</span>
+<span class="go">  cldr: &#39;37.0&#39;,</span>
+<span class="go">  http_parser: &#39;2.9.4&#39;,</span>
+<span class="go">  icu: &#39;67.1&#39;,</span>
+<span class="go">  llhttp: &#39;2.1.4&#39;,</span>
+<span class="go">  modules: &#39;72&#39;,</span>
+<span class="go">  napi: &#39;8&#39;,</span>
+<span class="go">  nghttp2: &#39;1.41.0&#39;,</span>
+<span class="go">  node: &#39;12.22.8&#39;,</span>
+<span class="go">  openssl: &#39;1.1.1m&#39;,</span>
+<span class="go">  tz: &#39;2019c&#39;,</span>
+<span class="go">  unicode: &#39;13.0&#39;,</span>
+<span class="go">  uv: &#39;1.40.0&#39;,</span>
+<span class="go">  v8: &#39;7.8.279.23-node.56&#39;,</span>
+<span class="go">  zlib: &#39;1.2.11&#39;</span>
+<span class="go">}</span>
+</code></pre></div>
+<p>In the above:</p>
+<ul>
+<li><code>'node-red-docker': '2.2.2'</code> indicates that version 2.2.2 of Node-RED is running. This is the version number you see at the bottom of the main menu when you click on the "hamburger" icon ("≡") at the top, right of the <em>Node-Red</em> window in your browser.</li>
+<li><code>node: '12.22.8'</code> indicates that version 12.x of <code>node.js</code> is installed.</li>
+</ul>
+<h3 id="versionControl">Controlling versions<a class="headerlink" href="#versionControl" title="Permanent link">&para;</a></h3>
+<p>IOTstack uses a service definition for Node-RED that includes these lines:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services/nodered/.</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKERHUB_TAG=latest</span>
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<p>If you do not see this structure in your <em>Compose</em> file, refer to <a href="#july2022syntax">updating to July 2022 syntax</a>.</p>
+</blockquote>
+<p>The value of the <code>DOCKERHUB_TAG</code> gives you the ability to control, from your <em>Compose</em> file, which versions of Node-RED and <code>node.js</code> run within your Node-RED container.</p>
+<p>The allowable values of <code>DOCKERHUB_TAG</code> can be found on the <a href="https://hub.docker.com/r/nodered/node-red/tags"><em>DockerHub</em> Node-RED tags page</a>. The table below contains examples of tags that were available on <em>DockerHub</em> at the time of writing (2022-07-06):</p>
+<table>
+<thead>
+<tr>
+<th>tag</th>
+<th>Node-RED version</th>
+<th><code>node.js</code> version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>latest</td>
+<td>2.2.2</td>
+<td>14.x</td>
+</tr>
+<tr>
+<td>latest-14</td>
+<td>2.2.2</td>
+<td>14.x &#x1F4CC;</td>
+</tr>
+<tr>
+<td>2.2.2</td>
+<td>2.2.2 &#x1F4CC;</td>
+<td>14.x</td>
+</tr>
+<tr>
+<td>2.2.2-14</td>
+<td>2.2.2 &#x1F4CC;</td>
+<td>14.x &#x1F4CC;</td>
+</tr>
+</tbody>
+</table>
+<p>Interpreting the tag:</p>
+<ol>
+<li>
+<p>The sub-string to the left of the hyphen determines the version of Node-RED:</p>
+<ul>
+<li>"latest" means the most up-to-date version, implying that the actual version number can change any time you follow the process to <a href="#upgradeNodeRed">upgrade Node-RED</a>.</li>
+<li>"2.2.2" pins your container to that specific version of Node-RED, implying that the version number will be frozen until you change the pin.</li>
+</ul>
+</li>
+<li>
+<p>The sub-string to the right of the hyphen determines the version of <code>node.js</code>:</p>
+<ul>
+<li>"-14" refers to <code>node.js</code> version 14.x and pins your container to that specific version of <code>node.js</code>.</li>
+<li>If the hyphen and suffix are omitted, it implies that the actual version of <code>node.js</code> can change any time you follow the process to <a href="#upgradeNodeRed">upgrade Node-RED</a>.</li>
+</ul>
+</li>
+</ol>
+<p>In short:</p>
+<ul>
+<li>If you pin both sides to specific values (eg "2.2.2-14") then all decisions about when to upgrade and which versions to use are under <strong>your</strong> control; but</li>
+<li>If you use "latest" then all timing and version decisions are under the control of the maintainers of the <em>DockerHub</em> images.</li>
+</ul>
+<p>IOTstack defaults to "latest". Although this appears to cede control to the maintainers of the <em>DockerHub</em> images, in practice it is no different to any other container where you pull its image directly from <em>DockerHub</em> using the <code>latest</code> tag (irrespective of whether <code>latest</code> is explicit or implied by omission).</p>
+<p>The <code>DOCKERHUB_TAG</code> argument for Node-RED merely gives you the ability to pin to specific versions of Node-RED from within your <em>Compose</em> file, in the same way as you can use tags on <code>image</code> directives for other containers.</p>
+<p>For example, suppose you wanted to pin to Node-RED version 2.2.2 with <code>node.js</code> version 12:</p>
+<ol>
+<li>
+<p>Edit your <em>Compose</em> file so that the <code>DOCKERHUB_TAG</code> looks like this:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKERHUB_TAG=2.2.2-12</span>
+</code></pre></div>
+</li>
+<li>
+<p>Run the <a href="#rebuildNodeRed">re-building the local Node-RED image</a> commands.</p>
+</li>
+</ol>
+<p>Changing a pinned version and rebuilding <em>may</em> result in a new <em>base</em> image being downloaded from <em>DockerHub</em>.</p>
+<h2 id="componentManagement">Component management<a class="headerlink" href="#componentManagement" title="Permanent link">&para;</a></h2>
+<h3 id="viaDockerfile">via Dockerfile<a class="headerlink" href="#viaDockerfile" title="Permanent link">&para;</a></h3>
+<p>You can install components by adjusting the Node-RED <em>Dockerfile</em>. This can be done by:</p>
+<ul>
+<li>Running the IOTstack menu and changing the selected Node-RED nodes; or</li>
+<li>Editing your Node-RED <em>Dockerfile</em> using a text editor.</li>
+</ul>
+<p>Using the IOTstack menu limits your choice of components to those presented in the menu. Editing the <em>Dockerfile</em> with a text editor is more flexible but carries the risk that your changes could be lost if you subsequently use the menu method.</p>
+<p>To apply changes made to your <em>Dockerfile</em>, run the <a href="#rebuildNodeRed">re-building the local Node-RED image</a> commands.</p>
+<h3 id="viaManagePalette">via Manage Palette<a class="headerlink" href="#viaManagePalette" title="Permanent link">&para;</a></h3>
+<p>You can add, remove or update components in Manage Palette. Node-RED will remind you to restart Node-RED and that is something you have to do by hand:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>nodered
+</code></pre></div>
+<p>Note:</p>
+<ul>
+<li>
+<p>Some users have reported misbehaviour from Node-RED if they do too many iterations of:</p>
+<ul>
+<li>make a change in Manage Palette</li>
+<li>restart Node-RED</li>
+</ul>
+<p>It is better to make <strong>all</strong> the changes you intend to make, and only <em>then</em> restart Node-RED.</p>
+</li>
+</ul>
+<h3 id="viaNPM">via <code>npm</code><a class="headerlink" href="#viaNPM" title="Permanent link">&para;</a></h3>
+<p>You can also run <code>npm</code> inside the container to install any component that could be installed by <code>npm</code> in a non-container environment. This is the basic syntax:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-w<span class="w"> </span>/data<span class="w"> </span>nodered<span class="w"> </span>npm<span class="w"> </span>«command»<span class="w"> </span>«arguments…»
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>nodered
+</code></pre></div>
+<p>Examples:</p>
+<ul>
+<li>
+<p>To add the "find my iphone" node:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-w<span class="w"> </span>/data<span class="w"> </span>nodered<span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span>find-my-iphone-node
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>nodered
+</code></pre></div>
+</li>
+<li>
+<p>To remove the "find my iphone" node:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-w<span class="w"> </span>/data<span class="w"> </span>nodered<span class="w"> </span>npm<span class="w"> </span>uninstall<span class="w"> </span>find-my-iphone-node
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>nodered
+</code></pre></div>
+</li>
+</ul>
+<p>Note:</p>
+<ul>
+<li>You <strong>must</strong> include <code>-w /data</code> on each command. Any formula you find on the web will not include this. You have to remember to do it yourself!</li>
+<li>Many web examples include the <code>--save</code> flag on the <code>npm</code> command. That flag is not needed (it is ignored because the behaviour it used to control has been the default since NPM version 5. Node-RED containers have been using NPM version 6 for some time.</li>
+<li>See also the note above about restarting too frequently.</li>
+<li>
+<p>You can use this approach if you need to force the installation of a specific version (which you don't appear to be able to do in Manage Palette). For example, to install version 4.0.0 of the "moment" node:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-w<span class="w"> </span>/data<span class="w"> </span>nodered<span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span>node-red-contrib-moment@4.0.0
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>nodered
+</code></pre></div>
+</li>
+</ul>
+<h3 id="viaWhich">Comparison of methods<a class="headerlink" href="#viaWhich" title="Permanent link">&para;</a></h3>
+<p>In terms of outcome, there is no real difference between the various methods. However, some nodes (eg "node-red-contrib-generic-ble" and "node-red-node-sqlite") <strong>must</strong> be installed by <em>Dockerfile</em>. The only way of finding out if a component <strong>must</strong> be installed via <em>Dockerfile</em> is to try Manage Palette and find that it doesn't work.</p>
+<p>Aside from the exception cases that require <em>Dockerfile</em> or where you need to force a specific version, it is quicker to install nodes via Manage Palette and applying updates is a bit easier too. But it's really up to you.</p>
+<p>If you're wondering about "backup", nodes installed via:</p>
+<ul>
+<li><em>Dockerfile</em> – implicitly backed up when the <em>Dockerfile</em> is backed-up.</li>
+<li>Manage Palette or <code>npm install</code> – explicitly backed up when the <code>~/IOTstack/volumes</code> directory is backed-up.</li>
+</ul>
+<p>Basically, if you're running IOTstack backups then your add-on nodes will be backed-up.</p>
+<h3 id="componentPrecedence">Component precedence<a class="headerlink" href="#componentPrecedence" title="Permanent link">&para;</a></h3>
+<p>Components that are installed via <em>Dockerfile</em> wind up at the <strong>internal</strong> path:</p>
+<div class="language-text highlight"><pre><span></span><code>/usr/src/node-red
+</code></pre></div>
+<p>Components installed via Manage Palette or <code>docker exec -w /data</code> wind up at the <strong>internal</strong> path:</p>
+<div class="language-text highlight"><pre><span></span><code>/data
+</code></pre></div>
+<p>which is the same as the <strong>external</strong> path:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/nodered/data
+</code></pre></div>
+<p>Because there are two places, this invites the question of what happens if a given component is installed in both? The answer is that components installed in <code>/data</code> take precedence.</p>
+<p>Or, to put it more simply: in any contest between methods, <em>Dockerfile</em> comes last.</p>
+<h3 id="fixDuplicateNodes">Resolving node duplication<a class="headerlink" href="#fixDuplicateNodes" title="Permanent link">&para;</a></h3>
+<p>Sometimes, even when you are 100% certain that <strong>you</strong> didn't do it, a component will turn up in both places. There is probably some logical reason for this but I don't know what it is.</p>
+<p>The problem this creates is that a later version of a component installed via <em>Dockerfile</em> will be blocked by the presence of an older version of that component installed by a different method.</p>
+<p>The <code>nodered_list_installed_nodes.sh</code> script helps discover when this situation exists. For example:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>nodered_list_installed_nodes.sh<span class="w"> </span>
+
+<span class="go">Fetching list of candidates installed via Dockerfile</span>
+
+<span class="go">Components built into the image (via Dockerfile)</span>
+<span class="go">  ACTIVE: node-red-admin</span>
+<span class="go">  ACTIVE: node-red-configurable-ping</span>
+<span class="go">  ACTIVE: node-red-contrib-boolean-logic</span>
+<span class="go">  ACTIVE: node-red-contrib-generic-ble</span>
+<span class="go">  ACTIVE: node-red-contrib-influxdb</span>
+<span class="go">  ACTIVE: node-red-dashboard</span>
+<span class="go"> BLOCKED: node-red-node-email</span>
+<span class="go">  ACTIVE: node-red-node-pi-gpiod</span>
+<span class="go">  ACTIVE: node-red-node-rbe</span>
+<span class="go">  ACTIVE: node-red-node-sqlite</span>
+<span class="go">  ACTIVE: node-red-node-tail</span>
+
+<span class="go">Fetching list of candidates installed via Manage Palette or npm</span>
+
+<span class="go">Components in persistent store at</span>
+<span class="go"> /home/pi/IOTstack/volumes/nodered/data/node_modules</span>
+<span class="go">  node-red-contrib-boolean-logic-ultimate</span>
+<span class="go">  node-red-contrib-chartjs</span>
+<span class="go">  node-red-node-email</span>
+<span class="go">  node-red-contrib-md5</span>
+<span class="go">  node-red-contrib-moment</span>
+<span class="go">  node-red-contrib-pushsafer</span>
+</code></pre></div>
+<p>Notice how the <code>node-red-node-email</code> instance installed in the Dockerfile is being blocked. To fix this problem:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-w<span class="w"> </span>/data<span class="w"> </span>nodered<span class="w"> </span>npm<span class="w"> </span>uninstall<span class="w"> </span>node-red-node-email
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>nodered
+</code></pre></div>
+<h2 id="packageManagement">Package management<a class="headerlink" href="#packageManagement" title="Permanent link">&para;</a></h2>
+<p>As well as providing the Node-RED service, the nodered container is an excellent testbed. Installing the DNS tools, Mosquitto clients and tcpdump will help you to figure out what is going on <strong>inside</strong> container-space.</p>
+<p>There are two ways to add extra packages. The first method is to add them to the running container. For example, to add the Mosquitto clients:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nodered<span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>mosquitto-clients
+</code></pre></div>
+<blockquote>
+<p>The "apk" implies that the Node-RED container is based on Alpine Linux. Keep that in mind when you search for instructions on installing packages.</p>
+</blockquote>
+<p>Packages installed this way will persist until the container is re-created (eg a <code>down</code> and <code>up</code> of the stack, or a reboot of your Raspberry Pi). This is a good choice if you only want to run a quick experiment.</p>
+<p>The second method adds the packages to your <em>local</em> image every time you rebuild. Because the packages are in the <em>local</em> image, they are always in the running container. For example, to include the Mosquitto clients in every build:</p>
+<ol>
+<li>
+<p>Edit your <em>Compose</em> file to include the package on the <code>EXTRA_PACKAGES</code> argument:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_PACKAGES=mosquitto-clients</span>
+</code></pre></div>
+<blockquote>
+<p>If you do not see the <code>EXTRA_PACKAGES</code> argument in your <em>Compose</em> file, refer to <a href="#july2022syntax">updating to July 2022 syntax</a>.</p>
+</blockquote>
+</li>
+<li>
+<p>Rebuild your <em>local</em> image by running the <a href="#rebuildNodeRed">re-building the local Node-RED image</a> commands.</p>
+</li>
+</ol>
+<p>You can specify multiple packages on the same line. For example:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_PACKAGES=mosquitto-clients bind-tools tcpdump</span>
+</code></pre></div>
+<p>Notes:</p>
+<ol>
+<li>Use a space to separate package names.</li>
+<li>Do <strong>not</strong> encapsulate the list in quote marks.</li>
+</ol>
+<h2 id="july2022syntax">Updating to July 2022 syntax<a class="headerlink" href="#july2022syntax" title="Permanent link">&para;</a></h2>
+<p>The primary benefit of the new syntax is that you no longer risk the IOTstack menu overwriting any custom changes you may have made to your Node-RED <em>Dockerfile</em>.</p>
+<p>If you install a clean copy of IOTstack, run the menu, enable Node-RED and select one or more add-on nodes then both your <em>Compose</em> file and <em>Dockerfile</em> will use the latest syntax automatically.</p>
+<p>If you have an older version of IOTstack installed, the syntax used in your <em>Compose</em> file and <em>Dockerfile</em> will depend on when you last ran the menu and manipulated Node-RED.</p>
+<p>To avoid any uncertainties, you can use a text editor to update your existing <em>Compose</em> file and <em>Dockerfile</em> to adopt the latest syntax.</p>
+<h3 id="july2022compose">Updating your <em>Compose</em> file<a class="headerlink" href="#july2022compose" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>Step 1: Implement the new syntactic scaffolding:</p>
+<p>The first three lines of the old syntax are:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">  </span><span class="nt">nodered</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodered</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services/nodered/.</span>
+</code></pre></div></td></tr></table></div>
+<p>Replace line 3 (the one-line <code>build:</code> directive) with the following lines:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services/nodered/.</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKERHUB_TAG=latest</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_PACKAGES=</span>
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Step 2: Pin to the desired version (optional):</p>
+<p>If your existing <em>Dockerfile</em> pins to a specific version, edit the value of <code>DOCKERHUB_TAG</code> (line 6 of your updated <em>Compose</em> file) to use the tag from your <em>Dockerfile</em>. For example, if your existing <em>Dockerfile</em> begins with:</p>
+<div class="language-Dockerfile highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">nodered/node-red:latest-12</span>
+</code></pre></div>
+<p>then line 6 of your <em>Compose</em> file should be:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKERHUB_TAG=latest-12</span>
+</code></pre></div></td></tr></table></div>
+<p>Note:</p>
+<ul>
+<li>IOTstack switched to <code>latest-12</code> in March 2021. The default for July 2022 syntax is <code>latest</code>. At the time of writing, that is the same as <code>latest-14</code>, which is what is recommended by Node-RED. If any of your flows has a dependence on <code>node.js</code> version 12 (or if you do not want to take the risk), use <code>latest-12</code>.</li>
+</ul>
+</li>
+<li>
+<p>Step 3: Define extra packages (optional):</p>
+<p>If your existing <em>Dockerfile</em> includes extra packages, edit the value of <code>EXTRA_PACKAGES</code> (line 7 of your updated <em>Compose</em> file) to list the same packages. For example, if your existing <em>Dockerfile</em> includes:</p>
+<div class="language-Dockerfile highlight"><pre><span></span><code><span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>eudev-dev<span class="w"> </span>mosquitto-clients<span class="w"> </span>bind-tools<span class="w"> </span>tcpdump
+</code></pre></div>
+<p>then everything <em>after</em> <code>eudev-dev</code> should appear on line 7 of your <em>Compose</em> file: </p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_PACKAGES=mosquitto-clients bind-tools tcpdump</span>
+</code></pre></div></td></tr></table></div>
+<p>Notes:</p>
+<ul>
+<li>use spaces between package names.</li>
+<li>do <strong>not</strong> enclose the list of packages in quotes.</li>
+<li>do <strong>not</strong> include <code>eudev-dev</code> (it is specified in the <a href="#july2022dockerfile">updated <em>Dockerfile</em></a>).</li>
+</ul>
+</li>
+</ul>
+<h3 id="july2022dockerfile">Updating your <em>Dockerfile</em><a class="headerlink" href="#july2022dockerfile" title="Permanent link">&para;</a></h3>
+<p>The first four lines of your existing <em>Dockerfile</em> will have a structure similar to this:</p>
+<div class="language-Dockerfile highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">nodered/node-red:latest-12</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">root</span>
+<span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>eudev-dev
+<span class="k">USER</span><span class="w"> </span><span class="s">node-red</span>
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<p>The actual text will depend on whether you have modified the tag in the first line or added extra packages to the third line.</p>
+</blockquote>
+<p>Replace the first four lines of your <em>Dockerfile</em> with the following lines:</p>
+<div class="language-Dockerfile highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c"># reference argument - omitted defaults to latest</span>
+<span class="k">ARG</span><span class="w"> </span><span class="nv">DOCKERHUB_TAG</span><span class="o">=</span>latest
+
+<span class="c"># Download base image</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">nodered/node-red:${DOCKERHUB_TAG}</span>
+
+<span class="c"># reference argument - omitted defaults to null</span>
+<span class="k">ARG</span><span class="w"> </span>EXTRA_PACKAGES
+<span class="k">ENV</span><span class="w"> </span><span class="nv">EXTRA_PACKAGES</span><span class="o">=</span><span class="si">${</span><span class="nv">EXTRA_PACKAGES</span><span class="si">}</span>
+
+<span class="c"># default user is node-red - need to be root to install packages</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">root</span>
+
+<span class="c"># install packages</span>
+<span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>eudev-dev<span class="w"> </span><span class="si">${</span><span class="nv">EXTRA_PACKAGES</span><span class="si">}</span>
+
+<span class="c"># switch back to default user</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">node-red</span>
+
+<span class="c"># variable not needed inside running container</span>
+<span class="k">ENV</span><span class="w"> </span><span class="nv">EXTRA_PACKAGES</span><span class="o">=</span>
+
+<span class="c"># add-on nodes follow</span>
+</code></pre></div></td></tr></table></div>
+<p>All remaining lines of your original <em>Dockerfile</em> should be left as-is.</p>
+<h3 id="july2022build">Applying the new syntax<a class="headerlink" href="#july2022build" title="Permanent link">&para;</a></h3>
+<p>Run the <a href="#rebuildNodeRed">re-building the local Node-RED image</a> commands.</p>
+<h2 id="linuxDistro">Alpine vs Debian<a class="headerlink" href="#linuxDistro" title="Permanent link">&para;</a></h2>
+<p>The first part of IOTstack's default service definition for Node-RED is shown at <a href="#serviceBuildFragment">IOTstack first run</a>. Although it is not immediately obvious, this results in a container which is based on the Alpine Linux distribution. You can confirm this by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nodered<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;PRETTY_NAME&quot;</span><span class="w"> </span>/etc/os-release
+<span class="go">PRETTY_NAME=&quot;Alpine Linux v3.20&quot;</span>
+</code></pre></div>
+<p>Historically, Node-RED has been distributed on on <a href="https://hub.docker.com/r/nodered/node-red/tags">Dockerhub</a> as two distinct sets of Node-RED images:</p>
+<ul>
+<li>Those based on the Alpine Linux distribution; and</li>
+<li>Those based on the Debian Linux distribution.</li>
+</ul>
+<p>In general, Node-RED images have tracked Alpine releases more consistently than they have Debian. For example, at the time of writing (July 2024):</p>
+<table>
+<thead>
+<tr>
+<th>Image Tag</th>
+<th>Distro</th>
+<th>Image OS</th>
+<th>Current</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>latest</code></td>
+<td>Alpine</td>
+<td>v3.20</td>
+<td><a href="https://alpinelinux.org/releases/">v3.20</a></td>
+</tr>
+<tr>
+<td><code>latest-debian</code></td>
+<td>Debian</td>
+<td>11 (bullseye)</td>
+<td><a href="https://www.debian.org/releases/">12 (bookworm)</a></td>
+</tr>
+</tbody>
+</table>
+<p>In addition, Node-RED images based on Alpine have offered a greater range of options when it comes to the embedded version of Node.js. At the time of writing:</p>
+<ul>
+<li>image variants based on Alpine Linux include <code>latest-18</code>, <code>latest-20</code> and <code>latest-22</code>, implying a choice of Node.js versions 18, 20 and 22, with version 20 being the default;  while</li>
+<li>the single image variant for Debian Linux is <code>latest-debian</code> which comes with Node.js version 20.</li>
+</ul>
+<p>Naturally, this situation could change at any time! This information is only here to make the point that, historically, Node-RED images based on Debian have lagged behind Alpine and have only supported a single version of Node.js. This is also the main reason why IOTstack defaults to Alpine images.</p>
+<p>However, there may be circumstances where you decide it is appropriate to run a Node-RED image based on Debian. The purpose of this section is not to explore scenarios nor weigh the pros and cons, merely to explain how to adapt your Node-RED service definition to accomplish it. Proceed as follows:</p>
+<ol>
+<li>
+<p>Make a copy of your existing Dockerfile:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack/services/nodered
+<span class="gp">$ </span>cp<span class="w"> </span>Dockerfile<span class="w"> </span>Debian.Dockerfile
+</code></pre></div>
+<p>The reason for making a copy is to preserve your existing (Alpine-aware) Dockerfile so you can easily switch back if you break something.</p>
+</li>
+<li>
+<p>Open <code>Debian.Dockerfile</code> in a text editor and make the following changes:</p>
+<ul>
+<li>
+<p>Find the line:</p>
+<div class="language-Dockerfile highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">ARG</span><span class="w"> </span><span class="nv">DOCKERHUB_TAG</span><span class="o">=</span>latest
+</code></pre></div></td></tr></table></div>
+<p><strong>Replace</strong> that line with:</p>
+<div class="language-Dockerfile highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">ARG</span><span class="w"> </span><span class="nv">DOCKERHUB_TAG</span><span class="o">=</span>latest-debian
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Find the line:</p>
+<div class="language-Dockerfile highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>eudev-dev<span class="w"> </span><span class="si">${</span><span class="nv">EXTRA_PACKAGES</span><span class="si">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>Replace</strong> that line with:</p>
+<div class="language-Dockerfile highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">RUN</span><span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>udev<span class="w"> </span><span class="si">${</span><span class="nv">EXTRA_PACKAGES</span><span class="si">}</span>
+</code></pre></div></td></tr></table></div>
+<p><code>apk</code> is the Alpine package manager whereas <code>apt</code> is the Debian package manager.</p>
+</li>
+<li>
+<p>Save your work.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Make a copy of your existing compose file:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>cp<span class="w"> </span>docker-compose.yml<span class="w"> </span>docker-compose.yml.bak
+</code></pre></div>
+<p>The reason for making a copy is to preserve your existing (Alpine-aware) service definition so you can easily switch back if you break something.</p>
+</li>
+<li>
+<p>Open <code>docker-compose.yml</code> in a text editor and make the following changes:</p>
+<ul>
+<li>
+<p>Change the Node-RED <code>build</code> clause so that it looks like this:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services/nodered/.</span>
+<span class="w">      </span><span class="nt">dockerfile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Debian.Dockerfile</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKERHUB_TAG=latest-debian</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_PACKAGES=</span>
+</code></pre></div></td></tr></table></div>
+<p>There are two key edits:</p>
+<ol>
+<li><strong>Insert</strong> the <code>dockerfile</code> line (as line 5).</li>
+<li><strong>Change</strong> the right hand side of the <code>DOCKERHUB_TAG</code> argument from <code>latest</code> to <code>latest-debian</code> (line 7).</li>
+</ol>
+</li>
+<li>
+<p>If you have any <code>EXTRA_PACKAGES</code> specified, you will need to allow for any package-name differences between Alpine and Debian. For example, suppose you are using this list of extra packages with Alpine:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_PACKAGES=mosquitto-clients bind-tools tcpdump tree</span>
+</code></pre></div></td></tr></table></div>
+<p>The <code>mosquitto-clients</code>, <code>tcpdump</code> and <code>tree</code> packages have the same names in the <code>apk</code> (Alpine) package manager as they do in <code>apt</code> (Debian) whereas <code>bind-tools</code> is named <code>dnsutils</code> in the Debian repositories. Thus the extra packages list for a Debian build would need to be:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_PACKAGES=mosquitto-clients dnsutils tcpdump tree</span>
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Save your work.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Rebuild Node-RED:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>build<span class="w"> </span>--no-cache<span class="w"> </span>--pull<span class="w"> </span>nodered
+</code></pre></div>
+<p>If the build process reports any errors, go back and check your work.</p>
+</li>
+<li>
+<p>Start the new container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>nodered
+</code></pre></div>
+</li>
+<li>
+<p>Check that the new container is running properly and hasn't gone into a restart loop:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>ps<span class="w"> </span>-a<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;table {{.Names}}\t{{.RunningFor}}\t{{.Status}}\t{{.Size}}&quot;</span><span class="w"> </span>--filter<span class="w"> </span><span class="nv">name</span><span class="o">=</span>nodered
+<span class="go">NAMES     CREATED          STATUS                    SIZE</span>
+<span class="go">nodered   32 seconds ago   Up 31 seconds (healthy)   0B (virtual 945MB)</span>
+</code></pre></div>
+<p>Providing the STATUS column reports "healthy" after roughly 30 seconds of runtime, it is usually safe to assume that the container is behaving normally.</p>
+</li>
+<li>
+<p>Verify the base Linux distribution being used by the container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nodered<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;PRETTY_NAME&quot;</span><span class="w"> </span>/etc/os-release
+<span class="go">PRETTY_NAME=&quot;Debian GNU/Linux 11 (bullseye)&quot;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Check your Node-RED and Node.js versions:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nodered<span class="w"> </span>npm<span class="w"> </span>version<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;[.[&quot;node-red-docker&quot;],.[&quot;node&quot;]] | @tsv&#39;</span>
+<span class="go">4.0.2   20.15.0</span>
+</code></pre></div>
+<p>Interpretation - the container is running:</p>
+<ul>
+<li>Node-RED version 4.0.2, with</li>
+<li>Node.js version 20.15.0</li>
+</ul>
+</li>
+</ol>
+<p>The actual version numbers you see in the last two steps will depend (obviously) on whatever the good folks who maintain Node-RED thought was appropriate at the time they released whatever <code>latest-debian</code> variant is present on DockerHub at the moment when you perform the migration.</p>
+<p>Please keep in mind that none of this affects the IOTstack menu. Re-running the menu is likely to revert your Node-RED service definition to be based on Alpine images.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>

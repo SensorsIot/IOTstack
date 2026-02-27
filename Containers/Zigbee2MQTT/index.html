@@ -1,0 +1,4106 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="../ZeroTier/">
+      
+      
+        <link rel="next" href="../Zigbee2mqttassistant/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Zigbee2MQTT - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#zigbee2mqtt" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Zigbee2MQTT
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Basic_setup/" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../AdGuardHome/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Developers/" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Updates/" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom overrides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Menu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MJPEG-Streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Node-RED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick links
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basicProcess" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic process for new users
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepareAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare your Zigbee adapter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identifyAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identify your Zigbee adapter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Identify your Zigbee adapter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identifyUSBAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        USB adapters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifyRemoteAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote adapters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configTemplate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#envVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tzSupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        timezone support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serialAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        serial adapter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapterType" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        adapter type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mqttServer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MQTT server type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontEndEnable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        front end
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logSymlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        debugging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confFile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-basic-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying basic operation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying basic operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkLog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking the log
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkMQTT" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Mosquitto connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectGUI" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting to the web GUI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shell-access-to-the-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shell access to the container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#container-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update202501" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2025 v1 to v2 upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update202204" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2022 Service definition change
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2022 Service definition change">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-existing-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pre-existing configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-RandomPassword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Random Services Password
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Menu-System/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/PostBuild-Script/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Postbuild BASH Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updating the project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/Changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/New-Menu-Release-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New IOTstack Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/gcgarner-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from gcgarner to SensorsIot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/migration-network-change/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration: network change
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick links
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basicProcess" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic process for new users
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepareAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare your Zigbee adapter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identifyAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identify your Zigbee adapter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Identify your Zigbee adapter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identifyUSBAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        USB adapters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifyRemoteAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote adapters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configTemplate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#envVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tzSupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        timezone support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serialAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        serial adapter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapterType" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        adapter type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mqttServer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MQTT server type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontEndEnable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        front end
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logSymlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        debugging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confFile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-basic-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying basic operation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying basic operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkLog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking the log
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkMQTT" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Mosquitto connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectGUI" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting to the web GUI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shell-access-to-the-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shell access to the container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#container-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update202501" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2025 v1 to v2 upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update202204" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2022 Service definition change
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2022 Service definition change">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-existing-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pre-existing configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="zigbee2mqtt">Zigbee2MQTT<a class="headerlink" href="#zigbee2mqtt" title="Permanent link">&para;</a></h1>
+<h2 id="quick-links">Quick links<a class="headerlink" href="#quick-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li>New users: <a href="#basicProcess">start here</a></li>
+<li>Existing users: <a href="#update202204">Service definition change</a> (circa April 2022)</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.zigbee2mqtt.io">Web Guide</a></li>
+<li><a href="https://www.zigbee2mqtt.io/guide/adapters/#recommended">Supported adapters</a></li>
+<li><a href="https://github.com/Koenkk/zigbee2mqtt">GitHub</a></li>
+<li><a href="https://hub.docker.com/r/koenkk/zigbee2mqtt/tags">DockerHub</a></li>
+</ul>
+<h2 id="definitions">Definitions<a class="headerlink" href="#definitions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><em>"compose file"</em> means the file at the path:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/docker-compose.yml
+</code></pre></div>
+</li>
+</ul>
+<h2 id="basicProcess">Basic process for new users<a class="headerlink" href="#basicProcess" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Run the IOTstack menu and choose both "Mosquitto" and "Zigbee2MQTT". That adds the service definitions for both of those containers to your <em>compose file</em>.</p>
+</li>
+<li>
+<p><a href="#prepareAdapter">Prepare your Zigbee adapter</a> by flashing its firmware.</p>
+</li>
+<li>
+<p>Follow the steps in <a href="#identifyAdapter">Identify your Zigbee adapter</a> to work out how your adapter:</p>
+<ul>
+<li>"mounts" on your Raspberry Pi; or</li>
+<li>"connects" over your network,</li>
+</ul>
+<p>and edit your <em>compose file</em> to include that information.</p>
+</li>
+<li>
+<p>The default environment variables assume:</p>
+<ul>
+<li>You are running Mosquitto and Zigbee2MQTT as IOTstack containers on the same computer;</li>
+<li>Your adapter mounts via USB; and</li>
+<li>You want the Zigbee2MQTT web front end to be available on port 8080.</li>
+</ul>
+<p>This is a good basis for getting started. If it sounds like it will meet your needs, you will not need to make any changes. Otherwise, review the <a href="#envVars">environment variables</a> and make appropriate changes to the service definition in your <em>compose file</em>.</p>
+</li>
+<li>
+<p><a name="upStack"></a>Bring up your stack:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+</li>
+<li>
+<p>Confirm that the Zigbee2MQTT container appears to be working correctly. You should:</p>
+<ul>
+<li><a href="#checkStatus">Check container status</a> to confirm that the container is running and stable, and is not in a restart loop;</li>
+<li><a href="#checkLog">Check the container's log</a> for any errors, warnings or other evidence of malfunction; and</li>
+<li><a href="#checkMQTT">Check inter-container connectivity</a> by verifying that the Zigbee2MQTT container is publishing MQTT messages to the Mosquitto broker.</li>
+</ul>
+</li>
+<li>
+<p><a href="#connectGUI">Connect to the web front end</a> and start adding your Zigbee devices.</p>
+</li>
+</ol>
+<h2 id="prepareAdapter">Prepare your Zigbee adapter<a class="headerlink" href="#prepareAdapter" title="Permanent link">&para;</a></h2>
+<p>Zigbee adapters usually need to be "flashed" before they can be used by Zigbee2MQTT. To prepare your adatper:</p>
+<ol>
+<li>Go to the <a href="https://www.zigbee2mqtt.io/guide/adapters/#recommended">supported adapters</a> page.</li>
+<li>Find your adapter in the list.</li>
+<li>Follow the instructions for flashing your adapter.</li>
+</ol>
+<p>Note:</p>
+<ul>
+<li>If you can't find your adapter in the list of supported devices, you may not be able to get the Zigbee2MQTT container to connect to it. This kind of problem is outside the scope of IOTstack. You will have to raise the issue with the <a href="https://www.zigbee2mqtt.io">Zigbee2MQTT</a> project.</li>
+</ul>
+<h2 id="identifyAdapter">Identify your Zigbee adapter<a class="headerlink" href="#identifyAdapter" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#identifyUSBAdapter">USB adapters</a></li>
+<li><a href="#identifyRemoteAdapter">Remote adapters</a></li>
+</ul>
+<h3 id="identifyUSBAdapter">USB adapters<a class="headerlink" href="#identifyUSBAdapter" title="Permanent link">&para;</a></h3>
+<p>This section covers adapters that connect to your Raspberry Pi via USB.</p>
+<p>Many USB Zigbee adapters mount as <code>/dev/ttyACM0</code> but this is not true for <em>all</em> adapters. In addition, if you have multiple devices connected to your Raspberry Pi that contend for a given device name, there are no guarantees that your Zigbee adapter will <em>always</em> be assigned the <em>same</em> name each time the device list is enumerated.</p>
+<p>For those reasons, it is better to take the time to identify your Zigbee adapter in a manner that will be predictable, unique and reliable:</p>
+<ol>
+<li>If your Zigbee adapter is connected to your Raspberry Pi, disconnect it.</li>
+<li>
+<p>Run the following command (the option is the digit "1"):</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>ls<span class="w"> </span>-1<span class="w"> </span>/dev/serial/by-id
+</code></pre></div>
+<p>The possible response patterns are:</p>
+<ul>
+<li>
+<p>An error message:</p>
+<div class="language-text highlight"><pre><span></span><code>ls: cannot access &#39;/dev/serial/by-id&#39;: No such file or directory
+</code></pre></div>
+</li>
+<li>
+<p>A list of one or more lines where your Zigbee adapter is <strong>not</strong> present. Example:</p>
+<div class="language-text highlight"><pre><span></span><code>usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_f068b8e7e82d4b119c0ee71fa1143ea0-if00-port0
+</code></pre></div>
+</li>
+</ul>
+<p>The actual response (error, or a list of devices) does not matter. You are simply establishing a baseline.</p>
+</li>
+<li>
+<p>Connect your prepared Zigbee adapter to a USB port on your Raspberry Pi.</p>
+</li>
+<li>
+<p>Repeat the same <code>ls</code> command from step 2. The response pattern should be different from step 2. The list should now contain your Zigbee adapter. Example:</p>
+<div class="language-text highlight"><pre><span></span><code>usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_f068b8e7e82d4b119c0ee71fa1143ea0-if00-port0
+usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00125A00183F06C5-if00
+</code></pre></div>
+<p>The second line indicates a CC2531 adapter is attached to the Raspberry Pi.</p>
+<p>If the response pattern does <strong>not</strong> change, it means the Raspberry Pi is unable to see your adapter. The two most common reasons are:</p>
+<ol>
+<li>Your adapter was not flashed correctly. Start over at <a href="#prepareAdapter">prepare your Zigbee adapter</a>.</li>
+<li>
+<p>Your adapter does not mount as a serial device. Try repeating steps 2 through 4 with the command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>ls<span class="w"> </span>-1<span class="w"> </span>/dev
+</code></pre></div>
+<p>to see if you can discover how your adapter attaches to your Raspberry Pi.</p>
+<blockquote>
+<p>One example is the Electrolama zig-a-zig-ah which attaches as <code>/dev/ttyUSB0</code>.</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>
+<p>Use the output from the <code>ls</code> command in step 4 to form the absolute path to your Zigbee adapter. Example:</p>
+<div class="language-text highlight"><pre><span></span><code>/dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00125A00183F06C5-if00
+</code></pre></div>
+</li>
+<li>
+<p>Check your work like this (the option is the lower-case letter "l"):</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>ls<span class="w"> </span>-l<span class="w"> </span>/dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00125A00183F06C5-if00
+<span class="go">lrwxrwxrwx 1 root root 13 Mar 31 19:49 dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00125A00183F06C5-if00 -&gt; ../../ttyACM0</span>
+</code></pre></div>
+<p>What the output is telling you is that the <em>by-id</em> path is a symbolic link to <code>/dev/ttyACM0</code>. Although this <em>may</em> always be true on your Raspberry Pi, the only part that is actually <em>guaranteed</em> to be true is the <em>by-id</em> path, which is why you should use it.</p>
+</li>
+<li>
+<p>Once you have identified the path to your adapter, you communicate that information to docker-compose like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="nv">ZIGBEE2MQTT_DEVICE_PATH</span><span class="o">=</span>/dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00125A00183F06C5-if00<span class="w"> </span>&gt;&gt;~/IOTstack/.env
+</code></pre></div>
+<p>Note:</p>
+<ul>
+<li>
+<p>if you forget to do this step, docker-compose will display the following error message:</p>
+<div class="language-text highlight"><pre><span></span><code>parsing ~/IOTstack/docker-compose.yml: error while interpolating services.zigbee2mqtt.devices.[]: required variable ZIGBEE2MQTT_DEVICE_PATH is missing a value: eg echo ZIGBEE2MQTT_DEVICE_PATH=/dev/ttyACM0 &gt;&gt;~/IOTstack/.env
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>Continue from <a href="#upStack">bring up your stack</a>.</p>
+</li>
+</ol>
+<h3 id="identifyRemoteAdapter">Remote adapters<a class="headerlink" href="#identifyRemoteAdapter" title="Permanent link">&para;</a></h3>
+<p>This section covers adapters that your Raspberry Pi connects to over a network via TCP.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://www.zigbee2mqtt.io/advanced/remote-adapter/connect_to_a_remote_adapter.html">connect to a remote adapter</a>.</li>
+</ul>
+<p>The default service definition provided by IOTstack for Zigbee2MQTT includes this device mapping:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">devices</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;${ZIGBEE2MQTT_DEVICE_PATH:?eg</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">ZIGBEE2MQTT_DEVICE_PATH=/dev/ttyACM0</span><span class="nv"> </span><span class="s">&gt;&gt;~/IOTstack/.env}:/dev/ttyACM0&quot;</span>
+</code></pre></div>
+<p>The above syntax assumes your Zigbee adapter connects via USB. You should either remove or comment-out both of those lines from your compose file. An alternative approach is to make the <code>devices</code> clause inactive by prepending <code>x-</code>, like this:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">x-devices</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;${ZIGBEE2MQTT_DEVICE_PATH:?eg</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">ZIGBEE2MQTT_DEVICE_PATH=/dev/ttyACM0</span><span class="nv"> </span><span class="s">&gt;&gt;~/IOTstack/.env}:/dev/ttyACM0&quot;</span>
+</code></pre></div>
+<p>You tell the container how to find your Zigbee adapter across the network by using an environment variable:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_PORT=tcp://«ipaddr»:«port»</span>
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li>«ipaddr» is the IP address or domain name where your remote Zigbee adapter is reachable; and</li>
+<li>«port» is the port on which your remote Zigbee adapter is listening.</li>
+</ul>
+<p>Example:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_PORT=tcp://192.168.1.5:6638</span>
+</code></pre></div>
+<h2 id="configTemplate">Configuration<a class="headerlink" href="#configTemplate" title="Permanent link">&para;</a></h2>
+<p>When you select Zigbee2MQTT in the IOTstack menu, the following service definition is added to your compose file:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nt">zigbee2mqtt</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zigbee2mqtt</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">koenkk/zigbee2mqtt:latest</span>
+<span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TZ=${TZ:-Etc/UTC}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_MQTT_SERVER=mqtt://mosquitto:1883</span>
+<span class="w">    </span><span class="c1"># only enable the next line for Zigbee2MQTT v1</span>
+<span class="w">    </span><span class="c1"># - ZIGBEE2MQTT_CONFIG_FRONTEND=true</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_SYMLINK_CURRENT=true</span>
+<span class="w">    </span><span class="c1"># - DEBUG=zigbee-herdsman*</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:8080&quot;</span>
+<span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./volumes/zigbee2mqtt/data:/app/data</span>
+<span class="w">  </span><span class="nt">devices</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;${ZIGBEE2MQTT_DEVICE_PATH:?eg</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">ZIGBEE2MQTT_DEVICE_PATH=/dev/ttyACM0</span><span class="nv"> </span><span class="s">&gt;&gt;~/IOTstack/.env}:/dev/ttyACM0&quot;</span>
+<span class="w">  </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">  </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mosquitto</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="envVars">Environment variables<a class="headerlink" href="#envVars" title="Permanent link">&para;</a></h3>
+<p>Many first time users of the Zigbee2MQTT container are following guidance which assumes their Zigbee2MQTT service is running <em>natively</em> rather than in a <em>container</em>.</p>
+<p>When you run Zigbee2MQTT <em>natively</em> you provide configuration information by editing Zigbee2MQTT's <code>configuration.yaml</code> file. Although you <em>can</em> edit <code>configuration.yaml</code> when Zigbee2MQTT is running in a container, it is a multi-step process and is also a sub-optimal approach. The correct way to provide configuration information to the Zigbee2MQTT container is via environment variables.</p>
+<p><strong>Any</strong> value that can be set in a Zigbee2MQTT <a href="#confFile">configuration file</a> can also be set using an environment variable.</p>
+<p>Please read that last sentence again and notice the emphasis on "Any" because it is really important. When you are running Zigbee2MQTT in a container, you <strong>never</strong> have to resort to editing the <code>configuration.yaml</code>.</p>
+<p>The <a href="https://www.zigbee2mqtt.io/guide/configuration/#environment-variables">Zigbee2MQTT documentation</a> explains the syntax. It boils down to these rules:</p>
+<ol>
+<li>All environment variables start with <code>ZIGBEE2MQTT_CONFIG_</code>.</li>
+<li>Append all-upper-case labels for section and variable names, separated by underscores.</li>
+<li>Append an <code>=</code> followed by the value(s).</li>
+</ol>
+<p>For example, if the Zigbee2MQTT <code>configuration.yaml</code> example you are following contains these lines:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">serial</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyACM0</span>
+<span class="w">  </span><span class="nt">adapter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zstack</span>
+</code></pre></div>
+<p>then the equivalent environment variables are:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack</span>
+</code></pre></div>
+<p>Note:</p>
+<ul>
+<li>Do <strong>not</strong> use quote marks to enclose the values (right hand sides) of environment variables.</li>
+</ul>
+<p>Whenever you change the value of an environment variable, you also need to tell <code>docker-compose</code> to apply the change:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>zigbee2mqtt
+</code></pre></div>
+<p>The default service definition provided with IOTstack includes the following environment variables:</p>
+<h4 id="tzSupport">timezone support<a class="headerlink" href="#tzSupport" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TZ=${TZ:-Etc/UTC}</span>
+</code></pre></div>
+<p>This assumes that your system timezone has been copied to <code>~/IOTstack/.env</code>, otherwise defaults to <code>Etc/UTC</code>.</p>
+<p>If you want to set your timezone:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;TZ=</span><span class="k">$(</span>cat<span class="w"> </span>/etc/timezone<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/IOTstack/.env
+</code></pre></div>
+<p>Most (but not yet all) IOTstack containers use this syntax. The idea is that a single value set in <code>.env</code> will ensure your containers operate in the same timezone.</p>
+<h4 id="serialAdapter">serial adapter<a class="headerlink" href="#serialAdapter" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0</span>
+</code></pre></div>
+<p>The default value of <code>/dev/ttyACM0</code> works in conjunction with the <code>devices</code> clause:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">devices</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;${ZIGBEE2MQTT_DEVICE_PATH:?eg</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">ZIGBEE2MQTT_DEVICE_PATH=/dev/ttyACM0</span><span class="nv"> </span><span class="s">&gt;&gt;~/IOTstack/.env}:/dev/ttyACM0&quot;</span>
+</code></pre></div>
+<p>Taken together, these assume your Zigbee adapter is connected to a local USB port. If you are using a <a href="#identifyRemoteAdapter">remote adapter</a> then you should:</p>
+<ol>
+<li>
+<p>Change the right hand side of this variable so that it points to your adapter. For example:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_PORT=tcp://«ipaddr»:«port»`</span>
+</code></pre></div>
+</li>
+<li>
+<p>Remove, comment-out or inactivate the <code>devices</code> clause (as explained in <a href="#identifyRemoteAdapter">remote adapters</a>).</p>
+</li>
+</ol>
+<h4 id="adapterType">adapter type<a class="headerlink" href="#adapterType" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack</span>
+</code></pre></div>
+<p>Identify your adapter from the <a href="https://www.zigbee2mqtt.io/guide/configuration/adapter-settings.html#basic-configuration">official list</a>. At the time of writing, the possible values were <code>zstack</code>, <code>ember</code>, <code>deconz</code>, <code>zigate</code> or <code>zboss</code>.</p>
+<h4 id="mqttServer">MQTT server type<a class="headerlink" href="#mqttServer" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_MQTT_SERVER=mqtt://mosquitto:1883</span>
+</code></pre></div>
+<p>Typical values for this are:</p>
+<ul>
+<li>
+<p><code>mqtt://mosquitto:1883</code></p>
+<p>This is default value supplied with the IOTstack template. It assumes that both Zigbee2MQTT and the Mosquitto broker are running in non-host mode containers on the same Raspberry Pi.</p>
+</li>
+<li>
+<p><code>mqtt://localhost:1883</code></p>
+<p>This would be appropriate if you were to run Zigbee2MQTT in host mode and the Mosquitto broker was running on the same Raspberry Pi.</p>
+</li>
+<li>
+<p><code>mqtt://«host-or-ip»:1883</code></p>
+<p>If the Mosquitto broker is running on a <em>different</em> computer, replace <code>«host-or-ip»</code> with the IP address or domain name of that other computer. You should also remove or comment-out the following lines from the service definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mosquitto</span>
+</code></pre></div>
+<p>The <code>depends_on</code> clause ensures that the Mosquitto container starts alongside the Zigbee2MQTT container. That would not be appropriate if Mosquitto was running on a separate computer.</p>
+</li>
+</ul>
+<h4 id="frontEndEnable">front end<a class="headerlink" href="#frontEndEnable" title="Permanent link">&para;</a></h4>
+<p>The "front end" is the name given to the Zigbee2MQTT web interface on port 8080. If you want to change the port number where you access the Zigbee2MQTT web interface, see <a href="#connectGUI">connecting to the web GUI</a>.</p>
+<p>Zigbee2MQTT version 2 introduced an incompatibility with this setting. The IOTstack template contains the following lines:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="c1"># only enable the next line for Zigbee2MQTT v1</span>
+<span class="c1"># - ZIGBEE2MQTT_CONFIG_FRONTEND=true</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true</span>
+</code></pre></div>
+<p>If you are running Zigbee2MQTT version 1 then the front end will not be enabled unless you uncomment:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_FRONTEND=true</span>
+</code></pre></div>
+<p>Zigbee2MQTT version 1 ignores the following environment variable so you do not need to comment it out:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true</span>
+</code></pre></div>
+<p>However, if you have been running Zigbee2MQTT version 1 and you upgrade to version 2 then you <strong>must</strong> either delete or comment-out:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="c1"># - ZIGBEE2MQTT_CONFIG_FRONTEND=true</span>
+</code></pre></div>
+<p>If you do not do that then the container will go into a restart loop. If you examine the container's log, you will see this error:</p>
+<div class="language-text highlight"><pre><span></span><code>frontend must be object
+</code></pre></div>
+<p>That error is telling you to comment-out that environment variable.</p>
+<h4 id="logSymlink">logging<a class="headerlink" href="#logSymlink" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_SYMLINK_CURRENT=true</span>
+</code></pre></div>
+<p>Defining this variable causes Zigbee2MQTT to create a symlink pointing to the current log <strong>folder</strong> at the path:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/zigbee2mqtt/data/log/current
+</code></pre></div>
+<p>See <a href="#checkLog">Checking the log</a> for more information about why this is useful.</p>
+<h4 id="debugging">debugging<a class="headerlink" href="#debugging" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG=zigbee-herdsman*</span>
+</code></pre></div>
+<p>Enabling this variable turns on extended debugging inside the container.</p>
+<h3 id="confFile">Configuration file<a class="headerlink" href="#confFile" title="Permanent link">&para;</a></h3>
+<p>Zigbee2MQTT creates a default configuration file at the path:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/zigbee2mqtt/data/configuration.yaml
+</code></pre></div>
+<p>Although you <em>can</em> edit the configuration file, the approach recommended for IOTstack is to use <a href="#envVars">environment variables</a>.</p>
+<p>If you decide to edit the configuration file:</p>
+<ol>
+<li>You will need to use <code>sudo</code> to edit the file.</li>
+<li>
+<p>After you have finished making changes, you need to inform the running container by:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>zigbee2mqtt
+</code></pre></div>
+</li>
+<li>
+<p><a href="#checkLog">Check the log</a> for errors.</p>
+</li>
+</ol>
+<p>Notes:</p>
+<ul>
+<li>If you start Zigbee2MQTT from a clean slate (ie where the configuration file does not exist) <strong>and</strong> your <em>compose file</em> does not define the <a href="#mqttServer"><code>… MQTT_SERVER</code></a> environment variable discussed above, the container will go into a restart loop. This happens because the Zigbee2MQTT container defaults to trying to reach the Mosquitto broker at <code>localhost:1883</code> instead of <code>mosquitto:1883</code>. That usually fails.</li>
+<li>Settings passed via environment variables take precedence over both the defaults and any changes you make subsequently to <code>configuration.yaml</code>. The Zigbee2MQTT container does not update <code>configuration.yaml</code> to reflect settings passed via environment variables.</li>
+</ul>
+<h2 id="verifying-basic-operation">Verifying basic operation<a class="headerlink" href="#verifying-basic-operation" title="Permanent link">&para;</a></h2>
+<h3 id="checkStatus">Checking status<a class="headerlink" href="#checkStatus" title="Permanent link">&para;</a></h3>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>ps<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-e<span class="w"> </span>mosquitto<span class="w"> </span>-e<span class="w"> </span>zigbee2mqtt
+<span class="go">NAMES         CREATED          STATUS</span>
+<span class="go">zigbee2mqtt   33 seconds ago   Up 30 seconds</span>
+<span class="go">mosquitto     33 seconds ago   Up 31 seconds (healthy)</span>
+</code></pre></div>
+<blockquote>
+<p>The above output is filtered down to the relevant columns</p>
+</blockquote>
+<p>You are looking for evidence that the container is restarting (ie the "Status" column only ever shows a low number of seconds when compared with the "Created" column).</p>
+<h3 id="checkLog">Checking the log<a class="headerlink" href="#checkLog" title="Permanent link">&para;</a></h3>
+<p>You can watch the container's log using this command:</p>
+<div class="language-text highlight"><pre><span></span><code>$ docker logs -f zigbee2mqtt
+</code></pre></div>
+<p>Press <kbd>control</kbd>+<kbd>c</kbd> to terminate the command. An alternative is to observe the following path using commands like <code>cat</code> and <code>tail</code>:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/zigbee2mqtt/data/log/current/log.log
+</code></pre></div>
+<p>Note:</p>
+<ul>
+<li>this depends on the <a href="#logSymlink"><code>… LOG_SYMLINK_CURRENT</code></a> environment variable being set to <code>true</code>.</li>
+</ul>
+<h3 id="checkMQTT">Checking Mosquitto connectivity<a class="headerlink" href="#checkMQTT" title="Permanent link">&para;</a></h3>
+<p>To perform this check, you will need to have the Mosquitto clients installed:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>mosquitto-clients
+</code></pre></div>
+<p>The Mosquitto clients package includes two command-line tools:</p>
+<ul>
+<li><code>mosquitto_pub</code> for publishing MQTT messages to the broker; and</li>
+<li>
+<p><code>mosquitto_sub</code> for subscribing to MQTT messages distributed by the broker.</p>
+<blockquote>
+<p>In IOTstack, the "broker" is usually the Mosquitto container.</p>
+</blockquote>
+</li>
+</ul>
+<p>Assuming the Mosquitto clients are installed, you can run the following command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>mosquitto_sub<span class="w"> </span>-v<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;localhost&quot;</span><span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;zigbee2mqtt/#&quot;</span><span class="w"> </span>-F<span class="w"> </span><span class="s2">&quot;%I %t %p&quot;</span>
+</code></pre></div>
+<p>One of two things will happen:</p>
+<ul>
+<li><em>silence,</em> indicating that the Zigbee2MQTT container is <strong>not</strong> able to communicate with the Mosquitto container. If this happens, you should <a href="#checkLog">check the Zigbee2MQTT log</a>. </li>
+<li><em>chatter,</em> proving that the Zigbee2MQTT container <strong>can</strong> communicate with the Mosquitto container.</li>
+</ul>
+<p>Terminate the <code>mosquitto_sub</code> command with a <kbd>Control</kbd><kbd>c</kbd>.</p>
+<h2 id="connectGUI">Connecting to the web GUI<a class="headerlink" href="#connectGUI" title="Permanent link">&para;</a></h2>
+<p>Open a browser, and point it to port 8080 on your Raspberry Pi. For example:</p>
+<div class="language-text highlight"><pre><span></span><code>http://raspberrypi.local:8080
+</code></pre></div>
+<p>You should see the Zigbee2MQTT interface.</p>
+<p>Notes:</p>
+<ol>
+<li>
+<p>The availability of the Zigbee2MQTT UI is governed by an environment variable. If you do not see the UI, check that <a href="#frontEndEnable"><code>… FRONTEND</code></a> is defined.</p>
+</li>
+<li>
+<p>In the URL above, port 8080 is an <strong>external</strong> port which is exposed via the following port mapping in the Zigbee2MQTT service definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:8080&quot;</span>
+</code></pre></div>
+<p>If you want to reach the Zigbee2MQTT UI via a different port, you should edit the left hand side of that mapping. For example, if you wanted to use port 10080 you would write: </p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;10080:8080&quot;</span>
+</code></pre></div>
+<p>Do not change the <em>internal</em> port number on the right hand side of the mapping. To apply changes to the port mapping:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>zigbee2mqtt
+</code></pre></div>
+</li>
+</ol>
+<h2 id="shell-access-to-the-container">Shell access to the container<a class="headerlink" href="#shell-access-to-the-container" title="Permanent link">&para;</a></h2>
+<p>To open a shell inside the Zigbee2MQTT container, run:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>zigbee2mqtt<span class="w"> </span>ash
+</code></pre></div>
+<blockquote>
+<p><code>ash</code> is <strong>not</strong> a typo!</p>
+</blockquote>
+<p>To close the shell and leave the container, either type "exit" and press <kbd>return</kbd>, or press <kbd>Control</kbd><kbd>d</kbd>.</p>
+<h2 id="container-maintenance">Container maintenance<a class="headerlink" href="#container-maintenance" title="Permanent link">&para;</a></h2>
+<p>When you become aware of a new version of Zigbee2MQTT on <a href="https://hub.docker.com/r/koenkk/zigbee2mqtt/tags">DockerHub</a>, do the following:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>pull<span class="w"> </span>zigbee2mqtt
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>zigbee2mqtt
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune
+</code></pre></div>
+<p>In words:</p>
+<ol>
+<li>Be in the correct directory.</li>
+<li>The <code>pull</code> compares the version on your Raspberry Pi with the latest version on <a href="https://hub.docker.com/r/koenkk/zigbee2mqtt/tags">DockerHub</a>, and downloads any later version.</li>
+<li>If a newer version is downloaded, the <code>up</code> instantiates a new container based on the new image and performs a new-for-old swap. There is barely any downtime.</li>
+<li>The <code>prune</code> cleans up the older image.</li>
+</ol>
+<p>You can omit the <code>zigbee2mqtt</code> arguments from the <code>pull</code> and <code>up</code> commands, in which case <code>docker-compose</code> makes an attempt to pull any available updates for all non-Dockerfile-based images, and then instantiates any new images it has downloaded.</p>
+<h2 id="update202501">2025 v1 to v2 upgrade<a class="headerlink" href="#update202501" title="Permanent link">&para;</a></h2>
+<p>If you have been running Zigbee2MQTT version 1 but do a "pull" from DockerHub you will be upgraded to version 2. The first time you do this, you may encounter the following error:</p>
+<div class="language-text highlight"><pre><span></span><code>frontend must be object
+</code></pre></div>
+<p>This is caused by a configuration incompatibility between v1 and v2. Although it is not <em>difficult</em> to update your service definition to work with v2, if you are in a hurry to get your Zigbee service running again you can revert to v1 by making a temporary alteration to your service definition, like this:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="c1"># image: koenkk/zigbee2mqtt:latest</span>
+<span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">koenkk/zigbee2mqtt:1.42.0</span>
+</code></pre></div>
+<p>Then, "up" the container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>zigbee2mqtt
+</code></pre></div>
+<p>When you are ready to upgrade to v2, you will need to undo the above change, and you will also need to update your Zigbee2MQTT service definition based on the <a href="#configTemplate">template</a>. In general terms, you will need to do the following:</p>
+<ol>
+<li>
+<p>If you have a locally-connected USB adapter then you will need to add:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0</span>
+</code></pre></div>
+<p>If you have a network adapter, you will have that variable defined already so you should not change it.</p>
+</li>
+<li>
+<p>Add:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack</span>
+</code></pre></div>
+<p>Then read the explanation about <a href="#adapterType">adapter types</a> and make a decision on whether <code>zstack</code> is the correct choice.</p>
+</li>
+<li>
+<p>The value of <code>ZIGBEE2MQTT_CONFIG_MQTT_SERVER</code> will probably be correct so you should not change it.</p>
+</li>
+<li>
+<p>Replace the existing <code>ZIGBEE2MQTT_CONFIG_FRONTEND</code> with the following:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="c1"># only enable the next line for Zigbee2MQTT v1</span>
+<span class="c1"># - ZIGBEE2MQTT_CONFIG_FRONTEND=true</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true</span>
+</code></pre></div>
+</li>
+<li>
+<p>Any other variables you have set will likely be correct so leave those alone.</p>
+</li>
+</ol>
+<h2 id="update202204">2022 Service definition change<a class="headerlink" href="#update202204" title="Permanent link">&para;</a></h2>
+<p>This information is for existing users of the Zigbee2MQTT container.</p>
+<p>The default IOTstack service definition for Zigbee2MQTT has changed:</p>
+<ul>
+<li>The container no longer needs to be built using a Dockerfile.</li>
+<li>The Zigbee2MQTT images on <a href="https://hub.docker.com/r/koenkk/zigbee2mqtt/tags">DockerHub</a> can be used "as is".</li>
+<li>Environment variables supplied with the updated service definition exactly replicate the purpose of the old Dockerfile. </li>
+<li>The Dockerfile supplied with the IOTstack template is deprecated but continues to be provided to maintain backwards compatibility and to avoid introducing a breaking change.</li>
+</ul>
+<p>If you were using the Zigbee2MQTT container in IOTstack before April 2022, you should use your favourite text editor to update your <em>compose file</em> to conform with the new service definition.</p>
+<blockquote>
+<p>You <em>could</em> run the menu, then de-select and re-select Zigbee2MQTT. That <em>will</em> have the effect of applying the updated service definition but it also risks overwriting any other customisations you may have in place. That is why editing your <em>compose file</em> is the recommended approach.</p>
+</blockquote>
+<p>The updated service definition is included <a href="#configTemplate">here</a> for ease of reference.</p>
+<p>The changes you should make to your existing Zigbee2MQTT service definition are:</p>
+<ol>
+<li>
+<p>Replace the <code>build</code> directive:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.templates/zigbee2mqtt/.</span>
+</code></pre></div>
+<p>with this <code>image</code> directive:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">koenkk/zigbee2mqtt:latest</span>
+</code></pre></div>
+<p>This causes IOTstack to use Zigbee2MQTT images "as is" from <a href="https://hub.docker.com/r/koenkk/zigbee2mqtt/tags">DockerHub</a>.</p>
+</li>
+<li>
+<p>Use the <a href="#configTemplate">template</a> as a guide to adjusting your environment variables. See also <a href="#envVars">environment variables</a> for more detail.</p>
+</li>
+<li>
+<p>Add the dependency clause:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mosquitto</span>
+</code></pre></div>
+<p>This ensures the Mosquitto container is brought up alongside Zigbee2MQTT. The Zigbee2MQTT container goes into a restart loop if Mosquitto is not reachable so this change enforces that business rule. See <a href="#mqttServer"><code>… MQTT_SERVER</code></a> for the situation where this might not be appropriate.</p>
+</li>
+</ol>
+<h3 id="pre-existing-configuration-file">pre-existing configuration file<a class="headerlink" href="#pre-existing-configuration-file" title="Permanent link">&para;</a></h3>
+<p>Environment variables in your <em>compose file</em> override corresponding values set in the <em>configuration file</em> at:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/zigbee2mqtt/data/configuration.yaml
+</code></pre></div>
+<p>If you have customised your existing Zigbee2MQTT <a href="#confFile">configuration file</a>, you should review your settings for potential conflicts with the environment variables introduced by the changes to the IOTstack service definition. You can resolve any conflicts either by:</p>
+<ul>
+<li>removing or commenting-out conflicting environment variables; or</li>
+<li>altering the environment variable values to match your configuration file.</li>
+</ul>
+<p>The second approach is recommended because it minimises the risk that Zigbee2MQTT will go into a restart loop if the configuration file is not present when the container starts.</p>
+<p>As the <a href="https://www.zigbee2mqtt.io/guide/configuration/#environment-variables">Zigbee2MQTT documentation</a> explains, any option that can be set in a configuration file can also be set using an environment variable, so you may want to take the opportunity to implement all your settings as environment variables.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>

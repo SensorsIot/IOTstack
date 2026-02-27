@@ -1,0 +1,4194 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="../Pi-hole/">
+      
+      
+        <link rel="next" href="../Plex/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Pi-hole version 6 - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pi-hole-version-6" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Pi-hole version 6
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Basic_setup/" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../AdGuardHome/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Developers/" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Updates/" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom overrides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Menu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MJPEG-Streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Node-RED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pi-hole-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pi-hole variants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#envVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adminPassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin password
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recursive-resolvers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recursive resolvers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#localAuthority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pi-hole-web-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pi-hole Web GUI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pi-hole Web GUI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connectGUI" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting to the GUI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#localNames" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding local domain names
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-your-pi-to-use-pi-hole" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure your Pi to use Pi-hole
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure your Pi to use Pi-hole">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nmiDNS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NetworkManager
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tradDNS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        non-NetworkManager
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-pi-hole-as-your-local-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Pi-hole as your local DNS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Pi-hole as your local DNS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed-ip-address-for-pi-hole" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed IP address for Pi-hole
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rpiConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure clients to use Pi-hole
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        other containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-interrelationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS interrelationships
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-and-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing and Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#microcontrollers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Microcontrollers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Microcontrollers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local-wont-work-for-esphome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        *.local won't work for ESPhome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-dhcp-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enabling DHCP (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating Pi-hole 5 to 6
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanSlate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting a clean slate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Desktop
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-RandomPassword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Random Services Password
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Menu-System/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/PostBuild-Script/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Postbuild BASH Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updating the project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/Changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/New-Menu-Release-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New IOTstack Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/gcgarner-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from gcgarner to SensorsIot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/migration-network-change/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration: network change
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pi-hole-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pi-hole variants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#envVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adminPassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin password
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recursive-resolvers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recursive resolvers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#localAuthority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pi-hole-web-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pi-hole Web GUI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pi-hole Web GUI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connectGUI" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting to the GUI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#localNames" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding local domain names
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-your-pi-to-use-pi-hole" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure your Pi to use Pi-hole
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure your Pi to use Pi-hole">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nmiDNS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NetworkManager
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tradDNS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        non-NetworkManager
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-pi-hole-as-your-local-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Pi-hole as your local DNS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Pi-hole as your local DNS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed-ip-address-for-pi-hole" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed IP address for Pi-hole
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rpiConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure clients to use Pi-hole
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        other containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-interrelationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS interrelationships
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-and-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing and Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#microcontrollers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Microcontrollers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Microcontrollers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local-wont-work-for-esphome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        *.local won't work for ESPhome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-dhcp-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enabling DHCP (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating Pi-hole 5 to 6
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanSlate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting a clean slate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Desktop
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="pi-hole-version-6">Pi-hole version 6<a class="headerlink" href="#pi-hole-version-6" title="Permanent link">&para;</a></h1>
+<p>Pi-hole is a general-purpose Domain Name System server with a fantastic ability to reduce the number of advertisements appearing in user interfaces.</p>
+<h2 id="pi-hole-variants">Pi-hole variants<a class="headerlink" href="#pi-hole-variants" title="Permanent link">&para;</a></h2>
+<p>In early 2025, Pi-hole underwent some major changes which broke compatibility with previous versions. In particular, the naming scheme for environment variables changed drastically. For IOTstack users, the immediate result of "pulling" the <code>latest</code> image from DockerHub was silent behavioural changes by the container.</p>
+<p>IOTstack reacted to this problem by pinning to version 2024.07.0. This was to "hold the ring" pending a solution. The solution is that the IOTstack menu now supports two variants:</p>
+<ul>
+<li>
+<p><strong>Pi-hole&nbsp;6</strong></p>
+<p>The IOTstack menu refers to this as <code>pihole6</code>. This variant tracks DockerHub images with the <code>latest</code> tag so it will keep updating as later versions are released. This document describes version 6.</p>
+</li>
+<li>
+<p><strong>Pi-hole&nbsp;5</strong></p>
+<p>The IOTstack menu refers to this as <code>pihole</code>. It is pinned to version <a href="https://github.com/pi-hole/docker-pi-hole/releases/tag/2024.07.0">2024.07.0</a> which is the final release of version 5. See <a href="../Pi-hole/">Pi-hole version 5</a>.</p>
+</li>
+</ul>
+<p>If you are installing Pi-hole for the first time, you should choose <code>pihole6</code> from the menu.</p>
+<p>See <a href="#migration">migration</a> if you are currently running Pi-hole&nbsp;5 and want to upgrade to Pi-hole&nbsp;6.</p>
+<div class="admonition help">
+<p class="admonition-title">Note</p>
+<p>You can't run both versions at the same time. That is because they both claim the same network ports.</p>
+</div>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/pi-hole/docker-pi-hole">Pi-hole on GitHub</a></li>
+<li><a href="https://hub.docker.com/r/pihole/pihole">Pi-hole on Dockerhub</a></li>
+</ul>
+<h2 id="definitions">Definitions<a class="headerlink" href="#definitions" title="Permanent link">&para;</a></h2>
+<p>Although this documentation assumes you will be running the Pi-hole service on a Raspberry Pi, there is nothing stopping you from running Pi-hole on other platforms (eg Intel Nuc, Proxmox-VE) or Linux distributions (eg Debian or Ubuntu). This document uses the definition below to try to encompass all of those possibilities:</p>
+<dl>
+    <dt><!--left d-quote-->&#x201C;<b>Pi-hole system</b><!--right d-quote-->&#x201D;</dt>
+        <dd><i>The host platform where the Pi-hole service is running.</i></dd>
+</dl>
+
+<h2 id="envVars">Environment variables<a class="headerlink" href="#envVars" title="Permanent link">&para;</a></h2>
+<p>In conjunction with the controls in Pi-hole's web GUI, environment variables govern much of Pi-hole's behaviour. Pi-hole's environment variables are stored inline in your compose file, in a format known as <a href="https://docs.docker.com/reference/compose-file/services/#environment">map syntax</a>. <em>Map</em> syntax is used because its handling of quoted strings is superior to that of <em>array</em> syntax. </p>
+<p>Although most of Pi-hole's options can be set through its web GUI, there are two key advantages to using environment variables:</p>
+<ol>
+<li>If you ever need to reset Pi-hole by <a href="#cleanSlate">erasing its persistent storage area</a>, configuration options set using environment variables will persist while those set through the GUI may be lost; and</li>
+<li>On at least two occasions in its history, Pi-hole upgrades have had the effect of wiping configuration options set through the GUI, whereas options set using environment variables survived. </li>
+</ol>
+<p>The service definition provided with IOTstack defines four environment variables which are discussed next.</p>
+<h3 id="adminPassword">Admin password<a class="headerlink" href="#adminPassword" title="Permanent link">&para;</a></h3>
+<p>The IOTstack implementations of Pi-hole do not have an administrator password by default. This is because the relevant <em>IOTstack-defined</em> environment variable defaults to a null string.</p>
+<p>If you wish to define a password to protect Pi-hole's web interface, you do it like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PIHOLE_ADMIN_PASSWORD=«YourPasswordHere»&quot;</span><span class="w"> </span>&gt;&gt;./.env
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>pihole6
+</code></pre></div>
+<p>Each time the Pi-hole container is launched, it checks for the presence or absence of a password, then reacts like this:</p>
+<ul>
+<li>
+<p>If a password is <em>defined</em> but is a null string (the default for IOTstack):</p>
+<ul>
+<li>No admin password is set;</li>
+<li>Any previous admin password is cleared;</li>
+<li>You will be able to <a href="#connectGUI">connect to Pi-hole's web interface</a> without providing a password (you won't even see the login screen); and</li>
+<li>The main menu (≡) will not contain a logout command.</li>
+</ul>
+</li>
+<li>
+<p>If a password is <em>defined</em> <strong>and</strong> has a non-null value, that value will become the admin password.</p>
+</li>
+<li>
+<p>If you don't define a password (either an explicit null string or an actual password value) then Pi-hole behaves like this:</p>
+<ul>
+<li>
+<p>If this is the first time Pi-hole has been launched, a random password is generated. Pi-hole senses "first launch" if it has to initialise its persistent storage area. See also <a href="#cleanSlate">getting a clean slate</a>. You can discover the password by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>logs<span class="w"> </span>pihole6<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>random
+</code></pre></div>
+<p>Docker logs are cleared each time a container is terminated or re-created so you need to run that command before the log disappears!</p>
+</li>
+<li>
+<p>Otherwise, whatever password was set on the previous launch will be re-used.</p>
+</li>
+</ul>
+</li>
+</ul>
+<details class="info">
+<summary>changing the password via the command line</summary>
+<p>Some Pi-hole documentation on the web recommends a command like the following to change Pi-hole's admin password:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>pihole6<span class="w"> </span>pihole<span class="w"> </span>setpassword<span class="w"> </span><span class="s1">&#39;«yourPasswordHere»&#39;</span>
+</code></pre></div>
+<p>The <code>setpassword</code> command is really intended for "native" installations of Pi-hole. It is not really appropriate to use it when Pi-hole is running in a Docker container. In particular, the command will be rejected if a password is already being set via an environment variable.</p>
+</details>
+<h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h3>
+<p>You can control the amount of information Pi-hole retains about your DNS queries using the "Privacy Settings" tab of the "Settings" group. The default is "Show &amp; record everything".</p>
+<p>If you choose any option except "Anonymous mode", then Pi-hole divides the logging store into two parts:</p>
+<ul>
+<li>Entries which are more recent than 24 hours; and</li>
+<li>Entries which are older than 24 hours.</li>
+</ul>
+<p>In the "System" tab of the "Settings" group is a <kbd>Flush logs (last 24 hours)</kbd> button. Clicking that button erases all log entries which are more recent than 24 hours. The button does <strong>not</strong> erase entries which are older than 24 hours.</p>
+<p>Retention of log entries older than 24 hours is controlled by the following environment variable where the value is in days:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">FTLCONF_database_maxDBdays</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">365</span>
+</code></pre></div>
+<p>Depending on your DNS activity, the database where the log entries are stored can become quite large. Setting this variable to a shorter period will help you control the amount of storage Pi-hole consumes on disk and in your backups.</p>
+<div class="admonition help">
+<p class="admonition-title">Tip</p>
+<p>Changing the number of days to be less than the previous setting will <strong>not</strong> reduce the size of the logging database. Although Pi-hole will implement the change, the SQLite database where the logs are written retains the released storage for subsequent re-use. If you want to reclaim that space, run the following command:   </p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sqlite3<span class="w"> </span>~/IOTstack/volumes/pihole6/etc-pihole/pihole-FTL.db<span class="w"> </span><span class="s2">&quot;vacuum;&quot;</span>
+</code></pre></div>
+<p>The command should not need <code>sudo</code> because <code>pi</code> is the owner by default. There is no need to terminate Pi-hole before running this command (SQLite handles any contention).</p>
+</div>
+<h3 id="recursive-resolvers">Recursive resolvers<a class="headerlink" href="#recursive-resolvers" title="Permanent link">&para;</a></h3>
+<p>You can control which public DNS servers are used by PiHole when it needs to refer queries to the Internet. You do this by enabling or disabling checkboxes in the "Upstream DNS Servers" panel of the "DNS" tab in the "Settings" group.</p>
+<p>The default is to use the two Google IPv4 DNS servers which correspond with 8.8.8.8 and 8.8.4.4, respectively. The IOTstack service definition implements that default using an environment variable:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">FTLCONF_dns_upstreams</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8.8.8.8;8.8.4.4</span>
+</code></pre></div>
+<p>This variable takes a semi-colon-separated list of DNS servers. You can discover the IP address associated with a checkbox by hovering your mouse pointer over the checkbox and waiting for a tool-tip to appear:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Figure 1: Upstream DNS Servers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Upstream DNS Servers" src="../images/pihole-server-ip-discovery.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>The list is not limited to two entries. You can add as many upstream servers as you need. You are also not restricted to the IP addresses that are mentioned in the GUI.</p>
+<h3 id="localAuthority">Advanced variables<a class="headerlink" href="#localAuthority" title="Permanent link">&para;</a></h3>
+<details class="info">
+<summary>(advanced) reverse DNS query handling</summary>
+<p>First, understand that there are two basic types of DNS query:</p>
+<ul>
+<li>
+<p><em>forward queries</em>:</p>
+<ul>
+<li>question: "what is the IP address of fred.home.arpa?"</li>
+<li>answer: 192.168.1.100</li>
+</ul>
+</li>
+<li>
+<p><em>reverse queries</em>:</p>
+<ul>
+<li>question: "what is the domain name for 192.168.1.100?"</li>
+<li>answer: fred.home.arpa</li>
+</ul>
+</li>
+</ul>
+<p>Pi-hole has its own built-in DNS server which can answer both kinds of queries. The implementation is useful but doesn't offer all the features of a full-blown DNS server like BIND9. If you decide to implement a more capable DNS server to work alongside Pi-hole, you will need to understand the Pi-hole environment variables discussed in this section.</p>
+<p>This part of the discussion is actually specific to Pi-hole&nbsp;5. It is helpful to understand the <strong>concepts</strong> that are associated with how Pi-hole&nbsp;5 implemented this feature so that you can apply the same principles in Pi-hole&nbsp;6. The variables are:</p>
+<ul>
+<li>
+<p><code>REV_SERVER:</code></p>
+<p>If you configure Pi-hole's built-in DNS server to be authoritative for your local domain name, <code>REV_SERVER: false</code> is appropriate, in which case none of the variables discussed below has any effect.</p>
+<p>Setting <code>REV_SERVER: true</code> allows Pi-hole to forward queries that it can't answer to a local upstream DNS server, typically running inside your network.</p>
+</li>
+<li>
+<p><code>REV_SERVER_DOMAIN: home.arpa</code> (where "home.arpa" is an example)</p>
+<p>The Pi-hole&nbsp;5 documentation says:</p>
+<blockquote>
+<p><em>"If conditional forwarding is enabled, set the domain of the local network router".</em></p>
+</blockquote>
+<p>The words "if conditional forwarding is enabled" mean "when <code>REV_SERVER: true</code>".</p>
+<p>However, this option really has little-to-nothing to do with the "domain of the local network <strong>router</strong>". Your router <em>may</em> have an IP address that reverse-resolves to a local domain name (eg gateway.home.arpa) but this is something most routers are unaware of, even if you have configured your router's DHCP server to inform clients that they should assume a default domain of "home.arpa".</p>
+<p>This variable actually tells Pi-hole the name of your local <strong>domain</strong>. In other words, it tells Pi-hole that a fully-qualified domain name like "fred.home.arpa" is part of the "home.arpa" domain because the suffixes match.</p>
+<p>When you set <code>REV_SERVER_DOMAIN: home.arpa</code> you are telling Pi-hole that a <em>forwards query</em> where the suffix of a fully-qualified domain name matches <code>home.arpa</code> should be sent to the <code>REV_SERVER_TARGET: 192.168.1.5</code> (discussed further down).</p>
+</li>
+<li>
+<p><code>REV_SERVER_CIDR: 192.168.1.0/24</code> (where 192.168.1.0/24 is an example)</p>
+<p>The Pi-hole&nbsp;5 documentation says:</p>
+<blockquote>
+<p><em>"If conditional forwarding is enabled, set the reverse DNS zone (e.g. 192.168.0.0/24)".</em></p>
+</blockquote>
+<p>This is correct but it lacks detail.</p>
+<p>The string "192.168.1.0/24" defines your local subnet using Classless Inter-Domain Routing (CIDR) notation. Most home subnets use a subnet-mask of 255.255.255.0. If you write that out in binary, it is 24 1-bits followed by 8 0-bits, as in:</p>
+<div class="language-text highlight"><pre><span></span><code>   255  .   255  .   255  .   0
+11111111 11111111 11111111 00000000
+</code></pre></div>
+<p>Those 24 one-bits are where the <code>/24</code> comes from in <code>192.168.1.0/24</code>. When you perform a bitwise logical AND between that subnet mask and 192.168.1.0, the ".0" is removed (conceptually), as in:</p>
+<div class="language-text highlight"><pre><span></span><code>192.168.1.0 AND 255.255.255.0 = 192.168.1
+</code></pre></div>
+<p>What it <strong>means</strong> is:</p>
+<ol>
+<li>The network <em>prefix</em> is "192.168.1".</li>
+<li>The <em>this host</em> on the 192.168.1 network is the reserved address "192.168.1.0". It is better to think of this as "the network prefix followed by all-zero bits in the host portion". It is not common to see the .0 address used in practice. A device either knows its IP address or it doesn't. If it doesn't then it won't know its prefix so it will use 0.0.0.0 as a substitute for "this".</li>
+<li>The <em>range</em> of IP addresses available for allocation to hosts on this subnet is 192.168.1.1 through 192.168.1.254 inclusive.</li>
+<li><em>All</em> hosts on the 192.168.1 network (ie broadcast) is the reserved address "192.168.1.255". It is better to think of this as "the network prefix followed by all-one bits in the host portion".</li>
+</ol>
+<p>When you set <code>REV_SERVER_CIDR: 192.168.1.0/24</code> you are telling Pi-hole that <em>reverse queries</em> for the host range 192.168.1.1 through 192.168.1.254 should be sent to the <code>REV_SERVER_TARGET: 192.168.1.5</code> (discussed next).</p>
+</li>
+<li>
+<p><code>REV_SERVER_TARGET: 192.168.1.5</code> (where 192.168.1.5 is an example):</p>
+<p>This option tells Pi-hole where to send queries that it can't answer itself. In other words, 192.168.1.5 is where Pi-hole will send both:</p>
+<ul>
+<li>forwards queries for *.home.arpa; and</li>
+<li>reverse queries for 192.168.1.*</li>
+</ul>
+<p>The Pi-hole&nbsp;5 documentation says:</p>
+<blockquote>
+<p><em>"If conditional forwarding is enabled, set the IP of the local network router".</em></p>
+</blockquote>
+<p>It <em>may</em> be appropriate to set <code>REV_SERVER_TARGET</code> to the IP address of your router (eg 192.168.1.1) but, unless your router is running as an authoritative DNS server (not impossible but uncommon), the router will likely just relay any queries to your ISP's DNS servers (or other well-known DNS servers like 8.8.8.8 or 1.1.1.1 if you have configured those). Those external DNS servers are unlikely to be able to resolve queries for names in home.arpa, and won't be able to do anything sensible with reverse queries if your home network uses RFC1918 addressing (which most do: 192.168.x.x being the most common example).</p>
+<p>Forwarding doesn't guarantee that 192.168.1.5 will be able to answer the query. The DNS server at 192.168.1.5 may well relay the query to yet another server. In other words, this environment variable does no more than set the next hop.</p>
+<p>If you are planning on using this option, the target really needs to be a DNS server that is authoritative for your local domain and that, pretty much, is going to be a local upstream DNS server inside your home network like another Raspberry Pi running BIND9.</p>
+</li>
+</ul>
+<p>Now I will explain how to apply all of the foregoing to Pi-hole&nbsp;6.</p>
+<p>Tip:</p>
+<ul>
+<li>If you read the section on Conditional forwarding in the Pi-hole&nbsp;6 User Interface (or its online User Guide) you will probably be left very confused. You are not alone. I recommend ignoring it entirely.</li>
+</ul>
+<p>Pi-hole&nbsp;6 uses a single environment variable to encapsulate all of the <strong>concepts</strong> covered by Pi-hole&nbsp;5's four environment variables. The following is a template which uses the Pi-hole&nbsp;5 variable names to show how the variable should be assembled:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">FTLCONF_dns_revServers</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;«REV_SERVER»,«REV_SERVER_CIDR»,«REV_SERVER_TARGET»,«REV_SERVER_DOMAIN»&#39;</span>
+</code></pre></div>
+<p>Here's an example which replaces those tokens with the values used in the Pi-hole&nbsp;5 example above:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">FTLCONF_dns_revServers</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true,192.168.1.0/24,192.168.1.5,home.arpa&#39;</span>
+</code></pre></div>
+<p>The one thing you can do with Pi-hole&nbsp;6 that you could not do with Pi-hole&nbsp;5 is to set up <em>multiple</em> local servers. Because a working DNS is so critical, it is always a good idea to have redundant servers so, even in a home network, a pair of Pi-holes and a pair of BIND9 servers may seem appropriate. Let's suppose your two BIND9 servers are running on 192.168.1.5 and 192.168.1.6. To implement that, you repeat the string with a semicolon separator:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">FTLCONF_dns_revServers</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true,192.168.1.0/24,192.168.1.5,home.arpa;true,192.168.1.0/24,192.168.1.6,home.arpa&#39;</span>
+</code></pre></div>
+</details>
+<h3 id="variable-discovery">Variable discovery<a class="headerlink" href="#variable-discovery" title="Permanent link">&para;</a></h3>
+<p>Almost all controls that you can set in Pi-hole's web interface can also be set via environment variable.</p>
+<p>Let's suppose you are looking at the "Web Interface" tab of Pi-hole's "Settings". You decide to try out the "Star Trek LCARS" theme and, subsequently, that you would like to apply that setting using an environment variable.</p>
+<p>Here's a recipe for discovering the correct variable name:</p>
+<ol>
+<li>In Pi-hole's web interface, open the main menu (<!--hamburger-->&#x2630; icon) at the top, right of the display and choose "Documentation". This opens another browser window.</li>
+<li>Click the Search icon (magnifying class) and start typing the name of what you are looking for. In this case, the appropriate search term would be "Theme".</li>
+<li>Under "Configuration", each mention of "theme" is a link. Click one.</li>
+<li>You will see a list of allowed values. The one associated with "Star Trek LCARS" is "lcars".</li>
+<li>A little further down are three alternate views labelled "<a href="https://toml.io/en/">TOML</a>", "CLI" and "Environment (Docker Compose)". Click the last one. The display will change to reveal:</li>
+</ol>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">FTLCONF_webserver_interface_theme</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;default-auto&#39;</span>
+</code></pre></div>
+<p>Replace <code>default-auto</code> with <code>lcars</code> then paste the result into your compose file. The next time you "up" the container, Pi-hole will adopt the "Star Trek LCARS" theme, and the UI controls will become locked to that theme.  </p>
+<h2 id="pi-hole-web-gui">Pi-hole Web GUI<a class="headerlink" href="#pi-hole-web-gui" title="Permanent link">&para;</a></h2>
+<h3 id="connectGUI">Connecting to the GUI<a class="headerlink" href="#connectGUI" title="Permanent link">&para;</a></h3>
+<p>Point your browser to:</p>
+<div class="language-text highlight"><pre><span></span><code>http://«your_ip»:8089/admin
+</code></pre></div>
+<p>where «your_ip» can be:</p>
+<ul>
+<li>The IP address of the <em>Pi-hole&nbsp;system</em>.</li>
+<li>The domain name of the <em>Pi-hole&nbsp;system</em>.</li>
+<li>The multicast DNS name (eg "raspberrypi.local") of the <em>Pi-hole&nbsp;system</em>.</li>
+</ul>
+<h3 id="localNames">Adding local domain names<a class="headerlink" href="#localNames" title="Permanent link">&para;</a></h3>
+<p>Login to the Pi-hole web interface: <code>http://«your_ip»:8089/admin</code>:</p>
+<ol>
+<li>
+<p>In the left hand panel, click "Settings", then click "Local DNS Records".</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Figure 2: Adding local domain names</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Adding local domain names" src="../images/pihole6-local-records.png" /></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Type a fully-qualified domain name into the "Domain" field   <!--A-->&#x1F150;. For example, <code>raspberrypi.home.arpa</code>.</p>
+</li>
+<li>Type the IP address into the "Associated IP" field <!--B-->&#x1F151;. For example, <code>192.168.1.10</code>.</li>
+<li>Click <kbd>+</kbd> <!--C-->&#x1F152;.</li>
+</ol>
+<p>Now you can use <code>raspberrypi.home.arpa</code> as the domain name for the Raspberry Pi in your whole local network. You can also add domain names for your other
+devices, provided they too have static IPs.</p>
+<div class="admonition help">
+<p class="admonition-title">Why .home.arpa?</p>
+<p>Because it's expressly reserved for home use. In principle you can use any domain name you like, providing it is unique. This includes a domain you have purchased from a registrar, or a sub-domain thereof. You can use also use <code>.internal</code>. Please don't use the <code>.local</code> domain because that's reserved for multicast DNS (mDNS), aka Rendezvous, aka Bonjour, aka ZeroConf, aka Avahi.</p>
+</div>
+<h2 id="configure-your-pi-to-use-pi-hole">Configure your Pi to use Pi-hole<a class="headerlink" href="#configure-your-pi-to-use-pi-hole" title="Permanent link">&para;</a></h2>
+<p>Your Pi-hole <em>system</em> does not have to use the Pi-hole <em>container</em> for its own DNS services and, in many ways, it is better if it does not. That's because the arrangement creates some chicken-and-egg situations. Examples:</p>
+<ul>
+<li>If the Pi-hole <em>system</em> needs DNS services at boot time before the Pi-hole <em>container</em> is running, the boot may stall;</li>
+<li>If the Pi-hole container is down when another process (eg <code>apt</code> or <code>docker-compose</code>) needs to do something that depends on DNS services being available.</li>
+</ul>
+<p>If you decide to use the Pi-hole <em>container</em> to provide DNS services to your Pi-hole <em>system</em> then you should also set up a fall-back to at least one well-known public DNS server that will kick in whenever your Pi-hole <em>container</em> is down.</p>
+<p>Please note that this only helps the Pi-hole <em>system</em>. It does not help <em>other</em> clients in your network to obtain DNS services when your Pi-hole <em>container</em> is down. The intention is to mitigate the chicken-and-egg situations mentioned above so that your Pi-hole <em>container</em> maintains high availability.</p>
+<p>First, determine whether Network Manager is running on your system:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>systemctl<span class="w"> </span>is-active<span class="w"> </span>NetworkManager
+</code></pre></div>
+<p>If the response is:</p>
+<ul>
+<li><code>active</code> then follow the <a href="#nmiDNS">NetworkManager</a> instructions;</li>
+<li>otherwise follow the <a href="#tradDNS">non-NetworkManager</a> instructions</li>
+</ul>
+<h3 id="nmiDNS">NetworkManager<a class="headerlink" href="#nmiDNS" title="Permanent link">&para;</a></h3>
+<p>The first step is to determine the <code>«connection»</code> name for each physical network interface that is active on your <em>Pi-hole&nbsp;system</em>. For example, if your Pi is connected to Ethernet the physical interface is likely to be defined as <code>eth0</code>:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>nmcli<span class="w"> </span>-g<span class="w"> </span>GENERAL.CONNECTION<span class="w"> </span>dev<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;eth0&quot;</span>
+<span class="go">Wired connection 1</span>
+</code></pre></div>
+<p>"Wired connection 1" is the name of the <code>«connection»</code>.</p>
+<div class="admonition help">
+<p class="admonition-title">Additional interfaces</p>
+<p>If your Pi is also connected to WiFi, substitute <code>wlan0</code>, re-run the command, and make a note of the <code>«connection»</code> name. Do the same for any other physical interfaces.</p>
+</div>
+<p>Run the following command for <strong>each</strong> physical interface, substituting <code>«connection»</code>:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;«connection»&quot;</span><span class="w"> </span>ipv4.dns<span class="w"> </span><span class="s2">&quot;127.0.0.1,8.8.8.8&quot;</span>
+</code></pre></div>
+<p>Once you have run that command for each physical interface, activate the change(s) by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>NetworkManager
+</code></pre></div>
+<p>You can check your work by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>nmcli<span class="w"> </span>-g<span class="w"> </span>ipv4.dns<span class="w"> </span>con<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;«connection»&quot;</span>
+</code></pre></div>
+<details class="info">
+<summary>Detailed explanations of these commands</summary>
+<ol>
+<li>
+<p>In the <code>sudo nmcli con mod</code> command, <code>"127.0.0.1,8.8.8.8"</code> is an ordered, comma- (or space-) separated list:</p>
+<ul>
+<li>
+<p>The <code>127.0.0.1</code> substring instructs the <em>Pi-hole&nbsp;system</em> to direct DNS queries to the loopback address. Port 53 is implied. If the Pi-hole container is running in:</p>
+<ul>
+<li>non-host mode, Docker is listening to port 53 and forwards the queries to the Pi-hole container;</li>
+<li>host mode, the Pi-hole container is listening to port 53.</li>
+</ul>
+</li>
+<li>
+<p>if there is no response from the Pi-hole container, the <code>8.8.8.8</code> substring instructs the <em>Pi-hole&nbsp;system</em> to forward the query to that IP address, which is a well-known DNS service provided by Google. Although queries for <em>local</em> domain names will not resolve if your Pi-hole container is down, Google's DNS will resolve global domain names.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>The <code>systemctl restart NetworkManager</code> command instructs the operating system running on your <em>Pi-hole&nbsp;system</em> to apply your changes by rebuilding the active resolver configuration.</p>
+</li>
+</ol>
+</details>
+<h3 id="tradDNS">non-NetworkManager<a class="headerlink" href="#tradDNS" title="Permanent link">&para;</a></h3>
+<p>Run these commands:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;name_servers=127.0.0.1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/resolvconf.conf
+<span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;name_servers_append=8.8.8.8&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/resolvconf.conf
+<span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;resolv_conf_local_only=NO&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/resolvconf.conf
+<span class="gp">$ </span>sudo<span class="w"> </span>resolvconf<span class="w"> </span>-u
+</code></pre></div>
+<details class="info">
+<summary>Detailed explanations of these commands</summary>
+<ol>
+<li>
+<p><code>name_servers=127.0.0.1</code> instructs the <em>Pi-hole&nbsp;system</em> to direct DNS queries to the loopback address. Port 53 is implied. If the Pi-hole container is running in:</p>
+<ul>
+<li>non-host mode, Docker is listening to port 53 and forwards the queries to the Pi-hole container;</li>
+<li>host mode, the Pi-hole container is listening to port 53.</li>
+</ul>
+</li>
+<li>
+<p><code>name_servers_append=8.8.8.8</code> instructs the <em>Pi-hole&nbsp;system</em> to fail-over to 8.8.8.8 if Pi-hole does not respond. You can replace <code>8.8.8.8</code> (a Google service) with:</p>
+<ul>
+<li>Another well-known public DNS server like <code>1.1.1.1</code> (Cloudflare).</li>
+<li>The IP address(es) of your ISP's DNS hosts (generally available from your ISP's web site).</li>
+<li>The IP address of another DNS server running in your local network (eg BIND9).</li>
+<li>The IP address of your home router. Most home routers default to the ISP's DNS hosts but you can usually change your router's configuration to bypass your ISP in favour of public servers like 8.8.8.8 and 1.1.1.1.</li>
+</ul>
+<p>You need slightly different syntax if you want to add multiple fallback servers. For example, suppose your fallback hosts are a local server (eg 192.168.1.2) running BIND9 and 8.8.8.8. The command would be:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;name_servers_append=&quot;192.168.1.2 8.8.8.8&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/resolvconf.conf
+</code></pre></div>
+</li>
+<li>
+<p><code>resolv_conf_local_only=NO</code> is needed so that 127.0.0.1 and 8.8.8.8 can coexist.</p>
+</li>
+<li>The <code>resolvconf -u</code> command instructs the operating system running on your <em>Pi-hole&nbsp;system</em> to rebuild the active resolver configuration. In principle, that means parsing <code>/etc/resolvconf.conf</code> to derive <code>/etc/resolv.conf</code>. This command can sometimes return the error "Too few arguments". You should ignore that error.</li>
+</ol>
+<pre class="mermaid"><code>flowchart LR
+  RERECONF["/etc/resolvconf.conf"] --- UP([resolvconf -u])
+  DHCP[DHCP provided DNS-server] --- UP
+  UP -- "generates" --&gt; RECONF["/etc/resolv.conf"]
+  classDef command fill:#9996,stroke-width:0px
+  class UP command</code></pre>
+</details>
+<details class="note">
+<summary>Advanced options: ignoring DHCP provided DNS-servers, local domain name search</summary>
+<ul>
+<li>
+<p>If you wish to prevent the <em>Pi-hole&nbsp;system</em> from including the address(es) of DNS servers learned from DHCP, you can instruct the DHCP client running on the <em>Pi-hole&nbsp;system</em> to ignore the information coming from the DHCP server:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;nooption domain_name_servers&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/dhcpcd.conf
+<span class="gp">$ </span>sudo<span class="w"> </span>service<span class="w"> </span>dhcpcd<span class="w"> </span>reload
+<span class="gp">$ </span>sudo<span class="w"> </span>resolvconf<span class="w"> </span>-u
+</code></pre></div>
+</li>
+<li>
+<p>If you have followed the steps in <a href="#localNames">Adding local domain names</a> to define names for your local hosts, you can inform the <em>Pi-hole&nbsp;system</em> of that fact like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;search_domains=home.arpa&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/resolvconf.conf
+<span class="gp">$ </span>sudo<span class="w"> </span>resolvconf<span class="w"> </span>-u
+</code></pre></div>
+<p>That will add the following line to <code>/etc/resolv.conf</code>:</p>
+<div class="language-text highlight"><pre><span></span><code>search home.arpa
+</code></pre></div>
+<p>Then, when you refer to a host by a short name (eg "fred") the <em>Pi-hole&nbsp;system</em> will also consider "fred.home.arpa" when trying to discover the IP address.</p>
+</li>
+</ul>
+</details>
+<h2 id="using-pi-hole-as-your-local-dns">Using Pi-hole as your local DNS<a class="headerlink" href="#using-pi-hole-as-your-local-dns" title="Permanent link">&para;</a></h2>
+<p>To use the Pi-hole container to provide DNS services in your LAN, you need to assign the <em>Pi-hole&nbsp;system</em> a fixed IP-address and configure this IP as your DNS server.</p>
+<h3 id="fixed-ip-address-for-pi-hole">Fixed IP address for Pi-hole<a class="headerlink" href="#fixed-ip-address-for-pi-hole" title="Permanent link">&para;</a></h3>
+<p>If you want clients on your network to use Pi-hole for their DNS, the <em>Pi-hole&nbsp;system</em> <strong>must</strong> have a fixed IP address. It does not have to be a <em>static</em> IP address (in the sense of being hard-coded into the <em>Pi-hole&nbsp;system</em>). The <em>Pi-hole&nbsp;system</em> can still obtain its IP address from DHCP at boot time, providing your DHCP server (usually your home router) always returns the same IP address. This is usually referred to as a <em>static binding</em> and associates the <em>Pi-hole&nbsp;system's</em> MAC address with a fixed IP address.</p>
+<p>Keep in mind that many Raspberry Pis have both Ethernet and WiFi interfaces. It is generally prudent to establish static bindings for <em>both</em> network interfaces in your DHCP server.</p>
+<p>You can use the following command to discover the MAC addresses for your Raspberry Pi's Ethernet and WiFi interfaces:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="k">for</span><span class="w"> </span>I<span class="w"> </span><span class="k">in</span><span class="w"> </span>eth0<span class="w"> </span>wlan0<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span><span class="nv">$I</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<span class="go">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000</span>
+<span class="go">    link/ether dc:a6:32:4c:89:f9 brd ff:ff:ff:ff:ff:ff</span>
+<span class="go">3: wlan0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000</span>
+<span class="go">    link/ether e5:4f:01:41:88:b2 brd ff:ff:ff:ff:ff:ff</span>
+</code></pre></div>
+<p>In the above:</p>
+<ul>
+<li>The MAC address of the Ethernet interface is "dc:a6:32:4c:89:f9"</li>
+<li>The MAC address of the WiFi interface is "e5:4f:01:41:88:b2"</li>
+</ul>
+<p>If a physical interface does not exist, the command returns "Device does not exist" for that interface. If you prefer, you can also substitute the <code>ifconfig</code> command for <code>ip link show</code>. It's just a little more wordy.</p>
+<h3 id="rpiConfig">Configure clients to use Pi-hole<a class="headerlink" href="#rpiConfig" title="Permanent link">&para;</a></h3>
+<p>In order for Pi-hole to block ads or resolve anything, clients need to be told to use it as their DNS server. You can either:</p>
+<ol>
+<li>Adopt a whole-of-network approach and edit the DNS settings in your DHCP server so that all clients are given the IP address of the <em>Pi-hole&nbsp;system</em> to use for DNS services when a lease is issued.</li>
+<li>Adopt a case-by-case (manual) approach where you instruct particular clients to obtain DNS services from the IP address of the <em>Pi-hole&nbsp;system</em>.</li>
+</ol>
+<p>Option 1 (whole-of-network) is the simplest approach. Assuming your <em>Pi-hole&nbsp;system</em> has the static IP <code>192.168.1.10</code>:</p>
+<ol>
+<li>
+<p>Go to your network's DHCP server. In most home networks, this will be your Wireless Access Point/WLAN Router:</p>
+<ul>
+<li>Login into its web-interface</li>
+<li>Find where DNS servers are defined (generally with DHCP controls)</li>
+<li>Change all DNS fields to <code>192.168.1.10</code></li>
+</ul>
+</li>
+<li>
+<p>All local clients have to be rebooted. Without this they will continue to use the old DNS setting from an old DHCP lease for quite some time.</p>
+</li>
+</ol>
+<p>Option 2 (case-by-case) generally involves finding the IP configuration options for each host and setting the DNS server manually. Manual changes are usually effective immediately without needing a reboot.</p>
+<details class="note">
+<summary>advanced configurations</summary>
+<p>Setting up a combination of Pi-hole (for ad-blocking services), and/or a local upstream DNS resolver (eg BIND9) to be authoritative for a local domain and reverse-resolution for your local IP addresses, and decisions about where each DNS server forwards queries it can't answer (eg your ISP's DNS servers, or Google's 8.8.8.8, or Cloudflare's 1.1.1.1) is a complex topic and depends on your specific needs.</p>
+<p>The same applies to setting up a DHCP server (eg DHCPD) which is capable of distinguishing between the various clients on your network (ie by MAC address) to make case-by-case decisions as to where each client should obtain its DNS services. </p>
+<p>If you need help, try asking questions on the <a href="https://discord.gg/ZpKHnks">IOTstack Discord channel</a>.</p>
+</details>
+<h3 id="other-containers">other containers<a class="headerlink" href="#other-containers" title="Permanent link">&para;</a></h3>
+<p>Docker provides a special IPv4 address 127.0.0.11. The virtual service at that address listens to DNS queries and resolves them according to the host system's <code>/etc/resolv.conf</code>. Containers usually rely on this to perform DNS lookups. This is nice as it won't present any surprises as DNS lookups on both the host and in the containers will yield the same results.</p>
+<p>It's possible to make DNS queries directly cross-container, and even supported in some <a href="../WireGuard/#customContInit">rare use-cases</a>.</p>
+<h2 id="dns-interrelationships">DNS interrelationships<a class="headerlink" href="#dns-interrelationships" title="Permanent link">&para;</a></h2>
+<p>Consider the following excerpts from the IOTstack service definition for Pi-hole:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">FTLCONF_dns_upstreams</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8.8.8.8;8.8.4.4</span>
+
+<span class="nt">dns</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+</code></pre></div>
+<p>What this means is any process running inside the Docker <strong>container</strong> will first try the container <em>itself</em> (ie the Pi-hole DNS <strong>service</strong>) but that, in the absence of a response, queries will be directed to 1.1.1.1 (Cloudflare). This is intended to cater for any situation where the Pi-hole <strong>service</strong> is not running (eg still booting up or stuck in a restart loop).</p>
+<p>Once the Pi-hole DNS <strong>service</strong> is established and responding to queries, the <code>dns:</code> clause is no longer relevant. The ordering is then governed by <code>FTLCONF_dns_upstreams</code> with an implied "self" (127.0.0.1) stuck on the front:</p>
+<div class="language-text highlight"><pre><span></span><code>127.0.0.1 8.8.8.8 8.8.4.4
+</code></pre></div>
+<p>Now let's add one more <a href="#localAuthority">wrinkle</a>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">FTLCONF_dns_revServers</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true,192.168.1.0/24,192.168.1.5,home.arpa&#39;</span>
+</code></pre></div>
+<p>Queries are handled like this:</p>
+<ol>
+<li>If Pi-hole is <a href="#localNames">authoritative for the domain name</a> being queried (either forwards or reverse), then Pi-hole will answer.</li>
+<li>If the domain name being queried is mentioned in a block list, the query will be blocked (ie Pi-hole will return 0.0.0.0).</li>
+<li>
+<p>If either of the following is true:</p>
+<ul>
+<li>the suffix of the domain name being queried matches <code>home.arpa</code>; or</li>
+<li>the IP address being reverse-resolved lies within the 192.168.1.0/24 subnet,</li>
+</ul>
+<p>then the query will be redirected to 192.168.1.5.</p>
+</li>
+<li>
+<p>Otherwise the query will be forwarded round-robin to 8.8.8.8 or 8.8.4.4.</p>
+</li>
+</ol>
+<p>In the absence of <code>FTLCONF_dns_revServers</code>, simply omit step 3.</p>
+<h2 id="testing-and-troubleshooting">Testing and Troubleshooting<a class="headerlink" href="#testing-and-troubleshooting" title="Permanent link">&para;</a></h2>
+<p>Make these assumptions:</p>
+<ol>
+<li>
+<p>You have followed the instructions above to add these lines to <code>/etc/resolvconf.conf</code>:</p>
+<div class="language-text highlight"><pre><span></span><code>name_servers=127.0.0.1
+name_servers_append=8.8.8.8
+resolv_conf_local_only=NO
+</code></pre></div>
+</li>
+<li>
+<p>The <em>Pi-hole&nbsp;system</em> has the IP address 192.168.1.10 which it obtains as a static assignment from your DHCP server.</p>
+</li>
+<li>You have configured your DHCP server to provide 192.168.1.10 for client devices to use to obtain DNS services (ie, you are saying clients should use Pi-hole for DNS).</li>
+</ol>
+<p>The result of the configuration appears in <code>/etc/resolv.conf</code>:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>cat<span class="w"> </span>/etc/resolv.conf
+<span class="gp"># </span>Generated<span class="w"> </span>by<span class="w"> </span>resolvconf
+<span class="go">nameserver 127.0.0.1</span>
+<span class="go">nameserver 192.168.1.10</span>
+<span class="go">nameserver 8.8.8.8</span>
+</code></pre></div>
+<p>Interpretation:</p>
+<ul>
+<li><code>nameserver 127.0.0.1</code> is present because of <code>name_servers=127.0.0.1</code></li>
+<li><code>nameserver 192.168.1.10</code> is present because it was learned from DHCP</li>
+<li><code>nameserver 8.8.8.8</code> is present because of <code>name_servers_append=8.8.8.8</code></li>
+</ul>
+<p>The fact that the <em>Pi-hole&nbsp;system</em> is effectively represented twice (once as 127.0.0.1, and again as 192.168.1.10) does not matter. If the Pi-hole container stops running, the <em>Pi-hole&nbsp;system</em> will bypass 192.168.1.10 and fail over to 8.8.8.8, failing back to 127.0.0.1 when the Pi-hole container starts again.</p>
+<p>Install dig:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>dnsutils
+</code></pre></div>
+<p>Test that Pi-hole is correctly configured (should respond 192.168.1.10):</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>dig<span class="w"> </span>raspberrypi.home.arpa<span class="w"> </span>@192.168.1.10
+</code></pre></div>
+<p>To test on another machine if your network's DNS configuration is correct, and
+an ESP will resolve its DNS queries correctly, restart the other machine to
+ensure DNS changes are updated and then use:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>dig<span class="w"> </span>raspberrypi.home.arpa
+</code></pre></div>
+<p>This should produce the same result as the previous command.</p>
+<p>If this fails to resolve the IP, check that the server in the response is
+<code>192.168.1.10</code>. If it's <code>127.0.0.xx</code> check <code>/etc/resolv.conf</code> begins with
+<code>nameserver 192.168.1.10</code>. If not, check the machine is configured to use DHCP
+and revisit <a href="#rpiConfig">Pi-hole as DNS</a>.</p>
+<h2 id="microcontrollers">Microcontrollers<a class="headerlink" href="#microcontrollers" title="Permanent link">&para;</a></h2>
+<p>If you want to avoid hardcoding your <em>Pi-hole&nbsp;system's</em> IP address into your ESPhome devices, you need a DNS server that will do the resolving. This can be done using the Pi-hole container as described above.</p>
+<h3 id="local-wont-work-for-esphome"><code>*.local</code> won't work for ESPhome<a class="headerlink" href="#local-wont-work-for-esphome" title="Permanent link">&para;</a></h3>
+<p>There is a special case for resolving <code>*.local</code> addresses. If you do a <code>ping raspberrypi.local</code> on your desktop Linux or the Raspberry Pi, it will first try using mDNS/bonjour to resolve the IP address raspberrypi.local. If this fails it will then ask the DNS server. ESPhome devices can't use mDNS to resolve an IP address. You need a proper DNS server to respond to queries made by an ESP. As such, <code>dig raspberrypi.local</code> will fail, simulating ESPhome device behavior. This is as intended, and you should use raspberrypi.home.arpa as the address on your ESP-device.</p>
+<h2 id="enabling-dhcp-optional">Enabling DHCP (optional)<a class="headerlink" href="#enabling-dhcp-optional" title="Permanent link">&para;</a></h2>
+<p>The service definitions provided with IOTstack assume that it is <strong>undesirable</strong> to enable Pi-hole's Dynamic Host Configuration Protocol (DHCP) service. In most home networks your router is also your DHCP server. It functions well in that role and, generally, should be left alone to do its job.</p>
+<details class="info">
+<summary>(advanced) enabling DHCP</summary>
+<p>If you are contemplating enabling Pi-hole's DHCP capabilities, you should consider the following:</p>
+<ul>
+<li>
+<p>IOTstack Pi-hole is a Docker container. Containers generally start late in the boot cycle. Following any major outage in your home network, you will incur a sequencing dependency such that you will need to ensure that Pi-hole is up and running before anything else, so that DHCP services are available when other devices start.</p>
+<blockquote>
+<p>If DHCP-dependent devices start before DHCP services are available, the devices' interfaces will adopt link-local addresses in the range 169.254/16 and, in general, you simplest way to cure that problem is to power-cycle each affected device. </p>
+</blockquote>
+</li>
+<li>
+<p>There are four mechanisms by which a device can acquire an IPv4 address:</p>
+<ol>
+<li>A dynamic address allocated by a DHCP server from a range of possible addresses;</li>
+<li>A fixed address allocated by a DHCP server (a hardware MAC always gets the same IP address);</li>
+<li>A static address hard-coded into the device; and</li>
+<li>A link-local address (if all of the above fail).</li>
+</ol>
+<p>If you enable Pi-hole's DHCP service then you must, by definition, set up a static IP address for each of the host's network interfaces. In other words, a DHCP server can't allocate its own IP addresses. The how-to of setting up static IP addresses is beyond the scope of this document. Google is your friend.</p>
+<blockquote>
+<p>If you run Pi-hole purely for its DNS capabilities and don't enable its DHCP service then you can use either a static IP address or a fixed address allocated by another DHCP server. Either <em>fixed</em> or <em>static</em> results in a <strong>predictable</strong> IP address, which is mandatory for any DNS server.</p>
+</blockquote>
+</li>
+<li>
+<p>One of the big network no-nos is having more than one authoritative DHCP server operating on a subnet. If you enable Pi-hole's DHCP service then you <strong>must</strong> disable DHCP on your home router.</p>
+<blockquote>
+<p>Technically, you can have multiple DHCP servers but only one can be <em>authoritative</em> for the subnet. To the best of my knowledge, Pi-hole's DHCP service lacks a control to operate as a non-authoritative backup DHCP server, as do all of the home routers I've examined.</p>
+</blockquote>
+</li>
+<li>
+<p>You will need to adjust Pi-hole's service definition. As shipped with IOTstack, the relevant part of Pi-hole's service definition includes these lines:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">x-network_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span>
+<span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8089:80/tcp&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;53:53/tcp&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;53:53/udp&quot;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">…</span>
+</code></pre></div>
+<p>The <code>x-</code> prefix has the effect of disabling the <code>network_mode: host</code> clause which, in turn, has the effect of placing the container in non-host mode.</p>
+<p>In non-host mode, the port mappings are applied. You read the first line as saying "the host's TCP port 8089 is forwarded to the container's port 80".</p>
+<p>DHCP relies on being able to receive broadcast traffic. That is something a container can't do when it is running in non-host mode. To place the Pi-hole container into host mode, you must move the <code>x-</code> prefix, like this:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">network_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span>
+<span class="nt">x-ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8089:80/tcp&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;53:53/tcp&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;53:53/udp&quot;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">…</span>
+</code></pre></div>
+<p>In this configuration, Pi-hole will bind to the port numbers on the right hand side of the port mappings. In other words, Pi-hole will bind to ports 80 and 53, as well as any other ports of its choice such as 67 and 443. If any other services are using any of those ports, you will have a conflict and the second service to start will be unlucky.</p>
+<p>All things considered, your life will be much simpler if you stay away from Pi-hole's DHCP capabilities.</p>
+</li>
+</ul>
+</details>
+<h2 id="migration">Migrating Pi-hole 5 to 6<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h2>
+<p>Pi-hole 5 and 6 use different locations for their persistent stores:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/
+├── pihole
+│   ├── etc-dnsmasq.d
+│   └── etc-pihole
+└── pihole6
+    ├── etc-dnsmasq.d
+    └── etc-pihole
+</code></pre></div>
+<p>If you start Pi-hole&nbsp;6 for the first time, it will create default structures and it will be the same as starting from a <a href="#cleanSlate">clean slate</a>.</p>
+<p>If you want to migrate an existing Pi-hole&nbsp;5 installation to Pi-hole&nbsp;6,  then assuming that your compose file contains service definitions for both <code>pihole</code> and <code>pihole6</code>, the best way to proceed is:</p>
+<ol>
+<li>
+<p>Stop Pi-hole&nbsp;5:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>pihole
+</code></pre></div>
+</li>
+<li>
+<p>Protectively remove Pi-hole&nbsp;6's persistent store:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>./volumes
+<span class="gp">$ </span>sudo<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>./pihole6
+</code></pre></div>
+</li>
+<li>
+<p>Make a copy of Pi-hole&nbsp;5's persistent store:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>cp<span class="w"> </span>-a<span class="w"> </span>pihole<span class="w"> </span>pihole6
+</code></pre></div>
+</li>
+<li>
+<p>Start Pi-hole&nbsp;6:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>..
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>pihole6
+</code></pre></div>
+</li>
+</ol>
+<p>This should inherit any whitelist, blacklist or local DNS records you entered, preserve your history, and run Pi-hole&nbsp;6 with updated environment variables.</p>
+<p>Once you are happy that Pi-hole&nbsp;6 is working properly, you can remove the <code>pihole</code> service definition from your compose file. </p>
+<p>If the migration fails or Pi-hole&nbsp;6 misbehaves then you can easily revert like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>pihole6
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>pihole
+</code></pre></div>
+<h2 id="cleanSlate">Getting a clean slate<a class="headerlink" href="#cleanSlate" title="Permanent link">&para;</a></h2>
+<p>If Pi-hole misbehaves, you can always try starting from a clean slate by erasing Pi-hole's persistent storage area. Erasing the persistent storage area causes PiHole to re-initialise its data structures on the next launch. You will lose:</p>
+<ol>
+<li>Any configuration options you may have set via the web GUI that are not otherwise reflected in <a href="#envVars">environment variables</a>.</li>
+<li>Any whitelist, blacklist or local DNS records you entered.</li>
+<li>All DNS resolution and blocking history.</li>
+</ol>
+<p>Also note that your <a href="#adminPassword">administrative password</a> will reset.</p>
+<p>The recommended approach is:</p>
+<ol>
+<li>Login to Pi-hole's web GUI and navigate to Settings » Teleporter.</li>
+<li>Click the <kbd>Backup</kbd> button to download a backup.</li>
+<li>Logout of the Web GUI.</li>
+<li>
+<p>Run the following commands:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>down<span class="w"> </span>pihole6
+<span class="gp">$ </span>sudo<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>./volumes/pihole6
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>pihole6
+</code></pre></div>
+</li>
+<li>
+<p>Login to Pi-hole's web GUI and navigate to Settings » Teleporter.</p>
+</li>
+<li>Use the checkboxes to select the settings you wish to restore, and click the <kbd>Browse</kbd> and <kbd>Restore</kbd> buttons.</li>
+</ol>
+<h2 id="docker-desktop">Docker Desktop<a class="headerlink" href="#docker-desktop" title="Permanent link">&para;</a></h2>
+<p>If you run Pi-hole using Docker Desktop for macOS, all client activity will be logged against the IP address of the default gateway on the internal bridged network.</p>
+<p>It appears that Docker Desktop for macOS interposes an additional level of Network Address Translation (NAT) between clients and the Pi-hole service. This does not affect  Pi-hole's ability to block ads. It just makes the GUI reports a little less useful.</p>
+<p>It is not known whether this is peculiar to Docker Desktop for macOS or also affects other variants of Docker Desktop.</p>
+<p>This problem is peculiar to Docker Desktop. It does not affect Pi-hole running in a container on other systems (eg Raspberry Pi,  Proxmox-VE guest).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>

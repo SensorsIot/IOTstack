@@ -1,0 +1,4176 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="../Homer/">
+      
+      
+        <link rel="next" href="../InfluxDB2/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>InfluxDB - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#influxdb" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              InfluxDB
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Basic_setup/" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../AdGuardHome/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Developers/" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Updates/" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom overrides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Menu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configFile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        about influxdb.conf
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting to InfluxDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#influxCLI" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interacting with the Influx CLI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interacting with the Influx CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usefulAlias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        useful alias
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authWarning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        warning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create two test databases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        define users
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assign access rights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        activate authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authNotes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authHints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authCleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cleaning up
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#udpSupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UDP support
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UDP support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#udpAliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        aliases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        confirm that UDP is not enabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create a database to receive the traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        define a UDP port mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        enable UDP support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rebuild the container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        confirm that UDP is enabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check your work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        start sending traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flashWear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reducing flash wear-out
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reducing flash wear-out">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugInspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container won't start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugPackages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding packages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugSniff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sniffing traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MJPEG-Streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Node-RED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-RandomPassword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Random Services Password
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Menu-System/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/PostBuild-Script/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Postbuild BASH Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updating the project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/Changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/New-Menu-Release-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New IOTstack Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/gcgarner-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from gcgarner to SensorsIot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/migration-network-change/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration: network change
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configFile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        about influxdb.conf
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting to InfluxDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#influxCLI" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interacting with the Influx CLI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interacting with the Influx CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usefulAlias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        useful alias
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authWarning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        warning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create two test databases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        define users
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assign access rights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        activate authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authStep5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authNotes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authHints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authCleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cleaning up
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#udpSupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UDP support
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UDP support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#udpAliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        aliases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        confirm that UDP is not enabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create a database to receive the traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        define a UDP port mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        enable UDP support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rebuild the container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        confirm that UDP is enabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check your work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#udpStep8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        start sending traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flashWear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reducing flash wear-out
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reducing flash wear-out">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugInspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container won't start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugPackages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding packages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugSniff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sniffing traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="influxdb">InfluxDB<a class="headerlink" href="#influxdb" title="Permanent link">&para;</a></h1>
+<p>InfluxDB is a time series database. What that means is <em>time</em> is the primary key of each table.</p>
+<p>Another feature of InfluxDB is the separation of <em>attributes</em> into:</p>
+<ul>
+<li><em>fields:</em> which are intended to hold variable data (data that is likely to be different in each row, such as a temperature reading from a sensor); and</li>
+<li><em>tags:</em> which are intended to hold metadata (data that is unlikely to be different in each row, such as the name of the sensor).</li>
+</ul>
+<p>InfluxDB has configurable aggregation and retention policies allowing measurement resolution reduction, storing all added data points for recent data and only aggregated values for older data.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://hub.docker.com/_/influxdb/tags">DockerHub</a></li>
+<li><a href="https://github.com/influxdata/influxdata-docker">GitHub home page</a> (for the container)</li>
+<li><a href="https://docs.influxdata.com/influxdb/v1/">InfluxDB 1 documentation</a></li>
+<li><a href="https://docs.influxdata.com/influxdb/v1/administration/config">InfluxDB 1 configuration reference</a></li>
+</ul>
+<p>Note:</p>
+<ul>
+<li>IOTstack uses the <code>influxdb:1.x</code> image. Substituting the <code>:latest</code> tag will get you InfluxDB version 2 and <em>will</em> create a mess.</li>
+</ul>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>All InfluxDB <a href="https://docs.influxdata.com/influxdb/v1/administration/config">settings</a> can be applied using environment variables. Environment variables override any settings in the <a href="#configFile">InfluxDB configuration file</a>:</p>
+<ul>
+<li>
+<p>Under "new menu" (master branch), environment variables are stored inline in</p>
+<div class="language-text highlight"><pre><span></span><code>~IOTstack/docker-compose.yml
+</code></pre></div>
+</li>
+<li>
+<p>Under "old menu", environment variables are stored in:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/services/influxdb/influxdb.env
+</code></pre></div>
+</li>
+</ul>
+<p>Whenever you change an environment variable, you activate it like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>influxdb
+</code></pre></div>
+<p>The default service definition provided with IOTstack exposes the following environment variables:</p>
+<ul>
+<li><code>TZ=Etc/UTC</code> set this to your local timezone. Do <strong>not</strong> use quote marks!</li>
+<li>
+<p><code>INFLUXDB_HTTP_FLUX_ENABLED=false</code> set this <code>true</code> if you wish to use Flux queries rather than InfluxQL:</p>
+<blockquote>
+<p>At the time of writing, Grafana queries use InfluxQL.</p>
+</blockquote>
+</li>
+<li>
+<p><code>INFLUXDB_REPORTING_DISABLED=false</code> InfluxDB activates <em>phone-home</em> reporting by default. This variable disables it for IOTstack. You can activate it if you want your InfluxDB instance to send reports to the InfluxDB developers.</p>
+</li>
+<li>
+<p><code>INFLUXDB_MONITOR_STORE_ENABLED=FALSE</code> disables automatic creation of the <code>_internal</code> database. This database stores metrics about InfluxDB itself. The database is <em>incredibly</em> busy. Side-effects of enabling this feature include increased wear and tear on SD cards and, occasionally, driving CPU utilisation through the roof and generally making your IOTstack unstable.</p>
+<blockquote>
+<p>To state the problem in a nutshell: <em>do you want Influx self-metrics, or do you want a usable IOTstack?</em> You really can't have both. See also <a href="https://github.com/influxdata/influxdb/issues/19543">issue 19543</a>.</p>
+</blockquote>
+</li>
+<li>
+<p>Authentication variables:</p>
+<ul>
+<li><code>INFLUXDB_HTTP_AUTH_ENABLED=false</code></li>
+<li><code>INFLUX_USERNAME=dba</code></li>
+<li><code>INFLUX_PASSWORD=supremo</code></li>
+</ul>
+<p>Misunderstanding the purpose and scope of these variables is a common mistake made by new users. Please do not guess! Please read <a href="#authentication">Authentication</a> <strong>before</strong> you enable or change any of these variables. In particular, <code>dba</code> and <code>supremo</code> are <strong>not</strong> defaults for database access.</p>
+</li>
+<li>
+<p>UDP data acquisition variables:</p>
+<ul>
+<li><code>INFLUXDB_UDP_ENABLED=false</code></li>
+<li><code>INFLUXDB_UDP_BIND_ADDRESS=0.0.0.0:8086</code></li>
+<li><code>INFLUXDB_UDP_DATABASE=udp</code></li>
+</ul>
+<p>Read <a href="#udpSupport">UDP support</a> before making any decisions on these variables.</p>
+</li>
+</ul>
+<h3 id="configFile">about <code>influxdb.conf</code><a class="headerlink" href="#configFile" title="Permanent link">&para;</a></h3>
+<p>A lot of InfluxDB documentation and help material on the web refers to the <code>influxdb.conf</code> configuration file. Such instructions are only appropriate when InfluxDB is installed <em>natively</em>.</p>
+<p>When InfluxDB runs in a <em>container</em>, changing <code>influxdb.conf</code> is neither necessary nor recommended. Anything that you can do with <code>influxdb.conf</code> can be done with environment variables.</p>
+<p>However, if you believe that you have a use case that absolutely demands the use of <code>influxdb.conf</code> then you can set it up like this:</p>
+<ol>
+<li>Make sure the InfluxDB container is running!</li>
+<li>
+<p>Execute the following commands:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span>cp<span class="w"> </span>influxdb:/etc/influxdb/influxdb.conf<span class="w"> </span>.
+</code></pre></div>
+</li>
+<li>
+<p>Edit <code>docker-compose.yml</code>, find the <code>influxdb</code> service definition, and add the following line to the <code>volumes:</code> directive:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./volumes/influxdb/config:/etc/influxdb</span>
+</code></pre></div>
+</li>
+<li>
+<p>Execute the following commands:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>influxdb
+<span class="gp">$ </span>sudo<span class="w"> </span>mv<span class="w"> </span>influxdb.conf<span class="w"> </span>./volumes/influxdb/config/
+<span class="gp">$ </span>docker-compose<span class="w"> </span>restart<span class="w"> </span>influxdb
+</code></pre></div>
+</li>
+</ol>
+<p>At this point, you can start making changes to:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/influxdb/config/influxdb.conf
+</code></pre></div>
+<p>You can apply changes by sending a <code>restart</code> to the container (as above). However, from time to time you may find that your settings disappear or revert to defaults. Make sure you keep good backups.</p>
+<h2 id="connecting">Connecting to InfluxDB<a class="headerlink" href="#connecting" title="Permanent link">&para;</a></h2>
+<p>By default, InfluxDB runs in non-host mode and respects the following port-mapping directive in its service definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8086:8086&quot;</span>
+</code></pre></div>
+<p>If you are connecting from:</p>
+<ul>
+<li>
+<p>another container (eg Node-RED or Grafana) that is also running in non-host mode, use:</p>
+<div class="language-text highlight"><pre><span></span><code>http://influxdb:8086
+</code></pre></div>
+<p>In this context, <code>8086</code> is the <em>internal</em> (right hand side) port number.</p>
+</li>
+<li>
+<p>either the Raspberry Pi itself or from another container running in host mode, use:</p>
+<div class="language-text highlight"><pre><span></span><code>http://localhost:8086
+</code></pre></div>
+<p>In this context, <code>8086</code> is the <em>external</em> (left hand side) port number.</p>
+</li>
+<li>
+<p>a different host, you use either the IP address of the Raspberry Pi or its fully-qualified domain name. Examples:</p>
+<div class="language-text highlight"><pre><span></span><code>http://192.168.1.10:8086
+http://raspberrypi.local:8086
+http://iot-hub.mydomain.com:8086
+</code></pre></div>
+<p>In this context, <code>8086</code> is the <em>external</em> (left hand side) port number.</p>
+</li>
+</ul>
+<h2 id="influxCLI">Interacting with the Influx CLI<a class="headerlink" href="#influxCLI" title="Permanent link">&para;</a></h2>
+<p>You can open the <code>influx</code> CLI interactive shell by:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>influxdb<span class="w"> </span>influx
+<span class="go">Connected to http://localhost:8086 version 1.x.x</span>
+<span class="go">InfluxDB shell version: 1.x.x</span>
+<span class="go">&gt;</span>
+</code></pre></div>
+<p>The command prompt in the CLI is <code>&gt;</code>. While in the CLI you can type commands such as:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; help</span>
+<span class="go">&gt; create database MYTESTDATABASE</span>
+<span class="go">&gt; show databases</span>
+<span class="go">&gt; USE MYTESTDATABASE</span>
+<span class="go">&gt; show measurements</span>
+<span class="go">&gt; show series</span>
+<span class="go">&gt; select * from «someMeasurement» where «someCriterion»</span>
+</code></pre></div>
+<p>You may also wish to set retention policies on your databases. This is an example of creating a database named "mydb" where any data older than 52 weeks is deleted:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; create database mydb</span>
+
+<span class="go">&gt; show retention policies on mydb</span>
+<span class="go">name    duration shardGroupDuration replicaN default</span>
+<span class="go">----    -------- ------------------ -------- -------</span>
+<span class="go">autogen 0s       168h0m0s           1        true</span>
+
+<span class="go">&gt; alter retention policy &quot;autogen&quot; on &quot;mydb&quot; duration 52w shard duration 1w replication 1 default</span>
+
+<span class="go">&gt; show retention policies on mydb</span>
+<span class="go">name    duration  shardGroupDuration replicaN default</span>
+<span class="go">----    --------  ------------------ -------- -------</span>
+<span class="go">autogen 8736h0m0s 168h0m0s           1        true</span>
+</code></pre></div>
+<p>To exit the CLI, either press <kbd>Control</kbd>+<kbd>d</kbd> or type:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; exit</span>
+<span class="gp">$</span>
+</code></pre></div>
+<h3 id="usefulAlias">useful alias<a class="headerlink" href="#usefulAlias" title="Permanent link">&para;</a></h3>
+<p>Consider adding the following alias to your <code>.bashrc</code>:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">alias influx=&#39;docker exec -it influxdb influx -precision=rfc3339&#39;</span>
+</code></pre></div>
+<p>With that alias installed, typing <code>influx</code> and pressing <kbd>return</kbd>, gets you straight into the influx CLI. The <code>-precision</code> argument tells the influx CLI to display dates in human-readable form. Omitting that argument displays dates as integer nanoseconds since 1970-01-01.</p>
+<p>Note:</p>
+<ul>
+<li>This alias is installed by <a href="https://github.com/Paraphraser/IOTstackAliases">IOTstackAliases</a>.</li>
+</ul>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<h3 id="authWarning">warning<a class="headerlink" href="#authWarning" title="Permanent link">&para;</a></h3>
+<p>This tutorial also assumes that you do not have any existing databases so it starts by creating two. One database will be provided with access controls but the other will be left alone so that the behaviour can be compared.</p>
+<p>However, you need to understand that enabling authentication in InfluxDB is <em>all-or-nothing</em>. If you have any existing InfluxDB databases, you will need to:</p>
+<ul>
+<li>define access rights for <strong>all</strong> of your databases; and</li>
+<li>provide credentials to processes like Node-Red and Grafana that access your databases.</li>
+</ul>
+<p>If you do not do this, your existing Node-Red flows, Grafana dashboards and other processes that write to or query your databases will stop working as soon as you <a href="#authStep4">activate authentication</a> below.</p>
+<h3 id="authStep1">create two test databases<a class="headerlink" href="#authStep1" title="Permanent link">&para;</a></h3>
+<p>Create two databases named "mydatabase1" and "mydatabase2":</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>influx
+<span class="go">&gt; CREATE DATABASE &quot;mydatabase1&quot;</span>
+<span class="go">&gt; CREATE DATABASE &quot;mydatabase2&quot;</span>
+</code></pre></div>
+<blockquote>
+<p>Typing <code>influx</code> didn't work? See <a href="#usefulAlias">useful alias</a> above. </p>
+</blockquote>
+<h3 id="authStep2">define users<a class="headerlink" href="#authStep2" title="Permanent link">&para;</a></h3>
+<p>Define an administrative user. In this example, that user is "dba" (database administrator) with the password "supremo":</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; CREATE USER &quot;dba&quot; WITH PASSWORD &#39;supremo&#39; WITH ALL PRIVILEGES</span>
+</code></pre></div>
+<ul>
+<li>Key point: the mixture of "double" and 'single' quotes is <strong>intentional</strong> and <strong>required</strong>.</li>
+</ul>
+<p>Define some garden-variety users:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; CREATE USER &quot;nodered_user&quot; WITH PASSWORD &#39;nodered_user_pw&#39;</span>
+<span class="go">&gt; CREATE USER &quot;grafana_user&quot; WITH PASSWORD &#39;grafana_user_pw&#39;</span>
+</code></pre></div>
+<p>You can define any usernames you like. The reason for using "nodered_" and "grafana_" prefixes in these examples is because those are common candidates in an IOTstack environment. The reason for the "_user" suffixes is to make it clear that a <em>username</em> is separate and distinct from a <em>container</em> name.</p>
+<h3 id="authStep3">assign access rights<a class="headerlink" href="#authStep3" title="Permanent link">&para;</a></h3>
+<p>The user "dba" already has access to everything but, for all other users, you need to state which database(s) the user can access, and whether that access is:</p>
+<ul>
+<li>READ (aka read-only)</li>
+<li>WRITE (aka write-only)</li>
+<li>ALL (implies both READ and WRITE)</li>
+</ul>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; GRANT WRITE ON &quot;mydatabase1&quot; TO &quot;nodered_user&quot;</span>
+<span class="go">&gt; GRANT READ ON &quot;mydatabase1&quot; TO &quot;grafana_user&quot;</span>
+</code></pre></div>
+<ul>
+<li>Key point: you CREATE a user <em>once</em> but you need to GRANT access to every database to which that user needs access.</li>
+</ul>
+<p>Once you have finished defining users and assigning access rights, drop out of the influx CLI:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; exit</span>
+<span class="gp">$</span>
+</code></pre></div>
+<h3 id="authStep4">activate authentication<a class="headerlink" href="#authStep4" title="Permanent link">&para;</a></h3>
+<p>Make sure you read the <a href="#authWarning">warning</a> above, then edit the InfluxDB environment variables to enable this key:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFLUXDB_HTTP_AUTH_ENABLED=true</span>
+</code></pre></div>
+<p>Put the change into effect by "upping" the container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>influxdb
+
+<span class="go">Recreating influxdb ... done</span>
+</code></pre></div>
+<p>The <code>up</code> causes <code>docker-compose</code> to notice that the environment has changed, and to rebuild the container with the new settings.</p>
+<ul>
+<li>
+<p>Note: You should always wait for 30 seconds after a rebuild for InfluxDB to become available. Any time you see a message like this:</p>
+<div class="language-text highlight"><pre><span></span><code>Failed to connect to http://localhost:8086: Get http://localhost:8086/ping: dial tcp 127.0.0.1:8086: connect: connection refused
+Please check your connection settings and ensure &#39;influxd&#39; is running.
+</code></pre></div>
+<p>it simply means that you did not wait long enough. Be patient!</p>
+</li>
+</ul>
+<h3 id="authStep5">experiments<a class="headerlink" href="#authStep5" title="Permanent link">&para;</a></h3>
+<p>Start the influx CLI:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>influx
+</code></pre></div>
+<p>Unless you have also set up the <code>INFLUX_USERNAME</code> and <code>INFLUX_PASSWORD</code> environment variables (described later under <a href="#authHints">Authentication Hints</a>), your session will not be authenticated as any user so you will not be able to access either database:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; USE mydatabase1</span>
+<span class="go">ERR: unable to parse authentication credentials</span>
+<span class="go">DB does not exist!</span>
+<span class="go">&gt; USE mydatabase2</span>
+<span class="go">ERR: unable to parse authentication credentials</span>
+<span class="go">DB does not exist!</span>
+</code></pre></div>
+<ul>
+<li>Key point: This is what will happen to any of your pre-existing databases if you enable authentication without a lot of care. You <strong>must</strong> define users and access rights for <strong>all</strong> of your databases, and you <strong>must</strong> provide those credentials to the relevant processes like Node-Red and Grafana.</li>
+</ul>
+<p>Authenticate as "nodered_user" and try again:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; AUTH</span>
+<span class="go">username: nodered_user</span>
+<span class="go">password: </span>
+<span class="go">&gt; USE mydatabase1</span>
+<span class="go">Using database mydatabase1</span>
+<span class="go">&gt; USE mydatabase2</span>
+<span class="go">ERR: Database mydatabase2 doesn&#39;t exist. Run SHOW DATABASES for a list of existing databases.</span>
+<span class="go">DB does not exist!</span>
+</code></pre></div>
+<p>The "nodered_user" can access "mydatabase1" but not "mydatabase2". You will get similar behaviour for the "grafana_user" (try it).</p>
+<p>Authenticate as the "dba" and try again:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; AUTH</span>
+<span class="go">username: dba</span>
+<span class="go">password: </span>
+<span class="go">&gt; USE mydatabase1</span>
+<span class="go">Using database mydatabase1</span>
+<span class="go">&gt; USE mydatabase2</span>
+<span class="go">Using database mydatabase2</span>
+</code></pre></div>
+<p>The super-user can access both databases.</p>
+<p>To get a list of users:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; SHOW USERS</span>
+<span class="go">user         admin</span>
+<span class="go">----         -----</span>
+<span class="go">dba          true</span>
+<span class="go">nodered_user false</span>
+<span class="go">grafana_user false</span>
+</code></pre></div>
+<ul>
+<li>Key point: you must be authenticated as the "dba" to run SHOW USERS.</li>
+</ul>
+<p>To find out what privileges a user has on a database:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; SHOW GRANTS FOR &quot;nodered_user&quot;</span>
+<span class="go">database    privilege</span>
+<span class="go">--------    ---------</span>
+<span class="go">mydatabase1 WRITE</span>
+</code></pre></div>
+<ul>
+<li>Key point: you must be authenticated as the "dba" to run SHOW GRANTS.</li>
+</ul>
+<p>To test grants, you can try things like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">AUTH</span>
+<span class="go">username: nodered_user</span>
+<span class="go">password: </span>
+<span class="go">&gt; USE &quot;mydatabase1&quot;</span>
+<span class="go">Using database mydatabase1</span>
+<span class="go">&gt; INSERT example somefield=123</span>
+</code></pre></div>
+<p>"nodered_user" has WRITE access to "mydatabase1".</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; SELECT * FROM example</span>
+<span class="go">ERR: error authorizing query: nodered_user not authorized to execute statement &#39;SELECT * FROM example&#39;, requires READ on mydatabase1</span>
+</code></pre></div>
+<p>"nodered_user" does not have READ access to "mydatabase1".</p>
+<p>Authenticate as "grafana_user" and try the query again:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; AUTH</span>
+<span class="go">username: grafana_user</span>
+<span class="go">password: </span>
+<span class="go">&gt; SELECT * FROM example</span>
+<span class="go">name: example</span>
+<span class="go">time                         somefield</span>
+<span class="go">----                         ---------</span>
+<span class="go">2020-09-19T01:41:09.6390883Z 123</span>
+</code></pre></div>
+<p>"grafana_user" has READ access to "mydatabase1". Try an insertion as "grafana_user":</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; INSERT example somefield=456</span>
+<span class="go">ERR: {&quot;error&quot;:&quot;\&quot;grafana_user\&quot; user is not authorized to write to database \&quot;mydatabase1\&quot;&quot;}</span>
+</code></pre></div>
+<p>"grafana_user" does not have WRITE access to "mydatabase1".</p>
+<p>Change the privileges for "nodered_user" to ALL then try both an insertion and a query. Note that changing privileges requires first authenticating as "dba":</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; AUTH</span>
+<span class="go">username: dba</span>
+<span class="go">password: </span>
+<span class="go">&gt; GRANT ALL ON &quot;mydatabase1&quot; TO &quot;nodered_user&quot;</span>
+<span class="go">&gt; AUTH</span>
+<span class="go">username: nodered_user</span>
+<span class="go">password: </span>
+<span class="go">&gt; INSERT example somefield=456</span>
+<span class="go">&gt; SELECT * FROM example</span>
+<span class="go">name: example</span>
+<span class="go">time                          somefield</span>
+<span class="go">----                          ---------</span>
+<span class="go">2020-09-19T01:41:09.6390883Z  123</span>
+<span class="go">2020-09-19T01:42:36.85766382Z 456</span>
+</code></pre></div>
+<p>"nodered_user" has both READ and WRITE access to "mydatabase1".</p>
+<h3 id="authNotes">notes<a class="headerlink" href="#authNotes" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Some inferences to draw from the above:</p>
+<ul>
+<li>user definitions are <strong>global</strong> rather than per-database. Grants are what tie users to particular databases.</li>
+<li>setting <code>INFLUXDB_HTTP_AUTH_ENABLED=true</code> is how authentication is activated and enforced. If it is false, all enforcement goes away (a handy thing to know if you lose passwords or need to recover from a mess).</li>
+<li>as the "HTTP" in <code>INFLUXDB_HTTP_AUTH_ENABLED</code> suggests, it applies to access via HTTP. This includes the influx CLI and processes like Node-Red and Grafana.</li>
+</ul>
+</li>
+<li>
+<p>Always keep in mind that the InfluxDB log is your friend:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>logs<span class="w"> </span>influxdb
+</code></pre></div>
+</li>
+</ol>
+<h3 id="authHints">hints<a class="headerlink" href="#authHints" title="Permanent link">&para;</a></h3>
+<p>After you enable authentication, there are a couple of ways of speeding-up your daily activities. You can pass the dba username and password on the end of the influx alias:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>influx<span class="w"> </span>-database<span class="w"> </span>mydatabase1<span class="w"> </span>-username<span class="w"> </span>dba<span class="w"> </span>-password<span class="w"> </span>supremo
+</code></pre></div>
+<p>but this is probably sub-optimal because of the temptation to hard-code your dba password into scripts. An alternative is to enable these environment variables:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFLUX_USERNAME=dba</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFLUX_PASSWORD=supremo</span>
+</code></pre></div>
+<p>and then "up" the container as explained above to apply the changes.</p>
+<p>Misunderstandings about the scope and purpose of <code>INFLUX_USERNAME</code> and <code>INFLUX_PASSWORD</code> are quite common so make sure you realise that the variables:</p>
+<ul>
+<li>do <strong>not</strong> "set" any username or password within InfluxDB;</li>
+<li><strong>only</strong> apply to starting the influx CLI&nbsp;–&nbsp;they are just synonyms for the <code>-username</code> and <code>-password</code> parameters on the <code>influx</code> CLI command; and</li>
+<li>are <strong>not</strong> some kind of general-access credentials that apply to everything. They will not work from Node-RED or Grafana!</li>
+</ul>
+<p>In other words, with <code>INFLUX_USERNAME</code> and <code>INFLUX_PASSWORD</code> added to the environment, the following two commands are identical:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>influx<span class="w"> </span>-database<span class="w"> </span>mydatabase1<span class="w"> </span>-username<span class="w"> </span>dba<span class="w"> </span>-password<span class="w"> </span>supremo
+<span class="gp">$ </span>influx<span class="w"> </span>-database<span class="w"> </span>mydatabase1
+</code></pre></div>
+<p>The <code>INFLUX_USERNAME</code> and <code>INFLUX_PASSWORD</code> variables also work if you start a shell into the InfluxDB container and then invoke the influx CLI from there:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>influxdb<span class="w"> </span>bash
+<span class="gp"># </span>influx
+<span class="go">&gt;</span>
+</code></pre></div>
+<p>That is <strong>all</strong> the <code>INFLUX_USERNAME</code> and <code>INFLUX_PASSWORD</code> variables do.</p>
+<h3 id="authCleanup">cleaning up<a class="headerlink" href="#authCleanup" title="Permanent link">&para;</a></h3>
+<p>To undo the steps in this tutorial, first set <code>INFLUXDB_HTTP_AUTH_ENABLED=false</code> and then "up" influxdb. Then:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>influx
+<span class="go">&gt; DROP USER &quot;dba&quot;</span>
+<span class="go">&gt; DROP USER &quot;nodered_user&quot;</span>
+<span class="go">&gt; DROP USER &quot;grafana_user&quot;</span>
+<span class="go">&gt; DROP DATABASE &quot;mydatabase1&quot;</span>
+<span class="go">&gt; DROP DATABASE &quot;mydatabase2&quot;</span>
+<span class="go">&gt; exit</span>
+</code></pre></div>
+<h2 id="udpSupport">UDP support<a class="headerlink" href="#udpSupport" title="Permanent link">&para;</a></h2>
+<p>Assumptions:</p>
+<ul>
+<li>you want to enable UDP support; and</li>
+<li>your goal is to log traffic arriving on UDP port 8086 into an InfluxDB database named "udp".</li>
+</ul>
+<h3 id="udpAliases">aliases<a class="headerlink" href="#udpAliases" title="Permanent link">&para;</a></h3>
+<p>This tutorial uses the following aliases:</p>
+<ul>
+<li><code>influx</code> - explained earlier - see <a href="#usefulAlias">useful alias</a>.</li>
+<li>
+<p><code>DPS</code> which is the equivalent of:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>ps<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;table {{.Names}}\t{{.RunningFor}}\t{{.Status}}&quot;</span>
+</code></pre></div>
+<p>The focus is: <em>what containers are running?</em></p>
+</li>
+<li>
+<p><code>DNET</code> which is the equivalent of:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>ps<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;table {{.Names}}\t{{.Ports}}&quot;</span>
+</code></pre></div>
+<p>The focus is: <em>what ports are containers using?</em></p>
+<blockquote>
+<p>Any container where no ports are listed is either exposing no ports and/or is running in host mode.</p>
+</blockquote>
+</li>
+</ul>
+<p>Although both <code>DPS</code> &amp; <code>DNET</code> invoke <code>docker ps</code>, the formatting means the output usually fits on your screen without line wrapping.</p>
+<p>All three aliases are installed by <a href="https://github.com/Paraphraser/IOTstackAliases">IOTstackAliases</a>.</p>
+<h3 id="udpStep1">confirm that UDP is not enabled<a class="headerlink" href="#udpStep1" title="Permanent link">&para;</a></h3>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>DNET
+<span class="go">NAMES      PORTS</span>
+<span class="go">influxdb   0.0.0.0:8086-&gt;8086/tcp</span>
+</code></pre></div>
+<p>Interpretation: Docker is listening on TCP port 8086, and is routing the traffic to the same port on the influxdb container. There is no mention of UDP.</p>
+<h3 id="udpStep2">create a database to receive the traffic<a class="headerlink" href="#udpStep2" title="Permanent link">&para;</a></h3>
+<p>This tutorial uses the database name of "udp".</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>influx
+<span class="go">&gt; create database udp</span>
+<span class="go">&gt; exit</span>
+<span class="go">&gt; $</span>
+</code></pre></div>
+<h3 id="udpStep3">define a UDP port mapping<a class="headerlink" href="#udpStep3" title="Permanent link">&para;</a></h3>
+<p>Edit <code>docker-compose.yml</code> to define a UDP port mapping (the second line in the <code>ports</code> grouping below):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">influxdb</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">…</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8086:8086&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8086:8086/udp&quot;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">…</span>
+</code></pre></div>
+<h3 id="udpStep4">enable UDP support<a class="headerlink" href="#udpStep4" title="Permanent link">&para;</a></h3>
+<p>Edit your <code>docker-compose.yml</code> and change the InfluxDB environment variables to glue it all together:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFLUXDB_UDP_DATABASE=udp</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFLUXDB_UDP_ENABLED=true</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFLUXDB_UDP_BIND_ADDRESS=0.0.0.0:8086</span>
+</code></pre></div>
+<p>In this context, the IP address "0.0.0.0" means "this host" (analogous to the way "255.255.255.255" means "all hosts").</p>
+<h3 id="udpStep5">rebuild the container<a class="headerlink" href="#udpStep5" title="Permanent link">&para;</a></h3>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>influxdb
+
+<span class="go">Recreating influxdb ... done</span>
+</code></pre></div>
+<p>The <code>up</code> causes <code>docker-compose</code> to notice that the environment has changed, and to rebuild the container with the new settings.</p>
+<h3 id="udpStep6">confirm that UDP is enabled<a class="headerlink" href="#udpStep6" title="Permanent link">&para;</a></h3>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>DNET
+<span class="go">NAMES      PORTS</span>
+<span class="go">influxdb   0.0.0.0:8086-&gt;8086/tcp, 0.0.0.0:8086-&gt;8086/udp</span>
+</code></pre></div>
+<p>Interpretation: In addition to the TCP port, Docker is now listening on UDP port 8086, and is routing the traffic to the same port on the influxdb container.</p>
+<h3 id="udpStep7">check your work<a class="headerlink" href="#udpStep7" title="Permanent link">&para;</a></h3>
+<p>Check the log: </p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>logs<span class="w"> </span>influxdb
+</code></pre></div>
+<p>If you see a line like this:</p>
+<div class="language-text highlight"><pre><span></span><code>ts=2020-09-18T03:09:26.154478Z lvl=info msg=&quot;Started listening on UDP&quot; log_id=0PJnqbK0000 service=udp addr=0.0.0.0:8086
+</code></pre></div>
+<p>then everything is probably working correctly. If you see anything that looks like an error message then you will need to follow your nose.</p>
+<h3 id="udpStep8">start sending traffic<a class="headerlink" href="#udpStep8" title="Permanent link">&para;</a></h3>
+<p>Although the how-to is beyond the scope of this tutorial, you will need a process that can send "line format" payloads to InfluxDB using UDP port 8086.</p>
+<p>Once that is set up, you can inspect the results like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>influx<span class="w"> </span>-database<span class="w"> </span>udp
+<span class="go">&gt; show measurements</span>
+</code></pre></div>
+<p>If data is being received, you will get at least one measurement name. An empty list implies no data is being received.</p>
+<p>If you get at least one measurement name then you can inspect the data using:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="go">&gt; select * from «measurement»</span>
+</code></pre></div>
+<p>where <code>«measurement»</code> is one of the names in the <code>show measurements</code> list.</p>
+<h2 id="flashWear">Reducing flash wear-out<a class="headerlink" href="#flashWear" title="Permanent link">&para;</a></h2>
+<p>SSD-drives have pretty good controllers spreading out writes, so this isn't a this isn't really a concern for them.  But if you store data on an SD-card, flash wear may cause the card to fail prematurely. Flash memory has a limited number of erase-write cycles per physical block. These blocks may be multiple megabytes. You can use <code>sudo lsblk -D</code> to see how big the erase granularity is on your card. The goal is to avoid writing lots of small changes targeting the same physical blocks. Here are some tips to mitigate SD-card wear:</p>
+<ul>
+<li>Don't use short retention policies. This may mask heavy disk IO without increasing disk space usage. Depending on the flash card and file system used, new data may be re-written to the same blocks that were freed by the expiration, wearing them out.</li>
+<li>Take care not to add measurements too often. If possible no more often than once a minute. Add all measurements in one operation. Even a small write will physically write a whole new block and erase the previously used block.</li>
+<li>Adding measurements directly to Influxdb will cause a write on every operation. If your client code can't aggregate multiple measurements into one write, consider routing them via Telegraf. It has the <code>flush_interval</code>-option, which will combine the measurements into one write.</li>
+<li>All InfluxDB queries are logged by default and logs are written to the SD-card. To disable this, add into docker-compose.yml, next to the other INFLUXDB_* entries:</li>
+</ul>
+<div class="language-yaml highlight"><pre><span></span><code><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFLUXDB_DATA_QUERY_LOG_ENABLED=false</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFLUXDB_HTTP_LOG_ENABLED=false</span>
+</code></pre></div>
+<p>This is especially important if you plan on having Grafana or Chronograf displaying up-to-date data on a dashboard, making queries all the time.</p>
+<h3 id="debugging">Debugging<a class="headerlink" href="#debugging" title="Permanent link">&para;</a></h3>
+<h3 id="debugInspection">Container won't start<a class="headerlink" href="#debugInspection" title="Permanent link">&para;</a></h3>
+<p>Sometimes you need start the container without starting influxdb to access its maintenance tools. Usually when influx crashes on startup.</p>
+<p>Add a new line below <code>influxdb:</code> to your docker-compose.yml:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">influxdb</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">…</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">entrypoint</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sleep infinity</span>
+</code></pre></div>
+<p>Recreate the container using the new entrypoint:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>influxdb
+<span class="go">Recreating influxdb ... done</span>
+</code></pre></div>
+<p>Now the container should start and you can get a shell to poke around and try the <code>influx_inspect</code> command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>influxdb<span class="w"> </span>bash
+<span class="gp"># </span>influx_inspect
+<span class="go">Usage: influx_inspect [[command] [arguments]]</span>
+</code></pre></div>
+<p>Once you have finished poking around, you should undo the change by removing the custom entrypoint and <code>up -d</code> again to return to normal container behaviour where you can then test to see if your fixes worked.</p>
+<h3 id="debugPackages">Adding packages<a class="headerlink" href="#debugPackages" title="Permanent link">&para;</a></h3>
+<p>The container is pretty bare-bones by default. It is OK to install additional tools. Start by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp"># </span>apt<span class="w"> </span>update
+</code></pre></div>
+<p>and then use <code>apt install</code> to add whatever you need. Packages you add will persist until the next time the container is re-created.  </p>
+<h3 id="debugSniff">Sniffing traffic<a class="headerlink" href="#debugSniff" title="Permanent link">&para;</a></h3>
+<p>If you need to see the actual packets being sent to Influx for insertion into your database, you can set it up like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>influxdb<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;apt update &amp;&amp; apt install tcpdump -y&#39;</span>
+</code></pre></div>
+<p>That adds <code>tcpdump</code> to the running container and, as noted above, that will persist until you re-create the container.</p>
+<p>To capture traffic:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>influxdb<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-s<span class="w"> </span><span class="m">0</span><span class="w"> </span>-n<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>-w<span class="w"> </span>/var/lib/influxdb/capture.pcap<span class="w"> </span>dst<span class="w"> </span>port<span class="w"> </span><span class="m">8086</span>
+</code></pre></div>
+<p>Breaking that down:</p>
+<ul>
+<li><code>-i eth0</code> is the container's internal virtual Ethernet network interface (attached to the internal bridged network)</li>
+<li><code>-s 0</code> means "capture entire packets"</li>
+<li><code>-n</code> means "do not try to resolve IP addresses to domain names</li>
+<li><code>-c 100</code> is optional and means "capture 100 packets then stop". If you omit this option, <code>tcpdump</code> will capture packets until you press <kbd>control</kbd>+<kbd>C</kbd>.</li>
+<li><code>-w /var/lib/influxdb/capture.pcap</code> is the internal path to the file where captured packets are written. You can, of course, substitute any filename you like for <code>capture.pcap</code>.</li>
+<li><code>dst port 8086</code> captures all packets where the destination port field is 8086, which is the InfluxDB internal port number.</li>
+</ul>
+<p>The internal path:</p>
+<div class="language-text highlight"><pre><span></span><code>/var/lib/influxdb/capture.pcap
+</code></pre></div>
+<p>maps to the external path:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/influxdb/data/capture.pcap
+</code></pre></div>
+<p>You can copy that file to another system where you have a tool like WireShark installed. WireShark will open the file and you can inspect packets and verify that the information being sent to InfluxDB is what you expect.</p>
+<p>Do not forget to clean-up any packet capture files:</p>
+<div class="language-text highlight"><pre><span></span><code>$ cd ~/IOTstack/volumes/influxdb/data
+$ sudo rm capture.pcap
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>

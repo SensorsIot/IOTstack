@@ -1,0 +1,4807 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="../ZeroTier-vs-WireGuard/">
+      
+      
+        <link rel="next" href="../Zigbee2MQTT/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>ZeroTier - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#zerotier" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ZeroTier
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Basic_setup/" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../AdGuardHome/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Developers/" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Updates/" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom overrides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Menu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MJPEG-Streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Node-RED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pi-hole6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#zeroTierImages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZeroTier Docker images
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gettingStarted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting started with ZeroTier
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting started with ZeroTier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#createAccount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#singleRemote" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install client on "remote"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#otherRemotes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other devices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology 1: ZeroTier client-only
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Topology 1: ZeroTier client-only">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topology1install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installing ZeroTier-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology 2: ZeroTier router
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Topology 2: ZeroTier router">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topology2install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installing ZeroTier-router
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology 3: Full tunnel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology 4: Multi-site routing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Topology 4: Multi-site routing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topo4tunnel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tunnelling remote clients
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managedRoutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managed Routes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managed Routes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#managedRoutesTLDR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#managedRoutesDetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#designConsiderations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Design considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hostPorts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host mode and ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dnsConsiderations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Domain Name System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Domain Name System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normalDNS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normal DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mDNS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multicast DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addressConflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolving address-range conflicts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#globalAddressing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global addressing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aboutAllowManaged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Allow Managed Addresses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usefulCommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Useful Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cliNetworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cliNetworksCheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check networks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliNetworksJoin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Join network
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliNetworksLeave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leave network
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliInfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliPeer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Peer status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliOptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cliOptionCheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check option
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliOptionSet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change option
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-persistent-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        About persistent storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#container-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ios-tip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iOS tip
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-RandomPassword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Random Services Password
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Menu-System/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menu system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/PostBuild-Script/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Postbuild BASH Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updating the project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/Changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/New-Menu-Release-Notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New IOTstack Menu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/gcgarner-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from gcgarner to SensorsIot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/migration-network-change/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration: network change
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#zeroTierImages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZeroTier Docker images
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gettingStarted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting started with ZeroTier
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting started with ZeroTier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#createAccount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#singleRemote" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install client on "remote"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#otherRemotes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other devices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology 1: ZeroTier client-only
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Topology 1: ZeroTier client-only">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topology1install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installing ZeroTier-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology 2: ZeroTier router
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Topology 2: ZeroTier router">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topology2install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installing ZeroTier-router
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology 3: Full tunnel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology 4: Multi-site routing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Topology 4: Multi-site routing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topo4tunnel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tunnelling remote clients
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managedRoutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managed Routes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managed Routes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#managedRoutesTLDR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#managedRoutesDetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#designConsiderations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Design considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hostPorts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host mode and ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dnsConsiderations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Domain Name System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Domain Name System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normalDNS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normal DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mDNS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multicast DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addressConflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolving address-range conflicts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#globalAddressing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global addressing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aboutAllowManaged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Allow Managed Addresses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usefulCommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Useful Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cliNetworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cliNetworksCheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check networks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliNetworksJoin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Join network
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliNetworksLeave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leave network
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliInfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliPeer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Peer status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliOptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cliOptionCheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check option
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cliOptionSet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change option
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-persistent-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        About persistent storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#container-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ios-tip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iOS tip
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="zerotier">ZeroTier<a class="headerlink" href="#zerotier" title="Permanent link">&para;</a></h1>
+<p>ZeroTier is a Virtual Private Network (VPN) solution that creates secure data-communications paths between devices at different locations. You can use ZeroTier to:</p>
+<ul>
+<li>give remote devices secure access to your home network's local services;</li>
+<li>provide secure network-to-network communications between your home network and the home networks of your friends and relations; and</li>
+<li>bypass carrier-grade network address translation (CGNAT) which can befuddle WireGuard.</li>
+</ul>
+<h2 id="zeroTierImages">ZeroTier Docker images<a class="headerlink" href="#zeroTierImages" title="Permanent link">&para;</a></h2>
+<p>This documentation covers two DockerHub images and two IOTstack templates:</p>
+<ul>
+<li>
+<p><code>zyclonite:zerotier</code></p>
+<p>This image implements a standard ZeroTier client. It is what you get if you choose "ZeroTier-client" from the IOTstack menu. Its function is identical to the clients you install on Android, iOS, macOS and Windows.</p>
+</li>
+<li>
+<p><code>zyclonite:zerotier-router</code></p>
+<p>This is an enhanced version of the ZeroTier client. It is what you get if you choose "ZeroTier-router" from the IOTstack menu. In addition to connecting your Raspberry Pi to your ZeroTier network, it can also forward packets between remote clients and devices attached to your home LAN. It is reasonably close to WireGuard in its general behaviour.</p>
+</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>ZeroTier:</p>
+<ul>
+<li><a href="https://www.zerotier.com">Home Page (sign-up)</a></li>
+<li><a href="https://my.zerotier.com">ZeroTier Central (management)</a></li>
+<li><a href="https://docs.zerotier.com">Documentation</a></li>
+<li><a href="https://zerotier.atlassian.net/wiki/spaces/SD/pages/7110657/Networking">Knowledge Base - Networking</a></li>
+<li><a href="https://github.com/zerotier/ZeroTierOne">GitHub (ZeroTier source code)</a></li>
+</ul>
+</li>
+<li>
+<p>zyclonite/zerotier:</p>
+<ul>
+<li><a href="https://github.com/zyclonite/zerotier-docker">GitHub (image source code)</a></li>
+<li><a href="https://hub.docker.com/r/zyclonite/zerotier">DockerHub (image repository)</a></li>
+</ul>
+</li>
+<li>
+<p><a href="../ZeroTier-vs-WireGuard/">IOTstack discussion paper : ZeroTier vs WireGuard</a></p>
+</li>
+</ul>
+<h2 id="definitions">Definition<a class="headerlink" href="#definitions" title="Permanent link">&para;</a></h2>
+<ul>
+<li><em>Catenet</em> (a con<strong>cate</strong>nation of <strong>net</strong>works) means the collection of networks and clients that can reach each other either across a local network or via a path through a ZeroTier Cloud.</li>
+</ul>
+<h2 id="gettingStarted">Getting started with ZeroTier<a class="headerlink" href="#gettingStarted" title="Permanent link">&para;</a></h2>
+<h3 id="createAccount">Create an account<a class="headerlink" href="#createAccount" title="Permanent link">&para;</a></h3>
+<p>ZeroTier offers both free and paid accounts. A free account offers enough for the average home user.</p>
+<p>Go to the <a href="https://www.zerotier.com/download/">Zerotier downloads</a> page. If you wait a little while, a popup window will appear with a "Start here" link which triggers a wizard to guide you through the registration and setup process. At the end, you will have an account plus an initial ZeroTier Network ID.</p>
+<blockquote>
+<p>Tip: Make a note of your ZeroTier network ID - you will need it!</p>
+</blockquote>
+<p>You should take the time to work through the configuration page for your newly-created ZeroTier network. At the very least:</p>
+<ol>
+<li>Give your ZeroTier network a name. At this point you only have a single network but you may decide to create more. Meaningful names are always easier on the brain than 16-hex-digit numbers.</li>
+<li>
+<p>Scroll down until you see the "IPv4 Auto-Assign" area. By default, ZeroTier will have done the following:</p>
+<ul>
+<li>Enabled "Auto-Assign from Range";</li>
+<li>Selected the "Easy" button; and</li>
+<li>Randomly-selected one of the <a href="https://www.rfc-editor.org/rfc/rfc1918.html">RFC1918</a> private ranges below the line.</li>
+</ul>
+<p>If the range selected by ZeroTier does not begin with "10.x", consider changing the selection to something in that range. This documentation uses <code>10.244.*.*</code> throughout and it may be easier to follow if you do something similar. </p>
+<blockquote>
+<p>Tip: avoid <code>10.13.*.*</code> if you are also running WireGuard. </p>
+</blockquote>
+<p>The logic behind this recommendation is that you can use 10.x.x.x for ZeroTier and 192.168.x.x for your home networks, leaving 172.x.x.x for Docker. That should make it easier to understand what is going on when you examine routing tables.</p>
+<p>Nevertheless, nothing about ZeroTier <em>depends</em> on you using a 10.x network. If you have good reasons for selecting from a different range, do so. It's <em>your</em> network! </p>
+</li>
+</ol>
+<h3 id="singleRemote">Install client on "remote"<a class="headerlink" href="#singleRemote" title="Permanent link">&para;</a></h3>
+<p>You should install ZeroTier client software on at least one mobile device (laptop, iDevice) that is going to connect remotely. You don't need to go to a remote location or fake "remoteness" by connecting through a cellular system. You can do all this while the device is connected to your home network.</p>
+<p>Connecting a client to your ZeroTier network is a three-step process:</p>
+<ol>
+<li>
+<p>Install the client software on the device. The <a href="https://www.zerotier.com/download/">Zerotier downloads</a> page has clients for every occasion: Android, iOS, macOS, Unix and Windows.</p>
+</li>
+<li>
+<p>Launch the client and enter your ZeroTier Network ID:</p>
+<ul>
+<li>
+<p>on macOS, launching the app adds a menu to the right hand side of your menu bar. From that menu, choose "Join New Network…", enter your network ID into the dialog box and click "Join".</p>
+</li>
+<li>
+<p>on iOS, launching the app for the first time presents you with a privacy policy which you need to accept, followed by a mostly-blank screen:</p>
+<ul>
+<li>Tap <kbd>+</kbd>, accept the privacy policy (again) and enter your network ID into the field.</li>
+<li>Leave the other settings alone and tap "Add Network". Acknowledge any security prompt (what you see depends on your version of iOS).</li>
+<li>Turn on the slider button.</li>
+</ul>
+</li>
+<li>
+<p>Android and Windows – follow your nose.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>In a web browser:</p>
+<ul>
+<li>connect to ZeroTier Central: <a href="https://my.zerotier.com">https://my.zerotier.com</a></li>
+<li>login to your account</li>
+<li>click on your network ID</li>
+<li>scroll down to the "Members" area</li>
+<li>find the newly-added client</li>
+<li>authorise the client by turning on its "Auth?" checkbox</li>
+<li>fill in the "Name" and, optionally, the "Description" fields so that you can keep track of the device associated with the client ID. Again, names are easier on the brain than numbers.  </li>
+</ul>
+</li>
+</ol>
+<p>Each time you authorise a client, ZeroTier assigns an IP address from the range you selected in the "IPv4 Auto-Assign" area. Most of the time this is exactly what you want but, occasionally, you may want to override ZeroTier's choice. The simplest approach is:</p>
+<ul>
+<li>
+<p>Type a new IP address into the text field to the right of the <kbd>+</kbd>&nbsp;;</p>
+<blockquote>
+<p>your choice needs to be from the range you selected in the "IPv4 Auto-Assign" area</p>
+</blockquote>
+</li>
+<li>
+<p>Click the <kbd>+</kbd> to accept the address; then</p>
+</li>
+<li>Delete the unwanted address by clicking the trash-can icon to its left.</li>
+</ul>
+<p>ZeroTier IP addresses are like fixed assignments from a DHCP server. They persist. The same client will always get the same IP address each time it connects. </p>
+<p>Key point:</p>
+<ul>
+<li>Clients can't join your ZeroTier network without your approval. If a new client appears in the list which you don't recognise, click the trash-can icon at the far right of its row. That denies the client access - permanently. The client needs to be reset before it can make another attempt.</li>
+</ul>
+<h3 id="otherRemotes">Other devices<a class="headerlink" href="#otherRemotes" title="Permanent link">&para;</a></h3>
+<p>Do <strong>not</strong> install ZeroTier on your Raspberry Pi by following the Linux instructions on the <a href="https://www.zerotier.com/download/">Zerotier downloads</a> page. Those instructions lead to a "native" installation. We are about to do all that with a Docker container.</p>
+<p>You <em>can</em> install ZeroTier clients on other systems but you should hold off on doing that for now because, ultimately, it may not be needed. Whether you need ZeroTier client software on any device will depend on the decisions you make as you follow these instructions.</p>
+<h2 id="topology1">Topology 1: ZeroTier client-only<a class="headerlink" href="#topology1" title="Permanent link">&para;</a></h2>
+<p>To help you choose between the ZeroTier-client and ZeroTier-router containers, it is useful to study a network topology that does not include routing.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Topology 1: Remote client accesses client on home network</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="ZeroTier - topology 1" src="../images/zerotier-topology-1.jpeg" /></td>
+</tr>
+</tbody>
+</table>
+<p>Four devices are shown:</p>
+<ul>
+<li><mark>A</mark> is a Raspberry Pi running "ZeroTier-client" installed by IOTstack.</li>
+<li>
+<p><mark>B</mark> is some other device (another Pi, Linux box, Mac, PC).</p>
+<blockquote>
+<p>The key thing to note is that <mark>B</mark> is <strong>not</strong> running ZeroTier client software.</p>
+</blockquote>
+</li>
+<li>
+<p><mark>C</mark> is your local router, likely an off-the-shelf device running a custom OS.</p>
+<blockquote>
+<p>Again, assume <mark>C</mark> is <strong>not</strong> running ZeroTier client software.</p>
+</blockquote>
+</li>
+<li>
+<p><mark>G</mark> is the <a href="#singleRemote">remote client</a> you set up above.</p>
+</li>
+</ul>
+<p>Table&nbsp;1 summarises what you can and can't do from the remote client <mark>G</mark>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="table1"></a>Table 1: Reachability using only ZeroTier clients</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="ZeroTier - topology 1 reachability" src="../images/zerotier-topology-1-reachability.jpeg" /></td>
+</tr>
+</tbody>
+</table>
+<p><mark>G</mark> can't reach <mark>B</mark> or <mark>C</mark>, <em>directly,</em> because those devices are not running ZeroTier client software.</p>
+<p><mark>G</mark> <em>can</em> reach <mark>B</mark> and <mark>C</mark>, <em>indirectly,</em> by first connecting to <mark>A</mark>. An example would be <mark>G</mark> opening an SSH session on <mark>A</mark> then, within that session, opening another SSH session on <mark>B</mark> or <mark>C</mark>.</p>
+<p>It should be apparent that you can also solve this problem by installing ZeroTier client software on <mark>B</mark>. It would then have its own interface in the 10.244.0.0/16 network that forms the ZeroTier Cloud and be reachable directly from <mark>G</mark>. The <em>no<sup>†</sup></em> entries would then become <em>yes</em>, with the caveat that <mark>G</mark> would reach <mark>B</mark> via its interface in the 10.244.0.0/16 network.</p>
+<p>The same would be true for your router <mark>C</mark>, providing it was capable of running ZeroTier client software.</p>
+<p>Lessons to learn:</p>
+<ol>
+<li>All hosts running a ZeroTier client and sharing a common ZeroTier Network ID can reach each other.</li>
+<li>You can springboard from a host that is reachable to a host that is otherwise unreachable, but your ability to do that in any given situation may depend on the protocol you are trying to use.</li>
+</ol>
+<p>ZeroTier clients are incredibly easy to set up. It's always:</p>
+<ol>
+<li>Install the client software.</li>
+<li>Tell the client the network ID.</li>
+<li>Authorise the device.</li>
+</ol>
+<p>After that, it's full peer-to-peer interworking.</p>
+<p>The <em>problem</em> with this approach is that it does not scale if you are only signed up for a free ZeroTier account. Free accounts are limited to 25 clients. After that you need a paid account.</p>
+<h3 id="topology1install">Installing ZeroTier-client<a class="headerlink" href="#topology1install" title="Permanent link">&para;</a></h3>
+<p>Now that you understand what the ZeroTier-client will and won't do, if you want to install the ZeroTier client on your Raspberry Pi via IOTstack, proceed like this:</p>
+<ol>
+<li>Run the IOTstack menu and choose "Zerotier-client".</li>
+<li>
+<p>Bring up the container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>zerotier-client
+</code></pre></div>
+</li>
+<li>
+<p>Tell the container to join your ZeroTier network by replacing «NetworkID» with your ZeroTier Network ID:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zerotier<span class="w"> </span>zerotier-cli<span class="w"> </span>join<span class="w"> </span>«NetworkID»<span class="w"> </span>
+</code></pre></div>
+<p>You only need to do this <strong>once</strong>. The information is kept in the container's persistent storage area. Thereafter, the client will rejoin the same network each time the container comes up.</p>
+</li>
+<li>
+<p>Go to <a href="https://my.zerotier.com">ZeroTier Central</a> and authorise the device.</p>
+</li>
+</ol>
+<p>Job done! There are no environment variables to set. It just works.</p>
+<h2 id="topology2">Topology 2: ZeroTier router<a class="headerlink" href="#topology2" title="Permanent link">&para;</a></h2>
+<p>This topology is a good starting point for using ZeroTier to replicate a WireGuard service running on your Raspberry Pi. Remember, you don't have to make an either/or choice between ZeroTier and WireGuard. You <em>can</em> run both containers side-by-side.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Topology 2: Remote client accesses home network</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="ZeroTier - topology 2" src="../images/zerotier-topology-2.jpeg" /></td>
+</tr>
+</tbody>
+</table>
+<p>With this structure in place, all hosts in <a href="#topology2">Topology&nbsp;2</a> can reach each other <em>directly.</em> All the cells in <a href="#table1">Table&nbsp;1</a> are <em>yes.</em> Full peer-to-peer networking!</p>
+<h3 id="topology2install">Installing ZeroTier-router<a class="headerlink" href="#topology2install" title="Permanent link">&para;</a></h3>
+<p>The ZeroTier-router container is just the ZeroTier-client container with some <code>iptables</code> rules. However, you can't run both containers at the same time. If ZeroTier-client is installed:</p>
+<ol>
+<li>
+<p>Terminate the container if it is running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>down<span class="w"> </span>zerotier-client
+</code></pre></div>
+<blockquote>
+<p>See also <a href="../../Basic_setup/#downContainer">if downing a container doesn't work</a></p>
+</blockquote>
+</li>
+<li>
+<p>Remove the existing service definition, either by:</p>
+<ul>
+<li>running the menu and de-selecting "ZeroTier-client"; or</li>
+<li>editing your <code>docker-compose.yml</code> to remove the service definition.</li>
+</ul>
+</li>
+</ol>
+<p>The ZeroTier-router <em>can</em> re-use the ZeroTier-client configuration (and vice-versa) so you should <strong>not</strong> erase the persistent storage area at:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/volumes/zerotier-one/
+</code></pre></div>
+<p>Keeping the configuration also means you won't need to authorise the ZeroTier-router client when it first launches.</p>
+<p>To install Zerotier-router:</p>
+<ol>
+<li>
+<p>Run the IOTstack menu and choose "Zerotier-router".</p>
+</li>
+<li>
+<p>Use a text editor to open your <code>docker-compose.yml</code>. Find the ZeroTier service definition and the environment variables it contains: </p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TZ=${TZ:-Etc/UTC}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PUID=1000</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PGID=1000</span>
+<span class="c1"># - ZEROTIER_ONE_NETWORK_IDS=yourNetworkID</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZEROTIER_ONE_LOCAL_PHYS=eth0 wlan0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZEROTIER_ONE_USE_IPTABLES_NFT=true</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZEROTIER_ONE_GATEWAY_MODE=both</span>
+</code></pre></div></td></tr></table></div>
+<p>You should:</p>
+<ol>
+<li>Set your timezone.</li>
+<li>
+<p>Uncomment line 9 and replace "yourNetworkID" with your ZeroTier Network ID. This variable only has an effect the first time ZeroTier is launched. It is an alternative to executing the following command after the container has come up the first time:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zerotier<span class="w"> </span>zerotier-cli<span class="w"> </span>join<span class="w"> </span>«NetworkID»
+</code></pre></div>
+<p>The reason for the plural variable name ("IDS") is because it supports joining multiple networks on first launch. Network IDs are space-separated, like this:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZEROTIER_ONE_NETWORK_IDS=3926d64e8ff148b3 ef7a364a687c45e0</span>
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>If necessary, change line 10 to represent your active local interfaces. Examples:</p>
+<ul>
+<li>
+<p>if your Raspberry Pi only connects to WiFi, you would use:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZEROTIER_ONE_LOCAL_PHYS=wlan0</span>
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>if both Ethernet and WiFi are active, use:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZEROTIER_ONE_LOCAL_PHYS=eth0 wlan0</span>
+</code></pre></div></td></tr></table></div>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>Launch the container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>zerotier-router
+</code></pre></div>
+</li>
+<li>
+<p>If the Raspberry Pi running the service has not previously been authorised in <a href="https://my.zerotier.com">ZeroTier Central</a>, authorise it. Make a note of the IP address assigned to the device in ZeroTier Central. In <a href="#topology2">Topology&nbsp;2</a> it is 10.244.0.1.</p>
+</li>
+<li>
+<p>You also need to set up some static routes:</p>
+<ul>
+<li>
+<p>In ZeroTier Central …</p>
+<p>Please start by reading <a href="#managedRoutes">Managed Routes</a>.</p>
+<p>Once you understand how to construct a valid less-specific route, go to <a href="https://my.zerotier.com">ZeroTier Central</a> and find the "Managed Routes" area. Under "Add Routes" are text-entry fields. Enter the values into the fields:</p>
+<div class="language-text highlight"><pre><span></span><code>Destination: 192.168.202.0/23 (via) 10.244.0.1
+</code></pre></div>
+<p>Click <kbd>Submit</kbd>.</p>
+<p>With reference to <a href="#topology2">Topology 2</a>:</p>
+<ul>
+<li>192.168.202.0/23 is the less-specific route to the home network; and</li>
+<li>10.244.0.1 is the IP address of <mark>A</mark> in the ZeroTier Cloud.</li>
+</ul>
+<p>This route teaches ZeroTier clients that the 10.244.0.0/16 network offers a path to the less-specific range (192.168.202.0/23) encompassing the home subnet (192.168.203.0/24).</p>
+<p>Remote clients can then reach devices on your home network. When a packet arrives on <mark>A</mark>, it is passed through NAT so devices on your home network "think" the packet has come from <mark>A</mark>. That means they can reply. However, this only works for connections that are initiated by remote clients like <mark>G</mark>. Devices on your home network like <mark>B</mark> and <mark>C</mark> can't initiate connections with remote clients because they don't know where to send the traffic. That's the purpose of the next static route.</p>
+</li>
+<li>
+<p>In your home router <mark>C</mark> …</p>
+<p>Add a static route to the ZeroTier Cloud pointing to the IP address of your Raspberry Pi on your home network. In <a href="#topology2">Topology 2</a>, this is:</p>
+<div class="language-text highlight"><pre><span></span><code>10.244.0.0/16 via 192.168.203.50
+</code></pre></div>
+<blockquote>
+<p>You need to figure out how to add this route in your router's user interface.</p>
+</blockquote>
+<p>Here's an example of what actually happens once this route is in place. Suppose <mark>B</mark> wants to communicate with <mark>G</mark>. <mark>B</mark> is not a ZeroTier client so it doesn't know that <mark>A</mark> offers a path to <mark>G</mark>. The IP stack running on <mark>B</mark> sends the packet to the default gateway <mark>C</mark> (your router). Because of the static route, <mark>C</mark> sends the packet to <mark>A</mark>. Once the packet arrives on <mark>A</mark>, it is forwarded via the ZeroTier Cloud to <mark>G</mark>.</p>
+<p>The process of a packet going into a router and coming back out on the same interface is sometimes referred to as "one-armed routing". It may seem inefficient but <mark>C</mark> also sends <mark>B</mark> what is called an "ICMP Redirect" message. This teaches <mark>B</mark> that it reach <mark>G</mark> via <mark>A</mark> so, in practice, not every <mark>B</mark>-to-<mark>G</mark> packet needs to transit <mark>C</mark>.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="topology3">Topology 3: Full tunnel<a class="headerlink" href="#topology3" title="Permanent link">&para;</a></h2>
+<p>The ZeroTier Cloud does not offer a path to the Internet. It is not a VPN solution which will allow you to pretend to be in another location. Every ZeroTier client still needs its own viable path to the Internet.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Topology 3: Remote client tunnels to Internet via Home Network</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="ZeroTier - topology 3" src="../images/zerotier-topology-3.jpeg" /></td>
+</tr>
+</tbody>
+</table>
+<p>In terms of traffic flows, what this means in a practical sense is:</p>
+<ul>
+<li>Traffic from <mark>G</mark> to [<mark>A</mark>, <mark>B</mark> or <mark>C</mark>] (and vice versa) flows over the ZeroTier Cloud and is securely end-to-end encrypted in transit; but</li>
+<li>All other traffic goes straight to the ISP or cellular carrier and is not encrypted.</li>
+</ul>
+<p>This is the routing table you would expect to see on <mark>G</mark>:</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code>Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         172.20.10.1     0.0.0.0         UG        0 0          0 wlan0
+10.244.0.0      0.0.0.0         255.255.0.0     U         0 0          0 ztr2qsmswx
+172.20.10.0     0.0.0.0         255.255.255.240 U         0 0          0 wlan0
+192.168.202.0   10.244.0.1      255.255.254.0   UG        0 0          0 ztr2qsmswx
+</code></pre></div></td></tr></table></div>
+<p>Executing a <code>traceroute</code> to 8.8.8.8 (Google DNS) shows:</p>
+<div class="language-text highlight"><pre><span></span><code>$ traceroute 8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  172.20.10.1 (172.20.10.1)  4.706 ms  4.572 ms  4.398 ms
+ 2  10.111.9.189 (10.111.9.189)  49.599 ms  49.807 ms  49.626 ms
+…
+11  dns.google (8.8.8.8)  32.710 ms  32.047 ms
+</code></pre></div>
+<p>You can see that the first hop is via 172.20.10.1. This means the traffic is not flowing over the ZeroTier Cloud (10.244.0.0/16). The traffic is reaching 8.8.8.8 via the default route through the phone's connection to the carrier's network (172.20.10.0/28).</p>
+<p>ZeroTier supports an option for forcing all of a client's traffic to pass over the ZeroTier Cloud. The client's traffic is then end-to-end encrypted, at least until it reaches your home. Traffic destined for the Internet will then pass back out through your home router. From the perspective of the Internet, your remote client will appear to be at your home.</p>
+<p>Enabling this feature is a two-step process:</p>
+<ol>
+<li>
+<p>In ZeroTier Central, find the "Managed Routes" area and add:</p>
+<div class="language-text highlight"><pre><span></span><code>Destination: 0.0.0.0/0 (via) 10.240.0.1
+</code></pre></div>
+<p>This is setting up a "default route". 10.240.0.1 is the IP address of <mark>A</mark> in the ZeroTier network.</p>
+</li>
+<li>
+<p>Each remote client (and <strong>only</strong> remote clients) needs to be instructed to accept the default route from the ZeroTier Cloud:</p>
+<ul>
+<li>
+<p>iOS clients:</p>
+<ol>
+<li>Launch the ZeroTier One app.</li>
+<li>If the connection is not already enabled, turn it on and wait for it to start.</li>
+<li>Tap on the network ID (brings up a details sheet).</li>
+<li>Turn on "Enable Default Route".</li>
+<li>Tap outside the details sheet to dismiss it.</li>
+<li>Turn the connection off.</li>
+<li>Turn the connection on again.</li>
+</ol>
+<p>Once the client has been configured like this, the "Enable Default Route" setting will stick. Subsequent connections will follow the <em>managed</em> default route.</p>
+<p>If you wish to turn the setting off again, you need to repeat the same series of steps, turning "Enable Default Route" off at Step 4.</p>
+</li>
+<li>
+<p>Linux clients: execute the command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zerotier<span class="w"> </span>zerotier-cli<span class="w"> </span><span class="nb">set</span><span class="w"> </span>«yourNetworkID»<span class="w"> </span><span class="nv">allowDefault</span><span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+<p>See <a href="#cliOptionSet">change option</a> for an explanation of the output and how to turn the option off.</p>
+</li>
+<li>
+<p>macOS clients: open the ZeroTier menu, then the sub-menu for the Network ID, then enable "Allow Default Router [sic] Override".</p>
+</li>
+<li>Android and Windows clients: follow your nose.</li>
+</ul>
+</li>
+</ol>
+<p>Once <code>allowDefault</code> is enabled on a client, the routing table changes:</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code>Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         10.244.0.1      128.0.0.0       UG        0 0          0 ztr2qsmswx
+0.0.0.0         172.20.10.1     0.0.0.0         UG        0 0          0 wlan0
+10.244.0.0      0.0.0.0         255.255.0.0     U         0 0          0 ztr2qsmswx
+128.0.0.0       10.244.0.1      128.0.0.0       UG        0 0          0 ztr2qsmswx
+172.20.10.0     0.0.0.0         255.255.255.240 U         0 0          0 wlan0
+192.168.202.0   10.244.0.1      255.255.254.0   UG        0 0          0 ztr2qsmswx
+</code></pre></div></td></tr></table></div>
+<p>Close inspection will show you that <strong>two</strong> entries have been added to the routing table:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Line</th>
+<th style="text-align: right;">Route</th>
+<th style="text-align: center;">Destination</th>
+<th style="text-align: center;">Mask</th>
+<th style="text-align: center;">Address Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: right;">0.0.0.0/1</td>
+<td style="text-align: center;">10.244.0.1</td>
+<td style="text-align: center;">128.0.0.0</td>
+<td style="text-align: center;">0.0.0.0…127.255.255.255</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: right;">128.0.0.0/1</td>
+<td style="text-align: center;">10.244.0.1</td>
+<td style="text-align: center;">128.0.0.0</td>
+<td style="text-align: center;">128.0.0.0…255.255.255.255</td>
+</tr>
+</tbody>
+</table>
+<p>Taken together, these have the same effect as a standard default route (0.0.0.0/0) but, because they are more-specific than the standard default route being offered by the cellular network, the path via ZeroTier Cloud will be preferred.</p>
+<p>You can test this with a <code>traceroute</code>:</p>
+<div class="language-text highlight"><pre><span></span><code>$ traceroute 8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  10.244.0.1 (10.244.0.1)  98.239 ms  98.121 ms  98.042 ms
+ 2  192.168.203.1 (192.168.203.1)  98.038 ms  97.943 ms  97.603 ms
+…
+ 7  dns.google (8.8.8.8)  104.748 ms  106.669 ms  106.356 ms
+</code></pre></div>
+<p>This time, the first hop is via the ZeroTier Cloud to <mark>A</mark> (10.244.0.1), then out through the local router <mark>C</mark> (192.168.203.1).</p>
+<h2 id="topology4">Topology 4: Multi-site routing<a class="headerlink" href="#topology4" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Topology 4: Site-to-Site with ZeroTier-router</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="ZeroTier - topology 4" src="../images/zerotier-topology-4.jpeg" /></td>
+</tr>
+</tbody>
+</table>
+<p>In this topology, everything can reach everything within your catenet. The installation process for <mark>F</mark> is the same as it was for <mark>A</mark>. See <a href="#topology2install">Installing ZeroTier-router</a>.</p>
+<p>In ZeroTier Central you need one "less-specific" <a href="#managedRoutes">Managed Route</a> pointing to each site where there is a ZeroTier router.</p>
+<p>At each site, the local router needs two static routes, both via the IP address of the local host running the ZeroTier-router container:</p>
+<ol>
+<li>A static route pointing to the ZeroTier Cloud (10.244.0.0/16); plus</li>
+<li>A static route covering all of 192.168.0.0/16.</li>
+</ol>
+<p>If the second route does not make sense, think of it like this:</p>
+<ul>
+<li>A packet destined for the local network (at any site) will match the more-specific routing table entry for that local network and be sent direct to the destination host.</li>
+<li>Otherwise, the packet will be sent to the local router (default gateway).</li>
+<li>On the router (<mark>C</mark> or <mark>D</mark>), the packet will match the less-specific static route for 192.168.0.0/16 and be forwarded to the local host running the ZeroTier-router container (one-armed routing).</li>
+<li>Courtesy of the Managed Routes set in ZeroTier Central, the local host running the ZeroTier-router container (<mark>A</mark> or <mark>F</mark>) will either have a more-specific route through the ZeroTier Cloud to the destination network, or it won't.</li>
+<li>If it has a more-specific route, the packet will be forwarded across the ZeroTier Cloud.</li>
+<li>Otherwise the packet will be dropped and the originator will receive an "ICMP destination network unreachable" message.</li>
+</ul>
+<p>In essence, both these static routes are "set and forget". They assume catenet growth is a <em>possibility,</em> and that it is preferable to set up schemes that will be robust and not need constant tweaking.</p>
+<h3 id="topo4tunnel">tunnelling remote clients<a class="headerlink" href="#topo4tunnel" title="Permanent link">&para;</a></h3>
+<p>The diagram above for Topology 4 does not include a default route in ZeroTier Central. If you implement Topology 4 according to the diagram:</p>
+<ul>
+<li>traffic between <mark>G</mark> and your sites will travel via the ZeroTier Cloud (tunnelled, encrypted); but</li>
+<li>traffic between <mark>G</mark> and the wider Internet will not be tunnelled, will not be encrypted by ZeroTier, and will reach the Internet via the ISP or cellular carrier.</li>
+</ul>
+<p>If you want remote clients like <mark>G</mark> to use full tunnelling, you can follow the same approach as for <a href="#topology3">Topology 3</a>. You simply need to decide which site should be used by <mark>G</mark> to reach the Internet. Having made your decision, define an appropriate default route in ZeroTier Central. For example, if <mark>G</mark> should reach the Internet via:</p>
+<ul>
+<li>
+<p>the left-hand site, the default route should point to the ZeroTier-router running on <mark>A</mark>:</p>
+<div class="language-text highlight"><pre><span></span><code>Destination: 0.0.0.0/0 (via) 10.240.0.1
+</code></pre></div>
+</li>
+<li>
+<p>the right-hand site, the default route should point to the ZeroTier-router running on <mark>F</mark>:</p>
+<div class="language-text highlight"><pre><span></span><code>Destination: 0.0.0.0/0 (via) 10.240.0.2
+</code></pre></div>
+</li>
+</ul>
+<p>Once you implement the default route, everything else is the same as for <a href="#topology3">Topology 3</a>.</p>
+<h2 id="managedRoutes">Managed Routes<a class="headerlink" href="#managedRoutes" title="Permanent link">&para;</a></h2>
+<h3 id="managedRoutesTLDR">TL;DR<a class="headerlink" href="#managedRoutesTLDR" title="Permanent link">&para;</a></h3>
+<p>If your home network is a single subnet with a /24 prefix (a subnet mask of 255.255.255.0), you need to follow two rules when constructing the "destination" field of a Managed Route in ZeroTier Central:</p>
+<ol>
+<li>use a /23 prefix.</li>
+<li>if the third octet of your home network range is an odd number, subtract 1 to make it an even number.</li>
+</ol>
+<p>Examples:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="table2"></a>Table 2: Constructing Managed Routes for Subnets - examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="ZeroTier - Managed Route examples" src="../images/zerotier-managed-route-examples.jpeg" /></td>
+</tr>
+</tbody>
+</table>
+<p>If your home network has multiple subnets and/or you do not use /24 prefixes then you should either read through the next section or consult one of the many IP address calculators that are available on the Internet. One example:</p>
+<ul>
+<li><a href="https://www.calculator.net/ip-subnet-calculator.html">www.calculator.net</a></li>
+</ul>
+<h3 id="managedRoutesDetails">The details<a class="headerlink" href="#managedRoutesDetails" title="Permanent link">&para;</a></h3>
+<p>This is a slightly contrived example but it will help you to understand why you need Managed Routes and how to construct them correctly in ZeroTier Central.</p>
+<p>Assume we are talking about <a href="#topology1">Topology&nbsp;1</a> and that this is the routing table for host <mark>A</mark>:</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code>Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         192.168.203.1   0.0.0.0         UG        0 0          0 eth0
+192.168.203.0   0.0.0.0         255.255.255.0   U         0 0          0 eth0
+</code></pre></div></td></tr></table></div>
+<p>Suppose <mark>A</mark> wants to send a packet to <mark>B</mark>. The IP stack starts searching the routing table. For each row:</p>
+<ol>
+<li>
+<p>The destination IP address for <mark>B</mark> (192.168.203.60) is ANDed with the subnet mask (255.255.255.0). Given the last row in the routing table above:</p>
+<div class="language-text highlight"><pre><span></span><code>candidate = destinationIP AND Genmask
+          = 192.168.203.60 AND 255.255.255.0
+          = 192.168.203.0
+</code></pre></div>
+</li>
+<li>
+<p>The candidate (192.168.203.0) is compared with the value in the Destination column (192.168.203.0). If the two values are the same, the route is considered to be a match:</p>
+<div class="language-text highlight"><pre><span></span><code>match = compareEqual(candidate,Destination)
+      = compareEqual(192.168.203.0, 192.168.203.0)
+      = true
+</code></pre></div>
+</li>
+<li>
+<p>The result is a match so the packet is handed to Layer 2 for transmission via the <code>eth0</code> interface.</p>
+</li>
+</ol>
+<p>Now suppose <mark>A</mark> wants to send a packet to 8.8.8.8 (Google DNS). The last row of the routing table will evaluate as follows:</p>
+<div class="language-text highlight"><pre><span></span><code>candidate = destinationIP AND Genmask
+          = 8.8.8.8 AND 255.255.255.0
+          = 8.8.8.0
+    match = compareEqual(candidate,Destination)
+          = compareEqual(8.8.8.0, 192.168.203.0)
+          = false
+</code></pre></div>
+<p>The result is no-match so the routing algorithm continues to search the table. Eventually it will arrive at the 0.0.0.0 entry which is known as the "default route":</p>
+<div class="language-text highlight"><pre><span></span><code>candidate = destinationIP AND Genmask
+          = 8.8.8.8 AND 0.0.0.0
+          = 0.0.0.0
+    match = compareEqual(candidate,Destination)
+          = compareEqual(0.0.0.0, 0.0.0.0)
+          = true
+</code></pre></div>
+<p>The result of comparing anything with the default route is always a match. Because the "Gateway" column is non-zero, the IP address of 192.168.203.1 (<mark>C</mark>) is used as the "next hop". The IP stack searches the routing table again. This new search for 192.168.203.1 will match on the bottom row so the packet will be handed to Layer 2 for transmission out of the <code>eth0</code> interface aimed at <mark>C</mark> (the local router, otherwise known as the "default gateway"). In turn, the local router forwards the packet to the ISP and, eventually, it winds up at 8.8.8.8.</p>
+<p>Let's bring ZeroTier into the mix.</p>
+<p>The local subnet shown in <a href="#topology1">Topology&nbsp;1</a> is 192.168.203.0/24 so it seems to make sense to use that same subnet in a Managed Route. Assume you configured that in ZeroTier Central:</p>
+<div class="language-text highlight"><pre><span></span><code>192.168.203.0/24 via 10.144.0.1
+</code></pre></div>
+<p>When the ZeroTier client on (<mark>A</mark>) adds that route to its routing table, you get something like this:</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code>Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         192.168.203.1   0.0.0.0         UG        0 0          0 eth0
+10.244.0.0      0.0.0.0         255.255.0.0     U         0 0          0 ztr2qsmswx
+192.168.203.0   10.244.0.1      255.255.255.0   UG        0 0          0 ztr2qsmswx
+192.168.203.0   0.0.0.0         255.255.255.0   U         0 0          0 eth0
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<p>To all network gurus following along: please remember this is a <em>contrived</em> example.</p>
+</blockquote>
+<p>Study the last two lines. You should be able to see that both lines will match when the IP stack searches this table whenever <mark>A</mark> needs to send a packet to <mark>B</mark>. This results in a tie.</p>
+<p>What normally happens is a tie-breaker algorithm kicks in. Schemes of route metrics, route weights, hop counts, round-trip times or interface priorities are used to pick a winner. Unfortunately, those schemes are all "implementation defined". Although the algorithms <em>usually</em> converge on a good answer, sometimes Murphy's Law kicks in. Routing problems are notoriously difficult to diagnose and can manifest in a variety of ways, ranging from sub-optimal routing, where the only symptom may be sluggishness, to forwarding loops, which can render your network mostly useless.</p>
+<p>Prevention is always better than cure so it is preferable to side-step the entire problem by taking advantage of the fact that IP routing will always match on a <em>more-specific</em> route before a <em>less-specific</em> route, and employ slightly less-specific Managed Routes in ZeroTier Central.</p>
+<p>What do <em>"more-"</em> and <em>"less-"</em> mean when we're talking about searching a routing table? The terms refer to the length of the network prefix. In "/X" notation, a larger value of X is <em>more-specific</em> than a smaller value of X:</p>
+<ul>
+<li>a "/25" is <em>more</em> specific then a "/24"</li>
+<li>a "/23" is <em>less</em> specific than a "/24"</li>
+</ul>
+<p>To ensure that the IP stack will always make the correct decision, the Managed Route you configure in ZeroTier Central should always be slightly <em>less-specific</em> than the actual subnet it covers. Given 192.168.203.0/24, your first attempt at constructing a less-specific route might be:</p>
+<div class="language-text highlight"><pre><span></span><code>192.168.203.0/23 via 10.144.0.1
+</code></pre></div>
+<p>Sadly, that won't work. Why? Because the 192.168.203.0/23 <strong>subnet</strong> does not actually exist. That may surprise you but it's true. It has to do with the requirement that subnet masks use <strong>contiguous</strong> one-bits. It's easier to understand if you study the binary:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="table3"></a>Table 3: Invalid vs Valid Managed Route</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="ZeroTier - managed route construction" src="../images/zerotier-managed-route-construction.jpeg" /></td>
+</tr>
+</tbody>
+</table>
+<p>The left hand side of <a href="#table3">Table&nbsp;3</a> shows a network prefix of 192.168.203.0/23 along with what that /23 expands to as a subnet mask of 255.255.254.0. The last row is the result of ANDing the first two rows. Notice the right-most 1-bit in the third octet (circled). That bit hasn't made it to the last row and that's a problem.</p>
+<p>What's going on here is that the right-most 1-bit in the third octet is not actually part of the <em>network</em> portion of the IP address; it's part of the <em>host</em> portion. For a network prefix to be valid, all the bits in the host portion must be zero. To put it another way, the IP address 192.168.203.0/23 is host .1.0 (ordinal 256) in subnet 192.168.202.0/23.</p>
+<p>Read that last sentence again because "in subnet 192.168.202.0/23" is the clue.</p>
+<p>The right hand side of <a href="#table3">Table&nbsp;3</a> starts with network prefix 192.168.202.0/23 and ANDs it with its subnet mask. This time the host portion is all-zero. That means it's a valid subnet and, accordingly, can be the subject of a Managed Route. </p>
+<p><a href="#table3">Table&nbsp;3</a> tells us something else about a /23 prefix. It tells us that whatever value appears in that third octet, the right-most 1-bit must always be zero. That's another way of saying that a /23 subnet is only valid if the third octet is an even number.</p>
+<p>At this point, you should understand the reason for the two rules in <a href="#managedRoutesTLDR">TL;DR</a> above, and have a better idea of what you are doing if you need to use a subnet calculator.</p>
+<h2 id="designConsiderations">Network Design considerations<a class="headerlink" href="#designConsiderations" title="Permanent link">&para;</a></h2>
+<p>If you intend to set up multiple sites and route between them using ZeroTier, you need to be aware of some of the consequences that flow from how you need to configure Managed Routes.</p>
+<p>First, it should be obvious that you can't have two sites with the same network prefix. You and a friend can't both be using 192.168.1.0/24 at home.</p>
+<p>The second is that the set of less-specific prefixes in Managed Routes can't overlap either. If you are using the 192.168.0.0/24 subnet at home while your friend is using 192.168.1.0/24 at her home, both of your less-specific Managed Routes will be the same: 192.168.0.0/23. If you set up two Managed Routes to 192.168.0.0/23 with different "via" addresses, all the routers will think there's a <strong>single</strong> site that can be reached by multiple routes. That's a recipe for a mess.</p>
+<p>Putting both of the above together, any network plan for multiple sites should assume a gap of two between subnets. For example, if you are using the subnet 192.168.0.0/24 then your friend should be using 192.168.2.0/24. Your Managed Route will be 192.168.0.0/23, and your friend's Managed Route will be 192.168.2.0/23.</p>
+<p>None of this stops either you or your friend from using both of the /24 subnets that aggregate naturally under your respective /23 prefixes. For example, the single Managed Route 192.168.0.0/23 naturally aggregates two subnets:</p>
+<ul>
+<li>192.168.0.0/24 - eg your Ethernet</li>
+<li>192.168.1.0/24 - eg your WiFi</li>
+</ul>
+<p><a name="subnetsThree"></a>Similarly, if you are using more than two subnets, such as:</p>
+<ul>
+<li>192.168.0.0/24 - your house Ethernet</li>
+<li>192.168.1.0/24 - your house WiFi</li>
+<li>192.168.2.0/24 - your workshop WiFi</li>
+</ul>
+<p>then you would slide your ZeroTier Managed Route prefix another bit to the left and use:</p>
+<div class="language-text highlight"><pre><span></span><code>192.168.0.0/22 via 10.144.0.1
+</code></pre></div>
+<p>Notice what happens as you slide the prefix left. Things change in powers of 2:</p>
+<ul>
+<li>a /24 prefix Managed Route spans exactly <strong>1</strong> /24 subnet</li>
+<li>a /23 prefix Managed Route spans exactly <strong>2</strong> /24 subnets</li>
+<li>a /22 prefix Managed Route spans exactly <strong>4</strong> /24 subnets</li>
+<li>a /21 prefix Managed Route spans exactly <strong>8</strong> /24 subnets</li>
+<li>…</li>
+<li>a /17 prefix Managed Route spans exactly <strong>128</strong> /24 subnets</li>
+</ul>
+<p>The direct consequence of that for Managed Routes is:</p>
+<ul>
+<li>a /23 prefix means values in the third octet must be wholly divisible by <strong>2</strong></li>
+<li>a /22 prefix means values in the third octet must be wholly divisible by <strong>4</strong></li>
+<li>a /21 prefix means values in the third octet must be wholly divisible by <strong>8</strong></li>
+<li>…</li>
+<li>a /17 prefix means values in the third octet must be wholly divisible by <strong>128</strong></li>
+</ul>
+<p>Understanding how adjacent subnets can be aggregated easily by changing the prefix length should also bring with it the realisation that it is unwise to use a scattergun approach when allocating the third octet among your home subnets. Consider this scheme:</p>
+<ul>
+<li>192.168.0.0/24 - your Ethernet</li>
+<li>192.168.100.0/24 - your house WiFi</li>
+<li>192.168.200.0/24 - your workshop WiFi</li>
+</ul>
+<p>You would need three /23 Managed Routes in ZeroTier Central. In addition, you would prevent anyone else in your private ZeroTier catenet from using 192.168.1.0/24, 192.168.101.0/24 and 192.168.201.0/24. It would be preferable to use a single /22 as shown in the <a href="#subnetsThree">example</a> above.</p>
+<p>Sure, that third octet can range from 0..255 but it's still a finite resource which is best used wisely, particularly once you start to contemplate using ZeroTier to span multiple sites.</p>
+<h2 id="hostPorts">Host mode and ports<a class="headerlink" href="#hostPorts" title="Permanent link">&para;</a></h2>
+<p>The default service definition for ZeroTier-router contains the following lines:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="w">  </span><span class="nt">network_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span>
+<span class="w">  </span><span class="nt">x-ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;9993:9993&quot;</span>
+</code></pre></div></td></tr></table></div>
+<p>Line 13 tells ZeroTier to run in Docker's "host mode". This means the processes running inside the container bind to the Raspberry Pi's network ports.</p>
+<blockquote>
+<p>Processes running inside non-host-mode containers bind to the container's ports, and then use Network Address Translation (NAT) to reach the Raspberry Pi's ports.</p>
+</blockquote>
+<p>The <code>x-</code> prefix on line 14 has the effect of commenting-out the entire clause. In other words, the single <code>x-</code> has exactly the same meaning as:</p>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># ports:</span>
+<span class="c1"># - &quot;9993:9993&quot;</span>
+</code></pre></div></td></tr></table></div>
+<p>The <code>x-ports</code> clause is included to document the fact that ZeroTier uses the Raspberry Pi's port 9993.</p>
+<blockquote>
+<p>Documenting the ports in use for host-mode containers helps IOTstack's maintainers avoid port conflicts when adding new containers.</p>
+</blockquote>
+<p>You should <strong>not</strong> remove the <code>x-</code> prefix. If docker-compose complains about the <code>x-ports</code> clause, the message is actually telling you that your copy of docker-compose is obsolete and that you should upgrade.</p>
+<h2 id="dnsConsiderations">The Domain Name System<a class="headerlink" href="#dnsConsiderations" title="Permanent link">&para;</a></h2>
+<h3 id="normalDNS">Normal DNS<a class="headerlink" href="#normalDNS" title="Permanent link">&para;</a></h3>
+<p>If you have a DNS server running somewhere in your catenet, you can ask ZeroTier to propagate that information to your ZeroTier clients. It works the same way as a DHCP server can be configured to provide the IP addresses of DNS servers when handing out leases.</p>
+<p>It is a two-step process:</p>
+<ol>
+<li>
+<p>In ZeroTier Central, find the "DNS" area, complete the (optional) "Search Domain" and (required) "Server Address" fields, then click <kbd>Submit</kbd>.</p>
+<p>Examples. In <a href="#topology4">Topology&nbsp;4</a>, suppose the DNS server (eg PiHole or BIND9) is host:</p>
+<ul>
+<li><mark>A</mark>, then "Server Address" = 10.244.0.1 (preferred) or 192.168.203.50 (less preferred);</li>
+<li><mark>B</mark>, then "Server Address" = 192.168.203.60 </li>
+</ul>
+</li>
+<li>
+<p>Each client needs to be instructed to accept the DNS configuration:</p>
+<ul>
+<li>iOS clients: always enabled.</li>
+<li>
+<p>Linux clients: execute the command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zerotier<span class="w"> </span>zerotier-cli<span class="w"> </span><span class="nb">set</span><span class="w"> </span>«yourNetworkID»<span class="w"> </span><span class="nv">allowDNS</span><span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+<p>See <a href="#cliOptionSet">change option</a> for an explanation of the output and how to turn the option off.</p>
+</li>
+<li>
+<p>macOS clients: open the ZeroTier menu, then the sub-menu for the Network ID, then enable "Allow DNS Configuration".</p>
+</li>
+<li>Android and Windows clients: follow your nose.</li>
+</ul>
+</li>
+</ol>
+<p>Notes:</p>
+<ul>
+<li>Notice that clients need to opt-in to receiving DNS via ZeroTier. It is generally more appropriate for remote clients to do this than devices attached to a home network. This is probably why ZeroTier-managed DNS is "always on" for iOS clients. Android clients may be the same. For local clients, is usually better to let DHCP hand out DNS servers with the lease.</li>
+<li>
+<p>There are reports of <code>allowDNS</code> being unreliable on Linux clients. If you have trouble on Linux, try disabling <code>allowDNS</code> and add the DNS server(s) to:</p>
+<div class="language-text highlight"><pre><span></span><code>/etc/resolvconf.conf
+</code></pre></div>
+</li>
+</ul>
+<h3 id="mDNS">Multicast DNS<a class="headerlink" href="#mDNS" title="Permanent link">&para;</a></h3>
+<p>The ZeroTier Cloud relays multicast traffic. That means that multicast DNS (mDNS) names are propagated between ZeroTier clients and you can use those names in connection requests.</p>
+<p>In terms of <a href="#topology4">Topology&nbsp;4</a>, <mark>A</mark>, <mark>F</mark> and <mark>G</mark> can all reach each other using mDNS names. For example:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">pi@a:~$ </span>ssh<span class="w"> </span>pi@f.local
+</code></pre></div>
+<p>However, even if <mark>B</mark> and <mark>C</mark> were advertising mDNS names over 192.168.203.0/24, they would be unreachable from <mark>D</mark>, <mark>E</mark>, <mark>F</mark> and <mark>G</mark> using those mDNS names because <mark>B</mark> and <mark>C</mark> are not ZeroTier clients. The same applies to reaching <mark>D</mark> and <mark>E</mark> from <mark>A</mark>, <mark>B</mark>, <mark>C</mark> or <mark>G</mark> using mDNS names.</p>
+<h2 id="addressConflicts">Resolving address-range conflicts<a class="headerlink" href="#addressConflicts" title="Permanent link">&para;</a></h2>
+<p>As your network infrastructure becomes more complex, you may find that you occasionally run into address-range conflicts that force you to consider renumbering.</p>
+<p>ZeroTier Central is where you define the subnet used by the ZeroTier Cloud (eg 10.244.0.0/16), while your home router is generally where you define the subnets used on your home networks.</p>
+<p>Docker typically allocates its internal subnets from 172.16/12 but it can sometimes venture into 192.168/16. Docker tries to stay clear of anything that is in use but it doesn't always have full visibility into every corner of your private catenet.</p>
+<p>The IOTstack menu adds the following to your compose file:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">networks</span><span class="p">:</span>
+
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<span class="w">    </span><span class="nt">ipam</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+
+<span class="w">  </span><span class="nt">nextcloud</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<span class="w">    </span><span class="nt">internal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">ipam</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+</code></pre></div>
+<p>That structure tells docker-compose that it should construct two networks:</p>
+<ul>
+<li><code>iotstack_default</code></li>
+<li><code>iotstack_nextcloud</code></li>
+</ul>
+<p>but leaves it up to docker-compose to work out the details. If you need more control, you can tell docker-compose to use specific subnets by adding two lines to each network definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">networks</span><span class="p">:</span>
+
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<span class="w">    </span><span class="nt">ipam</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">subnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.0.0/22</span>
+
+<span class="w">  </span><span class="nt">nextcloud</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<span class="w">    </span><span class="nt">internal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">ipam</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">subnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.4.0/22</span>
+</code></pre></div>
+<p>A /22 is sufficient for 1,021 containers. That may seem like overkill but it doesn't really affect anything. Nevertheless, no part of those subnet prefixes is any kind of "magic number". You should feel free to use whatever subnet definitions are appropriate to your needs.</p>
+<p>Note:</p>
+<ul>
+<li>If you are never going to run NextCloud on your Raspberry Pi, you can omit that network definition entirely. Doing so will silence unnecessary messages from docker-compose.</li>
+<li>
+<p>The <code>172.30.0.0/22</code> and <code>172.30.4.0/22</code> subnets (or whatever alternative ranges you choose) are <em>private</em> to the host where IOTstack is installed. That means you can re-use these same subnets on multiple hosts (Raspberry Pis or other supported platforms), irrespective of whether those hosts are at the same site (like <mark>A</mark> and <mark>B</mark>) or distributed across multiple sites (like <mark>A</mark> and <mark>F</mark>).</p>
+<blockquote>
+<p>The only time you would need to consider adjusting the subnet ranges is if you happened to be running two or more instances of IOTstack on the same host, simultaneously.</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="globalAddressing">Global addressing<a class="headerlink" href="#globalAddressing" title="Permanent link">&para;</a></h2>
+<p>Everything in this documentation assumes you are using RFC1918 private ranges throughout your catenet. ZeroTier Cloud makes the same assumption.</p>
+<p>If some parts of your private catenet are using public addressing (either officially allocated to you or "misappropriated" like the 28/7 network), you <em>may</em> need to enable assignment of Global addressing:</p>
+<ul>
+<li>iOS clients: not mentioned - likely enabled by default.</li>
+<li>
+<p>Linux clients: execute the command:</p>
+<div class="language-text highlight"><pre><span></span><code>$ docker exec zerotier zerotier-cli set «yourNetworkID» allowGlobal=1
+</code></pre></div>
+<p>See <a href="#cliOptionSet">change option</a> for an explanation of the output and how to turn the option off.</p>
+</li>
+<li>
+<p>macOS clients: open the ZeroTier menu, then the sub-menu for the Network ID, then enable "Allow Assignment of Global IPs".</p>
+</li>
+<li>Android and Windows clients: follow your nose.</li>
+</ul>
+<h2 id="aboutAllowManaged">Allow Managed Addresses<a class="headerlink" href="#aboutAllowManaged" title="Permanent link">&para;</a></h2>
+<p>The "Allow Managed Addresses" command (aka <code>allowManaged</code> option) is enabled by default. It gives ZeroTier permission to propagate IP addresses and route assignments. It is not a good idea to turn it off. If you turn it off accidentally, you can re-enable it either in the GUI or via:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zerotier<span class="w"> </span>zerotier-cli<span class="w"> </span><span class="nb">set</span><span class="w"> </span>«yourNetworkID»<span class="w"> </span><span class="nv">allowManaged</span><span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+<p>See <a href="#cliOptionSet">change option</a> for an explanation of the output.</p>
+<h2 id="usefulCommands">Useful Commands<a class="headerlink" href="#usefulCommands" title="Permanent link">&para;</a></h2>
+<p>The commands in this section are given using this syntax:</p>
+<div class="language-text highlight"><pre><span></span><code>$ zerotier-cli command {argument …}
+</code></pre></div>
+<p>When ZeroTier client software is running in a container, you can execute commands:</p>
+<ul>
+<li>
+<p>directly using <code>docker exec</code>:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zerotier<span class="w"> </span>zerotier-cli<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="o">{</span>argument<span class="w"> </span>…<span class="o">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>or by first opening a shell into the container:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>zerotier<span class="w"> </span>/bin/ash
+<span class="gp"># </span>zerotier-cli<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="o">{</span>argument<span class="w"> </span>…<span class="o">}</span>
+<span class="gp"># </span><span class="nb">exit</span>
+<span class="gp">$</span>
+</code></pre></div>
+</li>
+</ul>
+<p>On macOS you can run the commands from a Terminal window with <code>sudo</code>:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>zerotier-cli<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="o">{</span>argument<span class="w"> </span>…<span class="o">}</span>
+</code></pre></div>
+<p>Windows, presumably, has similar functionality.</p>
+<h3 id="cliNetworks">Networks<a class="headerlink" href="#cliNetworks" title="Permanent link">&para;</a></h3>
+<h4 id="cliNetworksCheck">Check networks<a class="headerlink" href="#cliNetworksCheck" title="Permanent link">&para;</a></h4>
+<p>To check the ZeroTier networks the client has joined:</p>
+<div class="language-text highlight"><pre><span></span><code>$ zerotier-cli listnetworks
+200 listnetworks &lt;nwid&gt; &lt;name&gt; &lt;mac&gt; &lt;status&gt; &lt;type&gt; &lt;dev&gt; &lt;ZT assigned ips&gt;
+200 listnetworks 900726788b1df8e2 My_Great_Network 33:b0:c6:2e:ad:2d OK PRIVATE feth4026 10.244.0.1/16
+</code></pre></div>
+<h4 id="cliNetworksJoin">Join network<a class="headerlink" href="#cliNetworksJoin" title="Permanent link">&para;</a></h4>
+<p>To join a new ZeroTier network:</p>
+<div class="language-text highlight"><pre><span></span><code>$ zerotier-cli join «NewNetworkID» 
+</code></pre></div>
+<h4 id="cliNetworksLeave">Leave network<a class="headerlink" href="#cliNetworksLeave" title="Permanent link">&para;</a></h4>
+<p>To leave an existing ZeroTier network:</p>
+<div class="language-text highlight"><pre><span></span><code>$ zerotier-cli leave «ExistingNetworkID» 
+</code></pre></div>
+<h3 id="cliInfo">Client status<a class="headerlink" href="#cliInfo" title="Permanent link">&para;</a></h3>
+<p>To check the status of a device running ZeroTier client:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>zerotier-cli<span class="w"> </span>info
+<span class="go">200 info 340afcaa2a 1.10.1 ONLINE</span>
+</code></pre></div>
+<h3 id="cliPeer">Peer status<a class="headerlink" href="#cliPeer" title="Permanent link">&para;</a></h3>
+<p>To check the status of peers in your ZeroTier Networks:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>zerotier-cli<span class="w"> </span>peers
+<span class="go">200 peers</span>
+<span class="go">&lt;ztaddr&gt;   &lt;ver&gt;  &lt;role&gt; &lt;lat&gt; &lt;link&gt; &lt;lastTX&gt; &lt;lastRX&gt; &lt;path&gt;</span>
+<span class="go">7492fd0dc5 1.10.1 LEAF       2 DIRECT 5407     5407     17.203.229.120/47647</span>
+<span class="go">f14094b92a 1.10.1 LEAF     227 DIRECT 1976     1976     34.209.49.222/54643</span>
+<span class="go">C88262CD64 1.10.1 LEAF       2 DIRECT 5411     5408     192.168.1.70/64408</span>
+<span class="go">…</span>
+</code></pre></div>
+<p>Tip:</p>
+<ul>
+<li>
+<p>In the <code>&lt;link&gt;</code> column, <code>DIRECT</code> means ZeroTier has been able to arrange for <em>this</em> client (where you are running the command) and <em>that</em> peer to communicate directly. In other words, the traffic is not being relayed through ZeroTier's servers. Seeing <code>RELAY</code> in this field is not necessarily a bad thing but, to quote from the ZeroTier documentation:</p>
+<blockquote>
+<p>If you see the peer you're trying to contact in the RELAY state, that means packets are bouncing through our root servers because a direct connection between peers cannot be established. Side effects of RELAYING are increased latency and possible packet loss. See "<a href="https://docs.zerotier.com/zerotier/troubleshooting#router-configuration-tips">Router Configuration Tips</a>" above for how to resolve this.</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="cliOptions">Options<a class="headerlink" href="#cliOptions" title="Permanent link">&para;</a></h3>
+<p>At the time of writing, these options are defined:</p>
+<table>
+<thead>
+<tr>
+<th>option</th>
+<th>Let ZeroTier …</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowDefault</td>
+<td>… modify the system's default route</td>
+</tr>
+<tr>
+<td>allowDNS</td>
+<td>… modify the system's DNS settings</td>
+</tr>
+<tr>
+<td>allowGlobal</td>
+<td>… manage IP addresses and Route assignments outside the RFC1918 ranges</td>
+</tr>
+<tr>
+<td>allowManaged</td>
+<td>… manage IP addresses and Route assignments</td>
+</tr>
+</tbody>
+</table>
+<h4 id="cliOptionCheck">Check option<a class="headerlink" href="#cliOptionCheck" title="Permanent link">&para;</a></h4>
+<p>To check an option:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>zerotier-cli<span class="w"> </span>get<span class="w"> </span>«yourNetworkID»<span class="w"> </span>«option»
+</code></pre></div>
+<p>The result is either "0" (false) or "1" (true). Example:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>zerotier-cli<span class="w"> </span>get<span class="w"> </span>900726788b1df8e2<span class="w"> </span>allowDNS
+<span class="go">0</span>
+</code></pre></div>
+<h4 id="cliOptionSet">Change option<a class="headerlink" href="#cliOptionSet" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>To enable an option:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>zerotier-cli<span class="w"> </span><span class="nb">set</span><span class="w"> </span>«yourNetworkID»<span class="w"> </span>«option»<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</li>
+<li>
+<p>To disable an option:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>zerotier-cli<span class="w"> </span><span class="nb">set</span><span class="w"> </span>«yourNetworkID»<span class="w"> </span>«option»<span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+</li>
+</ul>
+<p>The response to changing an option is a large amount of JSON output. The updated state of the options is near the start. In practice, you can limit the output to just the options with a <code>grep</code>:</p>
+<div class="language-text highlight"><pre><span></span><code>$ zerotier-cli set 900726788b1df8e2 allowDNS=0 | grep allow
+ &quot;allowDNS&quot;: false,
+ &quot;allowDefault&quot;: false,
+ &quot;allowGlobal&quot;: false,
+ &quot;allowManaged&quot;: true,
+</code></pre></div>
+<h2 id="about-persistent-storage">About persistent storage<a class="headerlink" href="#about-persistent-storage" title="Permanent link">&para;</a></h2>
+<p>Both ZeroTier-client and ZeroTier-router use the same persistent storage area. Should you choose to do so, you can freely switch back and forth between the -client and -router containers without worrying about the persistent storage area.</p>
+<p>The contents of ZeroTier's persistent storage uniquely identify the client to the ZeroTier Cloud. Unlike WireGuard, it is neither safe nor prudent to copy ZeroTier's persistent storage from one Raspberry Pi to another.</p>
+<p>An exception to this would be where you actually intend to move a ZeroTier client's identity to a different machine. That will work, providing your migration procedure never results in the same ZeroTier identity being in use on two machines at the same time.</p>
+<p>You can erase ZeroTier's persistent storage area like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker-compose<span class="w"> </span>down<span class="w"> </span><span class="o">{</span>zerotier-client<span class="w"> </span><span class="p">|</span><span class="w"> </span>zerotier-router<span class="o">}</span>
+<span class="gp">$ </span>sudo<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>./volumes/zerotier-one
+</code></pre></div>
+<p>Tips:</p>
+<ol>
+<li>always double-check <code>sudo</code> commands <strong>before</strong> hitting <kbd>Enter</kbd>.</li>
+<li>see also <a href="../../Basic_setup/#downContainer">if downing a container doesn't work</a></li>
+</ol>
+<p>Erasing persistent storage destroys the client's authorisation (cryptographic credentials). If you start the container again, it will construct a new identity and you will need to re-authorise the client in ZeroTier Central. You should also delete the obsolete client authorisation.</p>
+<h2 id="container-maintenance">Container maintenance<a class="headerlink" href="#container-maintenance" title="Permanent link">&para;</a></h2>
+<p>ZeroTier (either -client or -router) can be kept up-to-date with routine "pulls":</p>
+<div class="language-text highlight"><pre><span></span><code>$ cd ~/IOTstack
+$ docker-compose pull
+$ docker-compose up -d
+$ docker system prune -f
+</code></pre></div>
+<h2 id="ios-tip">iOS tip<a class="headerlink" href="#ios-tip" title="Permanent link">&para;</a></h2>
+<p>On iOS, you must decide whether to select "Custom DNS"  when you define the VPN. If you want to change your mind, you need to delete the connection and start over.</p>
+<blockquote>
+<p>Providing you don't delete the Zerotier app, the client's identity remains unchanged so you won't need to re-authorise the client in ZeroTier Central.</p>
+</blockquote>
+<p>An example of when you might want to enable Custom DNS is if you want your remote clients to use PiHole for name services. If PiHole is running on the same Raspberry Pi as your Zerotier instance, you should use the IP address associated with the Raspberry Pi's interface to the ZeroTier Cloud (ie 10.244.0.1 in the example topologies).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>
