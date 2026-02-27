@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # version - MUST be exactly 7 characters!
-UPDATE="2025v01"
+UPDATE="2026v01"
 
 #----------------------------------------------------------------------
 # The intention of this script is that it should be able to be run
@@ -13,6 +13,9 @@ UPDATE="2025v01"
 
 # overuse of sudo is a very common problem among new IOTstack users
 [ "$EUID" -eq 0 ] && echo "This script should NOT be run using sudo" && exit 1
+
+# the name of this script is
+SCRIPT=$(basename "${0}")
 
 # where is this script is running?
 WHERE=$(dirname "$(realpath "$0")")
@@ -47,7 +50,7 @@ COMPOSE_SYMLINK_PATH="/usr/local/bin/docker-compose"
 CMDLINE_OPTIONS="cgroup_memory=1 cgroup_enable=memory"
 
 # dependencies installed via apt
-APT_DEPENDENCIES="curl git jq pwgen python3-pip python3-dev python3-virtualenv uuid-runtime whiptail"
+APT_DEPENDENCIES="curl git jq pwgen python3-pip python3-dev python3-virtualenv rsync sqlite3 uuid-runtime whiptail"
 
 # minimum version requirements
 DOCKER_VERSION_MINIMUM="24"
@@ -72,11 +75,12 @@ LOGOUT_REQUIRED=false
 # Returns:
 #    JSON string with version, commit ID and exit code
 # Note:
-#    If $0 is not under Git control (eg a zip download of IOTstack) then
-#    the commit field will be an empty string.
+#    If $SCRIPT is not under Git control (eg a zip download of IOTstack)
+#    then the commit field will be an empty string.
 #
 version_json() {
-	echo "{\"version\": \"${UPDATE}\", \"commit\": \"$(git log -n 1 --pretty=format:%H -- "${0}" 2>/dev/null)\", \"exitCode\": ${1}}"
+	local commitID=$(git -C "${IOTSTACK}" log -n 1 --pretty=format:%H -- "${SCRIPT}" 2>/dev/null)
+	echo "{\"version\": \"${UPDATE}\", \"commit\": \"${commitID}\", \"exitCode\": ${1}}"
 }
 
 
