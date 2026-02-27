@@ -14,7 +14,7 @@ def main():
   global mainMenuList
   global currentMenuItemIndex
   global hideHelpText
-  
+
   try: # If not already set, then set it.
     hideHelpText = hideHelpText
   except:
@@ -24,11 +24,13 @@ def main():
 
   def runBackup():
     global needsRender
-    print("Execute Backup:")
-    subprocess.call("./scripts/backup.sh", shell=True)
-    print("")
-    print("Backup completed.")
-    print("Press [Up] or [Down] arrow key to show the menu if it has scrolled too far.")
+    with term.fullscreen(), term.cbreak():
+        print("Execute Backup:")
+        subprocess.call("./scripts/backup.sh", shell=True)
+        print("")
+        print("Backup completed.")
+        print("Press [Up] or [Down] arrow key to show the menu if it has scrolled too far.")
+        term.inkey()
     time.sleep(1)
     needsRender = 1
     return True
@@ -128,12 +130,12 @@ def main():
       toPrint += "{bv}".format(bv=specialChars[renderMode]["borderVertical"])
 
       toPrint = term.center(toPrint)
-      
+
       print(toPrint)
 
   def mainRender(needsRender, menu, selection):
     term = Terminal()
-    
+
     if needsRender == 1:
       print(term.clear())
       print(term.move_y(6 - hotzoneLocation[0]))
@@ -156,7 +158,7 @@ def main():
           print(term.center(commonEmptyLine(renderMode)))
           print(term.center("{bv}      Not enough vertical room to render controls help text                     {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
           print(term.center(commonEmptyLine(renderMode)))
-        else: 
+        else:
           print(term.center(commonEmptyLine(renderMode)))
           print(term.center("{bv}      Controls:                                                                 {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
           print(term.center("{bv}      [Up] and [Down] to move selection cursor                                  {bv}".format(bv=specialChars[renderMode]["borderVertical"])))

@@ -48,6 +48,21 @@ else
   USER=$(whoami)
 fi
 
+# Print to log file or to log file and console?
+# 0 = only log
+# 1 = console and file
+VERBOSE=true
+# But we can't do it here thus too many positional args
+# changing will broke compatibility
+#while getopts "v" OPTION
+#do
+#  case $OPTION in
+#    v) VERBOSE=true
+#       ;;
+#  esac
+#done
+#echo "VERBOSE LEVEL: $VERBOSE"
+
 BASEDIR=./backups
 TMPDIR=./.tmp
 DOW=$(date +%u)
@@ -66,85 +81,124 @@ ROLLING="$BASEDIR/rolling/backup_$DOW.tar.gz"
 [ -d ./.tmp/backup ] || mkdir -p ./.tmp/backup
 [ -d ./.tmp/databases_backup ] || mkdir -p ./.tmp/databases_backup
 
-touch $LOGFILE
-echo ""  > $LOGFILE
-echo "### IOTstack backup generator log ###" >> $LOGFILE
-echo "Started At: $(date +"%Y-%m-%dT%H-%M-%S")" >> $LOGFILE
-echo "Current Directory: $(pwd)" >> $LOGFILE
-echo "Backup Type: $BACKUPTYPE" >> $LOGFILE
+#------------------------------------------------------------------------------
+# echo pass params and log to file LOGFILE
+# depend to global var VERBOSE
+# Example:
+# doLog "Something"
+#------------------------------------------------------------------------------
+doLog(){
+  # also we can log every command with timestamp
+  MSG=''
+  # Check if string is empty print empty line without timestamp
+  if [ -z "$*" ]
+  then
+    MSG=$(echo "$*")
+  else
+    MSG=$(echo "$(date '+%Y.%m.%dT%H:%M:%S') - ""$*")
+  fi
+  # with colors code it's looks very ugly
+  # taken from: https://stackoverflow.com/a/51141872/660753
+  MSG=$(echo "$MSG" | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g')
+
+  # write to console if VERBOSE is set
+  if [ $VERBOSE ]
+  then
+    # also on the screen lines not looking cool, remove \r symbol
+    echo "$MSG" | sed 's/\r/\n/g'
+  fi
+
+  # write to LOGFILE
+  echo "$MSG" >> "$LOGFILE"
+}
+#eof func doLog
+
+touch "$LOGFILE"
+doLog ""
+doLog "### IOTstack backup generator log ###"
+doLog "Started At: $(date +"%Y-%m-%dT%H-%M-%S")"
+doLog "Current Directory: $(pwd)"
+doLog "Backup Type: $BACKUPTYPE"
 
 if [[ "$BACKUPTYPE" -eq "1" || "$BACKUPTYPE" -eq "3" ]]; then
-  echo "Backup File: $BACKUPFILE" >> $LOGFILE
+  doLog "Backup File: $BACKUPFILE"
 fi
 
 if [[ "$BACKUPTYPE" -eq "2" || "$BACKUPTYPE" -eq "3" ]]; then
-  echo "Rolling File: $ROLLING" >> $LOGFILE
+  doLog "Rolling File: $ROLLING"
 fi
 
-echo "" >> $BACKUPLIST
+echo "" >> "$BACKUPLIST"
 
-echo "" >> $LOGFILE
-echo "Executing prebackup scripts" >> $LOGFILE
-bash ./scripts/backup_restore/pre_backup_complete.sh >> $LOGFILE 2>&1
+doLog ""
+doLog "Executing pre-backup scripts"
+# Output to log file
+docker-compose logs --no-color --tail="50" >> "$LOGFILE"
+doLog "$(bash ./scripts/backup_restore/pre_backup_complete.sh)"
 
-echo "./services/" >> $BACKUPLIST
-echo "./volumes/" >> $BACKUPLIST
-[ -f "./docker-compose.yml" ] && echo "./docker-compose.yml" >> $BACKUPLIST
-[ -f "./docker-compose.override.yml" ] && echo "./docker-compose.yml" >> $BACKUPLIST
-[ -f "./compose-override.yml" ] && echo "./compose-override.yml" >> $BACKUPLIST
-[ -f "./extra" ] && echo "./extra" >> $BACKUPLIST
-[ -f "./.tmp/databases_backup" ] && echo "./.tmp/databases_backup" >> $BACKUPLIST
-[ -f "./postbuild.sh" ] && echo "./postbuild.sh" >> $BACKUPLIST
-[ -f "./post_backup.sh" ] && echo "./post_backup.sh" >> $BACKUPLIST
-[ -f "./pre_backup.sh" ] && echo "./pre_backup.sh" >> $BACKUPLIST
+echo "./services/" >> "$BACKUPLIST"
+echo "./volumes/" >> "$BACKUPLIST"
+[ -f "./docker-compose.yml" ] && echo "./docker-compose.yml" >> "$BACKUPLIST"
+[ -f "./docker-compose.override.yml" ] && echo "./docker-compose.yml" >> "$BACKUPLIST"
+[ -f "./compose-override.yml" ] && echo "./compose-override.yml" >> "$BACKUPLIST"
+[ -f "./extra" ] && echo "./extra" >> "$BACKUPLIST"
+[ -f "./.tmp/databases_backup" ] && echo "./.tmp/databases_backup" >> "$BACKUPLIST"
+[ -f "./postbuild.sh" ] && echo "./postbuild.sh" >> "$BACKUPLIST"
+[ -f "./post_backup.sh" ] && echo "./post_backup.sh" >> "$BACKUPLIST"
+[ -f "./pre_backup.sh" ] && echo "./pre_backup.sh" >> "$BACKUPLIST"
 
-sudo tar -czf $TMPBACKUPFILE -T $BACKUPLIST >> $LOGFILE 2>&1
+doLog "Create temporary backup archive"
+doLog "$(sudo tar -czf "$TMPBACKUPFILE" -T "$BACKUPLIST" 2>&1)"
 
-[ -f "$ROLLING" ] && ROLLINGOVERWRITTEN=1 && rm -rf $ROLLING
+[ -f "$ROLLING" ] && ROLLINGOVERWRITTEN=1 && rm -rf "$ROLLING"
 
-sudo chown -R $USER:$USER $TMPDIR/backup* >> $LOGFILE 2>&1
+doLog "$(sudo chown -R "$USER":"$USER" $TMPDIR/backup* 2>&1 )"
 
+doLog "Create persistent backup archive"
 if [[ "$BACKUPTYPE" -eq "1" || "$BACKUPTYPE" -eq "3" ]]; then
-  cp $TMPBACKUPFILE $BACKUPFILE
+  cp "$TMPBACKUPFILE" "$BACKUPFILE"
 fi
 if [[ "$BACKUPTYPE" -eq "2" || "$BACKUPTYPE" -eq "3" ]]; then
-  cp $TMPBACKUPFILE $ROLLING
+  cp "$TMPBACKUPFILE" "$ROLLING"
 fi
 
 if [[ "$BACKUPTYPE" -eq "2" || "$BACKUPTYPE" -eq "3" ]]; then
   if [[ "$ROLLINGOVERWRITTEN" -eq 1 ]]; then
-    echo "Rolling Overwritten: True" >> $LOGFILE
+    doLog "Rolling Overwritten: True"
   else
-    echo "Rolling Overwritten: False" >> $LOGFILE
+    doLog "Rolling Overwritten: False"
   fi
 fi
 
-echo "Backup Size (bytes): $(stat --printf="%s" $TMPBACKUPFILE)" >> $LOGFILE
-echo "" >> $LOGFILE
+doLog "Backup Size (bytes): $(stat --printf="%s" "$TMPBACKUPFILE")"
+doLog ""
 
-echo "Executing postbackup scripts" >> $LOGFILE
-bash ./scripts/backup_restore/post_backup_complete.sh >> $LOGFILE 2>&1
-echo "" >> $LOGFILE
+doLog "Executing post-backup scripts"
+# Output to log file
+docker-compose logs --no-color --tail="50" >> "$LOGFILE"
+doLog "$(bash ./scripts/backup_restore/post_backup_complete.sh)"
+doLog ""
 
-echo "Finished At: $(date +"%Y-%m-%dT%H-%M-%S")" >> $LOGFILE
-echo "" >> $LOGFILE
+doLog "Finished At: $(date +"%Y-%m-%dT%H-%M-%S")"
+doLog ""
 
 if [[ -f "$TMPBACKUPFILE" ]]; then
-  echo "Items backed up:" >> $LOGFILE
-  cat $BACKUPLIST >> $LOGFILE 2>&1
-  echo "" >> $LOGFILE
-  echo "Items Excluded:" >> $LOGFILE
-  echo " - No items" >> $LOGFILE 2>&1
-  rm -rf $BACKUPLIST >> $LOGFILE 2>&1
-  rm -rf $TMPBACKUPFILE >> $LOGFILE 2>&1
+  doLog "Items backed up:"
+  doLog "$(cat "$BACKUPLIST" 2>&1)"
+  doLog ""
+  doLog "Items Excluded:"
+  doLog " - No items"
+  doLog "$(rm -rf "$BACKUPLIST" 2>&1)"
+  doLog "$(rm -rf "$TMPBACKUPFILE" 2>&1)"
 else
-  echo "Something went wrong backing up. The temporary backup file doesn't exist. No temporary files were removed"
-  echo "Files: "
-  echo "  $BACKUPLIST"
+  doLog "Something went wrong backing up. The temporary backup file doesn't exist. No temporary files were removed"
+  doLog "Files: "
+  doLog "  $BACKUPLIST"
 fi
 
-echo "" >> $LOGFILE
-echo "### End of log ###" >> $LOGFILE
-echo "" >> $LOGFILE
+doLog ""
+doLog "### End of log ###"
+doLog ""
 
-cat $LOGFILE
+# we don't need to print LOGFILE if we are in verbose mode
+$VERBOSE != true && cat "$LOGFILE"
