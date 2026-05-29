@@ -1,6 +1,6 @@
   influxdb2:
     container_name: influxdb2
-    image: "influxdb:latest"
+    image: "influxdb:2"
     restart: unless-stopped
     environment:
       - TZ=${TZ:-Etc/UTC}
