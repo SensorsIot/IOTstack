@@ -1,6 +1,6 @@
   influxdb:
     container_name: influxdb
-    image: "influxdb:1.11"
+    image: "influxdb:1.12"
     restart: unless-stopped
     user: "0"
     ports:
