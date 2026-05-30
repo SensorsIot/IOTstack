@@ -34,6 +34,14 @@ OneMarcFifty:
 
 	[![20210202](http://img.youtube.com/vi/5a2qhKMetGU/0.jpg)](https://www.youtube.com/watch?v=5a2qhKMetGU)
 
+## hardware requirements
+
+IOTstack runs on Raspberry Pi 4 or 5. For a stable 24/7 setup, two things matter most:
+
+**Power supply** — Docker containers under sustained load can push a Pi 4 to 2–3A and a Pi 5 to 3–5A depending on connected peripherals (USB drives, HATs, NVMe). An underpowered supply causes random crashes and SD card corruption. Use the [Raspberry Pi Power Supply Calculator](https://raspberry.tips/en/raspberry-pi-power-supply-calculator-how-many-watts-does-my-project-need) to estimate the wattage your specific setup needs.
+
+**Storage** — SD cards wear out faster under continuous Docker log writes. An SSD (USB or NVMe HAT) is strongly recommended for production use. If you run on an SD card, [this lifespan calculator](https://raspberry.tips/en/calculate-raspberry-pi-sd-card-lifespan-test-now) estimates how long it will last based on your workload.
+
 ### getting started
 
 See [Getting Started](https://sensorsiot.github.io/IOTstack/Getting-Started) in the [IOTstack Wiki](https://sensorsiot.github.io/IOTstack/). It includes:
