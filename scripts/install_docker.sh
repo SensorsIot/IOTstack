@@ -19,7 +19,7 @@ if [ "$1" == "install" ]; then
     echo "Docker already installed" >&2
   else
     echo "Install Docker" >&2
-    curl -fsSL https://get.docker.com | sh
+    curl -fsSL https://get.docker.com | sudo sh
     RESTART_REQUIRED="true"
     sudo usermod -aG docker $USER
   fi
