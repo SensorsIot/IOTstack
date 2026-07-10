@@ -246,6 +246,9 @@ $ docker-compose restart telegraf
 ```
 
 The `grep` strips comment lines and the `sudo tee` is a safe way of appending the result to `telegraf.conf`. The `restart` causes Telegraf to notice the change.
+This result in the Telegraf service depending on the Mosquitto service, as such
+you may want to edit `docker-compose.yml` and add `- mosquitto` to the
+`depends_on:` of the telegraf service.
 
 ## Getting a clean slate { #cleanSlate }
 
