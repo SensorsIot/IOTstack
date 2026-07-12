@@ -28,7 +28,6 @@ from deps.issue_viewer import compactIssueRows, issueDisplayRows
 from deps.environment_options import generateEnvironmentSecret
 from deps.service_hooks import (
   HookContext,
-  getHookApiVersion,
   runServiceHook,
   serviceHookAvailable,
 )
@@ -397,7 +396,6 @@ class ServiceHookTests(unittest.TestCase):
     serviceName = next(iter(services))
     context = HookContext(services, serviceName, renderMode="ascii")
 
-    self.assertEqual(2, getHookApiVersion(buildScript))
     self.assertTrue(serviceHookAvailable(buildScript, "options", context))
     self.assertTrue(serviceHookAvailable(buildScript, "runChecks", context))
     self.assertEqual({}, runServiceHook(buildScript, "runChecks", context))
@@ -407,7 +405,6 @@ class ServiceHookTests(unittest.TestCase):
     services = self.yaml.load((ROOT / ".templates/openhab/service.yml").read_text())
     context = HookContext(services, "openhab", renderMode="ascii")
 
-    self.assertEqual(2, getHookApiVersion(buildScript))
     self.assertTrue(serviceHookAvailable(buildScript, "runChecks", context))
     self.assertEqual({}, runServiceHook(buildScript, "runChecks", context))
 
@@ -492,16 +489,16 @@ class ServiceHookTests(unittest.TestCase):
           os.chdir(previousDirectory)
         self.assertFalse(result)
 
-  def test_hooks_without_an_api_version_are_rejected(self):
+  def test_hooks_do_not_require_version_marker(self):
     buildScript = ROOT / "tests/fixtures/legacy_build.py"
     context = HookContext({}, "legacy-service", renderMode="ascii")
 
-    with self.assertRaisesRegex(ValueError, "HOOK_API_VERSION = 2"):
-      serviceHookAvailable(buildScript, "runChecks", context)
+    self.assertTrue(serviceHookAvailable(buildScript, "runChecks", context))
+    self.assertEqual({}, runServiceHook(buildScript, "runChecks", context))
 
-  def test_every_bundled_hook_uses_modern_api(self):
+  def test_every_bundled_hook_omits_version_marker(self):
     for buildScript in (ROOT / ".templates").glob("*/build.py"):
-      self.assertEqual(2, getHookApiVersion(buildScript), str(buildScript))
+      self.assertNotIn("HOOK_API_VERSION", buildScript.read_text(), str(buildScript))
 
   def test_every_bundled_hook_can_be_inspected(self):
     servicesWithOptions = {
@@ -699,7 +696,7 @@ class SourceRegressionTests(unittest.TestCase):
 
   def test_contributor_guide_uses_modern_hook_api(self):
     source = (ROOT / "docs/Developers/BuildStack-Services.md").read_text()
-    self.assertIn("HOOK_API_VERSION = 2", source)
+    self.assertNotIn("HOOK_API_VERSION", source)
     self.assertIn("def runChecks(context):", source)
     self.assertNotIn("eval(toRun)", source)
     self.assertNotIn("buildHooks = {}", source)

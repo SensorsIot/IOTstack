@@ -66,13 +66,7 @@ Path: `./scripts/buildstack_menu.py`
 
 The intended workflow is to copy `./.templates/example_template`, rename the directory, rename `example_service.yml` to `service.yml`, make its root service key match the new directory name, and optionally edit `build.py`. Service hooks are ordinary Python modules loaded with the standard-library `importlib` machinery.
 
-A new `build.py` must declare hook API version 2:
-
-```python
-HOOK_API_VERSION = 2
-```
-
-It may define any of these optional functions. Delete the functions the service does not need:
+A new `build.py` may define any of these optional functions. Delete the functions the service does not need:
 
 ```python
 def runChecks(context):
@@ -99,7 +93,7 @@ No classes, decorators, registration dictionaries, package installation, or glob
 
 The loader and validation live in `scripts/deps/service_hooks.py`. Contributors should not need to modify that file.
 
-All bundled service hooks use API version 2. A hook without the version declaration is rejected with an error pointing to the required declaration. Existing generated Compose projects do not depend on the hook loader and continue to run normally.
+Hook compatibility is defined by the callable names and context contract; no version declaration is required.
 
 ### Selection and deselection
 

@@ -48,19 +48,9 @@ See [Build Stack Password Options](./BuildStack-RandomPassword.md) for complete 
 
 ## Optional hook file
 
-A hook file is an ordinary Python module and must declare API version 2:
+A hook file is an ordinary Python module. Add only the functions the service needs:
 
 ``` python
-#!/usr/bin/env python3
-
-HOOK_API_VERSION = 2
-```
-
-Add only the functions the service needs:
-
-``` python
-HOOK_API_VERSION = 2
-
 def runChecks(context):
   return {}
 
@@ -100,8 +90,6 @@ import os
 import subprocess
 
 from deps.consts import templatesDirectory
-
-HOOK_API_VERSION = 2
 
 def runChecks(context):
   return {}
@@ -149,4 +137,4 @@ python3 -m unittest discover -v
 docker-compose config -q
 ```
 
-All bundled `build.py` files are inspected by the regression tests, including API version, hook availability, and return contracts.
+All bundled `build.py` files are inspected by the regression tests, including hook availability and return contracts.

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-HOOK_API_VERSION = 2
 
 issues = {} # Returned issues dict
 haltOnErrors = True

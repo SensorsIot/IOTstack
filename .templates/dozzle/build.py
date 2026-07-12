@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-HOOK_API_VERSION = 2
 OPTIONS_AVAILABLE = False
 
 issues = {} # Returned issues dict

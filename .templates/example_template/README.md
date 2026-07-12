@@ -6,13 +6,7 @@
 4. Edit the Compose settings for the container.
 5. Delete `build.py` if the service needs no menu hooks. Otherwise, keep only the hook functions you need.
 
-A hook file starts with:
-
-```python
-HOOK_API_VERSION = 2
-```
-
-The optional functions are:
+The optional hook functions are:
 
 ```python
 def runChecks(context):

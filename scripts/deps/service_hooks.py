@@ -1,11 +1,9 @@
-import ast
 import hashlib
 import importlib.util
 import pathlib
 import sys
 
 
-HOOK_API_VERSION = 2
 HOOK_FUNCTIONS = {
   "options": "runOptionsMenu",
   "preBuild": "preBuild",
@@ -28,31 +26,7 @@ class HookContext:
     self.terminal = terminal
 
 
-def getHookApiVersion(buildScriptPath):
-  """Read the declared API version without executing the hook file."""
-  sourcePath = pathlib.Path(buildScriptPath)
-  tree = ast.parse(sourcePath.read_text(), filename=str(sourcePath))
-  for statement in tree.body:
-    if not isinstance(statement, ast.Assign):
-      continue
-    for target in statement.targets:
-      if isinstance(target, ast.Name) and target.id == "HOOK_API_VERSION":
-        value = getattr(statement.value, "value", None)
-        if isinstance(value, int):
-          return value
-  return 1
-
-
-def _requireSupportedApiVersion(buildScriptPath):
-  version = getHookApiVersion(buildScriptPath)
-  if version != HOOK_API_VERSION:
-    raise ValueError(
-      "%s: service hooks must declare HOOK_API_VERSION = %s"
-      % (buildScriptPath, HOOK_API_VERSION)
-    )
-
-
-def _loadModernHook(buildScriptPath, serviceName):
+def _loadHook(buildScriptPath, serviceName):
   sourcePath = pathlib.Path(buildScriptPath).resolve()
   digest = hashlib.sha1(str(sourcePath).encode("utf-8")).hexdigest()[:12]
   safeServiceName = "".join(character if character.isalnum() else "_" for character in serviceName)
@@ -69,10 +43,6 @@ def _loadModernHook(buildScriptPath, serviceName):
     sys.modules.pop(moduleName, None)
     raise
 
-  if getattr(module, "HOOK_API_VERSION", None) != HOOK_API_VERSION:
-    raise ValueError(
-      "%s must declare HOOK_API_VERSION = %s" % (sourcePath, HOOK_API_VERSION)
-    )
   return module
 
 
@@ -80,8 +50,7 @@ def serviceHookAvailable(buildScriptPath, hookName, context):
   if hookName not in HOOK_FUNCTIONS:
     raise ValueError("Unknown service hook '%s'" % hookName)
 
-  _requireSupportedApiVersion(buildScriptPath)
-  module = _loadModernHook(buildScriptPath, context.serviceName)
+  module = _loadHook(buildScriptPath, context.serviceName)
   if hookName == "options" and getattr(module, "OPTIONS_AVAILABLE", True) is False:
     return False
   return callable(getattr(module, HOOK_FUNCTIONS[hookName], None))
@@ -91,8 +60,7 @@ def runServiceHook(buildScriptPath, hookName, context):
   if hookName not in HOOK_FUNCTIONS:
     raise ValueError("Unknown service hook '%s'" % hookName)
 
-  _requireSupportedApiVersion(buildScriptPath)
-  module = _loadModernHook(buildScriptPath, context.serviceName)
+  module = _loadHook(buildScriptPath, context.serviceName)
   hook = getattr(module, HOOK_FUNCTIONS[hookName], None)
   if not callable(hook):
     return {} if hookName == "runChecks" else None

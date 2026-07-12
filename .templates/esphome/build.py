@@ -6,7 +6,6 @@ import subprocess
 from deps.consts import templatesDirectory
 
 
-HOOK_API_VERSION = 2
 UDEV_RULES_FILE = "88-tty-iotstack-esphome.rules"
 UDEV_RULES_DIRECTORY = "/etc/udev/rules.d"
 

@@ -6,7 +6,6 @@ Copy this file with the example template, then delete any hooks your service
 does not need. IOTstack discovers the functions by name.
 """
 
-HOOK_API_VERSION = 2
 
 
 def runChecks(context):
