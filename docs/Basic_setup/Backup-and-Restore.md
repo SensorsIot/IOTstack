@@ -38,6 +38,8 @@ Backups:
 
   * You can find the backups in the ./backups/ folder. With rolling being in ./backups/rolling/ and date backups in ./backups/backup/
   * Log files can also be found in the ./backups/logs/ directory.
+  * Full backups include the root `.env` file so required credentials and device paths can be restored. Treat backup archives as sensitive data.
+
 
 ### Examples:
 
@@ -71,7 +73,7 @@ There are 2 ways to run a restore:
 The restore script takes 2 arguments:
 
 * Filename: The name of the backup file. The file must be present in the `./backups/` directory, or a subfolder in it. That means it should be moved from `./backups/backup` to `./backups/`, or that you need to specify the `backup` portion of the directory (see examples)
-* NoAsk: If a second parameter is present, is acts as setting the no ask flag to true. 
+* NoAsk: Pass the literal `noask` as the second parameter to skip the destructive-operation confirmation prompt.
 
 ## Pre and post script hooks
 The script checks if there are any pre and post back up hooks to execute commands. Both of these files will be included in the backup, and have also been added to the `.gitignore` file, so that they will not be touched when IOTstack updates.

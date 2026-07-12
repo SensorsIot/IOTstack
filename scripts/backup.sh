@@ -25,7 +25,7 @@
 #   sudo bash ./scripts/backup.sh 2 pi
 #     This will only produce a backup in the rollowing folder and change all the permissions to the 'pi' user.
 
-if [ -d "./menu.sh" ]; then
+if [ ! -f "./menu.sh" ]; then
 	echo "./menu.sh file was not found. Ensure that you are running this from IOTstack's directory."
   exit 1
 fi
@@ -90,25 +90,39 @@ bash ./scripts/backup_restore/pre_backup_complete.sh >> $LOGFILE 2>&1
 echo "./services/" >> $BACKUPLIST
 echo "./volumes/" >> $BACKUPLIST
 [ -f "./docker-compose.yml" ] && echo "./docker-compose.yml" >> $BACKUPLIST
-[ -f "./docker-compose.override.yml" ] && echo "./docker-compose.yml" >> $BACKUPLIST
+[ -f "./.env" ] && echo "./.env" >> $BACKUPLIST
+[ -f "./docker-compose.override.yml" ] && echo "./docker-compose.override.yml" >> $BACKUPLIST
 [ -f "./compose-override.yml" ] && echo "./compose-override.yml" >> $BACKUPLIST
-[ -f "./extra" ] && echo "./extra" >> $BACKUPLIST
-[ -f "./.tmp/databases_backup" ] && echo "./.tmp/databases_backup" >> $BACKUPLIST
+[ -e "./extra" ] && echo "./extra" >> $BACKUPLIST
+[ -d "./.tmp/databases_backup" ] && echo "./.tmp/databases_backup" >> $BACKUPLIST
 [ -f "./postbuild.sh" ] && echo "./postbuild.sh" >> $BACKUPLIST
 [ -f "./post_backup.sh" ] && echo "./post_backup.sh" >> $BACKUPLIST
 [ -f "./pre_backup.sh" ] && echo "./pre_backup.sh" >> $BACKUPLIST
+[ -f "./post_restore.sh" ] && echo "./post_restore.sh" >> $BACKUPLIST
 
-sudo tar -czf $TMPBACKUPFILE -T $BACKUPLIST >> $LOGFILE 2>&1
+if ! sudo tar -czf "$TMPBACKUPFILE" -T "$BACKUPLIST" >> "$LOGFILE" 2>&1; then
+  echo "Backup archive creation failed." >> "$LOGFILE"
+  cat "$LOGFILE"
+  exit 2
+fi
 
 [ -f "$ROLLING" ] && ROLLINGOVERWRITTEN=1 && rm -rf $ROLLING
 
 sudo chown -R $USER:$USER $TMPDIR/backup* >> $LOGFILE 2>&1
 
 if [[ "$BACKUPTYPE" -eq "1" || "$BACKUPTYPE" -eq "3" ]]; then
-  cp $TMPBACKUPFILE $BACKUPFILE
+  if ! cp "$TMPBACKUPFILE" "$BACKUPFILE"; then
+    echo "Failed to copy backup archive to '$BACKUPFILE'." >> "$LOGFILE"
+    cat "$LOGFILE"
+    exit 3
+  fi
 fi
 if [[ "$BACKUPTYPE" -eq "2" || "$BACKUPTYPE" -eq "3" ]]; then
-  cp $TMPBACKUPFILE $ROLLING
+  if ! cp "$TMPBACKUPFILE" "$ROLLING"; then
+    echo "Failed to copy rolling archive to '$ROLLING'." >> "$LOGFILE"
+    cat "$LOGFILE"
+    exit 3
+  fi
 fi
 
 if [[ "$BACKUPTYPE" -eq "2" || "$BACKUPTYPE" -eq "3" ]]; then

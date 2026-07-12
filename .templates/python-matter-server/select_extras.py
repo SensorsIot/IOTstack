@@ -90,7 +90,7 @@ def main():
     global paginationSize
     selectedTextLength = len("-> ")
 
-    print(term.move(hotzoneLocation[0], hotzoneLocation[1]))
+    print(term.move(hotzoneLocation[0], hotzoneLocation[1]), end="")
 
     if paginationStartIndex >= 1:
       print(term.center("{b}       {uaf}      {uaf}{uaf}{uaf}                                                   {ual}           {b}".format(
@@ -273,6 +273,7 @@ def main():
     with term.fullscreen():
       menuNavigateDirection = 0
       mainRender(needsRender, mainMenuList, currentMenuItemIndex)
+      needsRender = 0
       dockerCommandsSelectionInProgress = True
       with term.cbreak():
         while dockerCommandsSelectionInProgress:
@@ -325,6 +326,6 @@ def main():
 
   return True
 
-originalSignalHandler = signal.getsignal(signal.SIGINT)
+originalSignalHandler = signal.getsignal(signal.SIGWINCH)
 main()
 signal.signal(signal.SIGWINCH, originalSignalHandler)

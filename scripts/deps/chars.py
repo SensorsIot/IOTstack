@@ -70,3 +70,22 @@ def commonEmptyLine(renderMode, size=80):
     output += " "
   output += "{bv}".format(bv=specialChars[renderMode]["borderVertical"])
   return output
+
+def commonTextLine(renderMode, text, size=80, paddingBefore=0, style=None):
+  """Render text inside a fixed-width menu border.
+
+  Styling is applied after padding is calculated so terminal escape sequences do
+  not change the visible width of the row.
+  """
+  text = str(text)
+  availableWidth = max(0, size - paddingBefore)
+  text = text[:availableWidth]
+  styledText = style(text) if style else text
+  paddingAfter = size - paddingBefore - len(text)
+  border = specialChars[renderMode]["borderVertical"]
+  return "{border}{before}{text}{after}{border}".format(
+    border=border,
+    before=" " * paddingBefore,
+    text=styledText,
+    after=" " * paddingAfter,
+  )

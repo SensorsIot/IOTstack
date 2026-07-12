@@ -9,10 +9,10 @@ deconz:
   volumes:
     - ./volumes/deconz:/opt/deCONZ
   devices:
-    - "${DECONZ_DEVICE_PATH:?eg echo DECONZ_DEVICE_PATH=dev/ttyUSB0 >>~/IOTstack/.env}:/dev/ttyUSB0"
+    - "/dev/ttyUSB0:/dev/ttyUSB0"
   environment:
     - DECONZ_VNC_MODE=1
-    - DECONZ_VNC_PASSWORD=${DECONZ_VNC_PASSWORD:-%randomPassword%}
+    - DECONZ_VNC_PASSWORD=${DECONZ_VNC_PASSWORD:-IOtSt4ckDec0nZ}
     - DEBUG_INFO=1
     - DEBUG_APS=0
     - DEBUG_ZCL=0

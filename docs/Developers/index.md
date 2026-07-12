@@ -40,7 +40,7 @@ Services will grow over time, we may split up the buildstack menu into subsectio
 * `build.py` file is correct
 * Service allows for changing external WUI port from Build Stack's options menu if service uses a HTTP/S port
 * Use a default password, or allow the user to generate a random password for the service for initial installation. If the service asks to setup an account this can be ignored.
-* Ensure [Default Configs](../Basic_setup/Default-Configs.md) is updated as required. A helper script (default_ports_md_generator.sh) exists to simplify this. 
+* Ensure [Default Configs](../Basic_setup/Default-Configs.md) is updated as required. Run `python3 scripts/default_ports_md_generator.py` to regenerate the table.
 * Must detect port conflicts with other services on [BuildStack](Menu-System.md) Menu.
 * `Pre` and `Post` hooks work with no errors. 
 * Does not require user to edit config files in order to get the service running.

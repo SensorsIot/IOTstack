@@ -28,75 +28,99 @@ def main():
     global currentMenuItemIndex
     mainRender(1, mainMenuList, currentMenuItemIndex)
 
+  def runCommand(command):
+    exitCode = subprocess.call(command, shell=True)
+    if exitCode != 0:
+      print("Command failed with exit status %s." % exitCode)
+      return False
+    return True
+
   def startStack():
     print("Start Stack:")
     print("docker-compose up -d --remove-orphans")
-    subprocess.call("docker-compose up -d", shell=True)
+    stackStarted = runCommand("docker-compose up -d --remove-orphans")
     print("")
-    print("Stack Started")
+    if stackStarted:
+      print("Stack Started")
+    else:
+      print("Stack was not started")
     input("Process terminated. Press [Enter] to show menu and continue.")
     needsRender = 1
-    return True
+    return stackStarted
   
   def restartStack():
     print("Restarting Stack...")
     print("Stop Stack:")
     print("docker-compose down")
-    subprocess.call("docker-compose down", shell=True)
+    stackStopped = runCommand("docker-compose down")
     print("")
+    if not stackStopped:
+      print("Stack restart aborted because the stack could not be stopped")
+      input("Process terminated. Press [Enter] to show menu and continue.")
+      needsRender = 1
+      return False
+
     print("Start Stack:")
     print("docker-compose up -d --remove-orphans")
-    subprocess.call("docker-compose up -d", shell=True)
+    stackStarted = runCommand("docker-compose up -d --remove-orphans")
     # print("docker-compose restart")
     # subprocess.call("docker-compose restart", shell=True)
     print("")
-    print("Stack Restarted")
+    if stackStarted:
+      print("Stack Restarted")
+    else:
+      print("Stack was stopped but could not be restarted")
     input("Process terminated. Press [Enter] to show menu and continue.")
     needsRender = 1
-    return True
+    return stackStarted
 
   def stopStack():
     print("Stop Stack:")
     print("docker-compose down")
-    subprocess.call("docker-compose down", shell=True)
+    stackStopped = runCommand("docker-compose down")
     print("")
-    print("Stack Stopped")
+    if stackStopped:
+      print("Stack Stopped")
+    else:
+      print("Stack was not stopped")
     input("Process terminated. Press [Enter] to show menu and continue.")
     needsRender = 1
-    return True
+    return stackStopped
 
   def stopAllStack():
     print("Stop All Stack:")
     print("docker container stop $(docker container ls -aq)")
-    subprocess.call("docker container stop $(docker container ls -aq)", shell=True)
+    allStopped = runCommand("docker container stop $(docker container ls -aq)")
     print("")
     input("Process terminated. Press [Enter] to show menu and continue.")
     needsRender = 1
-    return True
+    return allStopped
 
   def pruneVolumes():
     print("Stop All Stack:")
     print("docker container stop $(docker container ls -aq)")
-    subprocess.call("docker container stop $(docker container ls -aq)", shell=True)
+    allStopped = runCommand("docker container stop $(docker container ls -aq)")
     print("")
     input("Process terminated. Press [Enter] to show menu and continue.")
     needsRender = 1
-    return True
+    return allStopped
 
   def updateAllContainers():
     print("Update All Containers:")
-    print("docker-compose pull")
-    subprocess.call("docker-compose pull", shell=True)
-    print("")
-    print("docker-compose build --no-cache --pull")
-    subprocess.call("docker-compose build --no-cache --pull", shell=True)
-    print("")
-    print("docker-compose up -d")
-    subprocess.call("docker-compose up -d", shell=True)
-    print("")
-    print("docker system prune -f")
-    subprocess.call("docker system prune -f", shell=True)
-    print("")
+    commands = [
+      "docker-compose pull",
+      "docker-compose build --no-cache --pull",
+      "docker-compose up -d",
+      "docker system prune -f",
+    ]
+    for command in commands:
+      print(command)
+      if not runCommand(command):
+        print("Container update aborted after a command failed.")
+        input("Process terminated. Press [Enter] to show menu and continue.")
+        needsRender = 1
+        return False
+      print("")
     input("Process terminated. Press [Enter] to show menu and continue.")
     needsRender = 1
     return True
@@ -104,20 +128,20 @@ def main():
   def deleteAndPruneVolumes():
     print("Delete and prune volumes:")
     print("docker system prune --volumes")
-    subprocess.call("docker system prune --volumes", shell=True)
+    volumesPruned = runCommand("docker system prune --volumes")
     print("")
     input("Process terminated. Press [Enter] to show menu and continue.")
     needsRender = 1
-    return True
+    return volumesPruned
 
   def deleteAndPruneImages():
     print("Delete and prune volumes:")
     print("docker image prune -a")
-    subprocess.call("docker image prune -a", shell=True)
+    imagesPruned = runCommand("docker image prune -a")
     print("")
     input("Process terminated. Press [Enter] to show menu and continue.")
     needsRender = 1
-    return True
+    return imagesPruned
 
   def monitorLogs():
     print("Monitor Logs:")
@@ -163,7 +187,7 @@ def main():
   needsRender = 1
 
   def renderHotZone(term, menu, selection, hotzoneLocation):
-    print(term.move(hotzoneLocation[0], hotzoneLocation[1]))
+    print(term.move(hotzoneLocation[0], hotzoneLocation[1]), end="")
     lineLengthAtTextStart = 71
 
     for (index, menuItem) in enumerate(menu):
@@ -244,6 +268,7 @@ def main():
     with term.fullscreen():
       menuNavigateDirection = 0
       mainRender(needsRender, mainMenuList, currentMenuItemIndex)
+      needsRender = 0
       dockerCommandsSelectionInProgress = True
       with term.cbreak():
         while dockerCommandsSelectionInProgress:
@@ -289,6 +314,6 @@ def main():
 
   return True
 
-originalSignalHandler = signal.getsignal(signal.SIGINT)
+originalSignalHandler = signal.getsignal(signal.SIGWINCH)
 main()
 signal.signal(signal.SIGWINCH, originalSignalHandler)

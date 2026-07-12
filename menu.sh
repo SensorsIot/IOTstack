@@ -62,34 +62,22 @@ function minimum_version_check() {
 		return 1
 	fi
 
-	if [ "${CURR_VERSION_MAJOR}" -ge $REQ_MIN_VERSION_MAJOR ]; then
+	if [ "${CURR_VERSION_MAJOR}" -gt "$REQ_MIN_VERSION_MAJOR" ]; then
 		VERSION_GOOD="true"
-		echo "$VERSION_GOOD"
-		return 0
-	else
+	elif [ "${CURR_VERSION_MAJOR}" -lt "$REQ_MIN_VERSION_MAJOR" ]; then
 		VERSION_GOOD="false"
-	fi
-
-	if [ "${CURR_VERSION_MAJOR}" -ge $REQ_MIN_VERSION_MAJOR ] && \
-		[ "${CURR_VERSION_MINOR}" -ge $REQ_MIN_VERSION_MINOR ]; then
+	elif [ "${CURR_VERSION_MINOR}" -gt "$REQ_MIN_VERSION_MINOR" ]; then
 		VERSION_GOOD="true"
-		echo "$VERSION_GOOD"
-		return 0
-	else
+	elif [ "${CURR_VERSION_MINOR}" -lt "$REQ_MIN_VERSION_MINOR" ]; then
 		VERSION_GOOD="false"
-	fi
-
-	if [ "${CURR_VERSION_MAJOR}" -ge $REQ_MIN_VERSION_MAJOR ] && \
-		[ "${CURR_VERSION_MINOR}" -ge $REQ_MIN_VERSION_MINOR ] && \
-		[ "${CURR_VERSION_BUILD}" -ge $REQ_MIN_VERSION_BUILD ]; then
+	elif [ "${CURR_VERSION_BUILD}" -ge "$REQ_MIN_VERSION_BUILD" ]; then
 		VERSION_GOOD="true"
-		echo "$VERSION_GOOD"
-		return 0
 	else
 		VERSION_GOOD="false"
 	fi
 
 	echo "$VERSION_GOOD"
+	[ "$VERSION_GOOD" = "true" ]
 }
 
 function check_git_updates()

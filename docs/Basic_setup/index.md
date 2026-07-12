@@ -32,6 +32,8 @@ IOTstack makes the following assumptions:
 	- an Intel-based Mac running macOS plus Parallels with a Debian guest.
 	- an Intel-based platform running Proxmox with a Debian guest.
 
+		See [Proxmox virtual machine](Proxmox.md) for recommended guest settings.
+
 2. Your host or guest system is running a reasonably-recent version of Debian or an operating system which is downstream of Debian in the Linux family tree, such as Raspberry Pi OS (aka "Raspbian") or Ubuntu.
 
 	IOTstack is known to work in 32-bit mode but not all containers have images on DockerHub that support 320bit mode. If you are setting up a new system from scratch, you should choose a 64-bit option.

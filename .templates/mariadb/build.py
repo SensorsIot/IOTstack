@@ -1,29 +1,24 @@
 #!/usr/bin/env python3
 
+OPTIONS_AVAILABLE = False
+
 issues = {} # Returned issues dict
-buildHooks = {} # Options, and others hooks
 haltOnErrors = True
 
 # Main wrapper function. Required to make local vars work correctly
 def main():
   import os
-  import time
   import sys
-  import ruamel.yaml
   import signal
   import subprocess
   from blessed import Terminal
 
   from deps.chars import specialChars, commonTopBorder, commonBottomBorder, commonEmptyLine, padText
-  from deps.consts import servicesDirectory, templatesDirectory, servicesFileName, buildSettingsFileName
-  from deps.common_functions import getExternalPorts, checkPortConflicts, generateRandomString
-
-  yaml = ruamel.yaml.YAML()
-  yaml.preserve_quotes = True
+  from deps.consts import servicesDirectory
+  from deps.common_functions import getExternalPorts, checkPortConflicts
 
   global dockerComposeServicesYaml # The loaded memory YAML of all checked services
   global toRun # Switch for which function to run when executed
-  global buildHooks # Where to place the options menu result
   global currentServiceName # Name of the current service
   global issues # Returned issues dict
   global haltOnErrors # Turn on to allow erroring
@@ -31,8 +26,6 @@ def main():
   global serviceService
 
   serviceService = servicesDirectory + currentServiceName
-  serviceTemplate = templatesDirectory + currentServiceName
-  buildSettings = serviceService + buildSettingsFileName
 
   try: # If not already set, then set it.
     hideHelpText = hideHelpText
@@ -43,43 +36,6 @@ def main():
 
   # runtime vars
   portConflicts = []
-
-  # This lets the menu know whether to put " >> Options " or not
-  # This function is REQUIRED.
-  def checkForOptionsHook():
-    try:
-      buildHooks["options"] = callable(runOptionsMenu)
-    except:
-      buildHooks["options"] = False
-      return buildHooks
-    return buildHooks
-
-  # This function is REQUIRED.
-  def checkForPreBuildHook():
-    try:
-      buildHooks["preBuildHook"] = callable(preBuild)
-    except:
-      buildHooks["preBuildHook"] = False
-      return buildHooks
-    return buildHooks
-
-  # This function is REQUIRED.
-  def checkForPostBuildHook():
-    try:
-      buildHooks["postBuildHook"] = callable(postBuild)
-    except:
-      buildHooks["postBuildHook"] = False
-      return buildHooks
-    return buildHooks
-
-  # This function is REQUIRED.
-  def checkForRunChecksHook():
-    try:
-      buildHooks["runChecksHook"] = callable(runChecks)
-    except:
-      buildHooks["runChecksHook"] = False
-      return buildHooks
-    return buildHooks
 
   # This service will not check anything unless this is set
   # This function is optional, and will run each time the menu is rendered
@@ -93,82 +49,7 @@ def main():
 
   # This function is optional, and will run just before the build docker-compose.yml code.
   def preBuild():
-    # Multi-service:
-    with open((r'%s/' % serviceTemplate) + servicesFileName) as objServiceFile:
-      serviceYamlTemplate = yaml.load(objServiceFile)
-
-    oldBuildCache = {}
-    try:
-      with open(r'%s' % buildCache) as objBuildCache:
-        oldBuildCache = yaml.load(objBuildCache)
-    except:
-      pass
-
-    buildCacheServices = {}
-    if "services" in oldBuildCache:
-      buildCacheServices = oldBuildCache["services"]
-
-    if not os.path.exists(serviceService):
-      os.makedirs(serviceService, exist_ok=True)
-
-    if os.path.exists(buildSettings):
-      # Password randomisation
-      with open(r'%s' % buildSettings) as objBuildSettingsFile:
-        mariaDbYamlBuildOptions = yaml.load(objBuildSettingsFile)
-        if (
-          mariaDbYamlBuildOptions["databasePasswordOption"] == "Randomise database password for this build"
-          or mariaDbYamlBuildOptions["databasePasswordOption"] == "Randomise database password every build"
-          or mariaDbYamlBuildOptions["databasePasswordOption"] == "Use default password for this build"
-        ):
-          if mariaDbYamlBuildOptions["databasePasswordOption"] == "Use default password for this build":
-            newAdminPassword = "IOtSt4ckToorMariaDb"
-            newPassword = "IOtSt4ckmariaDbPw"
-          else:
-            newAdminPassword = generateRandomString()
-            newPassword = generateRandomString()
-          for (index, serviceName) in enumerate(serviceYamlTemplate):
-            dockerComposeServicesYaml[serviceName] = serviceYamlTemplate[serviceName]
-            if "environment" in serviceYamlTemplate[serviceName]:
-              for (envIndex, envName) in enumerate(serviceYamlTemplate[serviceName]["environment"]):
-                envName = envName.replace("%randomAdminPassword%", newAdminPassword)
-                envName = envName.replace("%randomPassword%", newPassword)
-                dockerComposeServicesYaml[serviceName]["environment"][envIndex] = envName
-
-          # Ensure you update the "Do nothing" and other 2 strings used for password settings in 'passwords.py'
-          if (mariaDbYamlBuildOptions["databasePasswordOption"] == "Randomise database password for this build"):
-            mariaDbYamlBuildOptions["databasePasswordOption"] = "Do nothing"
-            with open(buildSettings, 'w') as outputFile:
-              yaml.dump(mariaDbYamlBuildOptions, outputFile)
-        else: # Do nothing - don't change password
-          for (index, serviceName) in enumerate(buildCacheServices):
-            if serviceName in buildCacheServices: # Load service from cache if exists (to maintain password)
-              dockerComposeServicesYaml[serviceName] = buildCacheServices[serviceName]
-            else:
-              dockerComposeServicesYaml[serviceName] = serviceYamlTemplate[serviceName]
-
-    else:
-      print("MariaDB Warning: Build settings file not found, using default password")
-      time.sleep(1)
-      newAdminPassword = "IOtSt4ckToorMariaDb"
-      newPassword = "IOtSt4ckmariaDbPw"
-      for (index, serviceName) in enumerate(serviceYamlTemplate):
-        dockerComposeServicesYaml[serviceName] = serviceYamlTemplate[serviceName]
-        if "environment" in serviceYamlTemplate[serviceName]:
-          for (envIndex, envName) in enumerate(serviceYamlTemplate[serviceName]["environment"]):
-            envName = envName.replace("%randomAdminPassword%", newAdminPassword)
-            envName = envName.replace("%randomPassword%", newPassword)
-            dockerComposeServicesYaml[serviceName]["environment"][envIndex] = envName
-        mariaDbYamlBuildOptions = {
-          "version": "1",
-          "application": "IOTstack",
-          "service": "MariaDB",
-          "comment": "MariaDB Build Options"
-        }
-
-      mariaDbYamlBuildOptions["databasePasswordOption"] = "Do nothing"
-      with open(buildSettings, 'w') as outputFile:
-        yaml.dump(mariaDbYamlBuildOptions, outputFile)
-
+    os.makedirs(serviceService, exist_ok=True)
     return True
 
   # #####################################
@@ -210,23 +91,6 @@ def main():
     needsRender = 1
     return True
 
-  def setPasswordOptions():
-    global needsRender
-    global hasRebuiltAddons
-    passwordOptionsMenuFilePath = "./.templates/{currentService}/passwords.py".format(currentService=currentServiceName)
-    with open(passwordOptionsMenuFilePath, "rb") as pythonDynamicImportFile:
-      code = compile(pythonDynamicImportFile.read(), passwordOptionsMenuFilePath, "exec")
-    execGlobals = {
-      "currentServiceName": currentServiceName,
-      "renderMode": renderMode
-    }
-    execLocals = {}
-    screenActive = False
-    exec(code, execGlobals, execLocals)
-    signal.signal(signal.SIGWINCH, onResize)
-    screenActive = True
-    needsRender = 1
-
   def onResize(sig, action):
     global mariaDbBuildOptions
     global currentMenuItemIndex
@@ -239,21 +103,22 @@ def main():
     global serviceService
 
     mariaDbBuildOptions = []
-    mariaDbBuildOptions.append([
-      "MariaDB Password Options",
-      setPasswordOptions
-    ])
 
     mariaDbBuildOptions.append(["Go back", goBack])
 
   def runOptionsMenu():
-    createMenu()
-    menuEntryPoint()
-    return True
+    originalSignalHandler = signal.getsignal(signal.SIGWINCH)
+    signal.signal(signal.SIGWINCH, onResize)
+    try:
+      createMenu()
+      menuEntryPoint()
+      return True
+    finally:
+      signal.signal(signal.SIGWINCH, originalSignalHandler)
 
   def renderHotZone(term, menu, selection, hotzoneLocation):
     lineLengthAtTextStart = 71
-    print(term.move(hotzoneLocation[0], hotzoneLocation[1]))
+    print(term.move(hotzoneLocation[0], hotzoneLocation[1]), end="")
     for (index, menuItem) in enumerate(menu):
       toPrint = ""
       if index == selection:
@@ -336,6 +201,7 @@ def main():
     with term.fullscreen():
       menuNavigateDirection = 0
       mainRender(needsRender, mariaDbBuildOptions, currentMenuItemIndex)
+      needsRender = 0
       selectionInProgress = True
       with term.cbreak():
         while selectionInProgress:
@@ -382,17 +248,50 @@ def main():
   ####################
 
 
+  hook = locals().get(toRun)
+  if hook is None:
+    raise ValueError("Unknown service hook '%s'" % toRun)
   if haltOnErrors:
-    eval(toRun)()
-  else:
-    try:
-      eval(toRun)()
-    except:
-      pass
+    return hook()
+  try:
+    return hook()
+  except Exception:
+    return None
 
-# This check isn't required, but placed here for debugging purposes
-global currentServiceName # Name of the current service
-if currentServiceName == 'mariadb':
-  main()
-else:
-  print("Error. '{}' Tried to run 'mariadb' config".format(currentServiceName))
+def _runHook(context, action):
+  """Adapt the service's established implementation to hook API v2."""
+  global dockerComposeServicesYaml
+  global currentServiceName
+  global renderMode
+  global toRun
+
+  dockerComposeServicesYaml = context.services
+  currentServiceName = context.serviceName
+  renderMode = context.renderMode
+  toRun = action
+  result = main()
+  context.services = dockerComposeServicesYaml
+  return result
+
+
+def runChecks(context):
+  """Return build issues for the currently selected Compose services."""
+  global issues
+  issues = {}
+  _runHook(context, "runChecks")
+  return issues
+
+
+def runOptionsMenu(context):
+  """Open this service's interactive configuration menu."""
+  return _runHook(context, "runOptionsMenu")
+
+
+def preBuild(context):
+  """Run this service's pre-build work."""
+  return _runHook(context, "preBuild")
+
+
+def postBuild(context):
+  """Run this service's post-build work."""
+  return _runHook(context, "postBuild")
