@@ -9,7 +9,8 @@ from ruamel.yaml import YAML
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from deps.menu_renderer import paginationSizes, paginationStart, terminalSupportsMenu
+from deps.chars import commonTextLine
+from deps.menu_renderer import pageSizeForTerminal, paginationStart, terminalSupportsMenu
 from deps.service_hooks import (
   HookContext,
   getHookApiVersion,
@@ -51,16 +52,31 @@ class PaginationTests(unittest.TestCase):
     self.assertEqual(3, paginationStart(selection=3, currentStart=5, pageSize=10))
 
   def test_small_terminal_never_has_negative_page_size(self):
-    self.assertEqual([1, 1], paginationSizes(terminalHeight=10))
+    self.assertEqual(1, pageSizeForTerminal(terminalHeight=10))
 
-  def test_expanded_page_fits_renderer_fixed_rows(self):
-    self.assertEqual([10, 12], paginationSizes(terminalHeight=40, reservedLines=28))
+  def test_page_automatically_fills_available_terminal_height(self):
+    self.assertEqual(13, pageSizeForTerminal(terminalHeight=40, reservedLines=27))
 
   def test_build_menu_uses_fallback_for_narrow_terminal(self):
     self.assertFalse(terminalSupportsMenu(terminalWidth=80, terminalHeight=24))
 
   def test_build_menu_supports_minimum_terminal_dimensions(self):
     self.assertTrue(terminalSupportsMenu(terminalWidth=82, terminalHeight=30))
+
+
+class MenuRenderingTests(unittest.TestCase):
+  def test_text_line_matches_standard_border_width(self):
+    line = commonTextLine("ascii", "Warning", paddingBefore=6)
+    self.assertEqual(82, len(line))
+    self.assertEqual("|      Warning", line[:14])
+    self.assertTrue(line.endswith("|"))
+
+  def test_text_line_styling_does_not_affect_padding(self):
+    style = lambda text: "<yellow>%s</yellow>" % text
+    plain = commonTextLine("ascii", "Warning", paddingBefore=6)
+    styled = commonTextLine("ascii", "Warning", paddingBefore=6, style=style)
+    self.assertEqual(plain.count(" "), styled.count(" "))
+    self.assertIn("<yellow>Warning</yellow>", styled)
 
 
 class ServiceTemplateTests(unittest.TestCase):
@@ -205,6 +221,20 @@ class SourceRegressionTests(unittest.TestCase):
   def test_build_menu_does_not_query_cursor_position(self):
     source = (ROOT / "scripts/buildstack_menu.py").read_text()
     self.assertNotIn("get_location", source)
+
+  def test_build_menu_explains_options_require_selected_container(self):
+    source = (ROOT / "scripts/buildstack_menu.py").read_text()
+    self.assertIn(
+      'Select this container with [Space] before opening its options.',
+      source,
+    )
+    self.assertIn('if key and transientMessage:', source)
+
+  def test_build_menu_height_is_automatic(self):
+    source = (ROOT / "scripts/buildstack_menu.py").read_text()
+    self.assertNotIn("KEY_TAB", source)
+    self.assertNotIn("paginationExpanded", source)
+    self.assertIn("pageSizeForTerminal(term.height", source)
 
   def test_dynamic_menu_removal_keeps_selection_in_range(self):
 

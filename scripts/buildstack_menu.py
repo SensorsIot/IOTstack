@@ -10,11 +10,11 @@ def main():
   import sys
   import subprocess
   import traceback
-  from deps.chars import specialChars, commonTopBorder, commonBottomBorder, commonEmptyLine, padText
+  from deps.chars import specialChars, commonTopBorder, commonBottomBorder, commonEmptyLine, commonTextLine, padText
   from deps.consts import servicesDirectory, templatesDirectory, buildCache, envFile, dockerPathOutput, servicesFileName, composeOverrideFile
   from deps.yaml_merge import mergeYaml
   from deps.service_templates import loadServiceTemplate, mergeServiceTemplate, removeServiceTemplate
-  from deps.menu_renderer import paginationSizes, paginationStart, terminalSupportsMenu
+  from deps.menu_renderer import pageSizeForTerminal, paginationStart, terminalSupportsMenu
   from deps.service_hooks import HookContext, serviceHookAvailable, runServiceHook
   from blessed import Terminal
   global signal
@@ -22,10 +22,9 @@ def main():
   global term
   global paginationSize
   global paginationStartIndex
-  global paginationToggle
-  global paginationExpanded
   global hideHelpText
   global lastSelection
+  global transientMessage
 
   yaml = ruamel.yaml.YAML()
   yaml.preserve_quotes = True
@@ -40,16 +39,17 @@ def main():
   templatesDirectoryFolders = next(os.walk(templatesDirectory))[1]
   term = Terminal()
   hotzoneLocation = [7, 0] # Top text
-  paginationToggle = paginationSizes(term.height, reservedLines=28) # Header, borders, and controls text
   paginationStartIndex = 0
-  paginationExpanded = False
-  paginationSize = paginationToggle[0]
   lastSelection = 0
+  transientMessage = None
   
   try: # If not already set, then set it.
     hideHelpText = hideHelpText
   except:
     hideHelpText = False
+
+  reservedLines = 19 if hideHelpText else 27
+  paginationSize = pageSizeForTerminal(term.height, reservedLines=reservedLines)
 
   def buildServices(): # TODO: Move this into a dependency so that it can be executed with just a list of services.
     global dockerComposeServicesYaml
@@ -263,7 +263,7 @@ def main():
       if (renderType == 1):
         print(term.center(commonEmptyLine(renderMode)))
         if not hideHelpText:
-          room = term.height - (28 + len(allIssues) + paginationSize)
+          room = term.height - (27 + len(allIssues) + paginationSize)
           if room < 0:
             print(term.center(commonEmptyLine(renderMode)))
             print(term.center("{bv}      Not enough vertical room to render controls help text ({th}, {rm})          {bv}".format(bv=specialChars[renderMode]["borderVertical"], th=padText(str(term.height), 3), rm=padText(str(room), 3))))
@@ -274,13 +274,20 @@ def main():
             print(term.center("{bv}      [Space] to select or deselect image                                       {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
             print(term.center("{bv}      [Up] and [Down] to move selection cursor                                  {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
             print(term.center("{bv}      [Right] for options for containers that support them                      {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
-            print(term.center("{bv}      [Tab] Expand or collapse build menu size                                  {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
             print(term.center("{bv}      [H] Show/hide this text                                                   {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
             # print(term.center("{bv}      [F] Filter options                                                        {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
             print(term.center("{bv}      [Enter] to begin build                                                    {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
             print(term.center("{bv}      [Escape] to cancel build                                                  {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
             print(term.center(commonEmptyLine(renderMode)))
-            print(term.center(commonEmptyLine(renderMode)))
+        if transientMessage:
+          print(term.center(commonTextLine(
+            renderMode,
+            transientMessage,
+            paddingBefore=6,
+            style=term.yellow,
+          )))
+        else:
+          print(term.center(commonEmptyLine(renderMode)))
         print(term.center(commonEmptyLine(renderMode)))
         print(term.center(commonBottomBorder(renderMode)))
 
@@ -504,12 +511,10 @@ def main():
     return False
 
   def onResize(sig, action):
-    global paginationToggle
     global paginationSize
     global paginationStartIndex
-    global paginationExpanded
-    paginationToggle = paginationSizes(term.height, reservedLines=28)
-    paginationSize = paginationToggle[1] if paginationExpanded else paginationToggle[0]
+    reservedLines = 19 if hideHelpText else 27
+    paginationSize = pageSizeForTerminal(term.height, reservedLines=reservedLines)
     paginationStartIndex = max(0, min(paginationStartIndex, max(0, len(menu) - paginationSize)))
     mainRender(menu, selection, 1)
 
@@ -533,13 +538,10 @@ def main():
       with term.cbreak():
         while selectionInProgress:
           key = term.inkey(esc_delay=0.05)
+          if key and transientMessage:
+            transientMessage = None
+            needsRender = 1
           if key.is_sequence:
-            if key.name == 'KEY_TAB':
-              needsRender = 1
-              paginationExpanded = not paginationExpanded
-              paginationSize = paginationToggle[1] if paginationExpanded else paginationToggle[0]
-              if paginationExpanded:
-                paginationStartIndex = 0
             if key.name == 'KEY_DOWN':
               selection += 1
               needsRender = 2
@@ -547,7 +549,11 @@ def main():
               selection -= 1
               needsRender = 2
             if key.name == 'KEY_RIGHT':
-              executeServiceOptions()
+              if not menu[selection][1]["checked"]:
+                transientMessage = "Select this container with [Space] before opening its options."
+                needsRender = 1
+              else:
+                executeServiceOptions()
             if key.name == 'KEY_ENTER':
               setCheckedMenuItems()
               checkForIssues()
@@ -568,6 +574,9 @@ def main():
                 hideHelpText = False
               else:
                 hideHelpText = True
+              reservedLines = 19 if hideHelpText else 27
+              paginationSize = pageSizeForTerminal(term.height, reservedLines=reservedLines)
+              paginationStartIndex = max(0, min(paginationStartIndex, max(0, len(menu) - paginationSize)))
               needsRender = 1
 
           selection = selection % len(menu)

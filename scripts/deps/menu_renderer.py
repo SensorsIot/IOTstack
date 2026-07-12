@@ -2,9 +2,8 @@ def terminalSupportsMenu(terminalWidth, terminalHeight, minimumWidth=82, minimum
   return terminalWidth >= minimumWidth and terminalHeight >= minimumHeight
 
 
-def paginationSizes(terminalHeight, reservedLines=22, collapsedSize=10):
-  availableSize = max(1, terminalHeight - reservedLines)
-  return [min(collapsedSize, availableSize), availableSize]
+def pageSizeForTerminal(terminalHeight, reservedLines=22):
+  return max(1, terminalHeight - reservedLines)
 
 
 def paginationStart(selection, currentStart, pageSize):
