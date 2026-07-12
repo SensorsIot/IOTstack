@@ -8,6 +8,7 @@ docker-compose.yml
 docker-compose.override.yml
 compose-override.yml
 build-installer.sh
+rsync-to-dev.sh
 docker-compose-base.yml
 build-options.json
 iotstack_build_*.zip
