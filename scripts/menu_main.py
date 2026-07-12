@@ -83,7 +83,9 @@ def onResize(sig, action):
   global mainMenuList
   global currentMenuItemIndex
   global screenActive
+  global hotzoneLocation
   if screenActive:
+    hotzoneLocation = [((term.height // 16) + 6), 0]
     mainRender(1, mainMenuList, currentMenuItemIndex)
 
 # Menu Functions
@@ -114,23 +116,30 @@ def buildStack():
   needsRender = 1
 
 def runExampleMenu():
-  exampleMenuFilePath = "./.templates/example_template/example_build.py"
-  with open(exampleMenuFilePath, "rb") as pythonDynamicImportFile:
-    code = compile(pythonDynamicImportFile.read(), exampleMenuFilePath, "exec")
-  # execGlobals = globals()
-  execGlobals = {
-    "renderMode": renderMode
-  }
-  execLocals = locals()
-  execGlobals["currentServiceName"] = 'SERVICENAME'
-  execGlobals["toRun"] = 'runOptionsMenu'
+  global screenActive
+  from deps.service_hooks import HookContext, runServiceHook
+  import ruamel.yaml
+
+  exampleMenuFilePath = "./.templates/example_template/build.py"
+  exampleServiceFilePath = "./.templates/example_template/example_service.yml"
+  yaml = ruamel.yaml.YAML()
+  with open(exampleServiceFilePath) as exampleServiceFile:
+    services = yaml.load(exampleServiceFile)
+  serviceName = next(iter(services))
+  context = HookContext(
+    services=services,
+    serviceName=serviceName,
+    renderMode=renderMode,
+    terminal=term,
+  )
   screenActive = False
-  exec(code, execGlobals, execLocals)
+  runServiceHook(exampleMenuFilePath, "options", context)
   signal.signal(signal.SIGWINCH, onResize)
   screenActive = True
 
 def dockerCommands():
   global needsRender
+  global screenActive
   dockerCommandsFilePath = "./scripts/docker_commands.py"
   with open(dockerCommandsFilePath, "rb") as pythonDynamicImportFile:
     code = compile(pythonDynamicImportFile.read(), dockerCommandsFilePath, "exec")
@@ -148,6 +157,7 @@ def dockerCommands():
 
 def miscCommands():
   global needsRender
+  global screenActive
   dockerCommandsFilePath = "./scripts/misc_commands.py"
   with open(dockerCommandsFilePath, "rb") as pythonDynamicImportFile:
     code = compile(pythonDynamicImportFile.read(), dockerCommandsFilePath, "exec")
@@ -209,8 +219,8 @@ def skipItem(currentMenuItemIndex, direction):
   return currentMenuItemIndex
 
 def deletePromptFiles():
-  # global promptFiles
-  # global currentMenuItemIndex
+  global promptFiles
+  global currentMenuItemIndex
   if os.path.exists(".project_outofdate"):
     os.remove(".project_outofdate")
   if os.path.exists(".docker_outofdate"):
@@ -327,12 +337,17 @@ def addPotentialMenuItem(menuItemName, hasSpacer=True):
   return False
 
 def removeMenuItemByLabel(potentialItemKey):
+  global currentMenuItemIndex
   i = -1
   for menuItem in mainMenuList:
     i += 1
     if menuItem[0] == potentialMenu[potentialItemKey]["menuItem"][0]:
       potentialMenu[potentialItemKey]["added"] = False
       mainMenuList.pop(i)
+      if len(mainMenuList) > 0:
+        currentMenuItemIndex = currentMenuItemIndex % len(mainMenuList)
+      return True
+  return False
 
 def doPotentialMenuCheck(projectStatus, dockerVersion=True, promptFiles=False):
   global needsRender
@@ -341,7 +356,8 @@ def doPotentialMenuCheck(projectStatus, dockerVersion=True, promptFiles=False):
     addPotentialMenuItem("deletePromptFiles")
     needsRender = 2
   else:
-    removeMenuItemByLabel("deletePromptFiles")
+    if removeMenuItemByLabel("deletePromptFiles"):
+      needsRender = 1
 
   # if (projectStatus.poll() == None):
   #   addPotentialMenuItem("updatesCheck", False)
@@ -376,12 +392,12 @@ def checkIfPromptFilesExist():
   return False
 
 def renderHotZone(term, menu, selection):
-  print(term.move(hotzoneLocation[0], hotzoneLocation[1]))
+  print(term.move(hotzoneLocation[0], hotzoneLocation[1]), end="")
   for (index, menuItem) in enumerate(menu):
     if index == selection:
-      print(term.center('-> {t.blue_on_green}{title}{t.normal} <-'.format(t=term, title=menuItem[0])))
+      print(term.clear_eol + term.center('-> {t.blue_on_green}{title}{t.normal} <-'.format(t=term, title=menuItem[0])))
     else:
-      print(term.center('{title}'.format(t=term, title=menuItem[0])))
+      print(term.clear_eol + term.center('{title}'.format(t=term, title=menuItem[0])))
 
 def mainRender(needsRender, menu, selection):
   term = Terminal()
@@ -432,6 +448,7 @@ if __name__ == '__main__':
   with term.fullscreen():
     checkRenderOptions()
     mainRender(needsRender, mainMenuList, currentMenuItemIndex) # Initial Draw
+    needsRender = 0
     with term.cbreak():
       while selectionInProgress:
         menuNavigateDirection = 0

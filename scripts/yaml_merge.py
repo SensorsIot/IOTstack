@@ -5,7 +5,7 @@ import ruamel.yaml
 yaml = ruamel.yaml.YAML()
 yaml.preserve_quotes = True
 
-if sys.argv[1] == "--pyyaml-version":
+if len(sys.argv) > 1 and sys.argv[1] == "--pyyaml-version":
   try:
     print("pyyaml", yaml.__version__)
     sys.exit(0)

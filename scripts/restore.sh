@@ -14,17 +14,19 @@
 #     Will restore from the backup file "./backups/some_other_backup.tar.gz" and will not warn that data will be deleted.
 #
 
-if [ -d "./menu.sh" ]; then
+if [ ! -f "./menu.sh" ]; then
   echo "./menu.sh file was not found. Ensure that you are running this from IOTstack's directory."
   exit 1
 fi
 
-echo "Restoring from a backup will erase all existing data."
-read -p "Continue [y/N]? " -n 1 -r PROCEED_WITH_RESTORE
-echo ""
-if [[ ! $PROCEED_WITH_RESTORE =~ ^[Yy]$ ]]; then
-  echo "Restore Cancelled."
-  exit 0
+if [ "${2:-}" != "noask" ]; then
+  echo "Restoring from a backup will erase all existing data."
+  read -p "Continue [y/N]? " -n 1 -r PROCEED_WITH_RESTORE
+  echo ""
+  if [[ ! $PROCEED_WITH_RESTORE =~ ^[Yy]$ ]]; then
+    echo "Restore Cancelled."
+    exit 0
+  fi
 fi
 
 RESTOREFILENAME="backup.tar.gz"
@@ -40,8 +42,7 @@ BACKUPFILE="$BASEDIR/backup/backup_$BASERESTOREFILE.tar.gz"
 [ -d ./backups ] || mkdir -p ./backups
 [ -d ./backups/logs ] || mkdir -p ./backups/logs
 
-[ -d ./.tmp ] || sudo rm -rf ./.tmp
-[ -d ./tmp ] || mkdir -p ./tmp
+[ -d ./.tmp ] || mkdir -p ./.tmp
 
 touch $LOGFILE
 echo ""  > $LOGFILE
@@ -59,27 +60,37 @@ if [ ! -f $RESTOREFILE ]; then
   echo "### End of log ###" >> $LOGFILE
   exit 2
 fi
+if ! tar -tzf "$RESTOREFILE" > /dev/null 2>> "$LOGFILE"; then
+  echo "Backup archive '$RESTOREFILE' is unreadable or corrupt. Cancelling restore." >> "$LOGFILE"
+  cat "$LOGFILE"
+  exit 3
+fi
+
 
 # Remove old files and folders
 sudo rm -rf ./services/ >> $LOGFILE 2>&1
 sudo rm -rf ./volumes/ >> $LOGFILE 2>&1
 sudo rm -rf ./compose-override.yml >> $LOGFILE 2>&1
 sudo rm -rf ./docker-compose.yml >> $LOGFILE 2>&1
+sudo rm -rf ./.env >> $LOGFILE 2>&1
 sudo rm -rf ./extra/ >> $LOGFILE 2>&1
 sudo rm -rf ./postbuild.sh >> $LOGFILE 2>&1
 sudo rm -rf ./pre_backup.sh >> $LOGFILE 2>&1
 sudo rm -rf ./post_backup.sh >> $LOGFILE 2>&1
 sudo rm -rf ./post_restore.sh >> $LOGFILE 2>&1
-sudo rm -rf ./post_restore.sh >> $LOGFILE 2>&1
+sudo rm -rf ./docker-compose.override.yml >> $LOGFILE 2>&1
 
-sudo tar -zxvf \
-	$RESTOREFILE >> $LOGFILE 2>&1
+if ! sudo tar -zxvf "$RESTOREFILE" >> "$LOGFILE" 2>&1; then
+  echo "Backup extraction failed." >> "$LOGFILE"
+  cat "$LOGFILE"
+  exit 4
+fi
 
 echo "" >> $LOGFILE
 
 echo "Executing post restore scripts" >> $LOGFILE
 bash ./scripts/backup_restore/post_restore_complete.sh >> $LOGFILE 2>&1
-echo "" > $LOGFILE
+echo "" >> $LOGFILE
 
 echo "Finished At: $(date +"%Y-%m-%dT%H-%M-%S")" >> $LOGFILE
 echo "" >> $LOGFILE

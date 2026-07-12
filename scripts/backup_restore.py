@@ -25,9 +25,12 @@ def main():
   def runBackup():
     global needsRender
     print("Execute Backup:")
-    subprocess.call("./scripts/backup.sh", shell=True)
+    returnCode = subprocess.call(["./scripts/backup.sh"])
     print("")
-    print("Backup completed.")
+    if returnCode == 0:
+      print("Backup completed.")
+    else:
+      print("Backup failed with exit code %s." % returnCode)
     print("Press [Up] or [Down] arrow key to show the menu if it has scrolled too far.")
     time.sleep(1)
     needsRender = 1
@@ -71,9 +74,12 @@ def main():
   def runRestore():
     global needsRender
     print("Execute Restore:")
-    subprocess.call("./scripts/restore.sh", shell=True)
+    returnCode = subprocess.call(["./scripts/restore.sh"])
     print("")
-    print("Restore completed.")
+    if returnCode == 0:
+      print("Restore process finished.")
+    else:
+      print("Restore failed with exit code %s." % returnCode)
     print("Press [Up] or [Down] arrow key to show the menu if it has scrolled too far.")
     time.sleep(1)
     needsRender = 1
@@ -114,7 +120,7 @@ def main():
 
   def renderHotZone(term, menu, selection, hotzoneLocation):
     lineLengthAtTextStart = 71
-    print(term.move(hotzoneLocation[0], hotzoneLocation[1]))
+    print(term.move(hotzoneLocation[0], hotzoneLocation[1]), end="")
     for (index, menuItem) in enumerate(menu):
       toPrint = ""
       if index == selection:
@@ -191,6 +197,7 @@ def main():
     with term.fullscreen():
       menuNavigateDirection = 0
       mainRender(needsRender, mainMenuList, currentMenuItemIndex)
+      needsRender = 0
       backupRestoreSelectionInProgress = True
       with term.cbreak():
         while backupRestoreSelectionInProgress:
@@ -235,6 +242,6 @@ def main():
 
   return True
 
-originalSignalHandler = signal.getsignal(signal.SIGINT)
+originalSignalHandler = signal.getsignal(signal.SIGWINCH)
 main()
 signal.signal(signal.SIGWINCH, originalSignalHandler)

@@ -6,23 +6,25 @@ results = {}
 
 def main():
   import os
-  import time
   import ruamel.yaml
-  import math
   import sys
   import subprocess
   import traceback
   from deps.chars import specialChars, commonTopBorder, commonBottomBorder, commonEmptyLine, padText
-  from deps.consts import servicesDirectory, templatesDirectory, volumesDirectory, buildCache, envFile, dockerPathOutput, servicesFileName, composeOverrideFile
+  from deps.consts import servicesDirectory, templatesDirectory, buildCache, envFile, dockerPathOutput, servicesFileName, composeOverrideFile
   from deps.yaml_merge import mergeYaml
+  from deps.service_templates import loadServiceTemplate, mergeServiceTemplate, removeServiceTemplate
+  from deps.menu_renderer import paginationSizes, paginationStart, terminalSupportsMenu
+  from deps.service_hooks import HookContext, serviceHookAvailable, runServiceHook
   from blessed import Terminal
   global signal
   global renderMode
   global term
   global paginationSize
   global paginationStartIndex
+  global paginationToggle
+  global paginationExpanded
   global hideHelpText
-  global activeMenuLocation
   global lastSelection
 
   yaml = ruamel.yaml.YAML()
@@ -38,10 +40,10 @@ def main():
   templatesDirectoryFolders = next(os.walk(templatesDirectory))[1]
   term = Terminal()
   hotzoneLocation = [7, 0] # Top text
-  paginationToggle = [10, term.height - 22] # Top text + controls text
+  paginationToggle = paginationSizes(term.height, reservedLines=28) # Header, borders, and controls text
   paginationStartIndex = 0
+  paginationExpanded = False
   paginationSize = paginationToggle[0]
-  activeMenuLocation = 0
   lastSelection = 0
   
   try: # If not already set, then set it.
@@ -126,7 +128,7 @@ def main():
     spaceAfterissues = len("      ")
     issuesLength = len(" !!   Issue ")
 
-    print(term.move(hotzoneLocation[0], hotzoneLocation[1]))
+    print(term.move(hotzoneLocation[0], hotzoneLocation[1]), end="")
 
     if paginationStartIndex >= 1:
       print(term.center("{b}       {uaf}      {uaf}{uaf}{uaf}                                                   {ual}           {b}".format(
@@ -137,7 +139,6 @@ def main():
     else:
       print(term.center(commonEmptyLine(renderMode)))
 
-    menuItemsActiveRow = term.get_location()[0]
     if renderType == 2 or renderType == 1: # Rerender entire hotzone
       for (index, menuItem) in enumerate(menu): # Menu loop
         if "issues" in menuItem[1] and menuItem[1]["issues"]:
@@ -148,7 +149,6 @@ def main():
 
           # Menu highlight logic
           if index == selection:
-            activeMenuLocation = term.get_location()[0]
             formattedLineText = '-> {t.blue_on_green}{title}{t.normal} <-'.format(t=term, title=menuItem[0])
             paddedLineText = generateLineText(formattedLineText, textLength=len(menuItem[0]) + selectedTextLength, paddingBefore=paddingBefore - selectedTextLength)
             toPrint = paddedLineText
@@ -211,8 +211,6 @@ def main():
       print(renderOffsetCurrentSelection, lastSelection, renderOffsetLastSelection)
       lastSelection = selection
       
-          # menuItemsActiveRow
-          # activeMenuLocation
 
 
     if paginationStartIndex + paginationSize < len(menu):
@@ -227,16 +225,22 @@ def main():
   def mainRender(menu, selection, renderType = 1):
     global paginationStartIndex
     global paginationSize
+
+    if not terminalSupportsMenu(term.width, term.height):
+      print(term.clear(), end="")
+      print(term.black_on_cornsilk4(term.center("IOTstack Build Menu")))
+      print("")
+      print(term.center("Terminal is too small to render the build menu."))
+      print(term.center("Resize to at least 82 columns by 30 rows, or press Escape."))
+      return
+
     paddingBefore = 4
 
     allIssues = []
 
-    if selection >= paginationStartIndex + paginationSize:
-      paginationStartIndex = selection - (paginationSize - 1) + 1
-      renderType = 1
-      
-    if selection <= paginationStartIndex - 1:
-      paginationStartIndex = selection
+    newPaginationStartIndex = paginationStart(selection, paginationStartIndex, paginationSize)
+    if newPaginationStartIndex != paginationStartIndex:
+      paginationStartIndex = newPaginationStartIndex
       renderType = 1
 
     try:
@@ -261,7 +265,6 @@ def main():
         if not hideHelpText:
           room = term.height - (28 + len(allIssues) + paginationSize)
           if room < 0:
-            allIssues.append({ "serviceName": "BuildStack Menu", "issues": { "screenSize": 'Not enough scren height to render correctly (t-height = ' + str(term.height) + ' v-lines = ' + str(room) + ')' } })
             print(term.center(commonEmptyLine(renderMode)))
             print(term.center("{bv}      Not enough vertical room to render controls help text ({th}, {rm})          {bv}".format(bv=specialChars[renderMode]["borderVertical"], th=padText(str(term.height), 3), rm=padText(str(room), 3))))
             print(term.center(commonEmptyLine(renderMode)))
@@ -285,30 +288,32 @@ def main():
           print(term.center(""))
           print(term.center(""))
           print(term.center(""))
-          print(term.center(("{btl}{bh}{bh}{bh}{bh}{bh}{bh} Build Issues "
-            "{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}"
-            "{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}"
-            "{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}"
-            "{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}"
-            "{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}"
-            "{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}"
-            "{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}{bh}"
-            "{bh}{bh}{bh}{bh}{bh}{bh}{bh}{btr}").format(
-            btl=specialChars[renderMode]["borderTopLeft"],
-            btr=specialChars[renderMode]["borderTopRight"],
-            bh=specialChars[renderMode]["borderHorizontal"]
-          )))
-          print(term.center(commonEmptyLine(renderMode, size = 139)))
+          issueBoxWidth = 80
+          issueTitle = " Build Issues "
+          leftBorderSize = 6
+          rightBorderSize = issueBoxWidth - leftBorderSize - len(issueTitle)
+          print(term.center(
+            specialChars[renderMode]["borderTopLeft"]
+            + (specialChars[renderMode]["borderHorizontal"] * leftBorderSize)
+            + issueTitle
+            + (specialChars[renderMode]["borderHorizontal"] * rightBorderSize)
+            + specialChars[renderMode]["borderTopRight"]
+          ))
+          print(term.center(commonEmptyLine(renderMode, size=issueBoxWidth)))
           for serviceIssues in allIssues:
             for index, issue in enumerate(serviceIssues["issues"]):
-              spacesAndBracketsLen = 5
-              issueAndTypeLen = len(issue) + len(serviceIssues["serviceName"]) + spacesAndBracketsLen
-              serviceNameAndConflictType = '{t.red_on_black}{issueService}{t.normal} ({t.yellow_on_black}{issueType}{t.normal}) '.format(t=term, issueService=serviceIssues["serviceName"], issueType=issue)
-              formattedServiceNameAndConflictType = generateLineText(str(serviceNameAndConflictType), textLength=issueAndTypeLen, paddingBefore=0, lineLength=32)
-              issueDescription = generateLineText(str(serviceIssues["issues"][issue]), textLength=len(str(serviceIssues["issues"][issue])), paddingBefore=0, lineLength=103)
-              print(term.center("{bv} {nm} - {desc} {bv}".format(nm=formattedServiceNameAndConflictType, desc=issueDescription, bv=specialChars[renderMode]["borderVertical"]) ))
-          print(term.center(commonEmptyLine(renderMode, size = 139)))
-          print(term.center(commonBottomBorder(renderMode, size = 139)))
+              plainPrefix = "%s (%s) - " % (serviceIssues["serviceName"], issue)
+              description = str(serviceIssues["issues"][issue])
+              contentWidth = issueBoxWidth - 2
+              maximumDescriptionLength = max(0, contentWidth - len(plainPrefix))
+              if len(description) > maximumDescriptionLength:
+                description = description[:max(0, maximumDescriptionLength - 3)] + "..."
+              plainContentLength = len(plainPrefix) + len(description)
+              styledPrefix = '{t.red_on_black}{service}{t.normal} ({t.yellow_on_black}{issue}{t.normal}) - '.format(t=term, service=serviceIssues["serviceName"], issue=issue)
+              content = styledPrefix + description + (" " * max(0, contentWidth - plainContentLength))
+              print(term.center("{bv} {content} {bv}".format(content=content, bv=specialChars[renderMode]["borderVertical"])))
+          print(term.center(commonEmptyLine(renderMode, size=issueBoxWidth)))
+          print(term.center(commonBottomBorder(renderMode, size=issueBoxWidth)))
 
     except Exception as err: 
       print("There was an error rendering the menu:")
@@ -329,34 +334,16 @@ def main():
     global dockerComposeServicesYaml
     dockerComposeServicesYaml.clear()
     for (index, checkedMenuItem) in enumerate(checkedMenuItems):
-      if reload == False:
-        if not checkedMenuItem in dockerComposeServicesYaml:
-          serviceFilePath = templatesDirectory + '/' + checkedMenuItem + '/' + servicesFileName
-          with open(r'%s' % serviceFilePath) as yamlServiceFile:
-            dockerComposeServicesYaml[checkedMenuItem] = yaml.load(yamlServiceFile)[checkedMenuItem]
-      else:
-        print("reload!")
-        time.sleep(1)
-        serviceFilePath = templatesDirectory + '/' + checkedMenuItem + '/' + servicesFileName
-        with open(r'%s' % serviceFilePath) as yamlServiceFile:
-          dockerComposeServicesYaml[checkedMenuItem] = yaml.load(yamlServiceFile)[checkedMenuItem]
+      templateServices = loadServiceTemplate(yaml, templatesDirectory, checkedMenuItem, servicesFileName)
+      mergeServiceTemplate(dockerComposeServicesYaml, templateServices, reload=reload)
 
     return True
 
   def loadService(serviceName, reload = False):
     try:
       global dockerComposeServicesYaml
-      if reload == False:
-        if not serviceName in dockerComposeServicesYaml:
-          serviceFilePath = templatesDirectory + '/' + serviceName + '/' + servicesFileName
-          with open(r'%s' % serviceFilePath) as yamlServiceFile:
-            dockerComposeServicesYaml[serviceName] = yaml.load(yamlServiceFile)[serviceName]
-      else:
-        print("reload!")
-        time.sleep(1)
-        servicesFileNamePath = templatesDirectory + '/' + serviceName + '/' + servicesFileName
-        with open(r'%s' % serviceFilePath) as yamlServiceFile:
-          dockerComposeServicesYaml[serviceName] = yaml.load(yamlServiceFile)[serviceName]
+      templateServices = loadServiceTemplate(yaml, templatesDirectory, serviceName, servicesFileName)
+      mergeServiceTemplate(dockerComposeServicesYaml, templateServices, reload=reload)
     except Exception as err:
       print("Error running build menu:", err)
       print("Check the following:")
@@ -369,151 +356,110 @@ def main():
 
     return True
 
+  def createHookContext(serviceName):
+    return HookContext(
+      services=dockerComposeServicesYaml,
+      serviceName=serviceName,
+      renderMode=renderMode,
+      terminal=term,
+    )
+
   def checkForIssues():
     global dockerComposeServicesYaml
     for (index, checkedMenuItem) in enumerate(checkedMenuItems):
+      menuItemIndex = getMenuItemIndexByService(checkedMenuItem)
       buildScriptPath = templatesDirectory + '/' + checkedMenuItem + '/' + buildScriptFile
-      if os.path.exists(buildScriptPath):
-        try:
-          with open(buildScriptPath, "rb") as pythonDynamicImportFile:
-            code = compile(pythonDynamicImportFile.read(), buildScriptPath, "exec")
-          execGlobals = {
-            "dockerComposeServicesYaml": dockerComposeServicesYaml,
-            "toRun": "checkForRunChecksHook",
-            "currentServiceName": checkedMenuItem
-          }
-          execLocals = locals()
-          exec(code, execGlobals, execLocals)
-          if "buildHooks" in execGlobals and "runChecksHook" in execGlobals["buildHooks"] and execGlobals["buildHooks"]["runChecksHook"]:
-            execGlobals = {
-              "dockerComposeServicesYaml": dockerComposeServicesYaml,
-              "toRun": "runChecks",
-              "currentServiceName": checkedMenuItem
-            }
-            execLocals = locals()
-            try:
-              exec(code, execGlobals, execLocals)
-              if "issues" in execGlobals and len(execGlobals["issues"]) > 0:
-                menu[getMenuItemIndexByService(checkedMenuItem)][1]["issues"] = execGlobals["issues"]
-              else:
-                menu[getMenuItemIndexByService(checkedMenuItem)][1]["issues"] = []
-            except Exception as err:
-              print("Error running checkForIssues on '%s'" % checkedMenuItem)
-              traceback.print_exc()
-              input("Press Enter to continue...")
-          else:
-            menu[getMenuItemIndexByService(checkedMenuItem)][1]["issues"] = []
-        except Exception as err:
-          print("Error running checkForIssues on '%s'" % checkedMenuItem)
-          traceback.print_exc()
-          input("Press any key to exit...")
-          sys.exit(1)
+      if not os.path.exists(buildScriptPath):
+        menu[menuItemIndex][1]["issues"] = []
+        continue
+
+      try:
+        context = createHookContext(checkedMenuItem)
+        if serviceHookAvailable(buildScriptPath, "runChecks", context):
+          issues = runServiceHook(buildScriptPath, "runChecks", context)
+        else:
+          issues = {}
+        dockerComposeServicesYaml = context.services
+        menu[menuItemIndex][1]["issues"] = issues if issues else []
+      except Exception:
+        print("Error running checkForIssues on '%s'" % checkedMenuItem)
+        traceback.print_exc()
+        input("Press any key to exit...")
+        sys.exit(1)
 
   def checkForOptions():
-    global dockerComposeServicesYaml
     for (index, menuItem) in enumerate(menu):
-      buildScriptPath = templatesDirectory + '/' + menuItem[0] + '/' + buildScriptFile
-      if os.path.exists(buildScriptPath):
-        try:
-          with open(buildScriptPath, "rb") as pythonDynamicImportFile:
-            code = compile(pythonDynamicImportFile.read(), buildScriptPath, "exec")
-          execGlobals = {
-            "dockerComposeServicesYaml": dockerComposeServicesYaml,
-            "toRun": "checkForOptionsHook",
-            "currentServiceName": menuItem[0],
-            "renderMode": renderMode
-          }
-          execLocals = {}
-          exec(code, execGlobals, execLocals)
-          if not "buildHooks" in menu[getMenuItemIndexByService(menuItem[0])][1]:
-            menu[getMenuItemIndexByService(menuItem[0])][1]["buildHooks"] = {}
-          if "options" in execGlobals["buildHooks"] and execGlobals["buildHooks"]["options"]:
-            menu[getMenuItemIndexByService(menuItem[0])][1]["buildHooks"]["options"] = True
-        except Exception as err:
-          print("Error running checkForOptions on '%s'" % menuItem[0])
-          traceback.print_exc()
-          input("Press any key to exit...")
-          sys.exit(1)
+      serviceName = menuItem[0]
+      buildScriptPath = templatesDirectory + '/' + serviceName + '/' + buildScriptFile
+      hookState = menuItem[1].setdefault("buildHooks", {})
+      hookState["options"] = False
+      if not os.path.exists(buildScriptPath):
+        continue
+
+      try:
+        context = createHookContext(serviceName)
+        hookState["options"] = serviceHookAvailable(buildScriptPath, "options", context)
+      except Exception:
+        print("Error checking service options on '%s'" % serviceName)
+        traceback.print_exc()
+        input("Press any key to exit...")
+        sys.exit(1)
 
   def runPrebuildHook():
     global dockerComposeServicesYaml
     for (index, checkedMenuItem) in enumerate(checkedMenuItems):
       buildScriptPath = templatesDirectory + '/' + checkedMenuItem + '/' + buildScriptFile
-      if os.path.exists(buildScriptPath):
-          with open(buildScriptPath, "rb") as pythonDynamicImportFile:
-            code = compile(pythonDynamicImportFile.read(), buildScriptPath, "exec")
-          execGlobals = {
-            "dockerComposeServicesYaml": dockerComposeServicesYaml,
-            "toRun": "checkForPreBuildHook",
-            "currentServiceName": checkedMenuItem
-          }
-          execLocals = locals()
-          try:
-            exec(code, execGlobals, execLocals)
-            if "preBuildHook" in execGlobals["buildHooks"] and execGlobals["buildHooks"]["preBuildHook"]:
-              execGlobals = {
-                "dockerComposeServicesYaml": dockerComposeServicesYaml,
-                "toRun": "preBuild",
-                "currentServiceName": checkedMenuItem
-              }
-              execLocals = locals()
-              exec(code, execGlobals, execLocals)
-          except Exception as err:
-            print("Error running PreBuildHook on '%s'" % checkedMenuItem)
-            traceback.print_exc()
-            input("Press Enter to continue...")
-            try: # If the prebuild hook modified the docker-compose object, pull it from the script back to here.
-              dockerComposeServicesYaml = execGlobals["dockerComposeServicesYaml"]
-            except:
-              pass
+      if not os.path.exists(buildScriptPath):
+        continue
+
+      try:
+        context = createHookContext(checkedMenuItem)
+        if serviceHookAvailable(buildScriptPath, "preBuild", context):
+          runServiceHook(buildScriptPath, "preBuild", context)
+        dockerComposeServicesYaml = context.services
+      except Exception:
+        print("Error running preBuild on '%s'" % checkedMenuItem)
+        traceback.print_exc()
+        input("Press Enter to continue...")
 
   def runPostBuildHook():
+    global dockerComposeServicesYaml
     for (index, checkedMenuItem) in enumerate(checkedMenuItems):
       buildScriptPath = templatesDirectory + '/' + checkedMenuItem + '/' + buildScriptFile
-      if os.path.exists(buildScriptPath):
-          with open(buildScriptPath, "rb") as pythonDynamicImportFile:
-            code = compile(pythonDynamicImportFile.read(), buildScriptPath, "exec")
-          execGlobals = {
-            "dockerComposeServicesYaml": dockerComposeServicesYaml,
-            "toRun": "checkForPostBuildHook",
-            "currentServiceName": checkedMenuItem
-          }
-          execLocals = locals()
-          try:
-            exec(code, execGlobals, execLocals)
-            if "postBuildHook" in execGlobals["buildHooks"] and execGlobals["buildHooks"]["postBuildHook"]:
-              execGlobals = {
-                "dockerComposeServicesYaml": dockerComposeServicesYaml,
-                "toRun": "postBuild",
-                "currentServiceName": checkedMenuItem
-              }
-              execLocals = locals()
-              exec(code, execGlobals, execLocals)
-          except Exception as err:
-            print("Error running PostBuildHook on '%s'" % checkedMenuItem)
-            traceback.print_exc()
-            input("Press Enter to continue...")
+      if not os.path.exists(buildScriptPath):
+        continue
+
+      try:
+        context = createHookContext(checkedMenuItem)
+        if serviceHookAvailable(buildScriptPath, "postBuild", context):
+          runServiceHook(buildScriptPath, "postBuild", context)
+        dockerComposeServicesYaml = context.services
+      except Exception:
+        print("Error running postBuild on '%s'" % checkedMenuItem)
+        traceback.print_exc()
+        input("Press Enter to continue...")
 
   def executeServiceOptions():
     global dockerComposeServicesYaml
     menuItem = menu[selection]
-    if menu[selection][1]["checked"] and "buildHooks" in menuItem[1] and "options" in menuItem[1]["buildHooks"] and menuItem[1]["buildHooks"]["options"]:
-      buildScriptPath = templatesDirectory + '/' + menuItem[0] + '/' + buildScriptFile
-      if os.path.exists(buildScriptPath):
-        with open(buildScriptPath, "rb") as pythonDynamicImportFile:
-          code = compile(pythonDynamicImportFile.read(), buildScriptPath, "exec")
+    hasOptions = menuItem[1].get("buildHooks", {}).get("options", False)
+    if not menuItem[1]["checked"] or not hasOptions:
+      return
 
-        execGlobals = {
-          "dockerComposeServicesYaml": dockerComposeServicesYaml,
-          "toRun": "runOptionsMenu",
-          "currentServiceName": menuItem[0],
-          "renderMode": renderMode
-        }
-        execLocals = locals()
-        exec(code, execGlobals, execLocals)
-        dockerComposeServicesYaml = execGlobals["dockerComposeServicesYaml"]
-        checkForIssues()
-        mainRender(menu, selection, 1)
+    buildScriptPath = templatesDirectory + '/' + menuItem[0] + '/' + buildScriptFile
+    if not os.path.exists(buildScriptPath):
+      return
+
+    try:
+      context = createHookContext(menuItem[0])
+      runServiceHook(buildScriptPath, "options", context)
+      dockerComposeServicesYaml = context.services
+      checkForIssues()
+      mainRender(menu, selection, 1)
+    except Exception:
+      print("Error running service options on '%s'" % menuItem[0])
+      traceback.print_exc()
+      input("Press Enter to continue...")
 
   def getMenuItemIndexByService(serviceName):
     for (index, menuItem) in enumerate(menu):
@@ -525,7 +471,8 @@ def main():
     if menu[selection][1]["checked"] == True:
       menu[selection][1]["checked"] = False
       menu[selection][1]["issues"] = None
-      del dockerComposeServicesYaml[menu[selection][0]]
+      templateServices = loadServiceTemplate(yaml, templatesDirectory, menu[selection][0], servicesFileName)
+      removeServiceTemplate(dockerComposeServicesYaml, templateServices)
     else:
       menu[selection][1]["checked"] = True
       print(menu[selection][0])
@@ -533,7 +480,7 @@ def main():
 
   def prepareMenuState():
     global dockerComposeServicesYaml
-    for (index, serviceName) in enumerate(dockerComposeServicesYaml):
+    for (index, serviceName) in enumerate(list(dockerComposeServicesYaml)):
       checkMenuItem(getMenuItemIndexByService(serviceName))
       setCheckedMenuItems()
       checkForIssues()
@@ -558,7 +505,12 @@ def main():
 
   def onResize(sig, action):
     global paginationToggle
-    paginationToggle = [10, term.height - 25]
+    global paginationSize
+    global paginationStartIndex
+    global paginationExpanded
+    paginationToggle = paginationSizes(term.height, reservedLines=28)
+    paginationSize = paginationToggle[1] if paginationExpanded else paginationToggle[0]
+    paginationStartIndex = max(0, min(paginationStartIndex, max(0, len(menu) - paginationSize)))
     mainRender(menu, selection, 1)
 
   templatesList = generateTemplateList(templatesDirectoryFolders)
@@ -576,6 +528,7 @@ def main():
       if loadCurrentConfigs(templatesList):
         prepareMenuState()
       mainRender(menu, selection, 1)
+      needsRender = 0
       selectionInProgress = True
       with term.cbreak():
         while selectionInProgress:
@@ -583,11 +536,10 @@ def main():
           if key.is_sequence:
             if key.name == 'KEY_TAB':
               needsRender = 1
-              if paginationSize == paginationToggle[0]:
-                paginationSize = paginationToggle[1]
+              paginationExpanded = not paginationExpanded
+              paginationSize = paginationToggle[1] if paginationExpanded else paginationToggle[0]
+              if paginationExpanded:
                 paginationStartIndex = 0
-              else:
-                paginationSize = paginationToggle[0]
             if key.name == 'KEY_DOWN':
               selection += 1
               needsRender = 2
@@ -617,14 +569,13 @@ def main():
               else:
                 hideHelpText = True
               needsRender = 1
-          else:
-            print(key)
-            time.sleep(0.5)
 
           selection = selection % len(menu)
 
-          mainRender(menu, selection, needsRender)
+          if needsRender > 0:
+            mainRender(menu, selection, needsRender)
+            needsRender = 0
 
-originalSignalHandler = signal.getsignal(signal.SIGINT)
+originalSignalHandler = signal.getsignal(signal.SIGWINCH)
 main()
 signal.signal(signal.SIGWINCH, originalSignalHandler)

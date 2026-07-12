@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
+HOOK_API_VERSION = 2
+
 issues = {} # Returned issues dict
-buildHooks = {} # Options, and others hooks
 haltOnErrors = True
 
 # Main wrapper function. Required to make local vars work correctly
@@ -22,7 +23,6 @@ def main():
 
   global dockerComposeServicesYaml # The loaded memory YAML of all checked services
   global toRun # Switch for which function to run when executed
-  global buildHooks # Where to place the options menu result
   global currentServiceName # Name of the current service
   global issues # Returned issues dict
   global haltOnErrors # Turn on to allow erroring
@@ -40,43 +40,6 @@ def main():
 
   # runtime vars
   portConflicts = []
-
-  # This lets the menu know whether to put " >> Options " or not
-  # This function is REQUIRED.
-  def checkForOptionsHook():
-    try:
-      buildHooks["options"] = callable(runOptionsMenu)
-    except:
-      buildHooks["options"] = False
-      return buildHooks
-    return buildHooks
-
-  # This function is REQUIRED.
-  def checkForPreBuildHook():
-    try:
-      buildHooks["preBuildHook"] = callable(preBuild)
-    except:
-      buildHooks["preBuildHook"] = False
-      return buildHooks
-    return buildHooks
-
-  # This function is REQUIRED.
-  def checkForPostBuildHook():
-    try:
-      buildHooks["postBuildHook"] = callable(postBuild)
-    except:
-      buildHooks["postBuildHook"] = False
-      return buildHooks
-    return buildHooks
-
-  # This function is REQUIRED.
-  def checkForRunChecksHook():
-    try:
-      buildHooks["runChecksHook"] = callable(runChecks)
-    except:
-      buildHooks["runChecksHook"] = False
-      return buildHooks
-    return buildHooks
 
   # This service will not check anything unless this is set
   # This function is optional, and will run each time the menu is rendered
@@ -303,17 +266,50 @@ def main():
   ####################
 
 
+  hook = locals().get(toRun)
+  if hook is None:
+    raise ValueError("Unknown service hook '%s'" % toRun)
   if haltOnErrors:
-    eval(toRun)()
+    hook()
   else:
     try:
-      eval(toRun)()
-    except:
+      hook()
+    except Exception:
       pass
 
-# This check isn't required, but placed here for debugging purposes
-global currentServiceName # Name of the current service
-if currentServiceName == 'home_assistant':
+def _runHook(context, action):
+  """Adapt the service's established implementation to hook API v2."""
+  global dockerComposeServicesYaml
+  global currentServiceName
+  global renderMode
+  global toRun
+
+  dockerComposeServicesYaml = context.services
+  currentServiceName = context.serviceName
+  renderMode = context.renderMode
+  toRun = action
   main()
-else:
-  print("Error. '{}' Tried to run 'home_assistant' config".format(currentServiceName))
+  context.services = dockerComposeServicesYaml
+
+
+def runChecks(context):
+  """Return build issues for the currently selected Compose services."""
+  global issues
+  issues = {}
+  _runHook(context, "runChecks")
+  return issues
+
+
+def runOptionsMenu(context):
+  """Open this service's interactive configuration menu."""
+  _runHook(context, "runOptionsMenu")
+
+
+def preBuild(context):
+  """Run this service's pre-build work."""
+  _runHook(context, "preBuild")
+
+
+def postBuild(context):
+  """Run this service's post-build work."""
+  _runHook(context, "postBuild")

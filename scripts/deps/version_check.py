@@ -37,7 +37,7 @@ def checkVersion(requiredVersion, currentVersion):
   if currentMajor > requiredMajor:
     return True, '', []
 
-  if currentMajor == requiredMajor and currentMajor > requiredMinor:
+  if currentMajor == requiredMajor and currentMinor > requiredMinor:
     return True, '', []
 
   if currentMajor == requiredMajor and currentMinor == requiredMinor and currentBuild >= requiredBuild:
