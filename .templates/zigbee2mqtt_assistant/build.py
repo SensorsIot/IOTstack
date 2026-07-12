@@ -67,12 +67,11 @@ def main():
   if hook is None:
     raise ValueError("Unknown service hook '%s'" % toRun)
   if haltOnErrors:
-    hook()
-  else:
-    try:
-      hook()
-    except Exception:
-      pass
+    return hook()
+  try:
+    return hook()
+  except Exception:
+    return None
 
 def _runHook(context, action):
   """Adapt the service's established implementation to hook API v2."""
@@ -85,8 +84,9 @@ def _runHook(context, action):
   currentServiceName = context.serviceName
   renderMode = context.renderMode
   toRun = action
-  main()
+  result = main()
   context.services = dockerComposeServicesYaml
+  return result
 
 
 def runChecks(context):
@@ -99,9 +99,9 @@ def runChecks(context):
 
 def preBuild(context):
   """Run this service's pre-build work."""
-  _runHook(context, "preBuild")
+  return _runHook(context, "preBuild")
 
 
 def postBuild(context):
   """Run this service's post-build work."""
-  _runHook(context, "postBuild")
+  return _runHook(context, "postBuild")

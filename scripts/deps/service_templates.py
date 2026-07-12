@@ -21,3 +21,26 @@ def mergeServiceTemplate(dockerComposeServicesYaml, templateServices, reload=Fal
 def removeServiceTemplate(dockerComposeServicesYaml, templateServices):
   for templateServiceName in templateServices:
     dockerComposeServicesYaml.pop(templateServiceName, None)
+
+
+def restoreSavedServiceTemplates(
+  yaml,
+  templatesDirectory,
+  templateNames,
+  savedServices,
+  servicesFileName,
+):
+  if not isinstance(savedServices, dict):
+    return {}
+
+  restoredServices = {}
+  for templateName in templateNames:
+    if templateName not in savedServices:
+      continue
+    templateServices = loadServiceTemplate(
+      yaml, templatesDirectory, templateName, servicesFileName
+    )
+    for serviceName in templateServices:
+      if serviceName in savedServices:
+        restoredServices[serviceName] = savedServices[serviceName]
+  return restoredServices

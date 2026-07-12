@@ -13,9 +13,16 @@ def main():
   from deps.chars import specialChars, commonTopBorder, commonBottomBorder, commonEmptyLine, commonTextLine, padText
   from deps.consts import servicesDirectory, templatesDirectory, buildCache, envFile, dockerPathOutput, servicesFileName, composeOverrideFile
   from deps.yaml_merge import mergeYaml
-  from deps.service_templates import loadServiceTemplate, mergeServiceTemplate, removeServiceTemplate
-  from deps.menu_renderer import pageSizeForTerminal, paginationStart, terminalSupportsMenu
+  from deps.service_templates import loadServiceTemplate, mergeServiceTemplate, removeServiceTemplate, restoreSavedServiceTemplates
+  from deps.menu_renderer import issuePanelHeight, pageSizeForTerminal, paginationStart, serviceOptionsMessage, terminalSupportsMenu
   from deps.service_hooks import HookContext, serviceHookAvailable, runServiceHook
+  from deps.compose_environment import (
+    requiredEnvironmentIssues,
+    configurableEnvironmentVariables,
+    restoreEnvironmentVariableReferences,
+  )
+  from deps.environment_options import runEnvironmentOptions
+  from deps.issue_viewer import compactIssueRows, runIssueViewer
   from blessed import Terminal
   global signal
   global renderMode
@@ -54,7 +61,17 @@ def main():
   def buildServices(): # TODO: Move this into a dependency so that it can be executed with just a list of services.
     global dockerComposeServicesYaml
     try:
-      runPrebuildHook()
+      requiredIssues = requiredEnvironmentIssues(dockerComposeServicesYaml)
+      if requiredIssues:
+        print("")
+        print("Build warning: required environment variables are missing:")
+        for description in requiredIssues.values():
+          print("* %s" % description)
+        print("Add the missing values to .env before building this stack.")
+        input("Press Enter to continue...")
+        return False
+      if not runPrebuildHook():
+        return False
       menuStateFileYaml = {}
       menuStateFileYaml["services"] = dockerComposeServicesYaml
 
@@ -77,13 +94,16 @@ def main():
 
       with open(r'%s' % dockerSavePathOutput, 'w') as outputFile:
         yaml.dump(menuStateFileYaml, outputFile)
-      runPostBuildHook()
+      if not runPostBuildHook():
+        return False
 
       if os.path.exists('./postbuild.sh'):
-        servicesList = ""
-        for (index, serviceName) in enumerate(dockerComposeServicesYaml):
-          servicesList += " " + serviceName
-        subprocess.call("./postbuild.sh" + servicesList, shell=True)
+        postBuildCommand = ["./postbuild.sh"] + list(dockerComposeServicesYaml)
+        postBuildResult = subprocess.call(postBuildCommand)
+        if postBuildResult != 0:
+          print("postbuild.sh failed with exit status %s." % postBuildResult)
+          input("Press Enter to continue...")
+          return False
 
       return True
     except Exception as err: 
@@ -120,7 +140,7 @@ def main():
     
     return result
 
-  def renderHotZone(term, renderType, menu, selection, paddingBefore, allIssues):
+  def renderHotZone(term, renderType, menu, selection, paddingBefore):
     global paginationSize
     optionsLength = len(" >>   Options ")
     optionsIssuesSpace = len("      ")
@@ -141,9 +161,6 @@ def main():
 
     if renderType == 2 or renderType == 1: # Rerender entire hotzone
       for (index, menuItem) in enumerate(menu): # Menu loop
-        if "issues" in menuItem[1] and menuItem[1]["issues"]:
-          allIssues.append({ "serviceName": menuItem[0], "issues": menuItem[1]["issues"] })
-
         if index >= paginationStartIndex and index < paginationStartIndex + paginationSize:
           lineText = generateLineText(menuItem[0], paddingBefore=paddingBefore)
 
@@ -222,6 +239,14 @@ def main():
     else:
       print(term.center(commonEmptyLine(renderMode)))
 
+  def getIssueEntries():
+    return [
+      (menuItem[0], issue, menuItem[1]["issues"][issue])
+      for menuItem in menu
+      if menuItem[1].get("issues")
+      for issue in menuItem[1]["issues"]
+    ]
+
   def mainRender(menu, selection, renderType = 1):
     global paginationStartIndex
     global paginationSize
@@ -236,7 +261,22 @@ def main():
 
     paddingBefore = 4
 
-    allIssues = []
+    issueEntries = getIssueEntries()
+    maximumIssueRows = min(4, max(1, term.height - 28))
+    issueRows = compactIssueRows(
+      issueEntries,
+      contentWidth=76,
+      maximumRows=maximumIssueRows,
+    )
+
+    issuesHeight = issuePanelHeight(len(issueRows), fixedRows=8)
+    showHelpText = not hideHelpText and term.height >= 27 + issuesHeight + 1
+    reservedLines = (27 if showHelpText else 19) + issuesHeight
+    newPaginationSize = pageSizeForTerminal(term.height, reservedLines=reservedLines)
+    if newPaginationSize != paginationSize:
+      paginationSize = newPaginationSize
+      paginationStartIndex = max(0, min(paginationStartIndex, max(0, len(menu) - paginationSize)))
+      renderType = 1
 
     newPaginationStartIndex = paginationStart(selection, paginationStartIndex, paginationSize)
     if newPaginationStartIndex != paginationStartIndex:
@@ -258,27 +298,20 @@ def main():
         print(term.center(commonEmptyLine(renderMode)))
         print(term.center(commonEmptyLine(renderMode)))
 
-      renderHotZone(term, renderType, menu, selection, paddingBefore, allIssues)
+      renderHotZone(term, renderType, menu, selection, paddingBefore)
 
       if (renderType == 1):
         print(term.center(commonEmptyLine(renderMode)))
-        if not hideHelpText:
-          room = term.height - (27 + len(allIssues) + paginationSize)
-          if room < 0:
-            print(term.center(commonEmptyLine(renderMode)))
-            print(term.center("{bv}      Not enough vertical room to render controls help text ({th}, {rm})          {bv}".format(bv=specialChars[renderMode]["borderVertical"], th=padText(str(term.height), 3), rm=padText(str(room), 3))))
-            print(term.center(commonEmptyLine(renderMode)))
-          else: 
-            print(term.center(commonEmptyLine(renderMode)))
-            print(term.center("{bv}      Controls:                                                                 {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
-            print(term.center("{bv}      [Space] to select or deselect image                                       {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
-            print(term.center("{bv}      [Up] and [Down] to move selection cursor                                  {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
-            print(term.center("{bv}      [Right] for options for containers that support them                      {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
-            print(term.center("{bv}      [H] Show/hide this text                                                   {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
-            # print(term.center("{bv}      [F] Filter options                                                        {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
-            print(term.center("{bv}      [Enter] to begin build                                                    {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
-            print(term.center("{bv}      [Escape] to cancel build                                                  {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
-            print(term.center(commonEmptyLine(renderMode)))
+        if showHelpText:
+          print(term.center(commonEmptyLine(renderMode)))
+          print(term.center("{bv}      Controls:                                                                 {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
+          print(term.center("{bv}      [Space] to select or deselect image                                       {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
+          print(term.center("{bv}      [Up] and [Down] to move selection cursor                                  {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
+          print(term.center("{bv}      [Right] for options for containers that support them                      {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
+          print(term.center("{bv}      [H] Show/hide this text                                                   {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
+          print(term.center("{bv}      [Enter] to begin build                                                    {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
+          print(term.center("{bv}      [Escape] to cancel build                                                  {bv}".format(bv=specialChars[renderMode]["borderVertical"])))
+          print(term.center(commonEmptyLine(renderMode)))
         if transientMessage:
           print(term.center(commonTextLine(
             renderMode,
@@ -291,7 +324,7 @@ def main():
         print(term.center(commonEmptyLine(renderMode)))
         print(term.center(commonBottomBorder(renderMode)))
 
-        if len(allIssues) > 0:
+        if issueEntries:
           print(term.center(""))
           print(term.center(""))
           print(term.center(""))
@@ -307,18 +340,20 @@ def main():
             + specialChars[renderMode]["borderTopRight"]
           ))
           print(term.center(commonEmptyLine(renderMode, size=issueBoxWidth)))
-          for serviceIssues in allIssues:
-            for index, issue in enumerate(serviceIssues["issues"]):
-              plainPrefix = "%s (%s) - " % (serviceIssues["serviceName"], issue)
-              description = str(serviceIssues["issues"][issue])
-              contentWidth = issueBoxWidth - 2
-              maximumDescriptionLength = max(0, contentWidth - len(plainPrefix))
-              if len(description) > maximumDescriptionLength:
-                description = description[:max(0, maximumDescriptionLength - 3)] + "..."
-              plainContentLength = len(plainPrefix) + len(description)
-              styledPrefix = '{t.red_on_black}{service}{t.normal} ({t.yellow_on_black}{issue}{t.normal}) - '.format(t=term, service=serviceIssues["serviceName"], issue=issue)
-              content = styledPrefix + description + (" " * max(0, contentWidth - plainContentLength))
-              print(term.center("{bv} {content} {bv}".format(content=content, bv=specialChars[renderMode]["borderVertical"])))
+          for issueRow in issueRows:
+            print(term.center(commonTextLine(
+              renderMode,
+              issueRow,
+              size=issueBoxWidth,
+              paddingBefore=2,
+            )))
+          print(term.center(commonTextLine(
+            renderMode,
+            "[I] View all issues",
+            size=issueBoxWidth,
+            paddingBefore=2,
+            style=term.yellow,
+          )))
           print(term.center(commonEmptyLine(renderMode, size=issueBoxWidth)))
           print(term.center(commonBottomBorder(renderMode, size=issueBoxWidth)))
 
@@ -371,22 +406,33 @@ def main():
       terminal=term,
     )
 
+  def getOwnedServices(serviceName):
+    templateServices = loadServiceTemplate(
+      yaml, templatesDirectory, serviceName, servicesFileName
+    )
+    return {
+      ownedServiceName: dockerComposeServicesYaml[ownedServiceName]
+      for ownedServiceName in templateServices
+      if ownedServiceName in dockerComposeServicesYaml
+    }
+
   def checkForIssues():
     global dockerComposeServicesYaml
     for (index, checkedMenuItem) in enumerate(checkedMenuItems):
       menuItemIndex = getMenuItemIndexByService(checkedMenuItem)
       buildScriptPath = templatesDirectory + '/' + checkedMenuItem + '/' + buildScriptFile
-      if not os.path.exists(buildScriptPath):
-        menu[menuItemIndex][1]["issues"] = []
-        continue
 
       try:
-        context = createHookContext(checkedMenuItem)
-        if serviceHookAvailable(buildScriptPath, "runChecks", context):
-          issues = runServiceHook(buildScriptPath, "runChecks", context)
-        else:
-          issues = {}
-        dockerComposeServicesYaml = context.services
+        issues = {}
+        if os.path.exists(buildScriptPath):
+          context = createHookContext(checkedMenuItem)
+          if serviceHookAvailable(buildScriptPath, "runChecks", context):
+            hookIssues = runServiceHook(buildScriptPath, "runChecks", context)
+            issues.update(hookIssues)
+          dockerComposeServicesYaml = context.services
+
+        ownedServices = getOwnedServices(checkedMenuItem)
+        issues.update(requiredEnvironmentIssues(ownedServices))
         menu[menuItemIndex][1]["issues"] = issues if issues else []
       except Exception:
         print("Error running checkForIssues on '%s'" % checkedMenuItem)
@@ -399,13 +445,27 @@ def main():
       serviceName = menuItem[0]
       buildScriptPath = templatesDirectory + '/' + serviceName + '/' + buildScriptFile
       hookState = menuItem[1].setdefault("buildHooks", {})
-      hookState["options"] = False
-      if not os.path.exists(buildScriptPath):
-        continue
+      hookState["serviceOptions"] = False
 
       try:
-        context = createHookContext(serviceName)
-        hookState["options"] = serviceHookAvailable(buildScriptPath, "options", context)
+        templateServices = (
+          loadServiceTemplate(
+            yaml, templatesDirectory, serviceName, servicesFileName
+          )
+          if menuItem[1]["checked"]
+          else {}
+        )
+        hookState["environmentOptions"] = bool(
+          configurableEnvironmentVariables(templateServices)
+        )
+        if os.path.exists(buildScriptPath):
+          context = createHookContext(serviceName)
+          hookState["serviceOptions"] = serviceHookAvailable(
+            buildScriptPath, "options", context
+          )
+        hookState["options"] = (
+          hookState["environmentOptions"] or hookState["serviceOptions"]
+        )
       except Exception:
         print("Error checking service options on '%s'" % serviceName)
         traceback.print_exc()
@@ -422,12 +482,18 @@ def main():
       try:
         context = createHookContext(checkedMenuItem)
         if serviceHookAvailable(buildScriptPath, "preBuild", context):
-          runServiceHook(buildScriptPath, "preBuild", context)
+          hookResult = runServiceHook(buildScriptPath, "preBuild", context)
+          if hookResult is False:
+            print("preBuild reported a failure for '%s'." % checkedMenuItem)
+            input("Press Enter to continue...")
+            return False
         dockerComposeServicesYaml = context.services
       except Exception:
         print("Error running preBuild on '%s'" % checkedMenuItem)
         traceback.print_exc()
         input("Press Enter to continue...")
+        return False
+    return True
 
   def runPostBuildHook():
     global dockerComposeServicesYaml
@@ -439,32 +505,67 @@ def main():
       try:
         context = createHookContext(checkedMenuItem)
         if serviceHookAvailable(buildScriptPath, "postBuild", context):
-          runServiceHook(buildScriptPath, "postBuild", context)
+          hookResult = runServiceHook(buildScriptPath, "postBuild", context)
+          if hookResult is False:
+            print("postBuild reported a failure for '%s'." % checkedMenuItem)
+            input("Press Enter to continue...")
+            return False
         dockerComposeServicesYaml = context.services
       except Exception:
         print("Error running postBuild on '%s'" % checkedMenuItem)
         traceback.print_exc()
         input("Press Enter to continue...")
+        return False
+    return True
 
   def executeServiceOptions():
     global dockerComposeServicesYaml
     menuItem = menu[selection]
-    hasOptions = menuItem[1].get("buildHooks", {}).get("options", False)
-    if not menuItem[1]["checked"] or not hasOptions:
+    hookState = menuItem[1].get("buildHooks", {})
+    if not menuItem[1]["checked"] or not hookState.get("options", False):
       return
 
-    buildScriptPath = templatesDirectory + '/' + menuItem[0] + '/' + buildScriptFile
-    if not os.path.exists(buildScriptPath):
-      return
+    serviceName = menuItem[0]
+    buildScriptPath = templatesDirectory + '/' + serviceName + '/' + buildScriptFile
+    templateServices = loadServiceTemplate(
+      yaml, templatesDirectory, serviceName, servicesFileName
+    )
+
+    def onEnvironmentValueSaved(name, unusedValue):
+      restoreEnvironmentVariableReferences(
+        dockerComposeServicesYaml,
+        templateServices,
+        name,
+      )
+
+    def openCustomServiceOptions():
+      global dockerComposeServicesYaml
+      context = createHookContext(serviceName)
+      result = runServiceHook(buildScriptPath, "options", context)
+      dockerComposeServicesYaml = context.services
+      return result
 
     try:
-      context = createHookContext(menuItem[0])
-      runServiceHook(buildScriptPath, "options", context)
-      dockerComposeServicesYaml = context.services
+      if hookState.get("environmentOptions", False):
+        customOptions = (
+          openCustomServiceOptions
+          if hookState.get("serviceOptions", False)
+          else None
+        )
+        runEnvironmentOptions(
+          term,
+          renderMode,
+          serviceName,
+          templateServices,
+          openServiceOptions=customOptions,
+          onValueSaved=onEnvironmentValueSaved,
+        )
+      elif hookState.get("serviceOptions", False):
+        openCustomServiceOptions()
       checkForIssues()
       mainRender(menu, selection, 1)
     except Exception:
-      print("Error running service options on '%s'" % menuItem[0])
+      print("Error running service options on '%s'" % serviceName)
       traceback.print_exc()
       input("Press Enter to continue...")
 
@@ -487,7 +588,11 @@ def main():
 
   def prepareMenuState():
     global dockerComposeServicesYaml
-    for (index, serviceName) in enumerate(list(dockerComposeServicesYaml)):
+    selectedTemplates = [
+      serviceName for serviceName in dockerComposeServicesYaml
+      if serviceName in templatesList
+    ]
+    for serviceName in selectedTemplates:
       checkMenuItem(getMenuItemIndexByService(serviceName))
       setCheckedMenuItems()
       checkForIssues()
@@ -502,20 +607,18 @@ def main():
         previousConfigs = yaml.load(fileSavedConfigs)
         if not previousConfigs == None:
           if "services" in previousConfigs:
-            dockerComposeServicesYaml = {}
-            for (index, serviceName) in enumerate(previousConfigs["services"]):
-              if serviceName in templatesList: # This ensures every service loaded has a template directory
-                dockerComposeServicesYaml[serviceName] = previousConfigs["services"][serviceName]
-            return True
+            dockerComposeServicesYaml = restoreSavedServiceTemplates(
+              yaml,
+              templatesDirectory,
+              templatesList,
+              previousConfigs["services"],
+              servicesFileName,
+            )
+            return bool(dockerComposeServicesYaml)
     dockerComposeServicesYaml = {}
     return False
 
   def onResize(sig, action):
-    global paginationSize
-    global paginationStartIndex
-    reservedLines = 19 if hideHelpText else 27
-    paginationSize = pageSizeForTerminal(term.height, reservedLines=reservedLines)
-    paginationStartIndex = max(0, min(paginationStartIndex, max(0, len(menu) - paginationSize)))
     mainRender(menu, selection, 1)
 
   templatesList = generateTemplateList(templatesDirectoryFolders)
@@ -544,13 +647,19 @@ def main():
           if key.is_sequence:
             if key.name == 'KEY_DOWN':
               selection += 1
-              needsRender = 2
+              if needsRender != 1:
+                needsRender = 2
             if key.name == 'KEY_UP':
               selection -= 1
-              needsRender = 2
+              if needsRender != 1:
+                needsRender = 2
             if key.name == 'KEY_RIGHT':
-              if not menu[selection][1]["checked"]:
-                transientMessage = "Select this container with [Space] before opening its options."
+              hasOptions = menu[selection][1].get("buildHooks", {}).get("options", False)
+              transientMessage = serviceOptionsMessage(
+                hasOptions,
+                menu[selection][1]["checked"],
+              )
+              if transientMessage:
                 needsRender = 1
               else:
                 executeServiceOptions()
@@ -574,10 +683,12 @@ def main():
                 hideHelpText = False
               else:
                 hideHelpText = True
-              reservedLines = 19 if hideHelpText else 27
-              paginationSize = pageSizeForTerminal(term.height, reservedLines=reservedLines)
-              paginationStartIndex = max(0, min(paginationStartIndex, max(0, len(menu) - paginationSize)))
               needsRender = 1
+            elif key.lower() == 'i':
+              issueEntries = getIssueEntries()
+              if issueEntries:
+                runIssueViewer(term, renderMode, issueEntries)
+                needsRender = 1
 
           selection = selection % len(menu)
 

@@ -82,6 +82,8 @@ def serviceHookAvailable(buildScriptPath, hookName, context):
 
   _requireSupportedApiVersion(buildScriptPath)
   module = _loadModernHook(buildScriptPath, context.serviceName)
+  if hookName == "options" and getattr(module, "OPTIONS_AVAILABLE", True) is False:
+    return False
   return callable(getattr(module, HOOK_FUNCTIONS[hookName], None))
 
 

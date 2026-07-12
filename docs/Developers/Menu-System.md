@@ -107,7 +107,7 @@ When an item is selected, the menu updates its checked state, loads every Compos
 
 ### Check for options
 
-During a full render, the build menu loads each optional `build.py` module and checks for a callable `runOptionsMenu(context)` function. If one exists, the options indicator is shown for that service.
+During a full render, the build menu checks the selected template for Compose environment settings and loads its optional `build.py` module. The options indicator is shown when automatic settings or a callable `runOptionsMenu(context)` function are available.
 
 ### Check for issues
 
@@ -115,7 +115,7 @@ When a service is selected or deselected, the menu calls its optional `runChecks
 
 ### Prebuild hook
 
-Pressing enter starts the build and calls each selected service's optional `preBuild(context)` function. It can create configuration files, generate credentials, or update `context.services` before Compose output is written.
+After required environment settings pass validation, the build calls each selected service's optional `preBuild(context)` function. It can create configuration files or update `context.services` before Compose output is written. Credentials should be declared in `service.yml` and saved through the shared settings menu.
 
 ### Postbuild hook
 
@@ -124,10 +124,11 @@ After `docker-compose.yml` has been written, the menu calls each selected servic
 ### The build process
 The selected services' yaml configuration is already loaded into memory before the build stack process is started.
 
-1. Run prebuildHooks.
-2. Read `./.templates/docker-compose-base.yml` file into a in memory yaml structure.
-3. Add selected services into the in memory structure.
-4. If it exists merge the `./compose-override.yml` file into memory
-5. Write the in memory yaml structure to disk `./docker-compose.yml`.
-6. Run postbuildHooks.
-7. Run `postbuild.sh` if it exists, with the list of services built.
+1. Validate required Compose environment settings and stop without side effects when any are missing.
+2. Run prebuild hooks.
+3. Read `./.templates/docker-compose-base.yml` into an in-memory YAML structure.
+4. Add selected services to the in-memory structure.
+5. Merge `./compose-override.yml` when it exists.
+6. Write the in-memory YAML structure to `./docker-compose.yml`.
+7. Run postbuild hooks.
+8. Run `postbuild.sh`, when present, with the list of services built.

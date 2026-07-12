@@ -99,8 +99,8 @@ If you don't get a sensible response to the `ls` command then try disconnecting 
 
 variable                         | default       | remark
 ---------------------------------|:-------------:|------------------------------    
-`MJPG_STREAMER_USERNAME`         | container ID  | *changes each time the container is recreated*
-`MJPG_STREAMER_PASSWORD`         | random UUID   | *changes each time the container restarts*
+`MJPG_STREAMER_USERNAME`         | `iotstack`     | may be overridden in `.env`
+`MJPG_STREAMER_PASSWORD`         | `IOtSt4ckMJPG` | may be kept or changed in the build menu
 `MJPG_STREAMER_SIZE`             | `640x480`     | should be one of your camera's natural resolutions
 `MJPG_STREAMER_FPS`              | `5`           | frames per second
 
@@ -120,7 +120,7 @@ To initialise your environment, begin by using a text editor (eg `vim`, `nano`) 
 	TZ=Australia/Sydney
 	```
 
-2. The access credentials default to random values which change each time the container starts. This is reasonably secure but is unlikely to be useful in practice, so you need to invent some credentials of your own. Example:
+2. The access credentials have stable defaults so you cannot lose a randomly-generated password. Use the service's Password Options menu to keep the default, enter your own, or generate and save a random password. You can also override either credential in `.env`. Example:
 
 	```
 	MJPG_STREAMER_USERNAME=streamer

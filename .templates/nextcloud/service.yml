@@ -5,7 +5,7 @@ nextcloud:
   environment:
     - TZ=${TZ:-Etc/UTC}
     - MYSQL_HOST=nextcloud_db
-    - MYSQL_PASSWORD=${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=%randomMySqlPassword% >>~/IOTstack/.env}
+    - MYSQL_PASSWORD=${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=IOtSt4ckmySqlDbPw >>~/IOTstack/.env}
     - MYSQL_DATABASE=${NEXTCLOUD_DB_NAME:-nextcloud}
     - MYSQL_USER=${NEXTCLOUD_DB_USER:-nextcloud}
   ports:
@@ -27,8 +27,8 @@ nextcloud_db:
     - TZ=${TZ:-Etc/UTC}
     - PUID=1000
     - PGID=1000
-    - MYSQL_ROOT_PASSWORD=${NEXTCLOUD_DB_ROOT_PASSWORD:?eg echo NEXTCLOUD_DB_ROOT_PASSWORD=%randomPassword% >>~/IOTstack/.env}
-    - MYSQL_PASSWORD=${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=%randomMySqlPassword% >>~/IOTstack/.env}
+    - MYSQL_ROOT_PASSWORD=${NEXTCLOUD_DB_ROOT_PASSWORD:?eg echo NEXTCLOUD_DB_ROOT_PASSWORD=IOtSt4ckToorMySqlDb >>~/IOTstack/.env}
+    - MYSQL_PASSWORD=${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=IOtSt4ckmySqlDbPw >>~/IOTstack/.env}
     - MYSQL_DATABASE=${NEXTCLOUD_DB_NAME:-nextcloud}
     - MYSQL_USER=${NEXTCLOUD_DB_USER:-nextcloud}
   volumes:

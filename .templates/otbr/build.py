@@ -60,6 +60,9 @@ def main():
   def preBuild():
     global dockerComposeServicesYaml
     global currentServiceName
+    if not os.path.exists(buildSettings):
+      print("OTBR hardware is not configured. Select hardware from Options before building.")
+      return False
     with open("{serviceDir}{buildSettings}".format(serviceDir=serviceService, buildSettings=buildSettingsFileName)) as objHardwareListFile:
       otbrYamlBuildOptions = yaml.load(objHardwareListFile)
 
@@ -195,13 +198,18 @@ def main():
     threadBuildOptions.append(["Go back", goBack])
 
   def runOptionsMenu():
-    createMenu()
-    menuEntryPoint()
-    return True
+    originalSignalHandler = signal.getsignal(signal.SIGWINCH)
+    signal.signal(signal.SIGWINCH, onResize)
+    try:
+      createMenu()
+      menuEntryPoint()
+      return True
+    finally:
+      signal.signal(signal.SIGWINCH, originalSignalHandler)
 
   def renderHotZone(term, menu, selection, hotzoneLocation):
     lineLengthAtTextStart = 71
-    print(term.move(hotzoneLocation[0], hotzoneLocation[1]))
+    print(term.move(hotzoneLocation[0], hotzoneLocation[1]), end="")
     for (index, menuItem) in enumerate(menu):
       toPrint = ""
       if index == selection:
@@ -297,6 +305,7 @@ def main():
     with term.fullscreen():
       menuNavigateDirection = 0
       mainRender(needsRender, threadBuildOptions, currentMenuItemIndex)
+      needsRender = 0
       selectionInProgress = True
       with term.cbreak():
         while selectionInProgress:
@@ -343,12 +352,11 @@ def main():
   if hook is None:
     raise ValueError("Unknown service hook '%s'" % toRun)
   if haltOnErrors:
-    hook()
-  else:
-    try:
-      hook()
-    except Exception:
-      pass
+    return hook()
+  try:
+    return hook()
+  except Exception:
+    return None
 
 def _runHook(context, action):
   """Adapt the service's established implementation to hook API v2."""
@@ -361,8 +369,9 @@ def _runHook(context, action):
   currentServiceName = context.serviceName
   renderMode = context.renderMode
   toRun = action
-  main()
+  result = main()
   context.services = dockerComposeServicesYaml
+  return result
 
 
 def runChecks(context):
@@ -375,14 +384,14 @@ def runChecks(context):
 
 def runOptionsMenu(context):
   """Open this service's interactive configuration menu."""
-  _runHook(context, "runOptionsMenu")
+  return _runHook(context, "runOptionsMenu")
 
 
 def preBuild(context):
   """Run this service's pre-build work."""
-  _runHook(context, "preBuild")
+  return _runHook(context, "preBuild")
 
 
 def postBuild(context):
   """Run this service's post-build work."""
-  _runHook(context, "postBuild")
+  return _runHook(context, "postBuild")

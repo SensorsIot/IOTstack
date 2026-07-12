@@ -8,7 +8,7 @@ pihole:
     - "67:67/udp"
   environment:
     - TZ=${TZ:-Etc/UTC}
-    - WEBPASSWORD=
+    - WEBPASSWORD=${PIHOLE_ADMIN_PASSWORD:-}
     # see https://sensorsiot.github.io/IOTstack/Containers/Pi-hole/#adminPassword
     - INTERFACE=eth0
     - FTLCONF_MAXDBDAYS=365

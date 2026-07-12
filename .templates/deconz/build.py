@@ -8,15 +8,14 @@ haltOnErrors = True
 # Main wrapper function. Required to make local vars work correctly
 def main():
   import os
-  import time
   import ruamel.yaml
   import signal
   import sys
   from blessed import Terminal
   
   from deps.chars import specialChars, commonTopBorder, commonBottomBorder, commonEmptyLine
-  from deps.consts import servicesDirectory, templatesDirectory, buildSettingsFileName, buildCache, servicesFileName
-  from deps.common_functions import getExternalPorts, getInternalPorts, checkPortConflicts, enterPortNumberWithWhiptail, generateRandomString
+  from deps.consts import servicesDirectory, buildSettingsFileName
+  from deps.common_functions import getExternalPorts, getInternalPorts, checkPortConflicts, enterPortNumberWithWhiptail
 
   yaml = ruamel.yaml.YAML()
   yaml.preserve_quotes = True
@@ -28,11 +27,9 @@ def main():
   global haltOnErrors # Turn on to allow erroring
   global hideHelpText # Showing and hiding the help controls text
   global serviceService
-  global serviceTemplate
   global hasRebuiltHardwareSelection
 
   serviceService = servicesDirectory + currentServiceName
-  serviceTemplate = templatesDirectory + currentServiceName
   buildSettings = serviceService + buildSettingsFileName
 
   hasRebuiltHardwareSelection = False
@@ -58,101 +55,17 @@ def main():
   # This function is optional, and will run just before the build docker-compose.yml code.
   def preBuild():
     global dockerComposeServicesYaml
-    global currentServiceName
-    with open("{serviceDir}{buildSettings}".format(serviceDir=serviceService, buildSettings=buildSettingsFileName)) as objHardwareListFile:
-      deconzYamlBuildOptions = yaml.load(objHardwareListFile)
-    # Password randomisation
-    # Multi-service:
-    with open((r'%s/' % serviceTemplate) + servicesFileName) as objServiceFile:
-      serviceYamlTemplate = yaml.load(objServiceFile)
-
-    oldBuildCache = {}
-    try:
-      with open(r'%s' % buildCache) as objBuildCache:
-        oldBuildCache = yaml.load(objBuildCache)
-    except:
-      pass
-
-    buildCacheServices = {}
-    if "services" in oldBuildCache:
-      buildCacheServices = oldBuildCache["services"]
-
-    if not os.path.exists(serviceService):
-      os.makedirs(serviceService, exist_ok=True)
-
-    if os.path.exists(buildSettings):
-      # Password randomisation
-      if "databasePasswordOption" in deconzYamlBuildOptions:
-        if (
-          deconzYamlBuildOptions["databasePasswordOption"] == "Randomise database password for this build"
-          or deconzYamlBuildOptions["databasePasswordOption"] == "Randomise database password every build"
-          or deconzYamlBuildOptions["databasePasswordOption"] == "Use default password for this build"
-        ):
-          if deconzYamlBuildOptions["databasePasswordOption"] == "Use default password for this build":
-            newPassword = "IOtSt4ckDec0nZ"
-          else:
-            newPassword = generateRandomString()
-          for (index, serviceName) in enumerate(serviceYamlTemplate):
-            dockerComposeServicesYaml[serviceName] = serviceYamlTemplate[serviceName]
-            if "environment" in serviceYamlTemplate[serviceName]:
-              for (envIndex, envName) in enumerate(serviceYamlTemplate[serviceName]["environment"]):
-                envName = envName.replace("%randomPassword%", newPassword)
-                dockerComposeServicesYaml[serviceName]["environment"][envIndex] = envName
-
-          # Ensure you update the "Do nothing" and other 2 strings used for password settings in 'passwords.py'
-          if (deconzYamlBuildOptions["databasePasswordOption"] == "Randomise database password for this build"):
-            deconzYamlBuildOptions["databasePasswordOption"] = "Do nothing"
-            with open(buildSettings, 'w') as outputFile:
-              yaml.dump(deconzYamlBuildOptions, outputFile)
-        else: # Do nothing - don't change password
-          for (index, serviceName) in enumerate(serviceYamlTemplate):
-            if serviceName in buildCacheServices: # Load service from cache if exists (to maintain password)
-              dockerComposeServicesYaml[serviceName] = buildCacheServices[serviceName]
-            else:
-              dockerComposeServicesYaml[serviceName] = serviceYamlTemplate[serviceName]
-      else:
-        print("Deconz Warning: Build settings file not found, using default password")
-        time.sleep(1)
-        newPassword = "IOtSt4ckDec0nZ"
-        for (index, serviceName) in enumerate(serviceYamlTemplate):
-          dockerComposeServicesYaml[serviceName] = serviceYamlTemplate[serviceName]
-          if "environment" in serviceYamlTemplate[serviceName]:
-            for (envIndex, envName) in enumerate(serviceYamlTemplate[serviceName]["environment"]):
-              envName = envName.replace("%randomPassword%", newPassword)
-              dockerComposeServicesYaml[serviceName]["environment"][envIndex] = envName
-
-      deconzYamlBuildOptions["databasePasswordOption"] = "Do nothing"
-      with open(buildSettings, 'w') as outputFile:
-        yaml.dump(deconzYamlBuildOptions, outputFile)
-
-    else:
-      print("Deconz Warning: Build settings file not found, using default password")
-      time.sleep(1)
-      newPassword = "IOtSt4ckDec0nZ"
-      for (index, serviceName) in enumerate(serviceYamlTemplate):
-        dockerComposeServicesYaml[serviceName] = serviceYamlTemplate[serviceName]
-        if "environment" in serviceYamlTemplate[serviceName]:
-          for (envIndex, envName) in enumerate(serviceYamlTemplate[serviceName]["environment"]):
-            envName = envName.replace("%randomPassword%", newPassword)
-            dockerComposeServicesYaml[serviceName]["environment"][envIndex] = envName
-        deconzYamlBuildOptions = {
-          "version": "1",
-          "application": "IOTstack",
-          "service": "Deconz",
-          "comment": "Deconz Build Options"
-        }
-        
-      deconzYamlBuildOptions["databasePasswordOption"] = "Do nothing"
-      with open(buildSettings, 'w') as outputFile:
-        yaml.dump(deconzYamlBuildOptions, outputFile)
-
-    try:
-      if currentServiceName in dockerComposeServicesYaml:
-        dockerComposeServicesYaml[currentServiceName]["devices"] = deconzYamlBuildOptions["hardware"]
-    except Exception as err:
-      print("Error setting deconz hardware: ", err)
+    if not os.path.exists(buildSettings):
+      print("DeConz hardware is not configured. Select hardware from Options before building.")
       return False
 
+    try:
+      with open(buildSettings) as hardwareSettingsFile:
+        hardwareSettings = yaml.load(hardwareSettingsFile)
+      dockerComposeServicesYaml[currentServiceName]["devices"] = hardwareSettings["hardware"]
+    except (OSError, KeyError, TypeError) as err:
+      print("Error setting DeConz hardware: %s" % err)
+      return False
     return True
 
   # #####################################
@@ -242,23 +155,6 @@ def main():
       createMenu()
     needsRender = 1
 
-  def setPasswordOptions():
-    global needsRender
-    global hasRebuiltAddons
-    passwordOptionsMenuFilePath = "./.templates/{currentService}/passwords.py".format(currentService=currentServiceName)
-    with open(passwordOptionsMenuFilePath, "rb") as pythonDynamicImportFile:
-      code = compile(pythonDynamicImportFile.read(), passwordOptionsMenuFilePath, "exec")
-    execGlobals = {
-      "currentServiceName": currentServiceName,
-      "renderMode": renderMode
-    }
-    execLocals = {}
-    screenActive = False
-    exec(code, execGlobals, execLocals)
-    signal.signal(signal.SIGWINCH, onResize)
-    screenActive = True
-    needsRender = 1
-
   def onResize(sig, action):
     global deconzBuildOptions
     global currentMenuItemIndex
@@ -284,21 +180,22 @@ def main():
       deconzBuildOptions.insert(0, ["Change selected hardware", selectDeconzHardware])
     else:
       deconzBuildOptions.insert(0, ["Select hardware", selectDeconzHardware])
-    deconzBuildOptions.append([
-      "DeConz Password Options",
-      setPasswordOptions
-    ])
 
     deconzBuildOptions.append(["Go back", goBack])
 
   def runOptionsMenu():
-    createMenu()
-    menuEntryPoint()
-    return True
+    originalSignalHandler = signal.getsignal(signal.SIGWINCH)
+    signal.signal(signal.SIGWINCH, onResize)
+    try:
+      createMenu()
+      menuEntryPoint()
+      return True
+    finally:
+      signal.signal(signal.SIGWINCH, originalSignalHandler)
 
   def renderHotZone(term, menu, selection, hotzoneLocation):
     lineLengthAtTextStart = 71
-    print(term.move(hotzoneLocation[0], hotzoneLocation[1]))
+    print(term.move(hotzoneLocation[0], hotzoneLocation[1]), end="")
     for (index, menuItem) in enumerate(menu):
       toPrint = ""
       if index == selection:
@@ -381,6 +278,7 @@ def main():
     with term.fullscreen():
       menuNavigateDirection = 0
       mainRender(needsRender, deconzBuildOptions, currentMenuItemIndex)
+      needsRender = 0
       selectionInProgress = True
       with term.cbreak():
         while selectionInProgress:
@@ -431,12 +329,11 @@ def main():
   if hook is None:
     raise ValueError("Unknown service hook '%s'" % toRun)
   if haltOnErrors:
-    hook()
-  else:
-    try:
-      hook()
-    except Exception:
-      pass
+    return hook()
+  try:
+    return hook()
+  except Exception:
+    return None
 
 def _runHook(context, action):
   """Adapt the service's established implementation to hook API v2."""
@@ -449,8 +346,9 @@ def _runHook(context, action):
   currentServiceName = context.serviceName
   renderMode = context.renderMode
   toRun = action
-  main()
+  result = main()
   context.services = dockerComposeServicesYaml
+  return result
 
 
 def runChecks(context):
@@ -463,14 +361,14 @@ def runChecks(context):
 
 def runOptionsMenu(context):
   """Open this service's interactive configuration menu."""
-  _runHook(context, "runOptionsMenu")
+  return _runHook(context, "runOptionsMenu")
 
 
 def preBuild(context):
   """Run this service's pre-build work."""
-  _runHook(context, "preBuild")
+  return _runHook(context, "preBuild")
 
 
 def postBuild(context):
   """Run this service's post-build work."""
-  _runHook(context, "postBuild")
+  return _runHook(context, "postBuild")
