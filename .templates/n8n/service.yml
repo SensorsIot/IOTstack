@@ -2,50 +2,11 @@ n8n:
   container_name: n8n
   image: n8nio/n8n
   restart: unless-stopped
-  depends_on:
-    - n8n_db
   environment:
     TZ: ${TZ:-Etc/UTC}
-    GENERIC_TIMEZONE: ${TZ:-Etc/UTC}
-    DB_TYPE: mysql
-    DB_MYSQLDB_DATABASE: ${N8N_DB_NAME:-n8n}
-    DB_MYSQLDB_HOST: n8n_db
-    DB_MYSQLDB_PORT: 3306
-    DB_MYSQLDB_USER: ${N8N_DB_USER:-n8n}
-    DB_MYSQLDB_PASSWORD: ${N8N_DB_PASSWORD:?eg echo N8N_DB_PASSWORD=userPassword >>~/IOTstack/.env}
-    # PGID: 1000
-    # PUID: 1000
-    # USBDEVICES: /dev/ttyAMA0
-    # PACKAGES: mc
-    # Optional to enable authentication
-    # N8N_BASIC_AUTH_ACTIVE: true
-    # N8N_BASIC_AUTH_USER: <USER>
-    # N8N_BASIC_AUTH_PASSWORD: <PASSWORD>
   ports:
     - "5678:5678"
   stdin_open: true
   volumes:
     - ./volumes/n8n:/home/node/.n8n
-  networks:
-    - default
-    - database
 
-n8n_db:
-  container_name: n8n_db
-  build: ./.templates/mariadb/.
-  restart: unless-stopped
-  environment:
-    TZ: ${TZ:-Etc/UTC}
-    PUID: 1000
-    PGID: 1000
-    MYSQL_ROOT_PASSWORD: ${N8N_DB_ROOT_PASSWORD:?eg echo N8N_DB_ROOT_PASSWORD=rootPassword >>~/IOTstack/.env}
-    MYSQL_DATABASE: ${N8N_DB_NAME:-n8n}
-    MYSQL_USER: ${N8N_DB_USER:-n8n}
-    MYSQL_PASSWORD: ${N8N_DB_PASSWORD:?eg echo N8N_DB_PASSWORD=userPassword >>~/IOTstack/.env}
-  volumes:
-    - ./volumes/n8n/db:/config
-    - ./volumes/n8n/db_backup:/backup
-  networks:
-    - database
-  x-ports:
-    - "3306:3306"
