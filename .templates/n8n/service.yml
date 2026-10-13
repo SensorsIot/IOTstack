@@ -43,8 +43,8 @@ n8n_db:
     MYSQL_USER: ${N8N_DB_USER:-n8n}
     MYSQL_PASSWORD: ${N8N_DB_PASSWORD:?eg echo N8N_DB_PASSWORD=userPassword >>~/IOTstack/.env}
   volumes:
-    - ./volumes/gitea/db:/config
-    - ./volumes/gitea/db_backup:/backup
+    - ./volumes/n8n/db:/config
+    - ./volumes/n8n/db_backup:/backup
   networks:
     - database
   x-ports:
