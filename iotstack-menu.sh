@@ -1157,6 +1157,19 @@ install_item_for_service() {
 #    2. Checks for presence of key=value, exiting normally if found.
 #    3. Checks for presence of key=, appending key=value if not found.
 #    4. Updates value if values differ, providing $3="true".
+# Notes on sed utility:
+#    1. The version of sed which ships with macOS requires an extension
+#       to be provided with the -i option. Linux treats the extension as
+#       optional. HomeBrew can also install gnu-sed which behaves like
+#       Linux sed. On macOS, this function prefers gnu-sed if it is installed
+#       but falls back to macOS-supplied sed. The bottom line is that, on
+#       macOS where gnu-sed is not installed, you'll get a `.env.bak` file
+#       otherwise you won't get a .bak file. While the notion of a .bak file
+#       might seem attractive, in practice variables tend to be set in batches
+#       to any .bak will only represent the most-recent edit so it isn't
+#       particularly useful for audit or rollback.
+#    2. The search-and-replace pattern includes a trailing g for global on the
+#       off-chance that the same key appears more than once.
 #
 set_dot_env() {
 	local DOT_ENV="${PROJECT_DIR}/.env" ; touch "${DOT_ENV}"
@@ -1164,19 +1177,28 @@ set_dot_env() {
 	eval "${VAL}" 2>/dev/null ; [ $? -ne 0 ] && VAL="${2}"
 	local KEYVAL="${1}=${VAL}"
 	local UPDATE=${3:-false}
-	# sense key=value present
-	[ $(grep -c "^${KEYVAL}" "${DOT_ENV}") -gt 0 ] \
+	# sense key=value present (exact text, left-aligned)
+	[ $(grep -c "^${KEYVAL}\$" "${DOT_ENV}") -gt 0 ] \
 		&& return 1
 	# sense key not present (append)
 	[ $(grep -c -e "^${1}=" "${DOT_ENV}") -eq 0 ] \
 		&& echo "${KEYVAL}" >>"${DOT_ENV}" \
 		&& return 0
-	# implied key present but value differs, sense update required
-	[ "${UPDATE}" = "true" ] \
-		&& sed -i -e "s|^${1}=.*|${KEYVAL}|g" "${DOT_ENV}" \
-		&& return 0
-	# key present but value not updated
-	return 1
+	# key present but value differs. Sense update not required.
+	[ "${UPDATE}" = "false" ] && return 1
+	# update required. Is this macOS?
+	if [ "$(uname -s)" = "Darwin" ] ; then
+		# yes! use gnu-sed if it is installed
+		[ -n "$(which gsed)" ] \
+			&& gsed -i -e "s|^${1}=.*|${KEYVAL}|g" "${DOT_ENV}" \
+			&& return 0
+		# implied fallback to macOS-supplied sed			
+		sed -i.bak -e "s|^${1}=.*|${KEYVAL}|g" "${DOT_ENV}"
+		return 0
+	fi
+	# assume Linux sed
+	sed -i -e "s|^${1}=.*|${KEYVAL}|g" "${DOT_ENV}"
+	return 0
 }
 
 # this function is needed by configuration scripts
