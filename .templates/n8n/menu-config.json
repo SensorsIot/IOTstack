@@ -2,10 +2,7 @@
    "configure": null,
    "dependencies": [],
    "description": "Workflow automation platform",
-   "environment": [
-      { "variable": "N8N_DB_PASSWORD", "preset": "$(random_password)" },
-      { "variable": "N8N_DB_ROOT_PASSWORD", "preset": "$(random_password)" }
-   ],
+   "environment": [],
    "install": [
       { "template": "service.yml", "service": "service.yml", "tracked": true }
    ],
