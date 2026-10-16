@@ -7,7 +7,7 @@
       { "template": "service.yml", "service": "service.yml", "tracked": true },
       { "template": "Dockerfile", "service": "Dockerfile", "tracked": false },
       { "template": "docker-entrypoint.sh", "service": "docker-entrypoint.sh", "tracked": false },
-      { "template": "app", "service": ".", "tracked": false }
+      { "template": "app/", "service": "app", "tracked": false }
    ],
    "service": "python"
 }

@@ -534,30 +534,6 @@ environment_presets_for_service() {
 
 
 # ----------------------------------------------------------------------
-# expected_items_for_service
-# ----------------------------------------------------------------------
-#
-# Arguments:
-#    $1 service name
-# Returns:
-#    a list of files that should be in /services/«service» if the
-#    service is installed properly. This should always contain at
-#    least service.yml.
-#
-expected_items_for_service() {
-	${SQLITE3} "${DB}" <<-SQL
-		SELECT
-			json_extract(value,'$.${J_SERVICE}')
-		FROM
-			services, json_each(config,'$.${J_INSTALL}')
-		WHERE
-			name = '${1}'
-		;
-	SQL
-}
-
-
-# ----------------------------------------------------------------------
 # get_state_for_service
 # ----------------------------------------------------------------------
 #
@@ -630,11 +606,53 @@ installable_items_for_service() {
 #       1 = false = at least one expected item is not present
 #
 is_service_properly_installed() {
-	local SERVICE_DIR="${SERVICES_DIR}/${1}"
-	for E in $(expected_items_for_service "${1}") ; do
-		[ -f "${SERVICE_DIR}/${E}" ] || return 1
+
+	# note service
+	local SERVICE="${1}"
+
+	# the service's template directory (in .templates) is
+	local TEMPLATE_DIR="${TEMPLATES_DIR}/${SERVICE}"
+
+	# the service's working directory (in services) is
+	local SERVICE_DIR="${SERVICES_DIR}/${SERVICE}"
+
+	# sense SERVICE_DIR does not exist (major fail)
+	[ -d "${SERVICE_DIR}" ] || return 1
+
+	# iterate the list of expected items
+	local ITEM TPATH SPATH WORK
+	for ITEM in $(installable_items_for_service "${SERVICE}") ; do
+
+		# crack the tuple (template»service»tracked)
+		IFS="»" ; set -- $ITEM ; unset IFS
+
+		# extract tuple components (3rd member of tuple ignored)
+		TPATH="${TEMPLATE_DIR}/${1}" ; SPATH="${SERVICE_DIR}/${2}"
+
+		# is the source path a directory?
+		if [ -d "${TPATH}" ] ; then
+
+			# yes! do rsync dry-run as per install_item_for_service()
+			WORK=$( \
+				rsync -goprtn --ignore-existing --out-format='%i %n' \
+				"${TPATH}" "${SPATH}" \
+			)
+
+			# WORK will be non-null if rsync would do work absent -n
+			[ -n "$WORK" ] && return 1
+
+		else
+
+			# not a directory. Sense destination path does not exist
+			[ -e "${SPATH}" ] || return 1
+
+		fi
+
 	done
+
+	# arriving here means we're good
 	return 0
+
 }
 
 
