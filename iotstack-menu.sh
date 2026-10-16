@@ -2512,7 +2512,9 @@ migrate() {
 # Arguments:
 #    none
 # Returns:
-#    nothing
+#    Boolean (bash return code):
+#       0 = true = auto migration completed normally
+#       1 = false = compose file present but can't be parsed correctly
 # Explanation:
 #    This function is invoked by initialise_database(). It is called
 #    when the internal database has only just been created (ie did not
@@ -2526,14 +2528,17 @@ auto_migration() {
 
 	local P SERVICES SERVICE STATE
 
-	# sense the compose file does not exist
-	[ -f "${COMPOSE_FILE}" ] || return
+	# sense the compose file does not exist - this is a normal condition
+	[ -f "${COMPOSE_FILE}" ] || return 0
 
 	# fetch the list of active services in the existing project
 	# (SERVICES will be null if "docker compose" not available)
 	SERVICES=$(docker compose \
 		--project-directory "${PROJECT_DIR}" \
 		config --services 2>/dev/null)
+
+	# sense docker compose config command failed - abnormal condition
+	[ $? -ne 0 ] && return 1
 
 	# iterate the active services
 	for SERVICE in ${SERVICES} ; do
@@ -2576,6 +2581,9 @@ auto_migration() {
 		fi
 
 	done
+
+	# normal exit
+	return 0
 
 }
 
@@ -2694,7 +2702,37 @@ initialise_database() {
 			discover_services
 
 			# and then attempt auto-migration
-			auto_migration
+			if ! auto_migration ; then
+
+				cat <<-MIGRATION
+
+					Error: ${COMPOSE_FILE} was found but it was not able to be parsed
+					       successfully using the command:
+
+					          \$ docker compose config --services
+
+					       It is likely that "docker compose up -d" would also fail. The presence of this
+					       error prevents the menu from performing auto-migration. You have two options:
+
+					       1. Ignore this problem. You can use the menu to install the services you want,
+					          and then build your stack. At that point, your compose file is likely to be
+					          correct so a "docker compose up -d" will succeed.
+
+					       2. Correct the problem by running the following command yourself:
+
+					             \$ docker compose config --services
+
+					          You will need to resolve any errors by hand. Once that command succeeds, you
+					          can cause the menu to re-attempt auto-migration by removing the internal
+					          database:
+
+					             \$ rm ${DB}
+
+				MIGRATION
+
+				exit 1
+
+			fi
 
 		fi
 
