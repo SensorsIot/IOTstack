@@ -34,9 +34,9 @@ mqttctl-broker-agent:
     MQTTCTL_TLS_PUBLIC_DIR: /run/mqttctl-broker-public
     MQTTCTL_TLS_SAN: DNS:mqttctl-broker-agent,DNS:localhost,IP:127.0.0.1
   ports:
-    - "${MQTTCTL_MQTT_PORT:-1884}:1883"
-    - "${MQTTCTL_MQTTS_PORT:-8884}:8883"
-    - "${MQTTCTL_WS_PORT:-9002}:9001"
+    - "${MQTTCTL_MQTT_PORT:-1883}:1883"
+    - "${MQTTCTL_MQTTS_PORT:-8883}:8883"
+    - "${MQTTCTL_WS_PORT:-9001}:9001"
   volumes:
     - ./volumes/mqttctl/agent-config:/etc/mqttctl:ro
     - ./volumes/mqttctl/broker-config:/mosquitto/config

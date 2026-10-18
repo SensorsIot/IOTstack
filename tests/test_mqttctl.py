@@ -54,9 +54,24 @@ try:
     assert "MQTTCTL_ADMIN_PASSWORD=IOT-" in dotenv
     assert "MQTTCTL_PUBLIC_URL=http://" in dotenv
     assert "Warning: mqttctl and mosquitto" in menu("install", "mosquitto")
-    assert "Warning: mqttctl and mosquitto" in menu("build")
+    warning = menu("build")
+    assert "Warning: mqttctl and mosquitto" in warning
+    assert "Both use host MQTT port 1883 by default" in warning
     config = json.loads(compose("config", "--format", "json").stdout)
     assert "mosquitto" in config["services"]
+    broker_ports = config["services"]["mqttctl-broker-agent"]["ports"]
+    assert {(int(port["published"]), port["target"]) for port in broker_ports} == {
+        (1883, 1883), (8883, 8883), (9001, 9001)
+    }
+    # Overrides allow both brokers without changing their internal MQTT ports.
+    with (work / ".env").open("a") as dotenv_file:
+        dotenv_file.write("\nMQTTCTL_MQTT_PORT=1884\nMQTTCTL_MQTTS_PORT=8884\nMQTTCTL_WS_PORT=9002\n")
+    custom_config = json.loads(compose("config", "--format", "json").stdout)
+    assert {(int(port["published"]), port["target"])
+            for port in custom_config["services"]["mqttctl-broker-agent"]["ports"]} == {
+        (1884, 1883), (8884, 8883), (9002, 9001)
+    }
+    assert custom_config["services"]["mosquitto"]["ports"][0]["published"] == "1883"
     assert all("mcp" not in name for name in config["services"])
     for name in ("mqttctl", "mqttctl-init", "mqttctl-broker-agent"):
         assert config["services"][name]["image"].endswith(":v0.0.8-264ca1e6585c")

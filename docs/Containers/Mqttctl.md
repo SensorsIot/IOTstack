@@ -39,15 +39,15 @@ The initializer generates independent broker-admin, broker-agent API and session
 | Endpoint | Default host port | Override in `.env` |
 | --- | --- | --- |
 | Web UI | 3002 | `MQTTCTL_HTTP_PORT` |
-| MQTT | 1884 | `MQTTCTL_MQTT_PORT` |
-| MQTT over TLS | 8884 | `MQTTCTL_MQTTS_PORT` |
-| MQTT over WebSockets | 9002 | `MQTTCTL_WS_PORT` |
+| MQTT | 1883 | `MQTTCTL_MQTT_PORT` |
+| MQTT over TLS | 8883 | `MQTTCTL_MQTTS_PORT` |
+| MQTT over WebSockets | 9001 | `MQTTCTL_WS_PORT` |
 
 If you change the web port, also update `MQTTCTL_PUBLIC_URL`. The URL must match the browser origin (scheme, hostname and port) because mqttctl checks it on requests. After changes, run `docker compose up -d mqttctl` again.
 
-The existing **mosquitto** service remains available. Selecting both displays a warning but is allowed. Their default host ports are distinct, and their users, retained messages and configuration are independent. No data or clients are migrated automatically.
+The existing **mosquitto** service remains available. Selecting both displays a warning but is allowed. Both brokers publish host port 1883 by default, so they cannot start together with their default port mappings. To run both, change one broker's host port (for example, set `MQTTCTL_MQTT_PORT=1884` in `.env`) and keep any TLS or WebSocket host ports distinct too. Their users, retained messages and configuration are independent. No data or clients are migrated automatically.
 
-Containers in this stack connect to `mqttctl-broker-agent:1883`; devices outside Docker use `<IOTstack-host>:1884`. Existing integrations pointing to `mosquitto:1883` continue to use the old broker until you change their settings. To use mqttctl alone on standard host port 1883, stop/deactivate Mosquitto and set `MQTTCTL_MQTT_PORT=1883`.
+Containers in this stack connect to `mqttctl-broker-agent:1883`; devices outside Docker use `<IOTstack-host>:1883`. Existing integrations pointing to `mosquitto:1883` continue to use the old broker until you change their settings. To use mqttctl alone on the standard ports, stop/deactivate Mosquitto before starting mqttctl.
 
 The broker-agent's management API is not published to the host. Only public certificates are shared with the UI. Certificates initially cover the internal service name and localhost. For external MQTT TLS clients, configure certificates covering your actual hostname/IP and trust the CA; see [mqttctl TLS documentation](https://github.com/Slyke/mqttctl/blob/master/docs/CERTS.md). HTTP and plain MQTT defaults are intended for a trusted local network.
 

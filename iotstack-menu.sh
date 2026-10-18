@@ -1380,7 +1380,7 @@ install_completions_command() {
 # Both brokers are supported; warn without changing either selection.
 warn_if_multiple_mqtt_brokers() {
 	if is_service_active mqttctl && is_service_active mosquitto ; then
-		local MESSAGE="mqttctl and mosquitto are both active. They are independent brokers with separate users and messages. mqttctl uses host MQTT port 1884 by default; mosquitto uses 1883. Keep their host ports distinct if you change them."
+		local MESSAGE="mqttctl and mosquitto are both active. They are independent brokers with separate users and messages. Both use host MQTT port 1883 by default and cannot start together with those mappings. Change one broker's host port (for example, MQTTCTL_MQTT_PORT=1884 in .env), or stop/deactivate one broker before starting the stack. Keep any TLS and WebSocket host ports distinct too."
 		if [ "${RUN_MODE}" = "menu" ] ; then
 			"${CLIMENU}" --title "Multiple MQTT brokers" --msgbox "${MESSAGE}" 12 "${MENU_COLUMNS}"
 		else
