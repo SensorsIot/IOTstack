@@ -7,9 +7,14 @@ import path from 'node:path';
 const root = '/state';
 const password = process.env.MQTTCTL_ADMIN_PASSWORD;
 const publicUrl = new URL(process.env.MQTTCTL_PUBLIC_URL);
-if (!['http:', 'https:'].includes(publicUrl.protocol) ||
-    publicUrl.pathname !== '/' || publicUrl.search || publicUrl.hash ||
-    publicUrl.username || publicUrl.password) {
+if (
+  !['http:', 'https:'].includes(publicUrl.protocol)
+  || publicUrl.pathname !== '/'
+  || publicUrl.search
+  || publicUrl.hash
+  || publicUrl.username
+  || publicUrl.password
+) {
   throw new Error('MQTTCTL_PUBLIC_URL must be an HTTP(S) origin without a path');
 }
 if (!password) throw new Error('MQTTCTL_ADMIN_PASSWORD must not be empty');
@@ -21,28 +26,34 @@ for (const directory of ['app-config', 'app-data', 'agent-config', 'broker-confi
 for (const directory of ['broker-config', 'broker-data']) {
   fs.chownSync(path.join(root, directory), 1883, 1883);
 }
-const writeJson = (file, value) => {
+const writeJson = ({ file, value }) => {
   const target = path.join(root, file);
   fs.writeFileSync(target + '.tmp', JSON.stringify(value, null, 2) + '\n', { mode: 0o600 });
   fs.renameSync(target + '.tmp', target);
 };
-const readJson = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
-const exists = (file) => fs.existsSync(path.join(root, file));
+const readJson = ({ file }) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
+const exists = ({ file }) => fs.existsSync(path.join(root, file));
 const random = () => crypto.randomBytes(32).toString('hex');
 const secretsFile = 'app-config/mqttctl.secrets.json';
-if (!exists(secretsFile)) {
+if (!exists({ file: secretsFile })) {
   // Refuse to silently replace credentials for an existing broker or app DB.
-  if (exists('broker-data/dynamic-security.json') || exists('app-data/mqttctl.sqlite') ||
-      exists('agent-config/broker-agent.config.json')) {
+  if (
+    exists({ file: 'broker-data/dynamic-security.json' })
+    || exists({ file: 'app-data/mqttctl.sqlite' })
+    || exists({ file: 'agent-config/broker-agent.config.json' })
+  ) {
     throw new Error('mqttctl secrets are missing from an existing installation; restore them from backup');
   }
-  writeJson(secretsFile, {
-    sessionSecret: random(),
-    broker: { dynsecAdminPassword: random(), agentApiKey: random() },
-    bootstrapAdmin: { username: 'admin', password }
+  writeJson({
+    file: secretsFile,
+    value: {
+      sessionSecret: random(),
+      broker: { dynsecAdminPassword: random(), agentApiKey: random() },
+      bootstrapAdmin: { username: 'admin', password }
+    }
   });
 }
-const secrets = readJson(secretsFile);
+const secrets = readJson({ file: secretsFile });
 const keyFiles = {
   caFile: '/mosquitto/config/certs/ca/ca.crt',
   mosquittoPublicKey: '/mosquitto/config/certs/mosquitto/tls.crt',
@@ -54,7 +65,7 @@ const brokerPaths = {
   keyFiles
 };
 const configFile = 'app-config/mqttctl.config.json';
-const config = exists(configFile) ? readJson(configFile) : {
+const config = exists({ file: configFile }) ? readJson({ file: configFile }) : {
   auth: { localEnabled: true, oidcEnabled: false, headerEnabled: false },
   broker: {
     ...brokerPaths,
@@ -65,24 +76,27 @@ const config = exists(configFile) ? readJson(configFile) : {
   }
 };
 config.publicBaseUrl = publicUrl.origin;
-writeJson(configFile, config);
-if (!exists('agent-config/broker-agent.config.json')) {
-  writeJson('agent-config/broker-agent.config.json', {
-    listen: {
-      http: { enabled: false, host: '0.0.0.0', port: 3900 },
-      https: { enabled: true, host: '0.0.0.0', port: 3943,
-        certFile: keyFiles.brokerPublicKey,
-        keyFile: '/mosquitto/config/certs/broker-agent/tls.key' }
-    },
-    auth: { apiKey: secrets.broker.agentApiKey },
-    broker: {
-      ...brokerPaths,
-      command: ['/usr/sbin/mosquitto', '-c', brokerPaths.mainConfigPath],
-      dynsecBootstrap: { username: 'admin', password: secrets.broker.dynsecAdminPassword }
+writeJson({ file: configFile, value: config });
+if (!exists({ file: 'agent-config/broker-agent.config.json' })) {
+  writeJson({
+    file: 'agent-config/broker-agent.config.json',
+    value: {
+      listen: {
+        http: { enabled: false, host: '0.0.0.0', port: 3900 },
+        https: { enabled: true, host: '0.0.0.0', port: 3943,
+          certFile: keyFiles.brokerPublicKey,
+          keyFile: '/mosquitto/config/certs/broker-agent/tls.key' }
+      },
+      auth: { apiKey: secrets.broker.agentApiKey },
+      broker: {
+        ...brokerPaths,
+        command: ['/usr/sbin/mosquitto', '-c', brokerPaths.mainConfigPath],
+        dynsecBootstrap: { username: 'admin', password: secrets.broker.dynsecAdminPassword }
+      }
     }
   });
 }
-if (!exists('broker-config/mosquitto.conf')) {
+if (!exists({ file: 'broker-config/mosquitto.conf' })) {
   fs.copyFileSync('/iotstack/mosquitto.conf', path.join(root, 'broker-config/mosquitto.conf'));
   fs.chmodSync(path.join(root, 'broker-config/mosquitto.conf'), 0o644);
 }

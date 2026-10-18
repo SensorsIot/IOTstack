@@ -2,7 +2,7 @@
 
 [mqttctl](https://github.com/Slyke/mqttctl) provides a browser UI for managing its own Mosquitto broker: users, roles, ACLs, broker configuration, snapshots, audit history and MQTT exploration.
 
-Selecting **mqttctl** installs the UI, a broker-agent containing Mosquitto, and a one-shot initializer. Both application images are pinned to `v0.0.8-d90b7f4d7c4b`. No MCP service or MCP configuration is included.
+Selecting **mqttctl** installs the UI, a broker-agent containing Mosquitto, and a one-shot initializer. The initializer runs inside the mqttctl image using its bundled Node.js; no host Node.js installation is required. Both application images are pinned to `v0.0.8-d90b7f4d7c4b`. No MCP service or MCP configuration is included.
 
 The pinned images currently target **linux/amd64** only. Native Raspberry Pi/ARM deployment requires ARM images to be published; this service does not force emulation.
 
