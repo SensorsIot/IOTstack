@@ -1377,6 +1377,19 @@ install_completions_command() {
 # Command functions that take a service name as an argument
 # ======================================================================
 
+# Both brokers are supported; warn without changing either selection.
+warn_if_multiple_mqtt_brokers() {
+	if is_service_active mqttctl && is_service_active mosquitto ; then
+		local MESSAGE="mqttctl and mosquitto are both active. They are independent brokers with separate users and messages. mqttctl uses host MQTT port 1884 by default; mosquitto uses 1883. Keep their host ports distinct if you change them."
+		if [ "${RUN_MODE}" = "menu" ] ; then
+			"${CLIMENU}" --title "Multiple MQTT brokers" --msgbox "${MESSAGE}" 12 "${MENU_COLUMNS}"
+		else
+			echo "Warning: ${MESSAGE}" >&2
+		fi
+	fi
+	return 0
+}
+
 # ----------------------------------------------------------------------
 # activate
 # ----------------------------------------------------------------------
@@ -1392,6 +1405,7 @@ install_completions_command() {
 activate() {
 	if is_service_inactive "${1}" ; then
 		set_state_for_service "${1}" ${S_ACTIVE}
+		case "${1}" in mqttctl|mosquitto) warn_if_multiple_mqtt_brokers ;; esac
 	else
 		echo "Warning: ${1} is not inactive" >&2
 	fi
@@ -1599,6 +1613,7 @@ install() {
 
 	# a newly-installed service is always active
 	set_state_for_service "${SERVICE}" ${S_ACTIVE}
+	case "${SERVICE}" in mqttctl|mosquitto) warn_if_multiple_mqtt_brokers ;; esac
 
 	# iterate to install any dependencies
 	local D
@@ -2077,6 +2092,8 @@ run_command_for_service() {
 #       this assumption does not hold.
 #
 build() {
+
+	warn_if_multiple_mqtt_brokers
 
 	# create a temporary directory and define temporary files.
 	local WORKSPACE=$(mktemp -d)

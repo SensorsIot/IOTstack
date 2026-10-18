@@ -1,0 +1,63 @@
+mqttctl:
+  container_name: mqttctl
+  image: slyke/mqttctl:v0.0.8-d90b7f4d7c4b
+  restart: unless-stopped
+  depends_on:
+    mqttctl-broker-agent:
+      condition: service_healthy
+  environment:
+    TZ: ${TZ:-Etc/UTC}
+    HOST: 0.0.0.0
+    PORT: "3000"
+    ORIGIN: ${MQTTCTL_PUBLIC_URL:?Build the stack to initialize MQTTCTL_PUBLIC_URL}
+    MQTTCTL_CONFIG_PATH: /app/config/mqttctl.config.json
+    MQTTCTL_SECRETS_PATH: /app/config/mqttctl.secrets.json
+    MQTTCTL_DB_KIND: sqlite
+    MQTTCTL_SQLITE_PATH: /app/data/mqttctl.sqlite
+    NODE_EXTRA_CA_CERTS: /mosquitto/config/certs/ca/ca.crt
+  ports:
+    - "${MQTTCTL_HTTP_PORT:-3002}:3000"
+  volumes:
+    - ./volumes/mqttctl/app-config:/app/config:ro
+    - ./volumes/mqttctl/app-data:/app/data
+    - ./volumes/mqttctl/public-certs:/mosquitto/config/certs:ro
+mqttctl-broker-agent:
+  container_name: mqttctl-broker-agent
+  image: slyke/mqttctl-broker-agent:v0.0.8-d90b7f4d7c4b
+  restart: unless-stopped
+  depends_on:
+    mqttctl-init:
+      condition: service_completed_successfully
+  environment:
+    TZ: ${TZ:-Etc/UTC}
+    MQTTCTL_BROKER_AGENT_CONFIG_PATH: /etc/mqttctl/broker-agent.config.json
+    MQTTCTL_TLS_PUBLIC_DIR: /run/mqttctl-broker-public
+    MQTTCTL_TLS_SAN: DNS:mqttctl-broker-agent,DNS:localhost,IP:127.0.0.1
+  ports:
+    - "${MQTTCTL_MQTT_PORT:-1884}:1883"
+    - "${MQTTCTL_MQTTS_PORT:-8884}:8883"
+    - "${MQTTCTL_WS_PORT:-9002}:9001"
+  volumes:
+    - ./volumes/mqttctl/agent-config:/etc/mqttctl:ro
+    - ./volumes/mqttctl/broker-config:/mosquitto/config
+    - ./volumes/mqttctl/broker-data:/mosquitto/data
+    - ./volumes/mqttctl/public-certs:/run/mqttctl-broker-public
+  healthcheck:
+    test: ["CMD", "curl", "--fail", "--silent", "--cacert", "/mosquitto/config/certs/ca/ca.crt", "https://localhost:3943/healthz"]
+    interval: 5s
+    timeout: 5s
+    retries: 12
+    start_period: 10s
+mqttctl-init:
+  container_name: mqttctl-init
+  image: slyke/mqttctl:v0.0.8-d90b7f4d7c4b
+  restart: "no"
+  network_mode: none
+  command: ["node", "/iotstack/initialize.mjs"]
+  environment:
+    MQTTCTL_ADMIN_PASSWORD: ${MQTTCTL_ADMIN_PASSWORD:?Build the stack to initialize MQTTCTL_ADMIN_PASSWORD}
+    MQTTCTL_PUBLIC_URL: ${MQTTCTL_PUBLIC_URL:?Build the stack to initialize MQTTCTL_PUBLIC_URL}
+  volumes:
+    - ./services/mqttctl/initialize.mjs:/iotstack/initialize.mjs:ro
+    - ./services/mqttctl/mosquitto.conf:/iotstack/mosquitto.conf:ro
+    - ./volumes/mqttctl:/state
