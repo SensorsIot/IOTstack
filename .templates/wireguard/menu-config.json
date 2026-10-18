@@ -1,0 +1,11 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Personal VPN",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true },
+      { "template": "use-container-dns.sh", "service": "use-container-dns.sh", "tracked": true }
+   ],
+   "service": "wireguard"
+}

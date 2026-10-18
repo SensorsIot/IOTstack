@@ -18,8 +18,6 @@ IOTstack reacted to this problem by pinning to version 2024.07.0. This was to "h
 
 If you are installing Pi-hole for the first time, you should choose `pihole6` from the menu.
 
-See [migration](#migration) if you are currently running Pi-hole&nbsp;5 and want to upgrade to Pi-hole&nbsp;6.
-
 Note:
 
 * You can't run both versions at the same time. That is because they both claim the same network ports.
@@ -49,7 +47,8 @@ If you are running new menu (master branch), environment variables are inline in
 ~/IOTstack/services/pihole/pihole.env
 ```
 
-> There is nothing about old menu which *requires* the variables to be stored in the `pihole.env` file. You can migrate everything to `docker-compose.yml` if you wish.
+!!! note
+	* There is nothing about old menu which *requires* the variables to be stored in the `pihole.env` file. You can migrate everything to `docker-compose.yml` if you wish.
 
 Pi-hole's authoritative list of environment variables can be found [here](https://github.com/pi-hole/docker-pi-hole#environment-variables). Although many of Pi-hole's options can be set through its web GUI, there are two key advantages to using environment variables:
 
@@ -58,13 +57,7 @@ Pi-hole's authoritative list of environment variables can be found [here](https:
 
 ### Admin password { #adminPassword }
 
-By default, Pi-hole does not have an administrator password. That is because the default service definition provided by IOTstack contains the following environment variable with no value on its right hand side:
-
-``` yaml
-- WEBPASSWORD=
-``` 
-
-Each time the Pi-hole container is launched, it checks for the presence or absence of the `WEBPASSWORD` environment variable, then reacts like this:
+By default, Pi-hole does not have an administrator password. That is because the default service definition provided by IOTstack defines the `WEBPASSWORD` environment variable as a null value. Each time the Pi-hole container is launched, it checks for the presence or absence of that environment variable, then reacts like this:
 
 * If `WEBPASSWORD` is *defined* but does **not** have a value:
 
@@ -77,20 +70,29 @@ Each time the Pi-hole container is launched, it checks for the presence or absen
 
 * If `WEBPASSWORD` is *defined* **and** has a value, that value will become the admin password. For example, to change your admin password to be "IOtSt4ckP1Hol3":
 
-	1. Edit your compose file so that Pi-hole's service definition contains:
+	1. Create an <a name="localOverride"></a>[override file](../Basic_setup/Custom.md#custom-service) at the path:
+
+		```
+		~/IOTstack/services/pihole/override.yml
+		```
+		
+		with the content:
 
 		``` yaml
-		- WEBPASSWORD=IOtSt4ckP1Hol3
+		pihole:
+		  environment:
+		    WEBPASSWORD: IOtSt4ckP1Hol3
 		```
 
 	2. Run:
 
 		``` console
 		$ cd ~/IOTstack
-		$ docker-compose up -d pihole
+		$ ./iotstack-menu.sh buil
+		$ docker compose up -d pihole
 		```
 
-		docker-compose will notice the change to the environment variable and re-create the container. The container will see that `WEBPASSWORD` has a value and will change the admin password to "IOtSt4ckP1Hol3".
+		docker compose will notice the change to the environment variable and re-create the container. The container will see that `WEBPASSWORD` has a value and will change the admin password to "IOtSt4ckP1Hol3".
 
 		You will be prompted for a password whenever you [connect to Pi-hole's web interface](#connectGUI).
 
@@ -119,7 +121,7 @@ $ docker exec pihole pihole -a -p «yourPasswordHere»
 That command works but its effect will always be overridden by `WEBPASSWORD`. For example, suppose your service definition contains:
 
 ``` yaml
-- WEBPASSWORD=myFirstPassword
+WEBPASSWORD: myFirstPassword
 ```
 
 When you start the container, the admin password will be "myFirstPassword". If you run:
@@ -128,7 +130,7 @@ When you start the container, the admin password will be "myFirstPassword". If y
 $ docker exec pihole pihole -a -p mySecondPassword
 ```
 
-then "mySecondPassword" will become the admin password **until** the next time the container is re-created by docker-compose, at which point the password will be reset to "myFirstPassword".
+then "mySecondPassword" will become the admin password **until** the next time the container is re-created by docker compose, at which point the password will be reset to "myFirstPassword".
 
 Given this behaviour, we recommend that you ignore the `pihole -a -p` command.
 
@@ -143,10 +145,12 @@ If you choose any option except "Anonymous mode", then Pi-hole divides the loggi
 
 In the "System" tab of the "Settings" group is a <kbd>Flush logs (last 24 hours)</kbd> button. Clicking that button erases all log entries which are more recent than 24 hours. The button does **not** erase entries which are older than 24 hours.
 
-Retention of log entries older than 24 hours is controlled by the following environment variable:
+Retention of log entries older than 24 hours is controlled by the following environment variable which you can adjust using an [override file](../Basic_setup/Custom.md#custom-service) (see [example](#localOverride) above):
 
 ``` yaml
-- FTLCONF_MAXDBDAYS=365
+pihole:
+  environment:
+    FTLCONF_MAXDBDAYS: 365
 ```
 
 The default (which applies if the variable is omitted) is to retain log entries for 365 days.
@@ -169,13 +173,16 @@ You can control which public DNS servers are used by PiHole when it needs to ref
 
 The default is to use the two Google IPv4 DNS servers which correspond with 8.8.8.8 and 8.8.4.4, respectively.
 
-An alternative to toggling checkboxes in the Pi-hole GUI is to use an environment variable:
+An alternative to toggling checkboxes in the Pi-hole GUI is to use an environment variable, implemented using an [override file](../Basic_setup/Custom.md#custom-service) (see [example](#localOverride) above):
 
 ``` yaml
-- PIHOLE_DNS_=8.8.8.8;8.8.4.4
+pihole:
+  environment:
+    PIHOLE_DNS_: 8.8.8.8;8.8.4.4
 ```
 
-> The variable *does* end with an underscore!
+!!! note
+	* The variable *does* end with an underscore!
 
 This variable takes a semi-colon-separated list of DNS servers. You can discover the IP address associated with a checkbox by hovering your mouse pointer over the checkbox and waiting for a tool-tip to appear:
 
@@ -199,25 +206,25 @@ This variable takes a semi-colon-separated list of DNS servers. You can discover
 
     Pi-hole has its own built-in DNS server which can answer both kinds of queries. The implementation is useful but doesn't offer all the features of a full-blown DNS server like BIND9. If you decide to implement a more capable DNS server to work alongside Pi-hole, you will need to understand the following Pi-hole environment variables:
 
-    * `REV_SERVER=`
+    * `REV_SERVER: `
 
         If you configure Pi-hole's built-in DNS server to be authoritative for your local domain name, `REV_SERVER=false` is appropriate, in which case none of the variables discussed below has any effect.
 
-        Setting `REV_SERVER=true` allows Pi-hole to forward queries that it can't answer to a local upstream DNS server, typically running inside your network.
+        Setting `REV_SERVER: true` allows Pi-hole to forward queries that it can't answer to a local upstream DNS server, typically running inside your network.
 
-    * `REV_SERVER_DOMAIN=yourdomain.com` (where "yourdomain.com" is an example)
+    * `REV_SERVER_DOMAIN: yourdomain.com` (where "yourdomain.com" is an example)
 
         The Pi-hole documentation says:
 
         > *"If conditional forwarding is enabled, set the domain of the local network router".*
 
-        The words "if conditional forwarding is enabled" mean "when `REV_SERVER=true`".
+        The words "if conditional forwarding is enabled" mean "when `REV_SERVER: true`".
 
         However, this option really has little-to-nothing to do with the "domain of the local network **router**". Your router *may* have an IP address that reverse-resolves to a local domain name (eg gateway.mydomain.com) but this is something most routers are unaware of, even if you have configured your router's DHCP server to inform clients that they should assume a default domain of "yourdomain.com".
 
         This variable actually tells Pi-hole the name of your local domain. In other words, it tells Pi-hole to consider the possibility that an *unqualified* name like "fred" could be the fully-qualified domain name "fred.yourdomain.com".
 
-    * `REV_SERVER_TARGET=192.168.1.5` (where 192.168.1.5 is an example):
+    * `REV_SERVER_TARGET: =192.168.1.5` (where 192.168.1.5 is an example):
 
         The Pi-hole documentation says:
 
@@ -231,7 +238,7 @@ This variable takes a semi-colon-separated list of DNS servers. You can discover
 
         If you are planning on using this option, the target needs to be a DNS server that is authoritative for your local domain and that, pretty much, is going to be a local upstream DNS server inside your home network like another Raspberry Pi running BIND9.
 
-    * `REV_SERVER_CIDR=192.168.1.0/24` (where 192.168.1.0/24 is an example)
+    * `REV_SERVER_CIDR: 192.168.1.0/24` (where 192.168.1.0/24 is an example)
 
         The Pi-hole documentation says:
 
@@ -259,7 +266,7 @@ This variable takes a semi-colon-separated list of DNS servers. You can discover
         3. The *range* of IP addresses available for allocation to hosts on this subnet is 192.168.1.1 through 192.168.1.254 inclusive.
         4. *All* hosts on the 192.168.1 network (ie broadcast) is the reserved address "192.168.1.255". It is better to think of this as "the network prefix followed by all-one bits in the host portion".
 
-        When you set `REV_SERVER_CIDR=192.168.1.0/24` you are telling Pi-hole that *reverse queries* for the host range 192.168.1.1 through 192.168.1.254 should be sent to the `REV_SERVER_TARGET=192.168.1.5`.
+        When you set `REV_SERVER_CIDR: 192.168.1.0/24` you are telling Pi-hole that *reverse queries* for the host range 192.168.1.1 through 192.168.1.254 should be sent to the `REV_SERVER_TARGET: 192.168.1.5`.
 
 ## Pi-hole Web GUI { #webGUI }
 
@@ -304,7 +311,7 @@ devices, provided they too have static IPs.
 Your Pi-hole *system* does not have to use the Pi-hole *container* for its own DNS services and, in many ways, it is better if it does not. That's because the arrangement creates some chicken-and-egg situations. Examples:
 
 * If the Pi-hole *system* needs DNS services at boot time before the Pi-hole *container* is running, the boot may stall;
-* If the Pi-hole container is down when another process (eg `apt` or `docker-compose`) needs to do something that depends on DNS services being available.
+* If the Pi-hole container is down when another process (eg `apt` or `docker compose`) needs to do something that depends on DNS services being available.
 
 If you decide to use the Pi-hole *container* to provide DNS services to your Pi-hole *system* then you should also set up a fall-back to at least one well-known public DNS server that will kick in whenever your Pi-hole *container* is down.
 
@@ -581,9 +588,9 @@ The recommended approach is:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose down pihole
+	$ docker compose down pihole
 	$ sudo rm -rf ./volumes/pihole
-	$ docker-compose up -d pihole
+	$ docker compose up -d pihole
 	```
 
 	> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)

@@ -3,10 +3,10 @@ syncthing:
   container_name: syncthing
   hostname: raspberrypi  # optional
   environment:
-    - PUID=1000
-    - PGID=1000
-    - HOME=/app
-    - TZ=${TZ:-Etc/UTC}
+    PUID: 1000
+    PGID: 1000
+    HOME: /app
+    TZ: ${TZ:-Etc/UTC}
   volumes:
     - ./volumes/syncthing/config:/config
     - ./volumes/syncthing/data:/app

@@ -11,27 +11,15 @@
 
 ```
 ~/IOTstack
-├── .templates
-│   └── nodered
-│       └── service.yml ❶
 ├── services
 │   └── nodered
-│       ├── Dockerfile ❷
-│       └── service.yml ❸
-├── docker-compose.yml ❹
-└── volumes
-    └── nodered ❺
-        ├── data ❻
-        └── ssh ❼
+│       ├── service.yml 🅐
+│       ├── Dockerfile 🅑
+│       ├── installed-addon-nodes.txt 🅒
+│       └── override.yml 🅓
+├── docker-compose.yml 🅔
+└── docker-compose.override.yml 🅕
 ```
-
-1. Template *service definition*.
-2. The *Dockerfile*.
-3. Working *service definition* (old-menu only, copied from ❶).
-4. The *Compose* file (includes ❶)
-5. Persistent storage area.
-6. Data directory (mapped volume).
-7. SSH directory (mapped volume).
 
 ## How Node-RED gets built for IOTstack { #iotstackBuild }
 
@@ -43,20 +31,26 @@ The source code for Node-RED lives at [GitHub node-red/node-red-docker](https://
 
 Periodically, the source code is recompiled and pushed to [nodered/node-red](https://hub.docker.com/r/nodered/node-red/tags?page=1&ordering=last_updated) on *DockerHub*. See [Node-RED and `node.js` versions](#containerVersions) for an explanation of the versioning tags associated with images on *DockerHub*.
 
-### IOTstack menu { #iotstackMenu }
+### IOTstack menu install { #iotstackMenuInstall }
 
-When you select Node-RED in the IOTstack menu, the *template service definition* ❶ is copied into the *Compose* file ❹.
+When you install Node-RED using the menu, the following files are copied from the template:
 
-> Under old menu, it is also copied to the *working service definition* ❸ and then not really used.
+* The service definition <!--A-->&#x1F150;;
+* The Dockerfile <!--B-->&#x1F151;; and
+* A default list of add-on nodes <!--C-->&#x1F152;.
 
-You choose add-on nodes from a supplementary menu. We recommend accepting the default nodes, and adding others that you think you are likely to need. Node-RED will not build if you do not select at least one add-on node.
+When you configure Node-RED (either from the menu TUI or the command line), the list of add-on nodes <!--C-->&#x1F152; is updated to reflect your choices. You can also create an override file <!--D-->&#x1F153; to customise the service definition.
 
-Key points: 
+Note:
 
-* Under new menu, you must press the right arrow to access the supplementary menu. Under old menu, the list of add-on nodes is displayed automatically. 
 * Do not be concerned if you can't find an add-on node you need in the list. You can also add nodes via Manage Palette once Node-RED is running. See [component management](#componentManagement).
 
-Choosing add-on nodes in the menu causes the *Dockerfile* ❷ to be created.
+### IOTstack build stack { #iotstackBuildStack }
+
+When you tell the menu to build your stack, the process:
+
+- appends the service definition <!--A-->&#x1F150;; to the compose file <!--E-->&#x1F154;; and
+- if present, appends the override file <!--D-->&#x1F153;; to the compose override file <!--F-->&#x1F155;.
 
 ### IOTstack first run { #iotstackFirstRun }
 
@@ -64,66 +58,63 @@ On a first install of IOTstack, you are told to do this:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
-`docker-compose` reads the *Compose* file ❹. When it arrives at the `nodered` service definition, it finds <a name="serviceBuildFragment"><a>:
+docker compose merges <!--E-->&#x1F154; with <!--F-->&#x1F155;, then processes the merged result. When it arrives at the merged `nodered` service definition, it finds <a name="serviceBuildFragment"></a>:
 
 ``` yaml linenums="1"
-  nodered:
-    container_name: nodered
-    build:
-      context: ./services/nodered/.
-      args:
-      - DOCKERHUB_TAG=latest
-      - EXTRA_PACKAGES=
+nodered:
+  container_name: nodered
+  build:
+    context: ./services/nodered/.
 ```
+
+The `build.context` path on the right hand side of line 4 is interpreted like this:
+
+* The leading `.` implies "the absolute path to the project folder (the folder containing the compose file)"; and
+* The trailing `.` implies `Dockerfile`.
+
+In other words, the path expands to point to the Dockerfile <!--B-->&#x1F151;. The Dockerfile contains instructions to download a *base* image from [*DockerHub*](https://hub.docker.com) and then apply local customisations such as:
+
+1. The list of add-on nodes <!--C-->&#x1F152;, which is either the initial default set, or the nodes you chose when configuring Node-RED using the menu.
+
+2. Any extra packages, such as:
+
+	``` yaml
+	nodered:
+	  build:
+	    args:
+	      - EXTRA_PACKAGES=mosquitto-clients bind-tools tcpdump tree
+	```
+	
+	The above example shows how to specify extra packages via an [override file](../Basic_setup/Custom.md#custom-service) (`override.yml` <!--D-->&#x1F153;).
+
+The result of applying local customisations is a *local* image, which is instantiated to become your running container.
 
 Note:
 
-* Prior to July 2022, IOTstack used the following one-line syntax for the `build` directive:
-
-	``` yaml linenums="3"
-	    build: ./services/nodered/.
-	```
-
-	The older syntax meant all local customisations (version-pinning and adding extra packages) needed manual edits to the *Dockerfile* ❷. Those edits would be overwritten each time the menu was re-run to alter the selected add-on nodes. The newer multi-line syntax avoids that problem.
-
-	See also [updating to July 2022 syntax](#july2022syntax).
-
-In either case, the path `./services/nodered/.` tells `docker-compose` to look for ❷:
-
-```
-~/IOTstack/services/nodered/Dockerfile
-```
-
-which contains instructions to download a *base* image from [*DockerHub*](https://hub.docker.com) and then apply local customisations such as the add-on nodes you chose in the IOTstack menu. The result is a *local* image which is instantiated to become your running container.
-
-Notes:
-
-1. During the build you may see warnings and deprecation notices. You may also see messages about "vulnerabilities" along with recommendations to run `npm audit fix`. You should ignore all such messages. There is no need to take any action.
-2. If SQLite is in your list of nodes, be aware that it needs to be compiled from its source code. It takes a *long* time, outputs an astonishing number of warnings and, from time to time, will look as if it has gotten stuck. Be patient.
-
-	> Acknowledgement: Successful installation of the SQLite node is thanks to @fragolinux.
+* During the build you may see warnings and deprecation notices. You may also see messages about "vulnerabilities" along with recommendations to run `npm audit fix`. You should ignore all such messages. There is no need to take any action.
 
 When you run the `docker images` command after Node-RED has been built, you will see something like this:
 
 ``` console
 $ docker images
-REPOSITORY               TAG       IMAGE ID       CREATED        SIZE
-iotstack-nodered         latest    9feeb87019cd   11 days ago    945MB
+IMAGE                    ID            DISK USAGE  CONTENT SIZE  EXTRA
+iotstack-nodered:latest  af4e9d96ef11       688MB            0B  U    
 ```
 
 The image name `iotstack-nodered` is the concatenation of two components:
 
-1. The `docker-compose` *project* name. This is the all-lower-case representation of the name of the folder containing `docker-compose.yml`. In a default clone of IOTstack, the folder name is `IOTstack` so the project name is `iotstack`.
+1. The docker compose *project* name. This is the all-lower-case representation of the name of the folder containing `docker-compose.yml`. In a default clone of IOTstack, the folder name is `IOTstack` so the project name is `iotstack`.
 2. The name of the service definition which, for Node-RED is `nodered`.
 
-When you install Node-RED for the first time, the entire process of downloading a *base* image from Dockerhub, building a *local* image by running your local Dockerfile ❷, and then instantiating that *local* image as your running container, is all completely automatic.
+When you launch Node-RED for the first time, the entire process of downloading a *base* image from Dockerhub, building a *local* image by running your local Dockerfile, and then instantiating that *local* image as your running container, is all completely automatic.
 
 However, *after* that first build, your *local* image is essentially frozen and it needs special action on your part to keep it up-to-date. See [maintaining Node-RED](#maintainNodeRed) and, in particular:
 
-* [Re-building the local image](#rebuildNodeRed) if you change the Dockerfile; and
+* [Re-building the local image](#rebuildNodeRed) if you change either the list of add-on nodes <!--C-->&#x1F152; or the Dockerfile <!--B-->&#x1F151;; and
+
 * [Upgrading Node-RED](#upgradeNodeRed) if you want to reconstruct your *local* image based on an updated *base* image which has become available on [DockerHub](https://hub.docker.com/r/nodered/node-red/tags).
 
 ## Securing Node-RED { #securingNodeRed }
@@ -180,7 +171,7 @@ Save the file and then restart Node-RED:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose restart nodered
+$ docker compose restart nodered
 ```
 
 ### Setting a username and password for Node-RED { #credentials }
@@ -201,27 +192,21 @@ Copy that text to your clipboard, then follow the instructions at [Node-RED User
 
 ## Referring to other containers { #containerNames }
 
-Node-RED can run in two modes. By default, it runs in "non-host mode" but you can also move the container to "host mode" by editing the Node-RED service definition in your *Compose* file to:
-
-1. Add the following directive:
-
-	``` yml
-	network_mode: host
-	```
-
-2. Remove the `ports` directive and the mapping of port 1880.
-
-### When Node-RED is not in host mode { #nonHostMode }
-
-Most examples on the web assume Node-RED and other services in the MING (Mosquitto, InfluxDB, Node-RED, Grafana) stack have been installed natively, rather than in Docker containers. Those examples typically include the loopback address + port syntax, like this:
+Most examples on the web assume Node-RED and other services in the MING stack (Mosquitto, InfluxDB, Node-RED, Grafana) have been installed natively, rather than in Docker containers. Those examples typically include the loopback address + port syntax, like this:
 
 ```
-127.0.0.1:1883
+127.0.0.1:«hostPort»
 ```
 
-The loopback address will not work when Node-RED is in non-host mode. This is because each container behaves like a self-contained computer. The loopback address means "this container". It does not mean "this Raspberry Pi".
+The loopback address will not work. This is because Node-RED runs in non-host mode where each container behaves like a self-contained computer. The loopback address means "this container". It does not mean "this computer".
 
-You refer to other containers by their container name. For example, a flow subscribing to an MQTT feed provided by the mosquitto container uses:
+You refer to other containers by using the following syntax:
+
+```
+«containerName»:«containerPort»
+```
+
+For example, a flow subscribing to an MQTT feed provided by the mosquitto container uses:
 
 ```
 mosquitto:1883
@@ -235,55 +220,24 @@ influxdb:8086
 
 Behind the scenes, Docker maintains a table, similar to an `/etc/hosts` file, mapping container names to the IP addresses on the internal bridged network that are assigned, dynamically, by Docker, when it spins up each container.
 
-### When Node-RED is in host mode { #hostmode }
-
-This is where you use loopback+port syntax, such as the following to communicate with Mosquitto:
-
-```
-127.0.0.1:1883
-```
-
-What actually occurs is that Docker is listening to external port 1883 on behalf of Mosquitto. It receives the packet and routes it (layer three) to the internal bridged network, performing network address translation (NAT) along the way to map the external port to the internal port. Then the packet is delivered to Mosquitto. The reverse happens when Mosquitto replies. It works but is less efficient than when all containers are in non-host mode. 
-
 ## Referring to the host { #hostReference }
 
-When the container is running in non-host mode, there are several ways in which it can refer to the host on which the container is running:
+Sometimes, a Node-RED flow will need to communicate with a service that is running on the same host but which can't be reached using `«containerName»:«containerPort»` syntax. Examples include:
 
-1. via the IP address of one of the host's interfaces;
-2. via the fully-qualified domain name of the host (ie same as the above but via the Domain Name System)
-3. via the default gateway on the Docker bridge network.
+* The service is running in a host-mode container; or
+* The service is running natively (ie not in a container).
 
-The problem with the first two is that they tie your flows to the specific host.
+If you need to reach such a service, use this syntax:
 
-The third method is *portable*, meaning a flow can conceptually refer to "this" host and be independent of the actual host on which the container is running.
+```
+host.docker.internal:«hostPort»
+```
 
-### Bridge network - default gateway { #defaultBridge }
+Here's a contrived example. It's contrived in the sense that I can't think of any obvious reason why you would want to do this, but it would still work. The ESPHome service runs in host mode and binds to host port 6052. If a Node-RED flow needed to communicate with ESPHome, it would use:
 
-* Method 1
-
-	The default gateway on the Docker bridge network is *usually* "172.17.0.1". You can confirm the IP address by running:
-
-	``` console
-	$ docker network inspect bridge | jq .[0].IPAM.Config[0].Gateway
-	"172.17.0.1"
-	```
-
-	> If `jq` is not installed on your system, you can install it by running `sudo apt install -y jq`.
-
-	If you use this method, your flows can refer to "this" host using the IP address "172.17.0.1".
-
-* Method 2
-
-	Alternatively, you can add the following lines to your Node-RED service definition:
-
-	``` yaml
-	extra_hosts:
-	  - "host.docker.internal:host-gateway"
-	```
-
-	If you use this method, your flows can refer to "this" host using the domain name "host.docker.internal".
-
-	Generally the second method is recommended for IOTstack. That is because your flows will continue to work even if the 172.17.0.1 IP address changes. However, it does come with the disadvantage that, if you publish a flow containing this domain name, the flow will not work unless the recipient also adds the `extra_hosts` clause.
+```
+host.docker.internal:6052
+```
 
 ## GPIO Access { #accessGPIO }
 
@@ -306,7 +260,7 @@ To communicate with your Raspberry Pi's GPIO you need to do the following:
 
 	Note:
 
-	* Unless you explicitly removed `node-red-node-pi-gpiod` from the list of add-on nodes added to your [Dockerfile](#viaDockerfile) by the IOTstack menu, it will be installed already. You can confirm this by examining your Node-RED Dockerfile&nbsp;❷.
+	* Unless you explicitly removed `node-red-node-pi-gpiod` from the default list of add-on nodes set up by the IOTstack menu, it will be installed already.
 
 3. Configure the `pigpdiod` daemon:
 
@@ -427,12 +381,7 @@ To communicate with your Raspberry Pi's GPIO you need to do the following:
 
 4. Drag a `pi gpio` node onto the canvas. Configure it according to your needs.
 
-	The `Host` field should be set to one of:
-
-	*  `172.17.0.1`; or
-	*  `host.docker.internal`
-
-	See also [Bridge network - default gateway](#defaultBridge).
+	The `Host` field should be set to `host.docker.internal`
 
 	Don't try to use 127.0.0.1 because that is the loopback address of the Node-RED container.
 
@@ -460,7 +409,7 @@ You have three basic options:
 	This is simple and effective but it suffers from a few problems:
 
 	* If the device is disconnected while the container is running, there's a good chance the container will crash.
-	* `docker-compose` will not start your container if the device is not present when you bring up your stack.
+	* docker compose will not start your container if the device is not present when you bring up your stack.
 	* You can't guarantee that the device will *always* enumerate as "ttyUSB0". It might come up as "ttyUSB1".
 
 	You can deal with the last problem by using the device's "by-id" path. There's an example of this in the [Zigbee2MQTT](https://sensorsiot.github.io/IOTstack/Containers/Zigbee2MQTT/#identifyAdapter) documentation.
@@ -468,7 +417,7 @@ You have three basic options:
 	Options 2 and 3 (below) deal with the first two problems in the sense that:
 
 	* a device disconnection is unlikely to cause the container to crash (the flow might);
-	* `docker-compose` will always start the container, irrespective of whether devices are actually attached to your USB ports.
+	* docker compose will always start the container, irrespective of whether devices are actually attached to your USB ports.
 
 	Options 2 and 3 (below) can't provide a workaround for devices being given different names via enumeration but you can still deal with that by using the device's "by-id" path (as explained above).
 
@@ -506,7 +455,7 @@ You have three basic options:
 
 		* the "*" is a wildcard for the minor number.
 
-3. Use the "privileged" flag by adding the following to your Node-RED service definition:
+3. Use the "privileged" flag by adding the following to your Node-RED override file:
 
 	``` yaml
 	privileged: true
@@ -516,14 +465,6 @@ You have three basic options:
 
 	* [Privileged vs root](https://www.howtogeek.com/devops/privileged-vs-root-in-docker-whats-the-difference/)
 	* [Mind the 'privileged' flag](https://betterprogramming.pub/docker-tips-mind-the-privileged-flag-d6e2ae71bdb4)
-
-### node-red-node-serialport { #nodeSerial }
-
-At the time of writing (Feb 2023), it was not possible to add `node-red-node-serialport` to the list of nodes in your Dockerfile. Attempting to do so crashed the Node-RED container with a *segmentation fault.* The workaround is to build the node from source by adding an extra line at the *end* of your Dockerfile: 
-
-``` Dockerfile
-RUN npm install node-red-node-serialport --build-from-source
-```
 
 ### hardware serial port { #piSerial }
 
@@ -547,14 +488,14 @@ Historically, `/dev/ttyAMA0` referred to the Raspberry Pi's serial port. The sit
 
 	And, if that isn't sufficiently confusing, the location of `config.txt` depends on the OS version:
 
-	* Bullseye (and earlier): `/boot/config.txt`
-	* Bookworm: `/boot/firmware/config.txt`
+	* Bullseye and earlier: `/boot/config.txt`
+	* Bookworm and later: `/boot/firmware/config.txt`
 
 Rolling all that together, if you want access to the hardware serial port from Node-RED, you need to:
 
 1. Add `enable_uart=1` to `config.txt`.
 2. Reboot.
-3. Add a device-mapping to Node-RED's service definition:
+3. Add a device-mapping to Node-RED's override file:
 
 	``` yaml
 	devices:
@@ -567,7 +508,7 @@ Rolling all that together, if you want access to the hardware serial port from N
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d nodered
+	$ docker compose up -d nodered
 	```
 
 ### Bluetooth device { #bluetoothSupport }
@@ -588,28 +529,24 @@ If you enable the `node-red-contrib-generic-ble` add on node, you will also need
 
 	You then need to reboot. This adds the Bluetooth device to `/dev`.
 
-2. Find the the Node-RED service definition in your `docker-compose.yml`:
-
-	* Add the following mapping to the `volumes:` clause:
-
-		```yaml
-		- /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
-		```
-
-	* Add the following `devices:` clause:
-
-		```yaml
-		devices:
-		  - "/dev/serial1:/dev/serial1"
-		  - "/dev/vcio:/dev/vcio"
-		  - "/dev/gpiomem:/dev/gpiomem"
-		```
-
-3. Recreate the Node-RED container:
+2. Create or edit the override file <!--D-->&#x1F153;, so that it includes the following content:
+	
+	``` yaml
+	nodered:
+	  volumes:
+	    - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+	  devices:
+	    - "/dev/serial1:/dev/serial1"
+	    - "/dev/vcio:/dev/vcio"
+	    - "/dev/gpiomem:/dev/gpiomem"
+	```
+	
+3. Rebuild your stack, then recreate the Node-RED container:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d nodered
+	$ ./iotstack-menu.sh build
+	$ docker compose up -d nodered
 	```
 
 Notes:
@@ -750,7 +687,7 @@ $ ssh host.docker.internal «COMMAND»
 
 where `«COMMAND»` is any command known to the target host.
 
-This section uses `host.docker.internal` throughout. That name comes from method 2 of [bridge network - default gateway](#defaultBridge) but, in principle, you can refer to the host using any mechanism described in [referring to the host](#hostReference).
+This section uses `host.docker.internal` to refer to the local machine where the Node-RED container is running. See also [referring to the host](#hostReference). In principle you could also use either the host's fully qualified domain name or the IP address of one of its network interfaces but `host.docker.internal` has the advantage of being portable if you need to move Node-RED to another computer.
 
 ### Assumptions { #sshAssumptions }
 
@@ -1059,7 +996,7 @@ Use these commands to:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d nodered
+$ docker compose up -d nodered
 ```
 
 The first time you execute this command, the *base* image of Node-RED is downloaded from DockerHub, and then the *Dockerfile* is run to produce a *local* image. The *local* image is then instantiated to become the running container.
@@ -1071,16 +1008,17 @@ To stop the running container:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down nodered
+$ docker compose down nodered
 ```
 
-> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
+!!! note
+	* see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
 
 Alternatively, you can stop the entire stack:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down
+$ docker compose down
 ```
 
 ### Restarting Node-RED { #restartNodeRed }
@@ -1089,27 +1027,28 @@ The `restart` command sends a signal to the processes running within the contain
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose restart nodered
+$ docker compose restart nodered
 ```
 
 ### Re-building the local image { #rebuildNodeRed }
 
 You need to rebuild the *local* image if you do any of the following:
 
-1. Change either of the build arguments (`DOCKERHUB_TAG` or `EXTRA_PACKAGES`) in your *Compose* file.
-2. Make a material change to your Node-RED *Dockerfile*, such as re-running the menu to change your selection of add-on nodes.
+1. Change either of the build arguments (`DOCKERHUB_TAG` or `EXTRA_PACKAGES`) in your override file <!--D-->&#x1F153;, and then rebuild your stack.
+2. Use the menu to change your selection of add-on nodes.
+3. Make a material change to your Node-RED *Dockerfile*.
 
 To rebuild your *local* image:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up --build -d nodered
+$ docker compose up --build -d nodered
 $ docker system prune -f
 ```
 
-Think of these commands as "re-running the *Dockerfile*". The only time a *base* image will be downloaded from *DockerHub is when a *base* image with a tag matching the value of `DOCKERHUB_TAG` can't be found on your Raspberry Pi.
+Think of these commands as "re-running the *Dockerfile*". The only time a *base* image will be downloaded from *DockerHub* is when a *base* image with a tag matching the value of `DOCKERHUB_TAG` can't be found on your Raspberry Pi.
 
-Your existing Node-RED container continues to run while the rebuild proceeds. Once the freshly-built *local* image is ready, the `up` tells `docker-compose` to do a new-for-old swap. There is barely any downtime for your Node-RED service.
+Your existing Node-RED container continues to run while the rebuild proceeds. Once the freshly-built *local* image is ready, the `up` tells docker compose to do a new-for-old swap. There is barely any downtime for your Node-RED service.
 
 ### Checking for Node-RED updates { #updateNodeRed }
 
@@ -1137,8 +1076,8 @@ Once a new version appears on [*DockerHub*](https://hub.docker.com), you can upg
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose build --no-cache --pull nodered
-$ docker-compose up -d nodered
+$ docker compose build --no-cache --pull nodered
+$ docker compose up -d nodered
 $ docker system prune -f
 ```
 
@@ -1149,9 +1088,9 @@ Breaking it down into parts:
 * `--pull` tells the Dockerfile process to actually check with [*DockerHub*](https://hub.docker.com) to see if there is a later version of the *base image* and, if so, to download it before starting the build;
 * `nodered` is the named container argument required by the `build` command.
 
-Your existing Node-RED container continues to run while the rebuild proceeds. Once the freshly-built *local* image is ready, the `up` tells `docker-compose` to do a new-for-old swap. There is barely any downtime for your Node-RED service.
+Your existing Node-RED container continues to run while the rebuild proceeds. Once the freshly-built *local* image is ready, the `up` tells docker compose to do a new-for-old swap. There is barely any downtime for your Node-RED service.
 
-The `prune` is the simplest way of cleaning up old images. Sometimes you need to run this twice, the first time to clean up the old *local* image, the second time for the old *base* image. Whether an old *base* image exists depends on the version of `docker-compose` you are using and how your version of `docker-compose` builds local images.
+The `prune` is the simplest way of cleaning up old images. Sometimes you need to run this twice, the first time to clean up the old *local* image, the second time for the old *base* image. Whether an old *base* image exists depends on the version of docker compose you are using and how your version of docker compose builds local images.
 
 
 ## Node-RED and `node.js` versions { #containerVersions }
@@ -1200,9 +1139,7 @@ IOTstack uses a service definition for Node-RED that includes these lines:
       - DOCKERHUB_TAG=latest
 ```
 
-> If you do not see this structure in your *Compose* file, refer to [updating to July 2022 syntax](#july2022syntax).
-
-The value of the `DOCKERHUB_TAG` gives you the ability to control, from your *Compose* file, which versions of Node-RED and `node.js` run within your Node-RED container.
+The value of the `DOCKERHUB_TAG` gives you the ability to control, from your override file <!--D-->&#x1F153;, which versions of Node-RED and `node.js` run within your Node-RED container.
 
 The allowable values of `DOCKERHUB_TAG` can be found on the [*DockerHub* Node-RED tags page](https://hub.docker.com/r/nodered/node-red/tags). The table below contains examples of tags that were available on *DockerHub* at the time of writing (2022-07-06):
 
@@ -1250,14 +1187,14 @@ Changing a pinned version and rebuilding *may* result in a new *base* image bein
 
 ### via Dockerfile { #viaDockerfile }
 
-You can install components by adjusting the Node-RED *Dockerfile*. This can be done by:
+You can install components by using the menu to "configure" Node-RED:
 
-* Running the IOTstack menu and changing the selected Node-RED nodes; or
-* Editing your Node-RED *Dockerfile* using a text editor.
+``` console
+$ cd ~/IOTstack
+$ ./iotstack-menu.sh configure nodered
+```
 
-Using the IOTstack menu limits your choice of components to those presented in the menu. Editing the *Dockerfile* with a text editor is more flexible but carries the risk that your changes could be lost if you subsequently use the menu method.
-
-To apply changes made to your *Dockerfile*, run the [re-building the local Node-RED image](#rebuildNodeRed) commands.
+When you change the set of add-on nodes, <!--C-->&#x1F152; is updated. That file is read by the Dockerfile <!--B-->&#x1F151; so applying the changes means you have to [re-build the local Node-RED image](#rebuildNodeRed).
 
 ### via Manage Palette { #viaManagePalette }
 
@@ -1265,7 +1202,7 @@ You can add, remove or update components in Manage Palette. Node-RED will remind
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose restart nodered
+$ docker compose restart nodered
 ```
 
 Note:
@@ -1284,7 +1221,7 @@ You can also run `npm` inside the container to install any component that could 
 ``` console
 $ cd ~/IOTstack
 $ docker exec -w /data nodered npm «command» «arguments…»
-$ docker-compose restart nodered
+$ docker compose restart nodered
 ```
 
 Examples:
@@ -1293,14 +1230,14 @@ Examples:
 
 	``` console
 	$ docker exec -w /data nodered npm install find-my-iphone-node
-	$ docker-compose restart nodered
+	$ docker compose restart nodered
 	```
 
 * To remove the "find my iphone" node:
 
 	``` console
 	$ docker exec -w /data nodered npm uninstall find-my-iphone-node
-	$ docker-compose restart nodered
+	$ docker compose restart nodered
 	```
 
 Note:
@@ -1312,7 +1249,7 @@ Note:
 
 	``` console
 	$ docker exec -w /data nodered npm install node-red-contrib-moment@4.0.0
-	$ docker-compose restart nodered
+	$ docker compose restart nodered
 	```
 
 ### Comparison of methods { #viaWhich }
@@ -1395,7 +1332,7 @@ Notice how the `node-red-node-email` instance installed in the Dockerfile is bei
 ``` console
 $ cd ~/IOTstack
 $ docker exec -w /data nodered npm uninstall node-red-node-email
-$ docker-compose restart nodered
+$ docker compose restart nodered
 ```
 
 
@@ -1409,152 +1346,32 @@ There are two ways to add extra packages. The first method is to add them to the
 $ docker exec nodered apk add --no-cache mosquitto-clients
 ```
 
-> The "apk" implies that the Node-RED container is based on Alpine Linux. Keep that in mind when you search for instructions on installing packages.
+!!! note
+	* The "apk" implies that the Node-RED container is based on Alpine Linux. Keep that in mind when you search for instructions on installing packages.
 
 Packages installed this way will persist until the container is re-created (eg a `down` and `up` of the stack, or a reboot of your Raspberry Pi). This is a good choice if you only want to run a quick experiment.
 
 The second method adds the packages to your *local* image every time you rebuild. Because the packages are in the *local* image, they are always in the running container. For example, to include the Mosquitto clients in every build:
 
-1. Edit your *Compose* file to include the package on the `EXTRA_PACKAGES` argument:
+1. Edit your override file <!--D-->&#x1F153; to include the package on the `EXTRA_PACKAGES` argument:
 
 	``` yaml
 	- EXTRA_PACKAGES=mosquitto-clients
 	```
 
-	> If you do not see the `EXTRA_PACKAGES` argument in your *Compose* file, refer to [updating to July 2022 syntax](#july2022syntax).
+	Notes:
+
+	1. Use a space to separate package names.
+	2. Do **not** encapsulate the list in quote marks.
+	3. See [IOTstack first run](#iotstackFirstRun) for another example.
 
 2. Rebuild your *local* image by running the [re-building the local Node-RED image](#rebuildNodeRed) commands.
 
-You can specify multiple packages on the same line. For example:
-
-``` yaml
-- EXTRA_PACKAGES=mosquitto-clients bind-tools tcpdump
-```
-
-Notes:
-
-1. Use a space to separate package names.
-2. Do **not** encapsulate the list in quote marks.
-
-## Updating to July 2022 syntax { #july2022syntax }
-
-The primary benefit of the new syntax is that you no longer risk the IOTstack menu overwriting any custom changes you may have made to your Node-RED *Dockerfile*.
-
-If you install a clean copy of IOTstack, run the menu, enable Node-RED and select one or more add-on nodes then both your *Compose* file and *Dockerfile* will use the latest syntax automatically.
-
-If you have an older version of IOTstack installed, the syntax used in your *Compose* file and *Dockerfile* will depend on when you last ran the menu and manipulated Node-RED.
-
-To avoid any uncertainties, you can use a text editor to update your existing *Compose* file and *Dockerfile* to adopt the latest syntax.
-
-### Updating your *Compose* file  { #july2022compose }
-
-* Step 1: Implement the new syntactic scaffolding:
-
-	The first three lines of the old syntax are:
-
-	``` yaml linenums="1"
-	  nodered:
-	    container_name: nodered
-	    build: ./services/nodered/.
-	```
-
-	Replace line 3 (the one-line `build:` directive) with the following lines:
-
-	``` yaml linenums="3"
-	    build:
-	      context: ./services/nodered/.
-	      args:
-	      - DOCKERHUB_TAG=latest
-	      - EXTRA_PACKAGES=
-	```
-
-* Step 2: Pin to the desired version (optional):
-
-	If your existing *Dockerfile* pins to a specific version, edit the value of `DOCKERHUB_TAG` (line 6 of your updated *Compose* file) to use the tag from your *Dockerfile*. For example, if your existing *Dockerfile* begins with:
-
-	``` Dockerfile
-	FROM nodered/node-red:latest-12
-	```
-
-	then line 6 of your *Compose* file should be:
-	 
-
-	``` yaml linenums="6"
-	      - DOCKERHUB_TAG=latest-12
-	```
-
-	Note:
-
-	* IOTstack switched to `latest-12` in March 2021. The default for July 2022 syntax is `latest`. At the time of writing, that is the same as `latest-14`, which is what is recommended by Node-RED. If any of your flows has a dependence on `node.js` version 12 (or if you do not want to take the risk), use `latest-12`.
-
-* Step 3: Define extra packages (optional):
-
-	If your existing *Dockerfile* includes extra packages, edit the value of `EXTRA_PACKAGES` (line 7 of your updated *Compose* file) to list the same packages. For example, if your existing *Dockerfile* includes:
-
-	``` Dockerfile
-	RUN apk update && apk add --no-cache eudev-dev mosquitto-clients bind-tools tcpdump
-	```
-
-	then everything *after* `eudev-dev` should appear on line 7 of your *Compose* file: 
-
-	``` yaml linenums="6"
-	      - EXTRA_PACKAGES=mosquitto-clients bind-tools tcpdump
-	```
-
-	Notes:
-
-	* use spaces between package names.
-	* do **not** enclose the list of packages in quotes.
-	* do **not** include `eudev-dev` (it is specified in the [updated *Dockerfile*](#july2022dockerfile)).
-
-### Updating your *Dockerfile*  { #july2022dockerfile }
-
-The first four lines of your existing *Dockerfile* will have a structure similar to this:
-
-``` Dockerfile linenums="1"
-FROM nodered/node-red:latest-12
-USER root
-RUN apk update && apk add --no-cache eudev-dev
-USER node-red
-```
-
-> The actual text will depend on whether you have modified the tag in the first line or added extra packages to the third line.
-
-Replace the first four lines of your *Dockerfile* with the following lines:
-
-``` Dockerfile linenums="1"
-# reference argument - omitted defaults to latest
-ARG DOCKERHUB_TAG=latest
-
-# Download base image
-FROM nodered/node-red:${DOCKERHUB_TAG}
-
-# reference argument - omitted defaults to null
-ARG EXTRA_PACKAGES
-ENV EXTRA_PACKAGES=${EXTRA_PACKAGES}
-
-# default user is node-red - need to be root to install packages
-USER root
-
-# install packages
-RUN apk update && apk add --no-cache eudev-dev ${EXTRA_PACKAGES}
-
-# switch back to default user
-USER node-red
-
-# variable not needed inside running container
-ENV EXTRA_PACKAGES=
-
-# add-on nodes follow
-```
-
-All remaining lines of your original *Dockerfile* should be left as-is.
-
-### Applying the new syntax { #july2022build }
-
-Run the [re-building the local Node-RED image](#rebuildNodeRed) commands.
-
 ## Alpine vs Debian { #linuxDistro }
+
+!!! note
+
+	* The information in this section has not been tested for a while. Please treat it as general guidance only and don't assume it will work first time. Also, and this can't be stressed enough, there is **NO RELATIONSHIP** between the Linux distribution running inside a Node-RED container (Alpine being the default) and the Linux distribution running on the host. The host can be a Raspberry Pi running Raspberry Pi OS (a version of Debian customised by the Raspberry Pi Foundation), or Debian, or Ubuntu, or whatever other Linux distribution you chose. Similarly, your hardware may be based on ARM (like the Raspberry Pi) or an Intel X86 chip. In its turn, your host's Linux distribution may be running directly on the bare metal, or may have a hypervisor like Proxmox-VE in between (which is based on Debian). All of that complexity is totally and utterly irrelevant to the choice of Alpine running inside a Docker container, whether that container is Node-RED or Mosquitto or anything else. **NO RELATIONSHIP!**
 
 The first part of IOTstack's default service definition for Node-RED is shown at [IOTstack first run](#serviceBuildFragment). Although it is not immediately obvious, this results in a container which is based on the Alpine Linux distribution. You can confirm this by running:
 
@@ -1668,7 +1485,7 @@ However, there may be circumstances where you decide it is appropriate to run a 
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose build --no-cache --pull nodered
+	$ docker compose build --no-cache --pull nodered
 	```
 
 	If the build process reports any errors, go back and check your work.
@@ -1676,7 +1493,7 @@ However, there may be circumstances where you decide it is appropriate to run a 
 6. Start the new container:
 
 	``` console
-	$ docker-compose up -d nodered
+	$ docker compose up -d nodered
 	```
 
 7. Check that the new container is running properly and hasn't gone into a restart loop:

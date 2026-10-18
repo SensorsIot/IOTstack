@@ -1,0 +1,12 @@
+{
+   "configure": "configure-example.sh",
+   "dependencies": [],
+   "description": "example_template",
+   "environment": [
+      { "variable": "EXAMPLE_TEMPLATE_PASSWORD", "preset": "$(random_password)" }
+   ],
+   "install": [
+     { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "example_template"
+}

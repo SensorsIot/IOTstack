@@ -1,10 +1,5 @@
 # Zigbee2MQTT
 
-## Quick links
-
-* New users: [start here](#basicProcess)
-* Existing users: [Service definition change](#update202204) (circa April 2022)
-
 ## References
 
 * [Web Guide](https://www.zigbee2mqtt.io)
@@ -14,15 +9,15 @@
 
 ## Definitions
 
-* *"compose file"* means the file at the path:
+* *"override file"* means the file at the path:
 
 	```
-	~/IOTstack/docker-compose.yml
+	~/IOTstack/zigbee2mqtt/override.yml
 	```
 
 ## Basic process for new users { #basicProcess }
 
-1. Run the IOTstack menu and choose both "Mosquitto" and "Zigbee2MQTT". That adds the service definitions for both of those containers to your *compose file*.
+1. Run the IOTstack menu and choose both "Mosquitto" and "Zigbee2MQTT". That adds the service definitions for both of those containers to your *[override file](../Basic_setup/Custom.md#custom-service)*.
 
 2. [Prepare your Zigbee adapter](#prepareAdapter) by flashing its firmware.
 3. Follow the steps in [Identify your Zigbee adapter](#identifyAdapter) to work out how your adapter:
@@ -30,7 +25,7 @@
 	* "mounts" on your Raspberry Pi; or
 	* "connects" over your network,
 
-	and edit your *compose file* to include that information.
+	and edit your *[override file](../Basic_setup/Custom.md#custom-service)* to include that information.
 
 4. The default environment variables assume:
 
@@ -38,13 +33,13 @@
 	- Your adapter mounts via USB; and
 	- You want the Zigbee2MQTT web front end to be available on port 8080.
 
-	This is a good basis for getting started. If it sounds like it will meet your needs, you will not need to make any changes. Otherwise, review the [environment variables](#envVars) and make appropriate changes to the service definition in your *compose file*.
+	This is a good basis for getting started. If it sounds like it will meet your needs, you will not need to make any changes. Otherwise, review the [environment variables](#envVars) and make appropriate changes to the service definition in your *[override file](../Basic_setup/Custom.md#custom-service)*.
 
 5. <a name="upStack"></a>Bring up your stack:
 
 	```console
 	$ cd ~/IOTstack
-	$ docker-compose up -d
+	$ docker compose up -d
 	```
 
 6. Confirm that the Zigbee2MQTT container appears to be working correctly. You should:
@@ -141,7 +136,7 @@ For those reasons, it is better to take the time to identify your Zigbee adapter
 
 	What the output is telling you is that the *by-id* path is a symbolic link to `/dev/ttyACM0`. Although this *may* always be true on your Raspberry Pi, the only part that is actually *guaranteed* to be true is the *by-id* path, which is why you should use it.
 
-7. Once you have identified the path to your adapter, you communicate that information to docker-compose like this:
+7. Once you have identified the path to your adapter, you communicate that information to docker compose like this:
 
 	```console
 	$ echo ZIGBEE2MQTT_DEVICE_PATH=/dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00125A00183F06C5-if00 >>~/IOTstack/.env
@@ -149,7 +144,7 @@ For those reasons, it is better to take the time to identify your Zigbee adapter
 
 	Note:
 
-	* if you forget to do this step, docker-compose will display the following error message:
+	* if you forget to do this step, docker compose will display the following error message:
 
 		```
 		parsing ~/IOTstack/docker-compose.yml: error while interpolating services.zigbee2mqtt.devices.[]: required variable ZIGBEE2MQTT_DEVICE_PATH is missing a value: eg echo ZIGBEE2MQTT_DEVICE_PATH=/dev/ttyACM0 >>~/IOTstack/.env
@@ -182,7 +177,7 @@ x-devices:
 You tell the container how to find your Zigbee adapter across the network by using an environment variable:
 
 ``` yaml
-- ZIGBEE2MQTT_CONFIG_SERIAL_PORT=tcp://«ipaddr»:«port»
+ZIGBEE2MQTT_CONFIG_SERIAL_PORT: tcp://«ipaddr»:«port»
 ```
 
 Where:
@@ -193,7 +188,7 @@ Where:
 Example:
 
 ``` yaml
-- ZIGBEE2MQTT_CONFIG_SERIAL_PORT=tcp://192.168.1.5:6638
+ZIGBEE2MQTT_CONFIG_SERIAL_PORT: tcp://192.168.1.5:6638
 ```
 
 ## Configuration { #configTemplate }
@@ -205,15 +200,15 @@ zigbee2mqtt:
   container_name: zigbee2mqtt
   image: koenkk/zigbee2mqtt:latest
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0
-    - ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack
-    - ZIGBEE2MQTT_CONFIG_MQTT_SERVER=mqtt://mosquitto:1883
+    TZ: ${TZ:-Etc/UTC}
+    ZIGBEE2MQTT_CONFIG_SERIAL_PORT: /dev/ttyACM0
+    ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: zstack
+    ZIGBEE2MQTT_CONFIG_MQTT_SERVER: mqtt://mosquitto:1883
     # only enable the next line for Zigbee2MQTT v1
-    # - ZIGBEE2MQTT_CONFIG_FRONTEND=true
-    - ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true
-    - ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_SYMLINK_CURRENT=true
-    # - DEBUG=zigbee-herdsman*
+    # ZIGBEE2MQTT_CONFIG_FRONTEND: true
+    ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED: true
+    ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_SYMLINK_CURRENT: true
+    # DEBUG: zigbee-herdsman*
   ports:
     - "8080:8080"
   volumes:
@@ -252,19 +247,19 @@ serial:
 then the equivalent environment variables are:
 
 ``` yaml
-- ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0
-- ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack
+ZIGBEE2MQTT_CONFIG_SERIAL_PORT: /dev/ttyACM0
+ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: zstack
 ```
 
 Note:
 
 * Do **not** use quote marks to enclose the values (right hand sides) of environment variables.
 
-Whenever you change the value of an environment variable, you also need to tell `docker-compose` to apply the change:
+Whenever you change the value of an environment variable, you also need to tell `docker compose` to apply the change:
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose up -d zigbee2mqtt
+$ docker compose up -d zigbee2mqtt
 ```
 
 The default service definition provided with IOTstack includes the following environment variables:
@@ -272,15 +267,15 @@ The default service definition provided with IOTstack includes the following env
 #### timezone support { #tzSupport }
 
 ``` yaml
-- TZ=${TZ:-Etc/UTC}
+TZ: ${TZ:-Etc/UTC}
 ```
 
 This assumes that your system timezone has been copied to `~/IOTstack/.env`, otherwise defaults to `Etc/UTC`.
 
-If you want to set your timezone:
+If you want to set your timezone, you can do it like this:
 
 ``` console
-$ echo "TZ=$(cat /etc/timezone)" >> ~/IOTstack/.env
+$ echo "TZ=Australia/Sydney" >> ~/IOTstack/.env
 ```
 
 Most (but not yet all) IOTstack containers use this syntax. The idea is that a single value set in `.env` will ensure your containers operate in the same timezone.
@@ -288,7 +283,7 @@ Most (but not yet all) IOTstack containers use this syntax. The idea is that a s
 #### serial adapter { #serialAdapter }
 
 ``` yaml
-- ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0
+ZIGBEE2MQTT_CONFIG_SERIAL_PORT: /dev/ttyACM0
 ```
 
 The default value of `/dev/ttyACM0` works in conjunction with the `devices` clause:
@@ -303,7 +298,7 @@ Taken together, these assume your Zigbee adapter is connected to a local USB por
 1. Change the right hand side of this variable so that it points to your adapter. For example:
 
 	``` yaml
-	- ZIGBEE2MQTT_CONFIG_SERIAL_PORT=tcp://«ipaddr»:«port»`
+	ZIGBEE2MQTT_CONFIG_SERIAL_PORT: tcp://«ipaddr»:«port»`
 	```
 
 2. Remove, comment-out or inactivate the `devices` clause (as explained in [remote adapters](#identifyRemoteAdapter)).
@@ -311,7 +306,7 @@ Taken together, these assume your Zigbee adapter is connected to a local USB por
 #### adapter type { #adapterType }
 
 ``` yaml
-- ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack
+ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: zstack
 ```
 
 Identify your adapter from the [official list](https://www.zigbee2mqtt.io/guide/configuration/adapter-settings.html#basic-configuration). At the time of writing, the possible values were `zstack`, `ember`, `deconz`, `zigate` or `zboss`.
@@ -319,7 +314,7 @@ Identify your adapter from the [official list](https://www.zigbee2mqtt.io/guide/
 #### MQTT server type { #mqttServer }
 
 ``` yaml
-- ZIGBEE2MQTT_CONFIG_MQTT_SERVER=mqtt://mosquitto:1883
+ZIGBEE2MQTT_CONFIG_MQTT_SERVER: mqtt://mosquitto:1883
 ```
 
 Typical values for this are:
@@ -351,26 +346,26 @@ Zigbee2MQTT version 2 introduced an incompatibility with this setting. The IOTst
 
 ``` yaml
 # only enable the next line for Zigbee2MQTT v1
-# - ZIGBEE2MQTT_CONFIG_FRONTEND=true
-- ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true
+# ZIGBEE2MQTT_CONFIG_FRONTEND: true
+ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED: true
 ```
 
 If you are running Zigbee2MQTT version 1 then the front end will not be enabled unless you uncomment:
 
 ``` yaml
-- ZIGBEE2MQTT_CONFIG_FRONTEND=true
+ZIGBEE2MQTT_CONFIG_FRONTEND: true
 ```
 
 Zigbee2MQTT version 1 ignores the following environment variable so you do not need to comment it out:
 
 ``` yaml
-- ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true
+ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED: true
 ```
 
 However, if you have been running Zigbee2MQTT version 1 and you upgrade to version 2 then you **must** either delete or comment-out:
 
 ``` yaml
-# - ZIGBEE2MQTT_CONFIG_FRONTEND=true
+# ZIGBEE2MQTT_CONFIG_FRONTEND: true
 ```
 
 If you do not do that then the container will go into a restart loop. If you examine the container's log, you will see this error:
@@ -384,7 +379,7 @@ That error is telling you to comment-out that environment variable.
 #### logging { #logSymlink }
 
 ``` yaml
-- ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_SYMLINK_CURRENT=true
+ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_SYMLINK_CURRENT: true
 ```
 
 Defining this variable causes Zigbee2MQTT to create a symlink pointing to the current log **folder** at the path:
@@ -398,7 +393,7 @@ See [Checking the log](#checkLog) for more information about why this is useful.
 #### debugging { #debugging }
 
 ``` yaml
-- DEBUG=zigbee-herdsman*
+DEBUG: zigbee-herdsman*
 ```
 
 Enabling this variable turns on extended debugging inside the container.
@@ -420,14 +415,14 @@ If you decide to edit the configuration file:
 
 	```console
 	$ cd ~/IOTstack
-	$ docker-compose restart zigbee2mqtt
+	$ docker compose restart zigbee2mqtt
 	```
 
 3. [Check the log](#checkLog) for errors.
 
 Notes:
 
-* If you start Zigbee2MQTT from a clean slate (ie where the configuration file does not exist) **and** your *compose file* does not define the [`… MQTT_SERVER`](#mqttServer) environment variable discussed above, the container will go into a restart loop. This happens because the Zigbee2MQTT container defaults to trying to reach the Mosquitto broker at `localhost:1883` instead of `mosquitto:1883`. That usually fails.
+* If you start Zigbee2MQTT from a clean slate (ie where the configuration file does not exist) **and** your *[override file](../Basic_setup/Custom.md#custom-service)* does not define the [`… MQTT_SERVER`](#mqttServer) environment variable discussed above, the container will go into a restart loop. This happens because the Zigbee2MQTT container defaults to trying to reach the Mosquitto broker at `localhost:1883` instead of `mosquitto:1883`. That usually fails.
 * Settings passed via environment variables take precedence over both the defaults and any changes you make subsequently to `configuration.yaml`. The Zigbee2MQTT container does not update `configuration.yaml` to reflect settings passed via environment variables.
 
 ## Verifying basic operation
@@ -523,7 +518,7 @@ Notes:
 
 	```console
 	$ cd ~/IOTstack
-	$ docker-compose up -d zigbee2mqtt
+	$ docker compose up -d zigbee2mqtt
 	```
 
 ## Shell access to the container
@@ -534,7 +529,8 @@ To open a shell inside the Zigbee2MQTT container, run:
 $ docker exec -it zigbee2mqtt ash
 ```
 
-> `ash` is **not** a typo!
+!!! note
+	* `ash` is **not** a typo!
 
 To close the shell and leave the container, either type "exit" and press <kbd>return</kbd>, or press <kbd>Control</kbd><kbd>d</kbd>.
 
@@ -544,8 +540,8 @@ When you become aware of a new version of Zigbee2MQTT on [DockerHub](https://hub
 
 ```console
 $ cd ~IOTstack
-$ docker-compose pull zigbee2mqtt
-$ docker-compose up -d zigbee2mqtt
+$ docker compose pull zigbee2mqtt
+$ docker compose up -d zigbee2mqtt
 $ docker system prune
 ```
 
@@ -556,7 +552,7 @@ In words:
 3. If a newer version is downloaded, the `up` instantiates a new container based on the new image and performs a new-for-old swap. There is barely any downtime.
 4. The `prune` cleans up the older image.
 
-You can omit the `zigbee2mqtt` arguments from the `pull` and `up` commands, in which case `docker-compose` makes an attempt to pull any available updates for all non-Dockerfile-based images, and then instantiates any new images it has downloaded.
+You can omit the `zigbee2mqtt` arguments from the `pull` and `up` commands, in which case `docker compose` makes an attempt to pull any available updates for all non-Dockerfile-based images, and then instantiates any new images it has downloaded.
 
 ## 2025 v1 to v2 upgrade { #update202501 }
 
@@ -577,7 +573,7 @@ Then, "up" the container:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d zigbee2mqtt
+$ docker compose up -d zigbee2mqtt
 ```
 
 When you are ready to upgrade to v2, you will need to undo the above change, and you will also need to update your Zigbee2MQTT service definition based on the [template](#configTemplate). In general terms, you will need to do the following:
@@ -585,7 +581,7 @@ When you are ready to upgrade to v2, you will need to undo the above change, and
 1. If you have a locally-connected USB adapter then you will need to add:
 
 	``` yaml
-	- ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0
+	ZIGBEE2MQTT_CONFIG_SERIAL_PORT: /dev/ttyACM0
 	```
 
 	If you have a network adapter, you will have that variable defined already so you should not change it.
@@ -593,7 +589,7 @@ When you are ready to upgrade to v2, you will need to undo the above change, and
 2. Add:
 
 	``` yaml
-	- ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack
+	ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: zstack
 	```
 
 	Then read the explanation about [adapter types](#adapterType) and make a decision on whether `zstack` is the correct choice.
@@ -604,69 +600,8 @@ When you are ready to upgrade to v2, you will need to undo the above change, and
 
 	``` yaml 
 	# only enable the next line for Zigbee2MQTT v1
-	# - ZIGBEE2MQTT_CONFIG_FRONTEND=true
-	- ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true
+	# ZIGBEE2MQTT_CONFIG_FRONTEND: true
+	ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED: true
 	```
 
 5. Any other variables you have set will likely be correct so leave those alone.
-
-## 2022 Service definition change { #update202204 }
-
-This information is for existing users of the Zigbee2MQTT container.
-
-The default IOTstack service definition for Zigbee2MQTT has changed:
-
-* The container no longer needs to be built using a Dockerfile.
-* The Zigbee2MQTT images on [DockerHub](https://hub.docker.com/r/koenkk/zigbee2mqtt/tags) can be used "as is".
-* Environment variables supplied with the updated service definition exactly replicate the purpose of the old Dockerfile. 
-* The Dockerfile supplied with the IOTstack template is deprecated but continues to be provided to maintain backwards compatibility and to avoid introducing a breaking change.
-
-If you were using the Zigbee2MQTT container in IOTstack before April 2022, you should use your favourite text editor to update your *compose file* to conform with the new service definition.
-
-> You *could* run the menu, then de-select and re-select Zigbee2MQTT. That *will* have the effect of applying the updated service definition but it also risks overwriting any other customisations you may have in place. That is why editing your *compose file* is the recommended approach.
-
-The updated service definition is included [here](#configTemplate) for ease of reference.
-
-The changes you should make to your existing Zigbee2MQTT service definition are:
-
-1. Replace the `build` directive:
-
-	```yaml
-	build: ./.templates/zigbee2mqtt/.
-	```
-
-	with this `image` directive:
-
-	```yaml
-	image: koenkk/zigbee2mqtt:latest
-	```
-
-	This causes IOTstack to use Zigbee2MQTT images "as is" from [DockerHub](https://hub.docker.com/r/koenkk/zigbee2mqtt/tags).
-
-2. Use the [template](#configTemplate) as a guide to adjusting your environment variables. See also [environment variables](#envVars) for more detail.
-
-3. Add the dependency clause:
-
-	```yaml
-	depends_on:
-	  - mosquitto
-	```
-
-	This ensures the Mosquitto container is brought up alongside Zigbee2MQTT. The Zigbee2MQTT container goes into a restart loop if Mosquitto is not reachable so this change enforces that business rule. See [`… MQTT_SERVER`](#mqttServer) for the situation where this might not be appropriate.
-
-### pre-existing configuration file
-
-Environment variables in your *compose file* override corresponding values set in the *configuration file* at:
-
-```
-~/IOTstack/volumes/zigbee2mqtt/data/configuration.yaml
-```
-
-If you have customised your existing Zigbee2MQTT [configuration file](#confFile), you should review your settings for potential conflicts with the environment variables introduced by the changes to the IOTstack service definition. You can resolve any conflicts either by:
-
-* removing or commenting-out conflicting environment variables; or
-* altering the environment variable values to match your configuration file.
-
-The second approach is recommended because it minimises the risk that Zigbee2MQTT will go into a restart loop if the configuration file is not present when the container starts.
-
-As the [Zigbee2MQTT documentation](https://www.zigbee2mqtt.io/guide/configuration/#environment-variables) explains, any option that can be set in a configuration file can also be set using an environment variable, so you may want to take the opportunity to implement all your settings as environment variables.

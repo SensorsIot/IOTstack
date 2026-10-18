@@ -1,0 +1,10 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Data visualisation tool (GUI)",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "grafana"
+}

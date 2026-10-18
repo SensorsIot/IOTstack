@@ -1,0 +1,10 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Jellyfin Free Software Media System",
+   "environment": [],
+   "install": [
+     { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "jellyfin"
+}

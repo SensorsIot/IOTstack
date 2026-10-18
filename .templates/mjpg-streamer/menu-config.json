@@ -1,0 +1,12 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "MJPG streamer for video cameras",
+   "environment": [
+      { "variable": "MJPG_STREAMER_PASSWORD", "preset": "$(random_password)" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "mjpg-streamer"
+}

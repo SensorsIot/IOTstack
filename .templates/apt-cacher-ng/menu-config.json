@@ -1,0 +1,10 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Cache service for apt upgrade",
+   "environment": [],
+   "install": [
+     { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "apt-cacher-ng"
+}

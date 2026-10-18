@@ -10,11 +10,11 @@ nextcloud:
   image: nextcloud
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - MYSQL_HOST=nextcloud_db
-    - MYSQL_PASSWORD=%randomMySqlPassword%
-    - MYSQL_DATABASE=nextcloud
-    - MYSQL_USER=nextcloud
+    TZ: ${TZ:-Etc/UTC}
+    MYSQL_HOST: nextcloud_db
+    MYSQL_PASSWORD: ${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=%randomMySqlPassword% >>~/IOTstack/.env}
+    MYSQL_DATABASE: ${NEXTCLOUD_DB_NAME:-nextcloud}
+    MYSQL_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
   ports:
     - "9321:80"
     - "9343:443"
@@ -24,25 +24,27 @@ nextcloud:
     - nextcloud_db
   networks:
     - default
-    - nextcloud
+    - database
 
 nextcloud_db:
   container_name: nextcloud_db
   build: ./.templates/mariadb/.
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - PUID=1000
-    - PGID=1000
-    - MYSQL_ROOT_PASSWORD=%randomPassword%
-    - MYSQL_PASSWORD=%randomMySqlPassword%
-    - MYSQL_DATABASE=nextcloud
-    - MYSQL_USER=nextcloud
+    TZ: ${TZ:-Etc/UTC}
+    PUID: 1000
+    PGID: 1000
+    MYSQL_ROOT_PASSWORD: ${NEXTCLOUD_DB_ROOT_PASSWORD:?eg echo NEXTCLOUD_DB_ROOT_PASSWORD=%randomPassword% >>~/IOTstack/.env}
+    MYSQL_PASSWORD: ${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=%randomMySqlPassword% >>~/IOTstack/.env}
+    MYSQL_DATABASE: ${NEXTCLOUD_DB_NAME:-nextcloud}
+    MYSQL_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
   volumes:
     - ./volumes/nextcloud/db:/config
     - ./volumes/nextcloud/db_backup:/backup
   networks:
-    - nextcloud
+    - database
+  x-ports:
+    - "3306:3306"
 ```
 
 There are two containers, one for the cloud service itself, and the other for the database. Both containers share the same persistent storage area in the volumes subdirectory so they are treated as a unit. This will not interfere with any other MariaDB containers you might wish to run.
@@ -52,17 +54,38 @@ Key points:
 * You do **not** need to select MariaDB in the IOTstack menu just to run NextCloud. Some tutorials suggest you do. They are wrong!
 * If you *choose* to select MariaDB in the IOTstack menu, understand that it is a *separate* instance of the relational database management system. It has no relationship with NextCloud.  
 
-Under old-menu, you are responsible for setting passwords. The passwords are "internal use only" and it is unlikely that you will need them unless you plan to go ferreting-about in the database using SQL. The rules are:
+## Database access controls { #dbaccess }
 
-* The two instances of `«user_password»` **must** be the same.
-* The instance of `«root_password»` *should* be different from `«user_password»`.
+Database access is governed by the following environment variables:
 
-Under new-menu, the menu can generate random passwords for you. You can either use that feature or roll your own using the old-menu approach by replacing:
+* Default database name:
 
-* Two instances of `%randomMySqlPassword%` (the `«user_password»`)
-* One instance of `%randomPassword%` (the `«root_password»`)
+	- `NEXTCLOUD_DB_NAME` (defaults to `nextcloud`)
 
-The passwords need to be set before you bring up the Nextcloud service for the first time. However, the following initialisation steps assume you might not have done that and always start from a clean slate.
+* User credentials:
+
+	- `NEXTCLOUD_DB_USER` (defaults to `nextcloud`)
+	- `NEXTCLOUD_DB_USER_PASSWORD` (random default)
+
+* Root credentials:
+
+	- `root` username (assumed)
+	- `NEXTCLOUD_DB_ROOT_PASSWORD` (random default)
+
+If `~/IOTstack/.env` does not contain definitions for the two password-related variables, the menu generates defaults. For example:
+
+```
+NEXTCLOUD_DB_ROOT_PASSWORD=IOT-beech-oR4a-hyuz3
+NEXTCLOUD_DB_USER_PASSWORD=IOT-eiv4a-hfee-9iesh
+```
+
+You can change the defaults for the other environment variables by writing values into `.env`. For example:
+
+``` console
+$ echo "NEXTCLOUD_DB_NAME=mycloud" >>~/IOTstack/.env
+```
+
+If you want to change the values associated with any of these environment variables, you must do so **before** [Initialising Nextcloud](#initialisation). If you make a mistake or change your mind, you will need to repeat the initialisation process.
 
 ## Initialising Nextcloud  { #initialisation }
 
@@ -75,7 +98,7 @@ The passwords need to be set before you bring up the Nextcloud service for the f
 2. If the stack is running, take it down:
 
 	```console
-	$ docker-compose down
+	$ docker compose down
 	```
 	
 	> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
@@ -91,7 +114,7 @@ The passwords need to be set before you bring up the Nextcloud service for the f
 4. Bring up the stack:
 
 	```console
-	$ docker-compose up -d
+	$ docker compose up -d
 	```
 
 5. Check for errors:
@@ -133,7 +156,8 @@ The passwords need to be set before you bring up the Nextcloud service for the f
 
 ## "Access through untrusted domain" { #untrustedDomain }
 
-> If you are reading this because you are staring at an "access through untrusted domain" message then you have come to the right place.
+!!! note
+	* If you are reading this because you are staring at an "access through untrusted domain" message then you have come to the right place.
 
 Let's assume the following:
 
@@ -183,13 +207,14 @@ Search for "trusted_domains". To tell Nextcloud to trust **all** of the URLs abo
   ),
 ```
 
-> Note: *all* the trailing commas are intentional!
+!!! note
+	* *all* the trailing commas are intentional!
 
 Once you have finished editing the file, save your work then restart Nextcloud:
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose restart nextcloud
+$ docker compose restart nextcloud
 ```
 
 Use `docker ps` to check that the container has restarted properly and hasn't gone into a restart loop.
@@ -200,7 +225,8 @@ See also:
 
 ### Using a DNS alias for your Nextcloud service { #dnsAlias }
 
-> The information in this section *may* be out of date. Recent tests suggest it is no longer necessary to add a `hostname` clause to your `docker-compose.yml` to silence warnings when using DNS aliases to reach your NextCloud service. This section is being left here so you will know what to do if you encounter the problem.
+!!! note
+	* The information in this section *may* be out of date. Recent tests suggest it is no longer necessary to add a `hostname` clause to your `docker-compose.yml` to silence warnings when using DNS aliases to reach your NextCloud service. This section is being left here so you will know what to do if you encounter the problem.
 
 The examples above include using a DNS alias (a CNAME record) for your Nextcloud service. If you decide to do that, you may see this warning in the log:
 
@@ -208,10 +234,25 @@ The examples above include using a DNS alias (a CNAME record) for your Nextcloud
 Could not reliably determine the server's fully qualified domain name
 ```
 
-You can silence the warning by editing the Nextcloud service definition in `docker-compose.yml` to add your fully-qualified DNS alias using a `hostname` directive. For example:
+You can silence the warning using an [override file](../Basic_setup/Custom.md#custom-service) at the path:
+
+```
+~/IOTstack/services/nextcloud/override.yml
+```
+
+Add your fully-qualified DNS alias using a `hostname` directive. For example:
 
 ```yaml
-    hostname: nextcloud.mydomain.com
+nextcloud:
+  hostname: nextcloud.mydomain.com
+```
+
+Apply the change:
+
+``` console
+$ cd ~/IOTstack
+$ ./iotstack-menu.sh build
+$ docker compose up -d nextcloud
 ```
 
 ## Security considerations { #security }
@@ -232,8 +273,8 @@ To update the `nextcloud` container:
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose pull nextcloud
-$ docker-compose up -d nextcloud
+$ docker compose pull nextcloud
+$ docker compose up -d nextcloud
 $ docker system prune
 ```
 
@@ -241,18 +282,20 @@ To update the `nextcloud_db` container:
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose build --no-cache --pull nextcloud_db
-$ docker-compose up -d nextcloud_db
+$ docker compose build --no-cache --pull nextcloud_db
+$ docker compose up -d nextcloud_db
 $ docker system prune
 ```
 
-> You may need to run the `prune` command twice if you are using a 1.x version of `docker-compose`.
+!!! note
+	* You may need to run the `prune` command twice if you are using a 1.x version of `docker compose`.
 
 ## Backups { #backups }
 
 Nextcloud is currently excluded from the IOTstack-supplied backup scripts due to its potential size.
 
-> [Paraphraser/IOTstackBackup](https://github.com/Paraphraser/IOTstackBackup) includes backup and restore for NextCloud.
+!!! note
+	* [Paraphraser/IOTstackBackup](https://github.com/Paraphraser/IOTstackBackup) includes backup and restore for NextCloud.
 
 If you want to take a backup, something like the following will get the job done:
 
@@ -260,9 +303,9 @@ If you want to take a backup, something like the following will get the job done
 $ cd ~/IOTstack
 $ BACKUP_TAR_GZ=$PWD/backups/$(date +"%Y-%m-%d_%H%M").$HOSTNAME.nextcloud-backup.tar.gz
 $ touch "$BACKUP_TAR_GZ"
-$ docker-compose down nextcloud nextcloud_db
+$ docker compose down nextcloud nextcloud_db
 $ sudo tar -czf "$BACKUP_TAR_GZ" -C "./volumes/nextcloud" .
-$ docker-compose up -d nextcloud
+$ docker compose up -d nextcloud
 ```
 
 Notes:
@@ -276,10 +319,10 @@ To restore, you first need to identify the name of the backup file by looking in
 ```console
 $ cd ~/IOTstack
 $ RESTORE_TAR_GZ=$PWD/backups/2021-06-12_1321.sec-dev.nextcloud-backup.tar.gz
-$ docker-compose down nextcloud nextcloud_db
+$ docker compose down nextcloud nextcloud_db
 $ sudo rm -rf ./volumes/nextcloud/*
 $ sudo tar -x --same-owner -z -f "$RESTORE_TAR_GZ" -C "./volumes/nextcloud"
-$ docker-compose up -d nextcloud
+$ docker compose up -d nextcloud
 ```
 
 If you are running from an SD card, it would be a good idea to mount an external drive to store the data. Something like:
@@ -333,7 +376,8 @@ Each network is assigned a /16 IPv4 subnet. Unless you override it, the subnet r
 
 The logical router on each network takes the `.0.1` address.
 
-> The reason why two octets are devoted to the host address is because a /16 network prefix implies a 16-bit host portion. Each octet describes 8 bits.
+!!! note
+	* The reason why two octets are devoted to the host address is because a /16 network prefix implies a 16-bit host portion. Each octet describes 8 bits.
 
 As each container is brought up, the network(s) it joins are governed by the following rules:
 
@@ -352,13 +396,14 @@ In this model there are two MariaDB instances, one named `nextcloud_db` and the 
 
 ```
 environment:
-  - MYSQL_HOST=nextcloud_db
+  MYSQL_HOST: nextcloud_db
 ```
 
 At runtime, the `nextcloud` container references `nextcloud_db:3306`. Docker resolves `nextcloud_db` to 172.19.0.2 so the traffic traverses the 172.19/16 internal bridged network and arrives at the `nextcloud_db` container.
 
 The `nextcloud` container *could* reach the `mariadb` container via `mariadb:3306`. There's no ambiguity because Docker resolves `mariadb` to 172.18.0.2, which is a different subnet and an entirely different internal bridged network. 
 
-> There would still be no ambiguity even if all containers attached to the `iotstack_default` network because each container name still resolves to a distinct IP address.
+!!! note
+	* There would still be no ambiguity even if all containers attached to the `iotstack_default` network because each container name still resolves to a distinct IP address.
 
 In terms of **external** ports, only `mariadb` exposes port 3306. Any external process trying to reach 192.168.203.60:3306 will always be port-forwarded to the `mariadb` container. The `iotstack_nextcloud` network is declared "internal" which means it is unreachable from beyond the Raspberry Pi. Any port-mappings associated with that network are ignored.

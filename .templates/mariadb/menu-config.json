@@ -1,0 +1,13 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "MariaDB Relational DBMS",
+   "environment": [
+      { "variable": "MARIADB_ROOT_PASSWORD", "preset": "$(random_password)" },
+      { "variable": "MARIADB_USER_PASSWORD", "preset": "$(random_password)" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "mariadb"
+}

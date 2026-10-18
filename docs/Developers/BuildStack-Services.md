@@ -2,192 +2,115 @@
 
 This page explains how the build stack system works for developers.
 
-## How to define a new service
-A service only requires 2 files:
-* `service.yml` - Contains data for docker-compose
-* `build.py` - Contains logic that the menu system uses.
+## References
 
-### A basic service
-Inside the `service.yml` is where the service data for docker-compose is housed, for example:
-``` yaml
-adminer:
-  container_name: adminer
-  image: adminer
-  restart: unless-stopped
-  ports:
-    - "9080:8080"
-```
-It is important that the service name match the directory that it's in - that means that the `adminer` service must be placed into a folder called `adminer` inside the `./.templates` directory.
+* [Defining a new service](./Add-Service.md)
 
+## installation
 
-### Basic build code for service
-At the very least, the `build.py` requires the following code:
-```
-#!/usr/bin/env python3
+When the user "installs" a service, the menu:
 
-issues = {} # Returned issues dict
-buildHooks = {} # Options, and others hooks
-haltOnErrors = True
+1. Creates `~/IOTstack/services/«service»` (if it does not exist); then
+2. Copies files from the service's template into that sub-directory.
 
-# Main wrapper function. Required to make local vars work correctly
-def main():
-  global currentServiceName # Name of the current service
+At minimum, the service's `service.yml` is copied. For some services (eg Node-RED) other files are copied too but this is the exception rather than the rule. Exactly what gets copied is governed by the contents of the [`"install":` array](./Add-Service.md#json_install) in the service's `menu-config.json`.
 
-  # This lets the menu know whether to put " >> Options " or not
-  # This function is REQUIRED.
-  def checkForOptionsHook():
-    try:
-      buildHooks["options"] = callable(runOptionsMenu)
-    except:
-      buildHooks["options"] = False
-      return buildHooks
-    return buildHooks
+## preconditions
 
-  # This function is REQUIRED.
-  def checkForPreBuildHook():
-    try:
-      buildHooks["preBuildHook"] = callable(preBuild)
-    except:
-      buildHooks["preBuildHook"] = False
-      return buildHooks
-    return buildHooks
+There are two preconditions for the build system to consider a service to be "properly installed":
 
-  # This function is REQUIRED.
-  def checkForPostBuildHook():
-    try:
-      buildHooks["postBuildHook"] = callable(postBuild)
-    except:
-      buildHooks["postBuildHook"] = False
-      return buildHooks
-    return buildHooks
+1. The service must be marked active in the internal database; and
 
-  # This function is REQUIRED.
-  def checkForRunChecksHook():
-    try:
-      buildHooks["runChecksHook"] = callable(runChecks)
-    except:
-      buildHooks["runChecksHook"] = False
-      return buildHooks
-    return buildHooks
+2. All files defined in the [`"install":` array](./Add-Service.md#json_install) must exist in the service's sub-directory of `~/IOTstack/services`.
 
-  # Entrypoint for execution
-  if haltOnErrors:
-    eval(toRun)()
-  else:
-    try:
-      eval(toRun)()
-    except:
-      pass
+If the service is marked active but the second precondition is not met, the menu advises the user to repair or reinstall the service.
+ 
+## build process { #build-process }
 
-# This check isn't required, but placed here for debugging purposes
-global currentServiceName # Name of the current service
-if currentServiceName == 'adminer': # Make sure you update this.
-  main()
-else:
-  print("Error. '{}' Tried to run 'adminer' config".format(currentServiceName))
-```
-This code doesn't have any port conflicting checking or menu code in it, and just allows the service to be built as is. The best way to learn on extending the functionality of the service's build script is to look at the other services' build scripts. You can also check out the advanced sections on adding menus and checking for issues for services though for a deeper explanation of specific situations.
-
-### Basic code for a service that uses bash
-If Python isn't your thing, here's a code blob you can copy and paste. Just be sure to update the lines where the comments start with `---`
-```
-#!/usr/bin/env python3
-
-issues = {} # Returned issues dict
-buildHooks = {} # Options, and others hooks
-haltOnErrors = True
-
-# Main wrapper function. Required to make local vars work correctly
-def main():
-  import subprocess
-  global dockerComposeServicesYaml # The loaded memory YAML of all checked services
-  global toRun # Switch for which function to run when executed
-  global buildHooks # Where to place the options menu result
-  global currentServiceName # Name of the current service
-  global issues # Returned issues dict
-  global haltOnErrors # Turn on to allow erroring
-
-  from deps.consts import servicesDirectory, templatesDirectory, volumesDirectory, servicesFileName
-
-  # runtime vars
-  serviceVolume = volumesDirectory + currentServiceName # Unused in example
-  serviceService = servicesDirectory + currentServiceName # Unused in example
-  serviceTemplate = templatesDirectory + currentServiceName
-
-  # This lets the menu know whether to put " >> Options " or not
-  # This function is REQUIRED.
-  def checkForOptionsHook():
-    try:
-      buildHooks["options"] = callable(runOptionsMenu)
-    except:
-      buildHooks["options"] = False
-      return buildHooks
-    return buildHooks
-
-  # This function is REQUIRED.
-  def checkForPreBuildHook():
-    try:
-      buildHooks["preBuildHook"] = callable(preBuild)
-    except:
-      buildHooks["preBuildHook"] = False
-      return buildHooks
-    return buildHooks
-
-  # This function is REQUIRED.
-  def checkForPostBuildHook():
-    try:
-      buildHooks["postBuildHook"] = callable(postBuild)
-    except:
-      buildHooks["postBuildHook"] = False
-      return buildHooks
-    return buildHooks
-
-  # This function is REQUIRED.
-  def checkForRunChecksHook():
-    try:
-      buildHooks["runChecksHook"] = callable(runChecks)
-    except:
-      buildHooks["runChecksHook"] = False
-      return buildHooks
-    return buildHooks
-
-  # This service will not check anything unless this is set
-  # This function is optional, and will run each time the menu is rendered
-  def runChecks():
-    checkForIssues()
-    return []
-
-  # This function is optional, and will run after the docker-compose.yml file is written to disk.
-  def postBuild():
-    return True
-
-  # This function is optional, and will run just before the build docker-compose.yml code.
-  def preBuild():
-    execComm = "bash {currentServiceTemplate}/build.sh".format(currentServiceTemplate=serviceTemplate) # --- You may want to change this
-    print("[Wireguard]: ", execComm) # --- Ensure to update the service name with yours
-    subprocess.call(execComm, shell=True) # This is where the magic happens
-    return True
-
-  # #####################################
-  # Supporting functions below
-  # #####################################
-
-  def checkForIssues():
-    return True
-
-  if haltOnErrors:
-    eval(toRun)()
-  else:
-    try:
-      eval(toRun)()
-    except:
-      pass
-
-# This check isn't required, but placed here for debugging purposes
-global currentServiceName # Name of the current service
-if currentServiceName == 'wireguard': # --- Ensure to update the service name with yours
-  main()
-else:
-  print("Error. '{}' Tried to run 'wireguard' config".format(currentServiceName)) # --- Ensure to update the service name with yours
+The goal of the build process is to create two files:
 
 ```
+~/IOTstack
+├── docker-compose.yml
+└── docker-compose.override.yml
+```
+
+* `docker-compose.yml` is the concatenation of:
+
+	1. `~/IOTstack/services/docker-compose-header.yml`;
+
+	2. all `~/IOTstack/services/*/service.yml` files, providing each such service is properly installed; and
+
+	3. `~/IOTstack/services/docker-compose-trailer.yml`.
+
+* `docker-compose.override.yml` is the concatenation of:
+
+	1. `~/IOTstack/services/docker-compose.override-header.yml`;
+
+	2. all `~/IOTstack/services/*/override.yml` files, providing each such service is properly installed: and
+
+	3. `~/IOTstack/services/docker-compose.override-trailer.yml`.
+
+The concatenation process takes each header file "as is", appends its own `services:` section heading, then right-shifts the contents of `service.yml` and `override.yml` files by two leading spaces, finishing with the trailer file. The process is *reasonably* robust but it assumes the source files contain valid YAML.
+
+!!! note
+	* If any input file contains mal-formed YAML then *docker&nbsp;compose* will complain when you try to start your stack.
+
+If either newly-generated file differs from an existing file of the same name, the existing file is renamed with a `.save` extension. In other words, there is always the potential for a `build` to yield four files:
+
+```
+~/IOTstack
+├── docker-compose.yml
+├── docker-compose.yml.save
+├── docker-compose.override.yml
+└── docker-compose.override.yml.save
+```
+
+The `.save` files help you to answer the "what changed?" question. You can run:
+
+``` console
+$ diff -y docker-compose.yml.save docker-compose.yml
+$ diff -y docker-compose.override.yml.save docker-compose.override.yml
+```
+
+You can pre-flight the results of a build by running:
+
+``` console
+$ docker compose config
+```
+
+If you have just changed a particular service, you can restrict the pre-flighting to just that service:
+
+``` console
+$ docker compose config «service»
+```
+
+*docker&nbsp;compose* merges your `docker-compose.yml` and `docker-compose.override.yml` files, then displays the merged result.
+
+When you run:
+
+``` console
+$ docker compose up -d
+```
+
+*docker&nbsp;compose* merges your `docker-compose.yml` and `docker-compose.override.yml` files, then processes the merged result to instantiate your stack.
+
+### special cases { #build-process-special }
+
+If you do not have at least one active service then *docker&nbsp;compose* will complain that no service is selected.
+
+If you do not take advantage of any customisation points, your `docker-compose.override.yml` will be an empty file. This does not affect *docker&nbsp;compose*.
+
+### password generation { #password-generation }
+
+As well as assembling the compose and override files, the build process generates random passwords. Auto-generated passwords are written to `~/IOTstack/.env` and always start with the letters "IOT" followed by 14 random characters arranged in a 5-4-5 pattern. For example:
+
+```
+YE_OLDE_PASSWORD=IOT-aigh9-yooW-oh4ah
+```
+
+This helps you to identify auto-generated passwords so you can replace them with values you choose. 
+
+In some cases (particularly databases) passwords are only applied when you first spin-up the container. Subsequent password changes applied via environment variables are either ignored or cause havoc. To put this another way, if you intend to replace a randomly-generated password, it is best to do it **before** you "up" the container for the first time.
+
+See also [passwords](./Add-Service.md#password-vars).

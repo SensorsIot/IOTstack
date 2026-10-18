@@ -1,0 +1,10 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Time-series DBMS v1 (recommended)",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "influxdb"
+}

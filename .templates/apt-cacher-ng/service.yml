@@ -1,0 +1,12 @@
+apt-cacher-ng:
+  container_name: apt-cacher-ng
+  image: mbentley/apt-cacher-ng
+  restart: unless-stopped
+  environment:
+    TZ: ${TZ:-Etc/UTC}
+    PUID: 0
+    PGID: 0
+  ports:
+    - "3142:3142"
+  volumes:
+    - ./volumes/apt-cacher-ng/cache:/var/cache/apt-cacher-ng

@@ -1,0 +1,10 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Workflow automation platform",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "n8n"
+}

@@ -8,6 +8,6 @@ web interface is on "{your_Pis_IP}:1888"
 
 see [EspruinoHub#status--websocket-mqtt--espruino-web-ide](https://github.com/espruino/EspruinoHub#status--websocket-mqtt--espruino-web-ide) for other details.
 
-there were no recommendations for persistent data volumes. so `docker-compose down` may destroy all you configurations so use `docker-compose stop` in stead 
+there were no recommendations for persistent data volumes. so `docker compose down` may destroy all you configurations so use `docker compose stop` instead 
 
 Please [check existing issues](https://github.com/SensorsIot/IOTstack/issues) if you encounter a problem, and then open a new issue if your problem has not been reported.

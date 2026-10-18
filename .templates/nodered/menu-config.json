@@ -1,0 +1,12 @@
+{
+   "configure": "configure-addon-nodes.sh",
+   "dependencies": [],
+   "description": "Low-code programming environment",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true },
+      { "template": "Dockerfile", "service": "Dockerfile", "tracked": true },
+      { "template": "default-addon-nodes.txt", "service": "installed-addon-nodes.txt", "tracked": false }
+   ],
+   "service": "nodered"
+}

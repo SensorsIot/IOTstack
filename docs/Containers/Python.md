@@ -18,14 +18,11 @@ When you select Python in the menu:
 	├── app
 	│   └── app.py
 	├── docker-entrypoint.sh
-	└── Dockerfile
+	├── Dockerfile
+	└── service.yml
 	```
 
-	Note:
-
-	* Under "old menu" (old-menu branch), the `service.yml` is also copied into the `python` directory but is then not used.
-
-2. This service definition is added to your `docker-compose.yml`:
+2. The service definition (`service.yml`) is:
 
 	```yaml
 	python:
@@ -33,13 +30,11 @@ When you select Python in the menu:
 	  build: ./services/python/.
 	  restart: unless-stopped
 	  environment:
-	  - TZ=Etc/UTC
-	  - IOTSTACK_UID=1000
-	  - IOTSTACK_GID=1000
-	# ports:
-	#   - "external:internal"
+	    TZ: ${TZ:-Etc/UTC}
+	    IOTSTACK_UID: 1000
+	    IOTSTACK_GID: 1000
 	  volumes:
-	  - ./volumes/python/app:/usr/src/app
+	    - ./volumes/python/app:/usr/src/app
 	```
 
 ### customising your Python service definition { #customisingPython }
@@ -61,27 +56,26 @@ The service definition contains a number of customisation points:
 
 		and its contents. If you want everything to be owned by root, set both of these variables to zero (eg `IOTSTACK_UID=0`).
 
-4. If your Python script listens to data-communications traffic, you can set up the port mappings by uncommenting the `ports:` directive.
+4. If your Python script listens to data-communications traffic, you should set up  port mappings. For example, if the container is listening on port 80, and you wish to map the traffic to host port 10080, you would define:
 
-If your Python container is already running when you make a change to its service definition, you can apply it via:
-
-``` console
-$ cd ~/IOTstack
-$ docker-compose up -d python
-```
+	``` yaml
+	  ports:
+	    - "10080:80"
+	```
 
 ## Python - first launch { #firstLaunchPython }
 
-After running the menu, you are told to run the commands:
+Launch your container the first time by running:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d
+$ ./iotstack-menu.sh build
+$ docker compose up -d python
 ```
 
 This is what happens:
 
-1. *docker-compose* reads your `docker-compose.yml`.
+1. *docker compose* reads your `docker-compose.yml`.
 2. When it finds the service definition for Python, it encounters:
 
 	``` yaml
@@ -141,41 +135,21 @@ This is what happens:
 
 ## stopping the Python service { #stopPython }
 
-To stop the container from running, either:
+To stop the container from running:
 
-* take down your whole stack:
-
-	``` console
-	$ cd ~/IOTstack
-	$ docker-compose down
-	```
-
-* terminate the python container
-
-	``` console
-	$ cd ~/IOTstack
-	$ docker-compose down python
-	```
+``` console
+$ cd ~/IOTstack
+$ docker compose down python
+```
 	
-	> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
-
 ## starting the Python service { #startPython }
 
-To bring up the container again after you have stopped it, either:
+To bring up the container again after you have stopped it:
 
-* bring up your whole stack:
-
-	``` console
-	$ cd ~/IOTstack
-	$ docker-compose up -d
-	```
-
-* bring up the python container
-
-	``` console
-	$ cd ~/IOTstack
-	$ docker-compose up -d python
-	```
+``` console
+$ cd ~/IOTstack
+$ docker compose up -d python
+```
 
 ## Python - second-and-subsequent launch { #reLaunchPython }
 
@@ -221,7 +195,7 @@ Any time you change something in the `app` folder, tell the running python conta
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose restart python
+$ docker compose restart python
 ```
 
 ### reading and writing to disk { #persistentStorage }
@@ -257,12 +231,10 @@ If you make a mess of things and need to start from a clean slate, erase the per
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down python
+$ docker compose down python
 $ sudo rm -rf ./volumes/python
-$ docker-compose up -d python
+$ docker compose up -d python
 ```
-
-> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
 
 The container will re-initialise the persistent storage area from its defaults.
 
@@ -297,14 +269,30 @@ To make *Flask* and *beautifulsoup4* a permanent part of your container:
 	```
 	Flask
 	beautifulsoup4
-	``` 
-
-3. Tell Docker to rebuild the local Python image:
+	```
+	
+3. Move to the IOTstack directory:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose build --force-rm python
-	$ docker-compose up -d --force-recreate python
+	``` 
+
+4. If you have changed either of the following files:
+
+	- `~/IOTstack/services/python/service.yml`
+	- `~/IOTstack/services/python/override.yml`
+
+	then you will need to rebuild your stack:
+	
+	``` console
+	$ ./iotstack-menu.sh build
+	```
+
+5. Tell Docker to rebuild the local Python image:
+
+	``` console
+	$ docker compose build --force-rm python
+	$ docker compose up -d --force-recreate python
 	$ docker system prune -f
 	```
 
@@ -312,7 +300,7 @@ To make *Flask* and *beautifulsoup4* a permanent part of your container:
 
 	* You will see a warning about running pip as root - ignore it.
 
-4. Confirm that the packages have been added:
+6. Confirm that the packages have been added:
 
 	``` console
 	$ docker exec python pip3 freeze | grep -e "Flask" -e "beautifulsoup4"
@@ -320,7 +308,7 @@ To make *Flask* and *beautifulsoup4* a permanent part of your container:
 	Flask==2.0.1
 	```
 
-5. Continue your development work by returning to [getting started](#gettingStarted).
+7. Continue your development work by returning to [getting started](#gettingStarted).
 
 Note:
 
@@ -339,7 +327,7 @@ Note:
 	``` console
 	$ cd ~/IOTstack
 	$ rm ./volumes/python/app/requirements.txt
-	$ docker-compose restart python
+	$ docker compose restart python
 	```
 
 	The `requirements.txt` file will be recreated and it will be a copy of the version in the *services* directory as of the last image rebuild.
@@ -381,7 +369,7 @@ Suppose the Python script you have been developing reaches a major milestone and
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose down python
+	$ docker compose down python
 	$ sudo rm -rf ./volumes/python
 	```
 
@@ -398,8 +386,8 @@ Suppose the Python script you have been developing reaches a major milestone and
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose build --force-rm python
-	$ docker-compose up -d --force-recreate python
+	$ docker compose build --force-rm python
+	$ docker compose up -d --force-recreate python
 	```
 
 	On its first launch, the new container will re-populate the persistent storage area but, this time, it will be your Python script and any other supporting files, rather than the original "hello world" script.
@@ -423,7 +411,7 @@ Proceed like this:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose down python
+	$ docker compose down python
 	```
 
 2. Remove the existing local image:
@@ -447,24 +435,22 @@ Proceed like this:
 	  build: ./services/python/.             |    build: ./services/wishbone/.
 	  restart: unless-stopped                     restart: unless-stopped
 	  environment:                                environment:
-	    - TZ=Etc/UTC                                - TZ=Etc/UTC
-	    - IOTSTACK_UID=1000                         - IOTSTACK_UID=1000
-	    - IOTSTACK_GID=1000                         - IOTSTACK_GID=1000
-	  # ports:                                    # ports:
-	  #   - "external:internal"                   #   - "external:internal"
+	    TZ: Etc/UTC                                 TZ: Etc/UTC
+	    IOTSTACK_UID: 1000                          IOTSTACK_UID: 1000
+	    IOTSTACK_GID: 1000                          IOTSTACK_GID: 1000
 	  volumes:                                    volumes:
 	    - ./volumes/python/app:/usr/src/app  |      - ./volumes/wishbone/app:/usr/src/app
 	```
 
 	Note:
 
-	* if you make a copy of the `python` service definition and then perform the required "wishbone" edits on the copy, the `python` definition will still be active so `docker-compose` may try to bring up both services. You will eliminate the risk of confusing yourself if you follow these instructions "as written" by **not** leaving the `python` service definition in place.
+	* if you make a copy of the `python` service definition and then perform the required "wishbone" edits on the copy, the `python` definition will still be active so `docker compose ` may try to bring up both services. You will eliminate the risk of confusing yourself if you follow these instructions "as written" by **not** leaving the `python` service definition in place.
 
 5. Start the renamed service:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d wishbone
+	$ docker compose up -d wishbone
 	```
 
 Remember:
@@ -481,8 +467,8 @@ To make sure you are running from the most-recent **base** image of Python from 
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose build --no-cache --pull python
-$ docker-compose up -d python
+$ docker compose build --no-cache --pull python
+$ docker compose up -d python
 $ docker system prune -f
 $ docker system prune -f
 ```
@@ -490,7 +476,7 @@ $ docker system prune -f
 In words:
 
 1. Be in the right directory.
-2. Force docker-compose to download the most-recent version of the Python **base** image from Dockerhub, and then run the Dockerfile to build a new **local** image.
+2. Force docker compose to download the most-recent version of the Python **base** image from Dockerhub, and then run the Dockerfile to build a new **local** image.
 3. Instantiate the newly-built **local** image.
 4. Remove the old **local** image.
 5. Remove the old **base** image

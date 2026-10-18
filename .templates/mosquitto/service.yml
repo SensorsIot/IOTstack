@@ -6,7 +6,7 @@ mosquitto:
       - MOSQUITTO_BASE=eclipse-mosquitto:latest
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
+    TZ: ${TZ:-Etc/UTC}
   ports:
     - "1883:1883"
   volumes:

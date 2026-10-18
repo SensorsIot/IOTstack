@@ -13,11 +13,17 @@ title: Scrypted
 ## Getting started
 
 1. Run the IOTstack menu and select "Scrypted" so that the service definition is added to your compose file.
-2. Before starting the container for the first time, run the following commands:
+2. Confirm that the `uuidgen` utility is available on your system:
+
+	``` console
+	$ [ -z "$(which uuidgen)" ] && sudo apt update && sudo apt install -y uuid-runtime
+	```
+
+3. Before starting the container for the first time, run the following commands:
 
 	``` console
 	$ cd ~/IOTstack
-	$ echo "SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION=$(cat /proc/sys/kernel/random/uuid | md5sum | head -c 24)" >>.env
+	$ echo "SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION=$(uuidgen | md5sum | head -c 24)" >>.env
 	```
 
 	This generates a random token and places it in `~/IOTstack/.env`.
@@ -27,18 +33,18 @@ title: Scrypted
 	1. You only need to do this **once**.
 	2. It is not clear whether the token is respected on every launch, or only on first launch.
 
-3. Start Scrypted:
+4. Start Scrypted:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d scrypted
+	$ docker compose up -d scrypted
 	```
 	
 	Note:
 	
 	* scrypted is a **large** image (2.5GB). It takes time to download and decompress!
 
-4. Use the following URL as a template:
+5. Use the following URL as a template:
 
 	```
 	https://«host-or-ip»:10443
@@ -54,8 +60,8 @@ title: Scrypted
 	
 	* You can't use the `http` protocol. You must use `https`.
 
-5. Paste the URL into a browser window. The container uses a self-signed certificate so you will need to accept that using your browser's mechanisms.
-6. Enter a username and password to create your administrator account.
+6. Paste the URL into a browser window. The container uses a self-signed certificate so you will need to accept that using your browser's mechanisms.
+7. Enter a username and password to create your administrator account.
 
 
 ## Troubleshooting
@@ -72,12 +78,10 @@ If you need to start over from scratch:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down scrypted
+$ docker compose down scrypted
 $ sudo rm -rf ./volumes/scrypted
-$ docker-compose up -d scrypted
+$ docker compose up -d scrypted
 ```
-
-> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
 
 ## About the service definition
 

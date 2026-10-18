@@ -3,14 +3,14 @@ kapacitor:
   image: kapacitor:1.5
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
+    TZ: ${TZ:-Etc/UTC}
     # see https://docs.influxdata.com/kapacitor/v1.6/administration/configuration/#kapacitor-environment-variables
-    - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
-    # - KAPACITOR_INFLUXDB_USERNAME=${INFLUXDB1_USERNAME:-dba}
-    # - KAPACITOR_INFLUXDB_PASSWORD=${INFLUXDB1_PASSWORD}
-    # - KAPACITOR_HOSTNAME=${KAPACITOR_HOSTNAME:-kapacitor}
-    # - KAPACITOR_LOGGING_LEVEL=INFO
-    # - KAPACITOR_REPORTING_ENABLED=false
+    KAPACITOR_INFLUXDB_0_URLS_0: http://influxdb:8086
+    # KAPACITOR_INFLUXDB_USERNAME: ${INFLUXDB1_USERNAME:-dba}
+    # KAPACITOR_INFLUXDB_PASSWORD: ${INFLUXDB1_PASSWORD:?eg echo INFLUXDB1_PASSWORD=supremo >>~/IOTstack/.env}
+    # KAPACITOR_HOSTNAME: ${KAPACITOR_HOSTNAME:-kapacitor}
+    # KAPACITOR_LOGGING_LEVEL: INFO
+    # KAPACITOR_REPORTING_ENABLED: false
   ports:
     - "9092:9092"
   volumes:

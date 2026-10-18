@@ -1,5 +1,18 @@
 # Backing up and restoring IOTstack
+
 This page explains how to use the backup and restore functionality of IOTstack.
+
+See also [IOTstackBackup](https://github.com/Paraphraser/IOTstackBackup) which uses a different approach:
+
+* It does **not** require you to take your stack down to run a backup. Because of backups are taken concurrently with normal stack operations, you can easily create `cron` jobs to run at whatever interval is appropriate to your needs (daily, hourly, etc).
+* Supports getting backup files off the local machine, such as another computer on your local network, or uploaded to a cloud service like Sync or Dropbox. Once you set this up, you'll never be in the position where your only backup is on the device that just failed.
+* [PiBuilder](https://github.com/Paraphraser/PiBuilder) installs [IOTstackBackup](https://github.com/Paraphraser/IOTstackBackup) **and** has hooks where you can save your IOTstackBackup configuration files. Once you set it up, restoring a broken system is a matter of:
+
+	1. Install a fresh image of Raspberry Pi OS or Debian.
+	2. Boot from that fresh image.
+	3. Clone PiBuilder and run its scripts.
+	4. Run `iotstack_restore` passing the runtag of the backup to be retrieved and restored.
+	5. Run `docker compose up -d`.
 
 ## Backup
 The backup command can be executed from IOTstack's menu, or from a cronjob.
@@ -90,21 +103,3 @@ To use it, simple create a `./post_backup.sh` file in IOTstack's main directory.
 The post restore hook script is executed after all files have been extracted and written to disk. It can be used to apply permissions that your custom services may require.
 
 To use it, simple create a `./post_restore.sh` file in IOTstack's main directory. It will be executed after a restore happens.
-
-## Third party integration
-This section explains how to backup your files with 3rd party software.
-
-### Dropbox
-Coming soon.
-
-### Google Drive
-Coming soon.
-
-### rsync
-Coming soon.
-
-### Duplicati
-Coming soon.
-
-### SFTP
-Coming soon.

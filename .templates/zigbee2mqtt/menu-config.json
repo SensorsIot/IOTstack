@@ -1,0 +1,12 @@
+{
+   "configure": "configure-adapter.sh",
+   "dependencies": ["mosquitto"],
+   "description": "MQTT bridge to Zigbee devices",
+   "environment": [
+      { "variable": "ZIGBEE2MQTT_DEVICE_PATH", "preset": "/dev/ttyACM0" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "zigbee2mqtt"
+}

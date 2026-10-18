@@ -1,0 +1,9 @@
+home_assistant:
+  # these changes are specific to the Raspberry Pi. You will need to
+  # adapt if you are trying to run this container on other platforms
+  volumes:
+    - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+  devices:
+    - "/dev/serial1:/dev/ttyAMA0"
+    - "/dev/vcio:/dev/vcio"
+    - "/dev/gpiomem:/dev/gpiomem"

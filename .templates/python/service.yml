@@ -3,11 +3,9 @@ python:
   build: ./services/python/.
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - IOTSTACK_UID=1000
-    - IOTSTACK_GID=1000
-  x-ports:
-    - "external:internal"
+    TZ: ${TZ:-Etc/UTC}
+    IOTSTACK_UID: 1000
+    IOTSTACK_GID: 1000
   volumes:
     - ./volumes/python/app:/usr/src/app
 

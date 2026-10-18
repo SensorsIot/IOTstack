@@ -20,14 +20,14 @@ adguardhome:
   image: adguard/adguardhome
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
+    TZ: ${TZ:-Etc/UTC}
   x-network_mode: host  # see IOTstack documentation
   ports:
     - "53:53/tcp"       # regular DNS
     - "53:53/udp"       # regular DNS
     - "3001:3000/tcp"   # only active until port 8089 becomes active
     - "8089:8089/tcp"   # regular administrative interface
-  # - "443:443/tcp"     # HTTPS/DNS-over-HTTPS
+  # - "4443:443/tcp"    # HTTPS/DNS-over-HTTPS
   # - "784:784/udp"     # DNS-over-QUIC
   # - "853:853/tcp"     # DNS-over-TLS
   # - "5443:5443/tcp"   # DNSCrypt
@@ -104,9 +104,9 @@ To start over from a clean slate, proceed like this:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down adguardhome
+$ docker compose down adguardhome
 $ sudo rm -rf ./volumes/adguardhome
-$ docker-compose up -d adguardhome
+$ docker compose up -d adguardhome
 ```
 
 The container will go into "first run" mode and port 3001 will become active. You can then follow the [Quick Start](#quickStart) procedure.
@@ -137,7 +137,7 @@ Save your work. To apply the changes:
 
 ```
 $ cd ~/IOTstack
-$ docker-compose up -d adguardhome
+$ docker compose up -d adguardhome
 ```
 
 When you run the container in host mode, **all** of the *internal* (right hand side) ports listed in the [`ports:` clause](#serviceDef) become active. If you are running *other* services on your host that are already bound to one or more of those ports, Docker will refuse to start the container. It is up to you to resolve those port conflicts.
@@ -181,5 +181,5 @@ In many home networks, requirements for strong login credentials on every servic
 5. Restart the container:
 
 	``` console
-	$ docker-compose restart adguardhome
+	$ docker compose restart adguardhome
 	```

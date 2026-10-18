@@ -1,0 +1,35 @@
+tailscale:
+  container_name: tailscale
+  image: "tailscale/tailscale"
+  restart: unless-stopped
+  environment:
+    TS_AUTHKEY: ${TAILSCALE_AUTHKEY:-}
+    TS_STATE_DIR: /var/lib/tailscale
+    TS_USERSPACE: ${TAILSCALE_USERSPACE:-0}
+  # TS_ACCEPT_DNS:
+  # TS_AUTH_ONCE:
+  # TS_DEST_IP:
+  # TS_HOSTNAME:
+  # TS_OUTBOUND_HTTP_PROXY_LISTEN:
+  # TS_ROUTES:
+  # TS_SOCKET
+  # TS_SOCKS5_SERVER:
+  # TS_EXTRA_ARGS:
+  # TS_TAILSCALED_EXTRA_ARGS:
+  network_mode: host
+  x-ports:
+    - "3478:3478/udp"
+    - "41641:41641/udp"
+  volumes:
+    - ./volumes/tailscale/lib:/var/lib
+  devices:
+    - "/dev/net/tun:/dev/net/tun"
+  cap_add:
+    - NET_ADMIN
+    - NET_RAW
+  x-links:
+    github: https://github.com/tailscale/tailscale
+    dockerhub: https://hub.docker.com/r/tailscale/tailscale
+    home: https://tailscale.com/
+    docs: https://tailscale.com/docs/features/containers/docker
+

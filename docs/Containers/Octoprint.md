@@ -33,7 +33,7 @@ If the OctoPrint container is up when the device number changes, the container w
 Suppose you choose this method and your 3D Printer mounts as `/dev/ttyUSB0`, you would define your printer like this:
 
 ```console
-$ echo OCTOPRINT_DEVICE_PATH=/dev/ttyUSB0 >>~/IOTstack/.env
+$ echo "OCTOPRINT_DEVICE_PATH=/dev/ttyUSB0" >>~/IOTstack/.env
 ```
 
 ### option 2 - `/dev/serial/by-id/xxxxxxxx`
@@ -53,7 +53,7 @@ usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_3b14eaa48a154d5e87032d594
 Suppose you choose this method and your 3D Printer mounts as shown above. You would define your printer like this:
 
 ```console
-$ echo OCTOPRINT_DEVICE_PATH=/dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_3b14eaa48a154d5e87032d59459d5206-if00-port0 >>~/IOTstack/.env
+$ echo "OCTOPRINT_DEVICE_PATH=/dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_3b14eaa48a154d5e87032d59459d5206-if00-port0" >>~/IOTstack/.env
 ```
 
 Note:
@@ -118,11 +118,13 @@ Next, ensure the required file exists by executing the following command:
 $ sudo touch /etc/udev/rules.d/99-usb-serial.rules
 ```
 
-> If the file does not exist already, the `touch` command creates an empty file, owned by root, with mode 644 (rw-r--r--) permissions (all of which are correct).
+!!! note
+	* If the file does not exist already, the `touch` command creates an empty file, owned by root, with mode 644 (rw-r--r--) permissions (all of which are correct).
 
 Use `sudo` and your favourite text editor to edit `/etc/udev/rules.d/99-usb-serial.rules` and insert the "SUBSYSTEM==" line you prepared earlier into that file, then save the file.
 
-> Rules files are read on demand so there is no `start` or `reload` command to execute.
+!!! note
+	* Rules files are read on demand so there is no `start` or `reload` command to execute.
 
 Check your work by disconnecting, then re-connecting your 3D printer, and then run:
 
@@ -135,7 +137,7 @@ You should expect to see the human-readable name you chose in the list of device
 You would then define your printer like this:
 
 ```console
-$ echo OCTOPRINT_DEVICE_PATH=/dev/MasterDisaster5000Pro >>~/IOTstack/.env
+$ echo "OCTOPRINT_DEVICE_PATH=/dev/MasterDisaster5000Pro" >>~/IOTstack/.env
 ```
 
 Notes:
@@ -147,7 +149,8 @@ Notes:
 
 By default, video camera support is disabled. This is because it is unsafe to assume a camera is present on `/dev/video0`.
 
-> See the [Webcams topic of the Octoprint Community Forum](https://community.octoprint.org/c/support/support-webcams/18) for help configuring other kinds of cameras.
+!!! note
+	* See the [Webcams topic of the Octoprint Community Forum](https://community.octoprint.org/c/support/support-webcams/18) for help configuring other kinds of cameras.
 
 The OctoPrint docker image includes an MJPG streamer. You do not need to run another container with a streamer unless you want to.
 
@@ -155,38 +158,52 @@ To activate a Raspberry Pi camera attached via ribbon cable:
 
 1. Follow the instructions at [raspberrypi.org](https://www.raspberrypi.org/documentation/configuration/camera.md) to connect and test the camera. There are guides on YouTube ([example](https://www.youtube.com/watch?v=T8T6S5eFpqE)) if you need help working out how to insert the ribbon cable.
 2. Confirm the presence of `/dev/video0`.
-3. Edit `docker-compose.yml` and uncomment **all** of the commented-out lines in the following:
+3. Create an [override file](../Basic_setup/Custom.md#custom-service) at the path:
 
+	```
+	~/IOTstack/services/octoprint/override.yml
+	```
+	
+	with the content:
+	
 	``` yaml
-	environment:
-	  # - ENABLE_MJPG_STREAMER=true
-	  # - MJPG_STREAMER_INPUT=-r 640x480 -f 10 -y
-	  # - CAMERA_DEV=/dev/video0
-
-	devices:
-	  # - /dev/video0:/dev/video0
+	octoprint:
+	  environment:
+	    ENABLE_MJPG_STREAMER: true
+	    MJPG_STREAMER_INPUT: -r 640x480 -f 10 -y
+	    CAMERA_DEV: /dev/video0
+	  devices:
+	    - /dev/video0:/dev/video0
 	```
 
-	Note:
+	Notes:
 	
 	* The device path on the right hand side of the `CAMERA_DEV` environment variable corresponds with the right hand side (ie *after* the colon) of the device mapping. There should be no reason to change either.
 
-The "640x480" `MJPG_STREAMER_INPUT` settings will probably result in your camera feed being "letterboxed" but they will get you started. A full list of options is at [mjpg-streamer-configuration-options](https://community.octoprint.org/t/available-mjpg-streamer-configuration-options/1106).
+	* The "640x480" `MJPG_STREAMER_INPUT` settings will probably result in your camera feed being "letterboxed" but they will get you started. A full list of options is at [mjpg-streamer-configuration-options](https://community.octoprint.org/t/available-mjpg-streamer-configuration-options/1106).
 
-The typical specs for a baseline Raspberry Pi camera are:
+		The typical specs for a baseline Raspberry Pi camera are:
 
-* 1080p 720p 5Mp Webcam
-* Max resolution: 2592x1944
-* Max frame rate: VGA 90fps, 1080p 30fps
-* CODEC: MJPG H.264 AVC
+		* 1080p 720p 5Mp Webcam
+		* Max resolution: 2592x1944
+		* Max frame rate: VGA 90fps, 1080p 30fps
+		* CODEC: MJPG H.264 AVC
 
-For that type of camera, the following is probably more appropriate:
+		For that type of camera, the following is probably more appropriate:
 
-``` yaml
-  - MJPG_STREAMER_INPUT=-r 1152x648 -f 10
-```
+		``` yaml
+		  - MJPG_STREAMER_INPUT: -r 1152x648 -f 10
+		```
 
-The resolution of 1152x648 is 60% of 1080p 1920x1080 and does not cause letterboxing. The resolution and rate of 10 frames per second won't over-tax your communications links, and the camera is MJPEG-capable so it does not need the `-y` option.
+		The resolution of 1152x648 is 60% of 1080p 1920x1080 and does not cause letterboxing. The resolution and rate of 10 frames per second won't over-tax your communications links, and the camera is MJPEG-capable so it does not need the `-y` option.
+
+4. Apply the change:
+
+	``` console
+	$ cd ~/IOTstack
+	$ ./iotstack-menu.sh build
+	$ docker compose up -d octoprint
+	```
 
 ## Practical usage
 
@@ -199,7 +216,7 @@ To start a print session:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d octoprint
+	$ docker compose up -d octoprint
 	```
 
 If you try to start the OctoPrint container before your 3D printer has been switched on and the USB interface has registered with the Raspberry Pi, the container will go into a restart loop.
@@ -315,7 +332,7 @@ Run the following commands:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose restart octoprint
+$ docker compose restart octoprint
 ```
 
 #### restarting via OctoPrint user interface
@@ -346,8 +363,8 @@ Unless you intend to leave your printer switched on 24 hours a day, you will als
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose stop octoprint
-	$ docker-compose rm -f octoprint
+	$ docker compose down octoprint
+	$ docker compose rm -f octoprint
 	```
 
 2. Turn the 3D printer off.
@@ -372,8 +389,8 @@ To silence the warning:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose stop octoprint
-	$ docker-compose rm -f octoprint
+	$ docker compose down octoprint
+	$ docker compose rm -f octoprint
 	```
 	
 2. use `sudo` and your favourite text editor to open the following file:
@@ -403,7 +420,7 @@ To silence the warning:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d octoprint
+	$ docker compose up -d octoprint
 	```
 
 ## Routine container maintenance
@@ -412,8 +429,8 @@ You can check for updates like this:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose pull octoprint
-$ docker-compose up -d octoprint
+$ docker compose pull octoprint
+$ docker compose up -d octoprint
 $ docker system prune
 ```
 
@@ -443,7 +460,7 @@ To reset a user's password:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose restart octoprint
+	$ docker compose restart octoprint
 	```
 
 Note:
@@ -460,10 +477,9 @@ If the OctoPrint container seems to be misbehaving, you can get a "clean slate" 
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose stop octoprint
-$ docker-compose rm -f octoprint
+$ docker compose down octoprint
 $ sudo rm -rf ./volumes/octoprint
-$ docker-compose up -d octoprint
+$ docker compose up -d octoprint
 ```
 
 The OctoPrint container is well-behaved and will re-initialise its persistent storage area correctly. OctoPrint will adopt "first run" behaviour and display the Setup Wizard.

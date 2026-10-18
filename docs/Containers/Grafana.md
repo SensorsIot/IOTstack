@@ -29,28 +29,37 @@ Grafana configuration is usually done in *grafana.ini*, but when used via
 docker as the IOTstack does, it should be configured using [environment
 variables](https://grafana.com/docs/grafana/latest/administration/configuration/#override-configuration-with-environment-variables).
 
-Edit `docker-compose.yml` and find `grafana:` and under it
-`environment:` this is where you can place the ini-options, but formatted as:
-```yaml
-    - GF_<SectionName>_<KeyName>=<value>
-```
-If you are using old-menu edit `~/IOTstack/services/grafana/grafana.env`
-instead and add the lines directly there, but without the leading dash:
-`GF_<SectionName>_<KeyName>=<value>`
+Use a text editor to create/edit an [override file](../Basic_setup/Custom.md#custom-service):
 
-For any changes to take effect you need recreate the Grafana container:
+```
+~/IOTstack/services/grafana/override.yml
+```
+
+The initial content should be:
+
+``` yaml
+grafana:
+  environment:
+```
+
+Append environment variables formatted as:
+
+``` yaml
+    GF_<SectionName>_<KeyName>: <value>
+```
+
+For example:
+
+``` yaml
+    GF_AUTH_ANONYMOUS_ORG_NAME: MyHouse
+    GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+```
+
+Rebuild your stack and "up" the container:
 
 ``` console
-$ docker-compose up -d grafana
-```
-
-### Setting your time-zone
-
-Change the right hand side to [your own
-timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones):
-
-```yaml
-    - TZ=Etc/UTC
+$ ./iotstack-menu.sh build
+$ docker compose up -d grafana
 ```
 
 ### Anonymous login
@@ -58,7 +67,7 @@ timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones):
 To allow anonymous logins add:
 
 ```yaml
-    - GF_AUTH_ANONYMOUS_ENABLED=true
+GF_AUTH_ANONYMOUS_ENABLED: true
 ```
 
 ### Custom admin user and password (not recommended)
@@ -80,8 +89,8 @@ To customize, editing the file as describe above, add the following lines under
 the `environment:` clause. For example, to set the administrative username to be "maestro" with password "123456":
 
 ```yaml
-    - GF_SECURITY_ADMIN_USER=maestro
-    - GF_SECURITY_ADMIN_PASSWORD=123456
+GF_SECURITY_ADMIN_USER: maestro
+GF_SECURITY_ADMIN_PASSWORD: 123456
 ```
 
 If you change the default password, Grafana will not force you to change the
@@ -91,14 +100,6 @@ As a summary, the environment variables only take effect if you set them up **be
 
 * `GF_SECURITY_ADMIN_USER` has a default value of "admin". You *can* explicitly set it to "admin" or some other value. Whatever option you choose then that's the account name of Grafana's administrative user. But choosing any value other than "admin" is probably a bad idea.
 * `GF_SECURITY_ADMIN_PASSWORD` has a default value of "admin". You can explicitly set it to "admin" or some other value. If its value is "admin" then you will be forced to change it the first time you login to Grafana. If its value is something other than "admin" then that will be the password until you change it via the web UI.
-
-### Options with spaces
-
-To set an options with a space, you must enclose the whole value in quotes:
-
-```yaml
-    - "GF_AUTH_ANONYMOUS_ORG_NAME=Main Org."
-```
 
 ## HELP – I forgot my Grafana admin password!
 
@@ -122,10 +123,11 @@ Begin by stopping Grafana:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down grafana
+$ docker compose down grafana
 ```
 
-> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
+!!! note
+	* see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
 
 You have two options:
 
@@ -149,7 +151,7 @@ When you are ready, bring Grafana back up again:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d grafana
+$ docker compose up -d grafana
 ```
 
 Grafana will automatically recreate everything it needs. You will be able to login as "admin/admin" (or the credentials you set using `GF_SECURITY_ADMIN_USER` and `GF_SECURITY_ADMIN_PASSWORD`).

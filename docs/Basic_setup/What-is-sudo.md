@@ -32,11 +32,13 @@ Please try to minimise your use of `sudo` when you are working with IOTstack. He
 1. Is what you are about to run a script? If yes, check whether the script already contains `sudo` commands. Using `menu.sh` as the example:
 
 	``` console
-	$ grep -c 'sudo' ~/IOTstack/menu.sh
-	28
+	$ grep -c 'sudo' ~/IOTstack/iotstack-menu.sh
+	2
 	```
 
-	There are numerous uses of `sudo` within `menu.sh`. That means the designer thought about when `sudo` was needed.
+	A non-zero count means the designer thought about when `sudo` was needed.
+
+	> Technically, `iotstack-menu.sh` does not use `sudo` at all. The first of those two hits is actually a check for whether you have launched the menu using `sudo`, in which case the menu refuses to run. Absent this check, running the menu with `sudo` would just create a mess. The second hit is where the menu displays a command that you can copy/paste to install `bash` autocompletions, if you choose to do that.
 
 2. Did the command you **just executed** work without `sudo`? Note the emphasis on the past tense. If yes, then your work is done. If no, and the error suggests elevated privileges are necessary, then re-execute the last command like this:
 

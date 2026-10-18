@@ -1,0 +1,15 @@
+# this list is used to seed IOTstack/services/nodered/installed-addon-nodes.txt
+# lines starting with # are comments
+@node-red-contrib-themes/theme-collection
+node-red-configurable-ping
+node-red-contrib-boolean-logic
+node-red-contrib-boolean-logic-ultimate
+node-red-contrib-chartjs
+node-red-contrib-influxdb
+node-red-contrib-md5
+node-red-contrib-moment
+node-red-contrib-pushsafer
+node-red-dashboard
+node-red-node-email
+node-red-node-pi-gpiod
+node-red-node-tail

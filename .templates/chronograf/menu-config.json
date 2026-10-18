@@ -1,0 +1,10 @@
+{
+   "configure": null,
+   "dependencies": ["influxdb", "kapacitor"],
+   "description": "Visualisation tool for TICK stack",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "chronograf"
+}

@@ -54,14 +54,14 @@ influxdb2:
   image: "influxdb:latest"
   restart: unless-stopped
   environment:
-    - TZ=Etc/UTC
-    - DOCKER_INFLUXDB_INIT_USERNAME=me
-    - DOCKER_INFLUXDB_INIT_PASSWORD=mypassword
-    - DOCKER_INFLUXDB_INIT_ORG=myorg
-    - DOCKER_INFLUXDB_INIT_BUCKET=mybucket
-    - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
-    - DOCKER_INFLUXDB_INIT_MODE=setup
-  # - DOCKER_INFLUXDB_INIT_MODE=upgrade
+    TZ: ${TZ:-Etc/UTC}
+    DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB2_USERNAME:-me}
+    DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB2_PASSWORD:?eg echo INFLUXDB2_PASSWORD=mypassword >>~/IOTstack/.env}
+    DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB2_ORG:-myorg}
+    DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB2_BUCKET:-mybucket}
+    DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-super-secret-auth-token
+    DOCKER_INFLUXDB_INIT_MODE: setup
+  # DOCKER_INFLUXDB_INIT_MODE: upgrade
   ports:
     - "8087:8086"
   volumes:
@@ -87,17 +87,17 @@ As an alternative to using the menu, you can copy and paste the service definiti
 
 Edit the service definition in your compose file to change the following variables:
 
-- `TZ=`«country»/«city»
+- `TZ:`«country»/«city»
 
-- <a name="influxUsername"></a>`DOCKER_INFLUXDB_INIT_USERNAME=`«username»
+- <a name="influxUsername"></a>`DOCKER_INFLUXDB_INIT_USERNAME:`«username»
 
 	This name becomes the administrative user. It is associated with your [«password»](#influxPassword) and [«token»](#influxToken).
 
-- <a name="influxPassword"></a>`DOCKER_INFLUXDB_INIT_PASSWORD=`«password»
+- <a name="influxPassword"></a>`DOCKER_INFLUXDB_INIT_PASSWORD:`«password»
 
 	Your «username» and «password» form your login credentials when you administer InfluxDB&nbsp;2 using its web-based graphical user interface. The strength of your password is up to you.
 
-- <a name="influxOrg"></a>`DOCKER_INFLUXDB_INIT_ORG=`«organisation»
+- <a name="influxOrg"></a>`DOCKER_INFLUXDB_INIT_ORG:`«organisation»
 
 	An organisation name is **required**. Examples:
 
@@ -105,11 +105,11 @@ Edit the service definition in your compose file to change the following variabl
 	- my-house
 	- com.mydomain.myhouse
 
-- <a name="influxBucket"></a>`DOCKER_INFLUXDB_INIT_BUCKET=`«bucket»
+- <a name="influxBucket"></a>`DOCKER_INFLUXDB_INIT_BUCKET:`«bucket»
 
 	A default bucket name is **required**. The name does not matter because you won't actually be using it so you can accept the default of "mybucket". You can [delete the unused bucket](#delBucket) later if you want to be tidy.
 
-- <a name="influxToken"></a>`DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=`«token»
+- <a name="influxToken"></a>`DOCKER_INFLUXDB_INIT_ADMIN_TOKEN:`«token»
 
 	Although you can let InfluxDB&nbsp;2 generate your access token for you, it will keep things simple if you generate your own. Here are some possible approaches:
 
@@ -157,7 +157,7 @@ To initialise InfluxDB&nbsp;2:
 3. Start the InfluxDB&nbsp;2 container:
 
 	```bash
-	$ docker-compose up -d influxdb2
+	$ docker compose up -d influxdb2
 	```
 
 4. InfluxDB&nbsp;2 will notice the following environment variable:
@@ -202,9 +202,9 @@ To migrate your InfluxDB&nbsp;1 data:
 
 	```bash
 	$ sudo rm -rf ./volumes/influxdb.migrate
-	$ docker-compose down influxdb
+	$ docker compose down influxdb
 	$ sudo cp -a ./volumes/influxdb ./volumes/influxdb.migrate
-	$ docker-compose up -d influxdb
+	$ docker compose up -d influxdb
 	$ sudo chown -R 1000:1000 ./volumes/influxdb.migrate/data
 	```
 	
@@ -225,15 +225,15 @@ To migrate your InfluxDB&nbsp;1 data:
 		- before editing:
 
 			```{ .yaml linenums="12" }
-			    - DOCKER_INFLUXDB_INIT_MODE=setup
-			  # - DOCKER_INFLUXDB_INIT_MODE=upgrade
+			    DOCKER_INFLUXDB_INIT_MODE: setup
+			  # DOCKER_INFLUXDB_INIT_MODE: upgrade
 			```
 
 		- after editing:
 
 			```{ .yaml linenums="12" }
-			  # - DOCKER_INFLUXDB_INIT_MODE=setup
-			    - DOCKER_INFLUXDB_INIT_MODE=upgrade
+			  # DOCKER_INFLUXDB_INIT_MODE: setup
+			    DOCKER_INFLUXDB_INIT_MODE: upgrade
 			```
 
 	2. Activate the volume mapping to give InfluxDB&nbsp;2 read-only access to the **copy** of the InfluxDB&nbsp;1 persistent store that you made in step 2:
@@ -250,7 +250,7 @@ To migrate your InfluxDB&nbsp;1 data:
 			    - ./volumes/influxdb.migrate/data:/var/lib/influxdb:ro
 			```
 
-	Save your work but do not execute any `docker-compose` commands.
+	Save your work but do not execute any `docker compose` commands.
 
 4. InfluxDB&nbsp;2 creates a "bolt" (lock) file to prevent accidental data-migrations. That file needs to be removed:
 
@@ -261,13 +261,13 @@ To migrate your InfluxDB&nbsp;1 data:
 5. The InfluxDB&nbsp;2 container is still running. The following command causes the container to be recreated with the edits you made in step 3:
 
 	```bash
-	$ docker-compose up -d influxdb2
+	$ docker compose up -d influxdb2
 	```
 
 6. InfluxDB&nbsp;2 will notice the following environment variable:
 
 	```yaml
-	DOCKER_INFLUXDB_INIT_MODE=upgrade
+	DOCKER_INFLUXDB_INIT_MODE: upgrade
 	```
 
 	This, combined with the absence of the "bolt" file, starts the migration process. You need to wait until the migration is complete. The simplest way to do that is to watch the size of the persistent store for InfluxDB&nbsp;2 until it stops increasing. Experience suggests that the InfluxDB&nbsp;2 persistent store will usually be a bit larger than InfluxDB&nbsp;1. For example:
@@ -302,17 +302,7 @@ The container now needs to be instructed to run in normal mode.
 
 2. Edit your compose file as per the "(omitted)" column of [Table 1](#svcDefVars). The changes are:
 
-	1. Deactivate all `DOCKER_INFLUXDB_INIT_` environment variables. After editing, the relevant lines should look like:
-
-		```{ .yaml linenums="7" }
-		  # - DOCKER_INFLUXDB_INIT_USERNAME=me
-		  # - DOCKER_INFLUXDB_INIT_PASSWORD=mypassword
-		  # - DOCKER_INFLUXDB_INIT_ORG=myorg
-		  # - DOCKER_INFLUXDB_INIT_BUCKET=mybucket
-		  # - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
-		  # - DOCKER_INFLUXDB_INIT_MODE=setup
-		  # - DOCKER_INFLUXDB_INIT_MODE=upgrade
-		```
+	1. Deactivate all `DOCKER_INFLUXDB_INIT_` environment variables.
 
 	2. Deactivate the volume mapping if it is active. After editing, the line should look like:
 
@@ -325,7 +315,7 @@ The container now needs to be instructed to run in normal mode.
 3. The InfluxDB&nbsp;2 container is still running. The following command causes the container to be recreated with the edits you have just made:
 
 	```bash
-	$ docker-compose up -d influxdb2
+	$ docker compose up -d influxdb2
 	```
 	
 	The absence of an active `DOCKER_INFLUXDB_INIT_MODE` variable places InfluxDB&nbsp;2 into normal run mode.
@@ -351,7 +341,7 @@ If you need to start over from a clean slate:
 2. Terminate the InfluxDB&nbsp;2 container:
 
 	```bash
-	$ docker-compose down influxdb2
+	$ docker compose down influxdb2
 	```
 	
 	> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
@@ -364,17 +354,7 @@ If you need to start over from a clean slate:
 
 	> always be *extremely* careful with any `sudo rm` command. Always check your work **before** you press <kbd>return</kbd>.
 
-4. Edit your compose file as per the "setup" column of [Table 1](#svcDefVars). After editing, the relevant lines should look like this:
-
-	```{ .yaml linenums="7" }
-	    - DOCKER_INFLUXDB_INIT_USERNAME=me
-	    - DOCKER_INFLUXDB_INIT_PASSWORD=mypassword
-	    - DOCKER_INFLUXDB_INIT_ORG=myorg
-	    - DOCKER_INFLUXDB_INIT_BUCKET=mybucket
-	    - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
-	    - DOCKER_INFLUXDB_INIT_MODE=setup
-	  # - DOCKER_INFLUXDB_INIT_MODE=upgrade
-	```
+4. Edit your compose file as per the "setup" column of [Table 1](#svcDefVars). After editing, the relevant lines should look the same as they do in the [reference service definition](#svcDef).
 
 Go to [initialising InfluxDB&nbsp;2](#initContainer).
 
@@ -441,7 +421,7 @@ Two important things to note here are:
 
 	```bash
 	$ cd ~/IOTstack
-	$ docker-compose up -d nodered
+	$ docker compose up -d nodered
 	```
 
 3. Use a web browser to connect to your Node-RED instance.
@@ -502,7 +482,7 @@ Two important things to note here are:
 
 	```bash
 	$ cd ~/IOTstack
-	$ docker-compose up -d grafana
+	$ docker compose up -d grafana
 	```
 
 2. Use a web browser to connect to your Grafana instance and login as an administrator.

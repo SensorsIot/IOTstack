@@ -15,18 +15,27 @@ openHAB runs in "host mode" so there are no port mappings. The default port bind
 
 If you want to change either of the first two:
 
-1. Edit the `openhab` fragment in `docker-compose.yml`:
+1. Create an [override file](../Basic_setup/Custom.md#custom-service) at the path:
 
 	```
-	    - OPENHAB_HTTP_PORT=4050
-	    - OPENHAB_HTTPS_PORT=4051
+	~/IOTstack/services/openhab/override.yml
+	```
+	
+	with the content:
+	
+	``` yaml
+	openhab:
+	  environment:
+	    OPENHAB_HTTP_PORT: 4050
+	    OPENHAB_HTTPS_PORT: 4051
 	```
 
-2. Recreate the openHAB container:
+2. Apply the change:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d openhab
+	$ ./iotstack-menu.sh build
+	$ docker compose up -d openhab
 	```
 
 There do not appear to be any environment variables to control ports 8101 or 5007 so, if other containers you need to run also depend on those ports, you will have to figure out some way of resolving the conflict.

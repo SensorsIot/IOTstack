@@ -1,0 +1,14 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "IoT device provisioning system",
+   "environment": [
+      { "variable": "ESPHOME_USERNAME", "preset": "esphome" },
+      { "variable": "ESPHOME_PASSWORD", "preset": "$(random_password)" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true },
+      { "template": "88-tty-iotstack-esphome.rules", "service": "88-tty-iotstack-esphome.rules", "tracked": true }
+   ],
+   "service": "esphome"
+}

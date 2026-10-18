@@ -20,7 +20,8 @@ The first part is fairly simple and there are quite a few Dynamic DNS service pr
 * [DuckDNS.org](https://www.duckdns.org)
 * [NoIP.com](https://www.noip.com)
 
-> You can find more service providers by Googling ["Dynamic DNS service"](https://www.google.com/search?q=%22Dynamic%20DNS%20service%22).
+!!! note
+	* You can find more service providers by Googling ["Dynamic DNS service"](https://www.google.com/search?q=%22Dynamic%20DNS%20service%22).
 
 Some router vendors also provide their own built-in Dynamic DNS capabilities for registered customers so it's a good idea to check your router's capabilities before you plough ahead.
 
@@ -42,7 +43,7 @@ A behind-the-router technique usually relies on sending updates according to a s
 The recommended and easiest solution is to install the Duckdns docker-container
 from the menu. It includes the cron service and logs are handled by Docker.
 
-For configuration see [Containers/Duck DNS]( ../Containers/Duckdns.md).
+For configuration see [Containers/Duck DNS](../Containers/Duckdns.md).
 
 !!! note
     This is a recently added container, please don't hesitate to report any
@@ -60,7 +61,8 @@ $ mkdir -p ~/.local/bin
 $ cp ~/IOTstack/duck/duck.sh ~/.local/bin
 ```
 
-> The reason for recommending that you make a copy of `duck.sh` is because the "original" is under Git control. If you change the "original", Git will keep telling you that the file has changed and it may block incoming updates from GitHub.
+!!! note
+	* The reason for recommending that you make a copy of `duck.sh` is because the "original" is under Git control. If you change the "original", Git will keep telling you that the file has changed and it may block incoming updates from GitHub.
 
 Then edit `~/.local/bin/duck.sh` to add your DuckDNS domain name(s) and token:
 
@@ -166,6 +168,29 @@ $ cat /dev/null >~/Logs/duck.log
 
 WireGuard is supplied as part of IOTstack. See [WireGuard documentation](../Containers/WireGuard.md).
 
+WireGuard requires you to expose a port on your home router, and associate it with a port-forwarding rule to direct traffic to your WireGuard host.
+
+If your ISP places CGNAT (Carrier-grade Network Address Translation) between you and the Internet you will also need a workaround such as an account with a Virtual Private Server provider. 
+
+### Zerotier
+
+ZeroTier is supplied as part of IOTstack. See:
+
+* [ZeroTier](../Containers/ZeroTier.md)
+* [ZeroTier vs WireGuard](../Containers/ZeroTier-vs-WireGuard.md)
+
+ZeroTier:
+
+* does not require you to expose ports or setup port-forwarding rules on your home router;
+* does not require solutions like DuckDNS or NoIP for address discovery; and
+* is not fazed by CGNAT.
+
+IOTstack offers both:
+
+* ZeroTier-client (a WireGuard- and Pi-VPN-equivalent topology which will allow you to tunnel home from remote locations); and
+
+* ZeroTier-router which, as well as all the functionality of the ZeroTier-client, lets you set up personal private VPNs. One common example is if you are the lucky person who gets to provide remote technical support to less-tech-savvy relatives or friends. For the price of a Raspberry Pi at each location, you can have always-on, secure, LAN-to-LAN connections with the networks of the people you need to support. 
+
 ### PiVPN
 
 pimylifeup.com has an excellent tutorial on how to install [PiVPN](https://pimylifeup.com/raspberry-pi-vpn-server/)
@@ -177,16 +202,3 @@ Don't forget you need to open the port 1194 on your firewall. Most people won't 
 Once you activate your VPN (from your phone/laptop/work computer) you will effectively be on your home network and you can access your devices as if you were on the wifi at home.
 
 I personally use the VPN any time I'm on public wifi, all your traffic is secure.
-
-### Zerotier
-
-https://www.zerotier.com/
-
-Zerotier is an alternative to PiVPN that doesn't require port forwarding on your router. It does however require registering for their free tier service [here](https://my.zerotier.com/login). 
-
-Kevin Zhang has written a how to guide [here](https://iamkelv.in/blog/2017/06/zerotier.html). Just note that the install link is outdated and should be:
-
-``` console
-$ curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg' | gpg --import && \
-if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi
-```

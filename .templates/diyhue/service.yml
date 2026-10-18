@@ -8,8 +8,8 @@ diyhue:
     - "2100:2100/udp"
   # - "2443:443/tcp"
   environment:
-    - IP=%LAN_IP_Address%
-    - MAC=%LAN_MAC_Address%
+    IP: ${DIYHUE_IP_ADDRESS:?eg echo DIYHUE_IP_ADDRESS=%LAN_IP_Address% >>~/IOTstack/.env}
+    MAC: ${DIYHUE_MAC_ADDRESS:?eg echo DIYHUE_MAC_ADDRESS=%LAN_MAC_Address% >>~/IOTstack/.env}
   volumes:
     - ./volumes/diyhue:/opt/hue-emulator/export
   restart: unless-stopped

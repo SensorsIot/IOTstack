@@ -2,9 +2,9 @@ heimdall:
   image: ghcr.io/linuxserver/heimdall
   container_name: heimdall
   environment:
-    - PUID=1000
-    - PGID=1000
-    - TZ=${TZ:-Etc/UTC}
+    PUID: 1000
+    PGID: 1000
+    TZ: ${TZ:-Etc/UTC}
   volumes:
     - ./volumes/heimdall/config:/config
   ports:

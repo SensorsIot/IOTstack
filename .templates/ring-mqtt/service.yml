@@ -3,8 +3,7 @@ ring-mqtt:
   image: tsightler/ring-mqtt
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - DEBUG=ring-*
+    TZ: ${TZ:-Etc/UTC}
   ports:
     - "8554:8554"
     - "55123:55123"

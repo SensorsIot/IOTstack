@@ -10,36 +10,42 @@
 
 Homebridge documentation has a comprehensive [configuration guide](https://github.com/oznu/docker-homebridge/wiki/Homebridge-on-Raspberry-Pi) which you are encouraged to read.
 
-Homebridge is configured using environment variables. In IOTstack:
+Homebridge is configured using environment variables. We recommend using an [override file](../Basic_setup/Custom.md#custom-service) for this purpose:
 
-* If you are running new menu (master branch, the default), environment variables are kept inline in `docker-compose.yml`.
-* If you are running old menu (old-menu branch), environment variables are at the path:
+```
+~/IOTstack/services/homebridge/override.yml
+```
 
-	```
-	~/IOTstack/services/homebridge/homebridge.env
-	```
+Once you have created or made any changes to the override file, implement the changes like this:
 
-In either case, you apply changes by editing the relevant file (`docker-compose.yml` or `homebridge.env`) and then:
-
-```console
+``` console
 $ cd ~/IOTstack
+$ ./iotstack_menu build
 $ docker-compose up -d homebridge
 ```
 
-### About "avahi"
+### Web Interface
+
+By default, the web UI for Homebridge can be found on `"your_ip":8581`. You can change the port by adjusting the environment variable. For example, to use port 8582:
+
+
+``` yaml
+homebridge:
+  environment:
+    HOMEBRIDGE_CONFIG_UI_PORT: 8582
+```
+
+After you have implemented that change (as above), the UI will be reachable on `"your_ip":8582`
+
+### Enabling "avahi"
 
 "avahi", "multicast DNS", "Rendezvous", "Bonjour" and "ZeroConf" are synonyms.
 
 Current Homebridge images disable avahi services by default. The Homebridge container runs in "host mode" which means it can participate in multicast traffic flows. If you have a plugin that requires avahi, it can enabled by setting the environment variable:
 
-```yaml
-ENABLE_AVAHI=1
-```  
-
-## Web Interface
-
-The web UI for Homebridge can be found on `"your_ip":8581`. You can change the port by adjusting the environment variable:
-
+``` yaml
+homebridge:
+  environment:
+    ENABLE_AVAHI: 1
 ```
-HOMEBRIDGE_CONFIG_UI_PORT=8581
-```
+

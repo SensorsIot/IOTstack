@@ -3,12 +3,13 @@ homebridge:
   image: homebridge/homebridge:latest
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - PGID=1000
-    - PUID=1000
-    - HOMEBRIDGE_CONFIG_UI=1
-    - HOMEBRIDGE_CONFIG_UI_PORT=8581
+    TZ: ${TZ:-Etc/UTC}
+    PGID: 1000
+    PUID: 1000
+    HOMEBRIDGE_CONFIG_UI: 1
+    HOMEBRIDGE_CONFIG_UI_PORT: 8581
   volumes:
     - ./volumes/homebridge:/homebridge
   network_mode: host
-
+  x-ports:
+    - "8581:8581"

@@ -22,6 +22,7 @@ post_restore.sh
 .new_install
 .installed
 .env
+*.save
 
 !.gitkeep
 

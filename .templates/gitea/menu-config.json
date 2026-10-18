@@ -1,0 +1,13 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Self-hosted source code control",
+   "environment": [
+      { "variable": "GITEA_DB_PASSWORD", "preset": "$(random_password)" },
+      { "variable": "GITEA_DB_ROOT_PASSWORD", "preset": "$(random_password)" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "gitea"
+}

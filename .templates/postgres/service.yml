@@ -4,10 +4,10 @@ postgres:
   x-comment: Please READ the Postgres document in the IOTstack Wiki BEFORE changing the "18"
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - POSTGRES_USER=${POSTGRES_USER:-postuser}
-    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?eg echo POSTGRES_PASSWORD=IOtSt4ckpostgresDbPw >>~/IOTstack/.env}
-    - POSTGRES_DB=${POSTGRES_DB:-postdb}
+    TZ: ${TZ:-Etc/UTC}
+    POSTGRES_USER: ${POSTGRES_USER:-postuser}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?eg echo POSTGRES_PASSWORD=IOtSt4ckpostgresDbPw >>~/IOTstack/.env}
+    POSTGRES_DB: ${POSTGRES_DB:-postdb}
   ports:
     - "5432:5432"
   volumes:

@@ -1,0 +1,14 @@
+---
+
+networks:
+
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+
+  database:
+    driver: bridge
+    internal: true
+    ipam:
+      driver: default

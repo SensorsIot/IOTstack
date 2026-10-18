@@ -45,9 +45,9 @@ This is a standing invitation to anyone who is familiar with this container to s
 	
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose down domoticz
+	$ docker compose down domoticz
 	$ sudo rm ./volumes/domoticz/domoticz.log
-	$ docker-compose up -d domoticz
+	$ docker compose up -d domoticz
 	```
 
 * `EXTRA_CMD_ARG=`
@@ -64,7 +64,7 @@ The service definition includes an `x-devices:` clause. The `x-` prefix has the 
 
 	```
 	$ cd ~/IOTstack
-	$ docker-compose up -d domoticz
+	$ docker compose up -d domoticz
 	```
 
 ## Migration Notes

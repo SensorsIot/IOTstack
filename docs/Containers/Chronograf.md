@@ -6,27 +6,9 @@
 - [*GitHub*: influxdata/influxdata-docker/chronograf](https://github.com/influxdata/influxdata-docker/tree/master/chronograf)
 - [*DockerHub*: influxdata Chronograf](https://hub.docker.com/_/chronograf)
 
-## Kapacitor integration
+## InfluxDB and Kapacitor integration
 
-If you selected Kapacitor in the menu and want Chronograf to be able to interact with it, you need to edit `docker-compose.yml` to un-comment the lines which are commented-out in the following:
-
-```yaml
-chronograf:
-  …
-  environment:
-  …
-  # - KAPACITOR_URL=http://kapacitor:9092
-  depends_on:
-  …
-  # - kapacitor
-```
-
-If the Chronograf container is already running when you make this change, run:
-
-``` console
-$ cd ~IOTstack
-$ docker-compose up -d chronograf
-```
+The service definition provided with IOTstack assumes dependencies on both InfluxDB and Kapacitor.
 
 ## Upgrading Chronograf
 
@@ -34,82 +16,45 @@ You can update the container via:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose pull
-$ docker-compose up -d
-$ docker system prune
+$ docker compose pull
+$ docker compose up -d
+$ docker system prune -f
 ```
 
 In words:
 
-* `docker-compose pull` downloads any newer images;
-* `docker-compose up -d` causes any newly-downloaded images to be instantiated as containers (replacing the old containers); and
+* `docker compose pull` downloads any newer images;
+* `docker compose up -d` causes any newly-downloaded images to be instantiated as containers (replacing the old containers); and
 * the `prune` gets rid of the outdated images.
-
-See also [2025-03-04 patch](#patch1).
 
 ### Chronograf version pinning
 
 If you need to pin to a particular version:
 
-1. Use your favourite text editor to open `docker-compose.yml`.
-2. Find the line:
-
-	``` yaml
-	image: chronograf:latest
-	```
-
-3. Replace `latest` with the version you wish to pin to. For example, to pin to version 1.9.0:
-
-	``` yaml
-	image: chronograf:1.9.0
-	```
-
-4. Save the file and tell `docker-compose` to bring up the container:
+1. Set your working directory:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d chronograf
-	$ docker system prune
 	```
 
-<a name="patch1"></a>
-## 2025-03-04 patch
+2. Use your favourite text editor to open/create an [override file](../Basic_setup/Custom.md#custom-service) at the following path:
 
-Chronograf does not start properly from a clean slate. The cause is explained [here](https://github.com/influxdata/influxdata-docker/pull/781).
+	```
+	./services/chronograf/override.yml
+	```
 
-You can solve the problem in two ways:
+3. Make the content of that file look like this:
 
-1. You can set the correct permissions yourself:
+	``` yaml
+	chronograf:
+	  image: chronograf:1.10
+	```
+	
+	Save the file.
+
+4. Rebuild your stack, and start the container:
 
 	``` console
-	$ cd ~/IOTstack
-	$ docker-compose down chronograf
-	$ sudo chown -R 999:999 ./volumes/chronograf
-	$ docker-compose up -d chronograf
+	$ ./iotstack_menu.sh build
+	$ docker compose up -d chronograf
 	```
-	
-	Generally, this is a one-time fix. You will only need to repeat it if you start Chronograf from a clean slate.
-	
-2. You can adopt the updated service definition, either by:
-
- 	- using the menu to delete then reinstall `chronograf`; or by
- 	- using a text editor to hand-merge the contents of:
-
-		```
-		~/IOTstack/.templates/chronograf/service.yml
-		```
-		
-		with:
-		
-		```
-		~/IOTstack/docker-compose.yml
-		```
-
-If you adopt the updated service definition then the process for keeping Chronograf up-to-date becomes:
-
-``` console
-$ cd ~/IOTstack
-$ docker-compose build --no-cache --pull chronograf
-$ docker-compose up -d chronograf
-$ docker system prune
-```

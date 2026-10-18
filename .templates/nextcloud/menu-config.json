@@ -1,0 +1,13 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Self-hosted cloud software",
+   "environment": [
+      { "variable": "NEXTCLOUD_DB_ROOT_PASSWORD", "preset": "$(random_password)" },
+      { "variable": "NEXTCLOUD_DB_USER_PASSWORD", "preset": "$(random_password)" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "nextcloud"
+}

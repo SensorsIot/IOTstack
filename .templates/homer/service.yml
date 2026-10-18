@@ -2,7 +2,7 @@ homer:
   image: b4bz/homer:latest
   container_name: homer
   environment:
-    - INIT_ASSETS=1
+    INIT_ASSETS: 1
   user: $UID:$GID
   volumes:
     - ./volumes/homer/assets:/www/assets

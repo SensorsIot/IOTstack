@@ -3,13 +3,13 @@ zerotier-router:
   image: "zyclonite/zerotier:router"
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - PUID=1000
-    - PGID=1000
-    # - ZEROTIER_ONE_NETWORK_IDS=yourNetworkID
-    - ZEROTIER_ONE_LOCAL_PHYS=eth0 wlan0
-    - ZEROTIER_ONE_USE_IPTABLES_NFT=true
-    - ZEROTIER_ONE_GATEWAY_MODE=both
+    TZ: ${TZ:-Etc/UTC}
+    PUID: 1000
+    PGID: 1000
+    ZEROTIER_ONE_NETWORK_IDS: ${ZEROTIER_ONE_NETWORK_IDS}
+    ZEROTIER_ONE_LOCAL_PHYS: ${ZEROTIER_ONE_LOCAL_PHYS:-eth0 wlan0}
+    ZEROTIER_ONE_USE_IPTABLES_NFT: true
+    ZEROTIER_ONE_GATEWAY_MODE: ${ZEROTIER_ONE_GATEWAY_MODE:-both}
   network_mode: host
   x-ports:
     - "9993:9993"

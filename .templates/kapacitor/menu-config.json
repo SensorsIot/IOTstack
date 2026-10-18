@@ -1,0 +1,12 @@
+{
+   "configure": null,
+   "dependencies": ["influxdb"],
+   "description": "Alerts, ETL jobs, detect anomalies",
+   "environment": [
+      { "variable": "INFLUXDB1_PASSWORD", "preset": "$(random_password)" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "kapacitor"
+}

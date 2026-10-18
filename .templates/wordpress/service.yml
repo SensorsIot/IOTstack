@@ -15,7 +15,7 @@ wordpress:
   hostname: ${WORDPRESS_HOSTNAME:?eg echo WORDPRESS_HOSTNAME=hostname >>~/IOTstack/.env}
   networks:
     - default
-    - nextcloud
+    - database
   depends_on:
     - wordpress_db
 
@@ -33,4 +33,6 @@ wordpress_db:
     - ./volumes/wordpress/db:/config
     - ./volumes/wordpress/db_backup:/backup
   networks:
-    - nextcloud
+    - database
+  x-ports:
+    - "3306:3306"

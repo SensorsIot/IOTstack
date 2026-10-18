@@ -3,14 +3,14 @@ influxdb2:
   image: "influxdb:2"
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB2_USERNAME:-me}
-    - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB2_PASSWORD:?eg echo INFLUXDB2_PASSWORD=mypassword >>~/IOTstack/.env}
-    - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB2_ORG:-myorg}
-    - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB2_BUCKET:-mybucket}
-    - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
-    - DOCKER_INFLUXDB_INIT_MODE=setup
-  # - DOCKER_INFLUXDB_INIT_MODE=upgrade
+    TZ: ${TZ:-Etc/UTC}
+    DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB2_USERNAME:-me}
+    DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB2_PASSWORD:?eg echo INFLUXDB2_PASSWORD=mypassword >>~/IOTstack/.env}
+    DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB2_ORG:-myorg}
+    DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB2_BUCKET:-mybucket}
+    DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-super-secret-auth-token
+    DOCKER_INFLUXDB_INIT_MODE: setup
+  # DOCKER_INFLUXDB_INIT_MODE: upgrade
   ports:
     - "8087:8086"
   volumes:
@@ -19,7 +19,7 @@ influxdb2:
     - ./volumes/influxdb2/backup:/var/lib/backup
   # - ./volumes/influxdb.migrate/data:/var/lib/influxdb:ro
   healthcheck:
-    test: ["CMD", "influx", "ping"]
+    test: ["CMD-SHELL", "influx ping"]
     interval: 30s
     timeout: 10s
     retries: 3

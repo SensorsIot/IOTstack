@@ -10,7 +10,7 @@ DEFAULTIMAGE="iotstack-nodered:latest"
 if [ "$#" -gt 1 ]; then
     echo "Usage: $SCRIPT {image:tag}"
     echo "   eg: $SCRIPT $DEFAULTIMAGE"
-    exit -1
+    exit 1
 fi
 
 # image can be passed as first argument, else default
@@ -41,7 +41,7 @@ else
 
 	   https://hub.docker.com/r/nodered/node-red/tags?page=1&ordering=last_updated
 
-	When an updated version is actually avaliable, proceed like this:
+	When an updated version is actually available, proceed like this:
 
 	   $ REBUILD nodered
 	   $ UP nodered

@@ -2,9 +2,9 @@ transmission:
   image: linuxserver/transmission
   container_name: transmission
   environment:
-    - PUID=1000
-    - PGID=1000
-    - TZ=${TZ:-Etc/UTC}
+    PUID: 1000
+    PGID: 1000
+    TZ: ${TZ:-Etc/UTC}
   volumes:
     - ./volumes/transmission/config:/config
     - ./volumes/transmission/downloads:/downloads

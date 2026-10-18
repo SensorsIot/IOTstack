@@ -1,0 +1,12 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Web interface for 3D printers",
+   "environment": [
+      { "variable": "OCTOPRINT_DEVICE_PATH", "preset": "/dev/serial0" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "octoprint"
+}

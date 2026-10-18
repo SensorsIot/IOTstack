@@ -43,14 +43,16 @@ wireguard:
   image: ghcr.io/linuxserver/wireguard
   restart: unless-stopped
   environment:
-    - PUID=1000
-    - PGID=1000
-    - TZ=${TZ:-Etc/UTC}
-    - SERVERURL=your.dynamic.dns.name
-    - SERVERPORT=51820
-    - PEERS=laptop,phone,tablet
-    - PEERDNS=auto
-    - ALLOWEDIPS=0.0.0.0/0
+    PUID: 1000
+    PGID: 1000
+    TZ: ${TZ:-Etc/UTC}
+    SERVERURL: ${WIREGUARD_SERVERURL:-your.dynamic.dns.name}
+    SERVERPORT: 51820
+    PEERS: ${WIREGUARD_PEERS:-laptop,phone,tablet}
+    PEERDNS: auto
+    ALLOWEDIPS: 0.0.0.0/0
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
   ports:
     - "51820:51820/udp"
   volumes:
@@ -75,28 +77,30 @@ With most containers, you can continue to tweak environment variables and settin
 
 #### Fields that you should always configure { #configureAlways }
 
-* `SERVERURL=` should be set to the domain name you have registered with a Dynamic DNS service provider. Example:
+* You should set the domain name you have registered with a Dynamic DNS service provider. Example:
 
-	```yml
-	- SERVERURL=downunda.duckdns.org
+	``` console
+	$ cd ~/IOTstack
+	$ echo "WIREGUARD_SERVERURL=downunda.duckdns.org" >>.env
 	```
 
-* `PEERS=` should be a comma-separated list of your client devices (all the phones, tablets, laptops, desktops you want to use remotely to get back into your home network). Example:
+* You should define a comma-separated list of your client devices (all the phones, tablets, laptops, desktops you want to use remotely to get back into your home network). Example:
 
-	```yml
-	- PEERS=jillMacbook,jackChromebook,alexNokiaG10
+	``` console
+	$ cd ~/IOTstack
+	$ echo "WIREGUARD_PEERS=jillMacbook,jackChromebook,alexNokiaG10" >>.env
 	```
 
 	Notes:
 
-	- Many examples on the web use "PEERS=n" where "n" is a number. In practice, that approach seems to be a little fragile and is not recommended for IOTstack.
+	- Many examples on the web use a number rather than a list of peer names. In practice, that approach seems to be a little fragile and is not recommended for IOTstack.
 	- Each name needs to start with a letter and be followed by one or more letters and/or digits. Letters can be upper- or lower-case. Do not use any other characters.
 
 #### Optional configuration - DNS resolution for peers { #configurePeerDNS }
 
 You have several options for how your remote peers resolve DNS requests:
 
-* `PEERDNS=auto`
+* `PEERDNS=auto` (the default)
 
 	DNS queries made on connected WireGuard clients should work as if they were made on the host. If you configure [PiHole](Pi-hole.md) into the host's `resolveconf.conf`, Wireguard clients will also automatically use it.
 
@@ -113,62 +117,62 @@ You have several options for how your remote peers resolve DNS requests:
 
 	To activate this feature:
 
-	1. Make sure your WireGuard service definition contains `PEERDNS=auto`.
-	2. Start the WireGuard container by executing:
+	1. Start the WireGuard container by executing:
 
 		``` console
 		$ cd ~/IOTstack
-		$ docker-compose up -d wireguard
+		$ docker compose up -d wireguard
 		```
 
 		This ensures that the `~/IOTstack/volumes/wireguard` folder structure is created and remote client configurations are (re)generated properly.
 
-	3. Run the following commands:  
+	2. Run the following commands:  
 
 		``` console
 		$ cd ~/IOTstack
-		$ sudo cp ./.templates/wireguard/use-container-dns.sh ./volumes/wireguard/custom-cont-init.d/
+		$ sudo cp ./services/wireguard/use-container-dns.sh ./volumes/wireguard/custom-cont-init.d/
 		$ sudo chmod 755 ./volumes/wireguard/custom-cont-init.d/use-container-dns.sh
-		$ docker-compose restart wireguard
+		$ docker compose restart wireguard
 		```
 
 	 	The presence of `use-container-dns.sh` causes WireGuard to redirect incoming DNS queries to the default gateway on the internal bridged network. That, in turn, results in the queries being forwarded to any other container that is listening for DNS traffic on port 53. It does not matter if that other container is PiHole, AdGuardHome, bind9 or any other kind of DNS server.
 	 
-	 	Do note, however, that this configuration creates a dependency between WireGuard and the container providing DNS resolution. You may wish to make that explicit in your `docker-compose.yml` by adding these lines to your WireGuard service definition:
-	 
+	 	Do note, however, that this configuration creates a dependency between WireGuard and the container providing DNS resolution. You may wish to make that explicit in your `docker-compose.yml` by adding these lines to an [override file](../Basic_setup/Custom.md#custom-service) at the path:
+	 	
+	 	```
+	 	~/IOTstack/services/wireguard/override.yml
+	 	```
+	 	
+	 	with the content:
+ 
 		```yaml
-		depends_on:
-		  - pihole
+		wireguard:
+		  depends_on:
+		    - pihole6
 		```
 
-	 	> Substitute `adguardhome` or `bind9` for `pihole`, as appropriate.
+	 	> Substitute `adguardhome` or `bind9` for `pihole6`, as appropriate.
+	 	
+	 	Apply the change by running:
+	 	
+	 	``` console
+	 	$ cd ~/IOTstack
+	 	$ ./iotstack-menu.sh build
+	 	$ docker compose up -d wireguard
+	 	```
 
-	Once activated, this feature will remain active until you decide to deactivate it. If you ever wish to deactivate it, run the following commands:
-
-	``` console
-	$ cd ~/IOTstack
-	$ sudo rm ./volumes/wireguard/custom-cont-init.d/use-container-dns.sh
-	$ docker-compose restart wireguard
-	```
-	
 	Notes:
 	
 	* the `use-container-dns.sh` script contains comments which explain the theory of operation.
-	* if you are using an older service definition for WireGuard, you may need to add:
-
-		``` yaml
-		extra_hosts:
-		  - "host.docker.internal:host-gateway"
-		```
-		
-		See `./.templates/wireguard/service.yml` for an example.
 
 * `PEERDNS=«ip address»`
 
-	A third possibility is if you have a local upstream DNS server. You can specify the IP address of that server so that remote peers receive DNS resolution from that host. For example:
+	A third possibility is if you have a local upstream DNS server. You can specify the IP address of that server so that remote peers receive DNS resolution from that host. Here is an example using an override file:
 
-	```yml
-	- PEERDNS=192.168.203.65
+	```yaml
+	wireguard:
+	  environment:
+	    PEERDNS: 192.168.203.65
 	```
 
 	Do note that changes to `PEERDNS` will not be updated to existing clients, and as such you may want to use `PEERDNS=auto` unless you have a very specific requirement.
@@ -181,7 +185,7 @@ To understand what each port number does, it is better to think of them like thi
 
 ```yml
 environment:
-- SERVERPORT=«public»
+  SERVERPORT: «public»
 ports:
 - "«external»:«internal»/udp"
 ```
@@ -210,83 +214,28 @@ See [Understanding WireGuard's port numbers](#understandingPorts) if you want mo
 
 ### Step 5: Configure WireGuard { #configureWireGuard }
 
-There are two approaches:
+You can set the server URL and peers by writing to the `.env` file. For example:
 
-1. Let the menu generate a `docker-compose.yml` with the default WireGuard service definition template, and then edit `docker-compose.yml`.
-2. Prepare a `compose-override.yml` file, then run the menu and have it perform the substitutions for you.
+``` console
+$ cd ~/IOTstack
+$ echo "WIREGUARD_SERVERURL=downunda.duckdns.org" >>.env
+$ echo "WIREGUARD_PEERS=laptop1,laptop2,phone" >>.env
+```
 
-Of the two, the first is generally the simpler and means you don't have to re-run the menu whenever you want to change WireGuard's configuration.
+Alternatively, you can use an [override file](../Basic_setup/Custom.md#custom-service) at:
 
-#### Method 1: Configure WireGuard by editing `docker-compose.yml` { #editCompose }
+```
+~/IOTstack/services/wireguard/override.yml
+```
 
-1. Run the menu:
+The content below has the identical effect to the `.env` approach:
 
-	``` console
-	$ cd ~/IOTstack
-	$ ./menu.sh
-	```
-
-2. Choose the "Build Stack" option.
-3. If WireGuard is not already selected, select it.
-4. Press <kbd>enter</kbd> to begin the build.
-5. Choose Exit.
-6. Open `docker-compose.yml` in your favourite text editor.
-7. Navigate to the WireGuard service definition.
-8. Implement the decisions you took in [decide what to configure](#configureWhat).
-9. Save your work.
-
-#### Method 2: Configure WireGuard using `compose-override.yml` { #editOverride }
-
-The [Custom services and overriding default settings for IOTstack](../Basic_setup/Custom.md) page describes how to use an override file to allow the menu to incorporate your custom configurations into the final `docker-compose.yml` file.
-
-You will need to create the `compose-override.yml` **before** running the menu to build your stack. If you have already built your stack, you'll have to rebuild it after creating `compose-override.yml`.
-
-1. Use your favourite text editor to create (or open) the override file. The file is expected to be at the path:
-
-	```
-	~/IOTstack/compose-override.yml
-	```
-
-2. Define overrides to implement the decisions you took in [Decide what to configure](#configureWhat). For example:
-
-	``` { .yaml linenums="1" }
-	services:
-	  wireguard:
-	    environment:
-	    - PUID=1000
-	    - PGID=1000
-	    - TZ=${TZ:-Etc/UTC}
-	    - SERVERURL=downunda.duckdns.org
-	    - SERVERPORT=51820
-	    - PEERS=laptop,phone,tablet
-	    - PEERDNS=auto
-	    - ALLOWEDIPS=0.0.0.0/0
-	```
-
-	Key points:
-
-	* The override file works at the **section** level. Therefore, you have to include *all* of the environment variables from the template, not just the ones you want to alter.
-	* If your override file contains configurations for other containers, make sure the file only has a single `services:` directive at the start.
-
-3. Save your work.
-4. Run the menu:
-
-	``` console
-	$ cd ~/IOTstack
-	$ ./menu.sh
-	```
-
-5. Choose the "Build Stack" option.
-6. If WireGuard is not already selected, select it.
-7. Press <kbd>enter</kbd> to begin the build.
-8. Choose Exit.
-9. Check your work by running:
-
-	``` console
-	$ cat docker-compose.yml
-	```
-
-	and verify that the `wireguard` service definition is as you expect.
+``` { .yaml linenums="1" }
+wireguard:
+  environment:
+    SERVERURL: downunda.duckdns.org
+    PEERS: laptop1,laptop2,phone
+```
 
 ### Step 6: Start WireGuard { #startWireGuard }
 
@@ -294,7 +243,8 @@ You will need to create the `compose-override.yml` **before** running the menu t
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d
+	$ ./iotstack-menu.sh build
+	$ docker compose up -d wireguard
 	```
 
 2. Confirm that WireGuard has started properly by running:
@@ -311,10 +261,10 @@ You will need to create the `compose-override.yml` **before** running the menu t
 
 	See also discussion of [the read-only flag](#readOnlyFlag).
 
-3. Confirm that WireGuard has generated the expected configurations. For example, given the following setting in `docker-compose.yml`:
+3. Confirm that WireGuard has generated the expected configurations. For example, given the following setting in `~/IOTstack/.env`:
 
 	```yml
-	- PEERS=jillMacbook,jackChromebook,alexNokiaG10
+	WIREGUARD_PEERS=jillMacbook,jackChromebook,alexNokiaG10
 	```
 
 	you would expect a result something like this:
@@ -351,7 +301,7 @@ You will need to create the `compose-override.yml` **before** running the menu t
 	└── wg0.conf
 	```
 
-	Notice how each element in the `PEERS=` list is represented by a sub-directory prefixed with `peer_`. You should expect the same pattern for your peers.
+	Notice how each element in the peers list is represented by a sub-directory prefixed with `peer_`. You should expect the same pattern for your peers.
 
 ### Step 7: Save your WireGuard client configuration files (QR codes) { #clientQRcodes }
 
@@ -369,7 +319,8 @@ If your Raspberry Pi has a GUI (such as a screen attached to an HDMI port or a V
 
 If, however, your Raspberry Pi is running headless, you will need to copy the `.png` files to a system that is capable of displaying them, such as a Mac or PC. You can use SCP to do that.
 
-> See [ssh tutorial](https://github.com/Paraphraser/IOTstackBackup/blob/master/ssh_tutorial.md) if you need help setting up SSH (of which SCP is a part).
+??? info "SSH tutorial"
+	* See [ssh tutorial](https://github.com/Paraphraser/IOTstackBackup/blob/master/ssh_tutorial.md) if you need help setting up SSH (of which SCP is a part).
 
 For example, to copy **all** PNG files from your Raspberry Pi to a target system:
 
@@ -402,7 +353,8 @@ To use a VPN from outside of your home network (which is precisely the point of 
 
 If you have not used your router's administrative interface before, the default login credentials may be physically printed on the device or in its instruction manual.
 
-> If you have never changed the default login credentials, you should take the time to do that. 
+!!! note
+	* If you have never changed the default login credentials, you should take the time to do that. 
 
 Routers have wildly different user interfaces but the concepts will be the same. This section describes the basic technique but if you are unsure how to do this on your particular router model, the best idea would be to search the web for:
 
@@ -461,10 +413,10 @@ Here's a concrete example configuration using three different port numbers:
 
 ```yml
 environment:
-- SERVERURL=downunda.duckdns.org
-- SERVERPORT=51620
+  SERVERURL: downunda.duckdns.org
+  SERVERPORT: 51620
 ports:
-- "51720:51820/udp"
+  - "51720:51820/udp"
 ```
 
 In other words:
@@ -590,13 +542,13 @@ To update the WireGuard container:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose pull wireguard
+$ docker compose pull wireguard
 ```
 
 If a new image comes down, then:
 
 ``` console
-$ docker-compose up -d wireguard
+$ docker compose up -d wireguard
 $ docker system prune
 ```
 
@@ -629,11 +581,12 @@ IOTstack users implementing WireGuard for the first time will get the correct st
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down wireguard
+$ docker compose down wireguard
 $ ./scripts/2022-10-01-wireguard-restructure.sh
 ```
 
-> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
+!!! note
+	* see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
 
 In words:
 
@@ -652,7 +605,7 @@ Your WireGuard client configurations (QR codes) are not affected by the migratio
 Once the migration is complete **and** you have adopted the new service definition, you can start WireGuard again:
 
 ``` console
-$ docker-compose up -d wireguard
+$ docker compose up -d wireguard
 ``` 
 
 You should test that your remote clients can still connect. Assuming a successful migration, you can safely delete the backup directory:
@@ -661,26 +614,28 @@ You should test that your remote clients can still connect. Assuming a successfu
 $ sudo rm -rf ./volumes/wireguard.bak
 ```
 
-> Always be careful when using `sudo` in conjunction with recursive remove. Double-check everything before pressing <kbd>return</kbd>.
+!!! note
+	* Always be careful when using `sudo` in conjunction with recursive remove. Double-check everything before pressing <kbd>return</kbd>.
 
 ## Getting a clean slate { #cleanSlate }
 
 If WireGuard misbehaves, you can start over from a clean slate. You *may* also need to do this if you change any of the following environment variables:
 
-```yml
-- SERVERURL=
-- SERVERPORT=
-- PEERS=
-- PEERDNS=
-```
+| yaml `environment` key | `~/IOTstack/.env` key  |
+|:----------------------:|:----------------------:|
+| `SERVERURL:`           | `WIREGUARD_SERVERURL=` |
+| `PEERS:`               | `WIREGUARD_PEERS=`     |
+| `SERVERPORT:`          | *n/a*                  |
+| `PEERDNS:`             | *n/a*                  |
 
-The procedure is:
+
+> If you need to change either `SERVERPORT` or `PEERDNS`, an [override file](../Basic_setup/Custom.md#custom-service) is recommended.
 
 1. If WireGuard is running, terminate it:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose down wireguard
+	$ docker compose down wireguard
 	```
 	
 	> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
@@ -701,7 +656,7 @@ The procedure is:
 3. Start WireGuard:
 
 	``` console
-	$ docker-compose up -d wireguard
+	$ docker compose up -d wireguard
 	```
 
 	This will generate new client configurations and QR codes for your devices.

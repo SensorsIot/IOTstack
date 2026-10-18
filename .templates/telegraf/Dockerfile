@@ -1,5 +1,8 @@
+# reference argument - omitted defaults to latest
+ARG DOCKERHUB_TAG=latest
+
 # Download base image
-FROM telegraf:latest
+FROM telegraf:${DOCKERHUB_TAG}
 
 # Add support tool
 RUN apt update && apt install -y rsync

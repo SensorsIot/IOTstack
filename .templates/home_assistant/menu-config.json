@@ -1,0 +1,11 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Home Assistant (non-supervised)",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true },
+      { "template": "raspberry_pi_override.yml", "service": "override.yml", "tracked": false }
+   ],
+   "service": "home_assistant"
+}

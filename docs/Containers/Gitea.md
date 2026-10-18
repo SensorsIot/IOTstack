@@ -174,7 +174,8 @@ Environment variables need to be set in several stages:
 
 At the time of writing (April 2025), the MariaDB instance was not respecting the environment variable being used to pass the root password into the container.
 
-> See [MariaDB issue 163](https://github.com/linuxserver/docker-mariadb/issues/163)
+!!! note
+	* See [MariaDB issue 163](https://github.com/linuxserver/docker-mariadb/issues/163)
 
 You can ensure that the root password is set by running the following command:
 
@@ -260,7 +261,7 @@ The Gitea_DB container needs special handling:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose build --no-cache --pull gitea_db
+$ docker compose build --no-cache --pull gitea_db
 $ docker compose up -d gitea_db
 $ docker system prune -f
 ```

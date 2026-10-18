@@ -36,26 +36,21 @@ $ cd ~/IOTstack
 1. Launch the menu
 
 	``` console
-	$ ./menu.sh
+	$ ./iotstack-menu.sh
 	```
 	
-2. Choose "Build Stack".
-3. Place the cursor on "wordpress" and press <kbd>space</kbd> to select it.
-4. Press <kbd>enter</kbd> to build the stack.
-5. Place the cursor on "Exit" and press <kbd>enter</kbd>.
+2. Select "Services".
+3. Place the cursor on "wordpress" and press <kbd>enter</kbd> to select it.
+4. Select "Install".
+4. Select "Return".
+5. Select "Build".
+5. Select "Exit", twice.
 
-### option 2 - manual from IOTstack templates
-
-When IOTstack is cloned from GitHub, the default for your local copy of the repository is to be on the "master" branch. Master-branch templates are left-shifted by two spaces with respect to how they need to appear in `docker-compose.yml`. The following `sed` command prepends two spaces to the start of each line:
-
-``` console
-$ sed -e "s/^/  /" ./.templates/wordpress/service.yml >>docker-compose.yml
-```
-						
-Templates on the "old-menu" branch already have proper alignment, so `cat` can be used:
+### option 2 - from the command line
 
 ``` console
-$ cat ./.templates/wordpress/service.yml >>docker-compose.yml
+$ ./iotstack-menu.sh install wordpress
+$ ./iotstack-menu.sh build
 ```
 
 <a name="wpConfig"></a>
@@ -115,31 +110,11 @@ WORDPRESS_ROOT_PASSWORD=ee749d72-f1a5-4bc0-b182-21e8284f9fd2
 WORDPRESS_HOSTNAME=raspberrypi.local
 ```
 
-### alternative method
-
-If you prefer to keep your environment values inline in your `docker-compose.yml` rather than in the `.env` file then you can achieve the same result by editing the service definitions as follows:
-
-* `wordpress`:
-
-	``` yaml
-	  environment:
-	    WORDPRESS_DB_PASSWORD: «yourUserPasswordHere»
-	  hostname: «hostname».«domain»
-	```
-
-* `wordpress_db`:
-
-	``` yaml
-	  environment:
-	    MYSQL_ROOT_PASSWORD: «yourRootPasswordHere»
-	    MYSQL_PASSWORD: «yourUserPasswordHere»
-	```
-
 ## Starting WordPress
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d wordpress
+$ docker compose up -d wordpress
 ```
 
 This starts both WordPress and its database.
@@ -170,7 +145,8 @@ After that, you should refer to the [WordPress documentation](https://wordpress.
 
 The MariaDB instance associated with WordPress is **private** to WordPress. It is included along with the WordPress service definition. You do **not** have to select MariaDB in the IOTstack menu.
 
-> There is nothing stopping you from *also* selecting MariaDB in the IOTstack menu. Multiple instances of MariaDB will coexist quite happily but they are separate and distinct Relational Database Manager Systems (RDBMS).
+??? advanced "multiple MariaDB instances"
+	* There is nothing stopping you from *also* selecting MariaDB in the IOTstack menu. Multiple instances of MariaDB will coexist quite happily but they are separate and distinct Relational Database Manager Systems (RDBMS).
 
 <a name="mariaDBcli"></a>
 ### Accessing the MariaDB command line interface
@@ -227,27 +203,13 @@ Bye
 
 Similarly, <kbd>control</kbd>+<kbd>d</kbd> or `exit` will terminate the container's `bash` shell and return you to the host's command line.
 
-## References to `nextcloud`
-
-Both the `wordpress` and `wordpress_db` service definitions connect to the `nextcloud` **network**. 
-
-> Please note the emphasis on "**network**".
-
-The `nextcloud` network is an internal *private* network created by `docker-compose` to facilitate data-communications between a user-facing service (like WordPress) and an associated database back-end (like MariaDB).
-
-The NextCloud container was the first to use the private-network strategy so the "nextcloud" name is an accident of history. In an ideal world, the network would be renamed to something which more accurately reflected its purpose, like "databases". Unfortunately, the IOTstack menu lacks the facilities needed to update *existing* deployments so the most likely result of any attempt at renaming would be to break existing stacks.
-
-At runtime, the `nextcloud` network has the name `iotstack_nextcloud`, and exists alongside the `iotstack_default` network which is shared by other IOTstack containers.
-
-The material point is that, even though WordPress has nothing to do with NextCloud, the references to the `nextcloud` network are are not mistakes. They are intentional.
-
 ## <a name="cleanSlate"></a>Getting a clean slate
 
 If you start the WordPress container and *then* decide that you need to change its [environment variables](#wpConfig), you must first erase the container's persistent store:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down wordpress wordpress_db
+$ docker compose down wordpress wordpress_db
 $ sudo rm -rf ./volumes/wordpress
 ```
 
@@ -262,7 +224,7 @@ When you are ready, start WordPress again:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d wordpress
+$ docker compose up -d wordpress
 ```
 
 Note:

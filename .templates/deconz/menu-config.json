@@ -1,0 +1,14 @@
+{
+   "configure": "configure-hardware-option.sh",
+   "dependencies": [],
+   "description": "REST-API interface to Zigbee",
+   "environment": [
+      { "variable": "DECONZ_VNC_PASSWORD", "preset": "$(random_password)" },
+      { "variable": "DECONZ_DEVICE_PATH", "preset": "/dev/ttyUSB0" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true },
+      { "template": "default-hardware-option.txt", "service": "installed-hardware-option.txt", "tracked": false }
+   ],
+   "service": "deconz"
+}

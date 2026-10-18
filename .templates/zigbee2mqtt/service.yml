@@ -2,15 +2,15 @@ zigbee2mqtt:
   container_name: zigbee2mqtt
   image: koenkk/zigbee2mqtt:latest
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0
-    - ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack
-    - ZIGBEE2MQTT_CONFIG_MQTT_SERVER=mqtt://mosquitto:1883
+    TZ: ${TZ:-Etc/UTC}
+    ZIGBEE2MQTT_CONFIG_SERIAL_PORT: /dev/ttyACM0
+    ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: zstack
+    ZIGBEE2MQTT_CONFIG_MQTT_SERVER: mqtt://mosquitto:1883
     # only enable the next line for Zigbee2MQTT v1
-    # - ZIGBEE2MQTT_CONFIG_FRONTEND=true
-    - ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true
-    - ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_SYMLINK_CURRENT=true
-    # - DEBUG=zigbee-herdsman*
+    # ZIGBEE2MQTT_CONFIG_FRONTEND: true
+    ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED: true
+    ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_SYMLINK_CURRENT: true
+    # DEBUG: zigbee-herdsman*
   ports:
     - "8080:8080"
   volumes:

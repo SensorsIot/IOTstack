@@ -15,89 +15,11 @@
     You can add your own keywords into the search:
     [https://gist.github.com/search?q=iotstack](https://gist.github.com/search?q=iotstack)
 
-## FAQ
-
-!!! danger "Breaking update"
-    A change done 2022-01-18 will require [manual steps](
-    ../Updates/migration-network-change.md)
-    or you may get an error like:  
-    `ERROR: Service "influxdb" uses an undefined network "iotstack_nw"`
-
-## Device Errors
-
-If you are trying to run IOTstack on non-Raspberry Pi hardware, you will probably get the following error from `docker-compose` when you try to bring up your stack for the first time:
-
-```
-Error response from daemon: error gathering device information while adding custom device "/dev/ttyAMA0": no such file or directory
-```
-
-> You will get a similar message about any device which is not known to your hardware.
-
-The `/dev/ttyAMA0` device is the Raspberry Pi's built-in serial port so it is guaranteed to exist on any "real" Raspberry Pi. As well as being referenced by containers that can actually use the serial port, `ttyAMA0` is often employed as a placeholder.
-
-Examples:
-
-* Node-RED flows can use the `node-red-node-serialport` node to access the serial port. This is an example of "actual use";
-* The Zigbee2MQTT container employs `ttyAMA0` as a placeholder. This allows the container to start. Once you have worked out how your Zigbee adapter appears on your system, you will substitute your adapter's actual device path. For example:
-
-	``` yaml
-	- "/dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00125B0028EEEEE0-if00:/dev/ttyACM0"
-	```
-
-The simplest approach to solving "error gathering device information" problems is just to comment-out every device mapping that produces an error and, thereafter, treat the comments as documentation about what the container is expecting at run-time. For example, this is the devices list for Node-RED:
-
-``` yaml
-  devices:
-    - "/dev/ttyAMA0:/dev/ttyAMA0"
-    - "/dev/vcio:/dev/vcio"
-    - "/dev/gpiomem:/dev/gpiomem"
-```   
-
-Those are, in turn, the Raspberry Pi's:
-
-* serial port
-* videoCore multimedia processor
-* mechanism for accessing GPIO pin headers
-
-If none of those is available on your chosen platform (the usual situation on non-Pi hardware), commenting-out the entire block is appropriate:
-
-``` yaml
-# devices:
-#   - "/dev/ttyAMA0:/dev/ttyAMA0"
-#   - "/dev/vcio:/dev/vcio"
-#   - "/dev/gpiomem:/dev/gpiomem"
-```
-
-You interpret each line in a device map like this:
-
-``` yaml
-    - "«external»:«internal»"
-```
-
-The *«external»* device is what the platform (operating system plus hardware) sees. The *«internal»* device is what the container sees. Although it is reasonably common for the two sides to be the same, this is **not** a requirement. It is usual to replace the *«external»* device with the actual device while leaving the *«internal»* device unchanged.
-
-Here is an example. On macOS, a CP2102 USB-to-Serial adapter shows up as:
-
-```   
-/dev/cu.SLAB_USBtoUART
-```
-
-Assume you are running the Node-RED container in macOS Docker Desktop, and that you want a flow to communicate with the CP2102. You would change the service definition like this:
-
-``` yaml
-  devices:
-    - "/dev/cu.SLAB_USBtoUART:/dev/ttyAMA0"
-#   - "/dev/vcio:/dev/vcio"
-#   - "/dev/gpiomem:/dev/gpiomem"
-```
-
-In other words, the *«external»* (real world) device `cu.SLAB_USBtoUART` is mapped to the *«internal»* (container) device `ttyAMA0`. The flow running in the container is expecting to communicate with `ttyAMA0` and is none-the-wiser.
-
 ## Needing to use `sudo` to run docker commands
 
 You should never (repeat **never**) use `sudo` to run docker or docker compose commands. Forcing docker to do something with `sudo` almost always creates more problems than it solves. Please see [What is sudo?](https://sensorsiot.github.io/IOTstack/Basic_setup/What-is-sudo/) to understand how `sudo` actually works.
 
-If `docker` or `docker-compose` commands *seem* to need elevated privileges, the most likely explanation is incorrect group membership. Please read the [next section](#dockerGroup) about errors involving `docker.sock`. The solution (two `usermod` commands) is the same.
+If `docker` or `docker compose` commands *seem* to need elevated privileges, the most likely explanation is incorrect group membership. Please read the [next section](#dockerGroup) about errors involving `docker.sock`. The solution (two `usermod` commands) is the same.
 
 If, however, the current user *is* a member of the `docker` group *but* you still get error responses that *seem* to imply a need for `sudo`, it implies that something fundamental is broken. Rather than resorting to `sudo`, you are better advised to rebuild your system.
 
@@ -195,7 +117,7 @@ If problems persist even when the `dhcpcd` patch is in place, you *may* have an 
 	``` console
 	sed -i.bak '1s/^/usb-storage.quirks=f0a1:f1b2:u /' "$CMDLINE"
 	```
-	
+
 	Make sure that you keep the <kbd>space</kbd> between the `:u` and `/'`. You risk breaking your system if that <kbd>space</kbd> is not there.
 
 5. Run these commands - the second line is the one you prepared in step 4 using `sudo`:
@@ -204,14 +126,14 @@ If problems persist even when the `dhcpcd` patch is in place, you *may* have an 
 	$ CMDLINE="/boot/firmware/cmdline.txt" && [ -e "$CMDLINE" ] || CMDLINE="/boot/cmdline.txt"
 	$ sudo sed -i.bak '1s/^/usb-storage.quirks=f0a1:f1b2:u /' "$CMDLINE"
 	```
-	
+
 	The command:
-	
+
 	- makes a backup copy of `cmdline.txt` as `cmdline.txt.bak`
 	- inserts the quirks string at the start of `cmdline.txt`.
 
 	You can confirm the result as follows:
-	
+
 	* display the original (baseline reference):
 
 		```
@@ -237,7 +159,7 @@ If you create a mess and can't see how to recover, try proceeding like this:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down
+$ docker compose down
 $ cd
 $ mv IOTstack IOTstack.old
 $ git clone https://github.com/SensorsIot/IOTstack.git IOTstack

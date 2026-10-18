@@ -1,5 +1,4 @@
 pihole6:
-  # see https://sensorsiot.github.io/IOTstack/Containers/Pi-hole/
   container_name: pihole6
   image: pihole/pihole:latest
   restart: unless-stopped
@@ -15,6 +14,7 @@ pihole6:
     TZ: ${TZ:-Etc/UTC}
     FTLCONF_webserver_api_password: '${PIHOLE_ADMIN_PASSWORD:-}'
     FTLCONF_dns_interface: eth0
+    FTLCONF_dns_listeningMode: 'ALL'
     FTLCONF_database_maxDBdays: 365
     FTLCONF_dns_upstreams: 8.8.8.8;8.8.4.4
   volumes:

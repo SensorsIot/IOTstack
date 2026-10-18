@@ -29,7 +29,8 @@ Home Assistant Container runs as a **single** Docker container, and doesn't supp
 
 The **only** method supported by IOTstack is Home Assistant Container.
 
-> To understand why, see [about Supervised Home Assistant](#hassioBackground).
+!!! note
+	* To understand why, see [about Supervised Home Assistant](#hassioBackground).
 
 If Home Assistant Container will not do what you want then, basically, you will need two Raspberry Pis:
 
@@ -38,17 +39,13 @@ If Home Assistant Container will not do what you want then, basically, you will 
 
 ## Installing Home Assistant Container { #installHAContainer }
 
-Home Assistant (Container) can be found in the `Build Stack` menu. Selecting it in this menu results in a service definition being added to:
+Home Assistant (non-supervised) can be found in the menu. Alternatively, you can add it from the command line:
 
-```
-~/IOTstack/docker-compose.yml
-```
-
-The normal IOTstack commands apply to Home Assistant Container such as:
-
-```console
+``` console
 $ cd ~/IOTstack
-$ docker-compose up -d
+$ iotstack-menu.sh install home_assistant
+$ iotstack-menu.sh build
+$ docker-compose up -d home_assistant
 ```
 
 ## Using bluetooth from the container { #usingBluetooth }
@@ -90,27 +87,24 @@ See also: [Scribles: Auto Power On Bluetooth Adapter on Boot-up](https://scrible
 
 ### Possible service definition changes { #serviceDefinition }
 
-Although the [Home Assistant documentation](https://www.home-assistant.io/installation/raspberrypi#docker-compose) does not mention this, it is *possible* that you may also need to make the following changes to the Home Assistant service definition in your `docker-compose.yml`:
+Although the [Home Assistant documentation](https://www.home-assistant.io/installation/raspberrypi#docker-compose) does not mention this, the following overrides are needed to make the container run on a Raspberry Pi:
 
-* Add the following mapping to the `volumes:` clause:
+``` yaml
+home_assistant:
+  # these changes are specific to the Raspberry Pi. You will need to
+  # adapt if you are trying to run this container on other platforms
+  volumes:
+    - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+  devices:
+    - "/dev/serial1:/dev/ttyAMA0"
+    - "/dev/vcio:/dev/vcio"
+    - "/dev/gpiomem:/dev/gpiomem"
+```
 
-	```yaml
-	- /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
-	```
+The menu installs those overrides automatically. However, please keep the following in mind:
 
-* Add the following `devices:` clause:
-
-	```yaml
-	devices:
-	  - "/dev/serial1:/dev/ttyAMA0"
-	  - "/dev/vcio:/dev/vcio"
-	  - "/dev/gpiomem:/dev/gpiomem"
-	```
-
-Notes:
-
-* These changes are *specific* to the Raspberry Pi. If you need Bluetooth support on non-Pi hardware, you will need to figure out the details for your chosen platform.
-* Historically, `/dev/ttyAMA0` meant "the serial interface" on Raspberry Pis. Subsequently, it came to mean "the Bluetooth interface" where Bluetooth support was present. Now, `/dev/serial1` is used to mean "the Raspberry Pi's Bluetooth interface". The example above maps that to the internal device `/dev/ttyAMA0` because that is **probably** what the container expects. There are no guarantees and you may need to experiment with internal device names.
+* These overrides are *specific* to the Raspberry Pi. If you need Bluetooth support on non-Pi hardware, you will need to figure out the details for your chosen platform.
+* Historically, `/dev/ttyAMA0` meant "the serial interface" on Raspberry Pis. Subsequently, it came to mean "the Bluetooth interface" where Bluetooth support was present. Now, `/dev/serial1` is used to mean "the Raspberry Pi's Bluetooth interface". The example above maps that to the internal device `/dev/ttyAMA0` because that appears to be what the container expects. There are no guarantees and you may need to experiment with internal device names.
 
 ## HTTPS with a valid SSL certificate { #httpsWithSSLcert }
 
@@ -138,15 +132,15 @@ your RPi hostname is raspberrypi)
 	    cap_add:
 	      - NET_ADMIN
 	    environment:
-	      - PUID=1000
-	      - PGID=1000
-	      - TZ=${TZ:-Etc/UTC}
-	      - URL=<yourdomain>.duckdns.org
-	      - SUBDOMAINS=wildcard
-	      - VALIDATION=duckdns
-	      - DUCKDNSTOKEN=<token>
-	      - CERTPROVIDER=zerossl
-	      - EMAIL=<e-mail> # required when using zerossl
+	      PUID: 1000
+	      PGID: 1000
+	      TZ: ${TZ:-Etc/UTC}
+	      URL: <yourdomain>.duckdns.org
+	      SUBDOMAINS: wildcard
+	      VALIDATION: duckdns
+	      DUCKDNSTOKEN: <token>
+	      CERTPROVIDER: zerossl
+	      EMAIL: <e-mail> # required when using zerossl
 	    volumes:
 	      - ./volumes/swag/config:/config
 	    ports:
@@ -160,10 +154,10 @@ your RPi hostname is raspberrypi)
 
 	```console
 	$ cd ~/IOTstack
-	$ docker-compose up -d
+	$ docker compose up -d
 	```
 
-	Check it starts up OK: `docker-compose logs -f swag`. It will take a minute or two before it finally logs "Server ready".
+	Check it starts up OK: `docker compose logs -f swag`. It will take a minute or two before it finally logs "Server ready".
 
 6. Enable reverse proxy for `raspberrypi.local`. `homassistant.*` is already by default. and fix homeassistant container name ("upstream_app"):
 
@@ -201,7 +195,7 @@ your RPi hostname is raspberrypi)
 	$ cd ~/IOTstack
 	$ sed -i -e 's/#auth_basic/auth_basic/' \
 		volumes/swag/config/nginx/proxy-confs/homeassistant.subdomain.conf
-	$ docker-compose exec swag htpasswd -c /config/nginx/.htpasswd anyusername
+	$ docker compose exec swag htpasswd -c /config/nginx/.htpasswd anyusername
 	```
 
 9. Add `use_x_forwarded_for` and `trusted_proxies` to your homeassistant [http
@@ -218,7 +212,7 @@ your RPi hostname is raspberrypi)
          - 10.77.0.0/16
     ```
 
-10. Refresh the stack: `cd ~/IOTstack && docker-compose stop && docker-compose
+10. Refresh the stack: `cd ~/IOTstack && docker compose down && docker compose
     up -d` (again may take 1-3 minutes for swag to start if it recreates
     certificates)
 11. Test homeassistant is still working correctly:

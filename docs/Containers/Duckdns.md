@@ -8,38 +8,58 @@ when your IP-address changes.
 
 ## Configuration
 
-First, register an account, add your subdomain and get your token from
-[http://www.duckdns.org/](http://www.duckdns.org/)
+1. Register an account, add your subdomain and get your token from
+[http://www.duckdns.org/](http://www.duckdns.org/).
 
-Either edit `~/IOTstack/docker-compose.yml` or create a file
-`~/IOTstack/docker-compose.override.yml`. Place your Duckdns token and
-subdomain name (without .duckdns.org) there:
+2. Install the DuckDNS service. For example:
 
-``` yaml title="docker-compose.override.yml"
-version: '3.6'
-services:
-  duckdns:
-    environment:
-      TOKEN: your-duckdns-token
-      SUBDOMAINS: subdomain
-```
+	``` console
+	$ cd ~/IOTstack
+	$ ./iotstack-menu.sh install duckdns
+	```
+	
+	You can also call `./iotstack-menu.sh` without arguments and do the same thing from menu mode.
 
-Observe that at least the initial update is successful:
+3. Use a text editor to create an [override file](../Basic_setup/Custom.md#custom-service) at the following path
+
+	```
+	~/IOTstack/services/duckdns/override.yml
+	```
+	
+	This is the template for that file:
+	
+	``` yaml
+	duckdns:
+	  environment:
+	    TOKEN: «your-duckdns-token»
+	    SUBDOMAINS: «your-subdomain»
+	```
+	
+	Replace both `«your-duckdns-token»` and `«your-subdomain»` with the relevant values, then save the file.
+
+4. Rebuild your stack and start the container:
+
+	``` console
+	$ ./iotstack-menu.sh build
+	$ docker compose up -d duckdns
+	```
+
+5. Confirm that at least the initial update is successful:
+
+	``` console
+	$ docker compose up -d duckdns
+	$ docker compose logs -f duckdns
+	...SNIP...
+	duckdns    | Sat May 21 11:01:00 UTC 2022: Your IP was updated
+	...SNIP...
+	```
+	
+	Press <kbd>control</kbd>+<kbd>c</kbd> to stop following the log.
+
+If there is a problem, check that the resulting effective configuration of `duckdns:` looks OK:
 
 ``` console
-$ cd ~/IOTstack
-$ docker-compose up -d duckdns
-$ docker-compose logs -f duckdns
-...SNIP...
-duckdns    | Sat May 21 11:01:00 UTC 2022: Your IP was updated
-...SNIP...
-(ctrl-c to stop following the log)
-```
-
-If there is a problem, check that the resulting effective configuration of
-'duckdns:' looks OK:
-``` console
-$ cd ~/IOTstack && docker-compose config
+$ cd ~/IOTstack && docker compose config duckdns
 ```
 
 ### Domain name for the private IP

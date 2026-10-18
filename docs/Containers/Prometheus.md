@@ -24,7 +24,7 @@
 
 	```
 	$ cd ~/IOTstack
-	$ docker-compose down prometheus prometheus-cadvisor prometheus-nodeexporter
+	$ docker compose down prometheus prometheus-cadvisor prometheus-nodeexporter
 	```
 	
 	> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
@@ -50,7 +50,7 @@
 
 	```
 	$ cd ~/IOTstack
-	$ docker-compose up -d prometheus
+	$ docker compose up -d prometheus
 	```
 
 	Starting `prometheus` should start `prometheus-cadvisor` and `prometheus-nodeexporter` automatically. Because the old configuration has been moved out of the way, the container will supply a new version as a default.
@@ -79,7 +79,7 @@
 
 	```
 	$ cd ~/IOTstack
-	$ docker-compose restart prometheus
+	$ docker compose restart prometheus
 	```
 
 ## Overview { #overview }
@@ -158,18 +158,16 @@ Periodically, the source code is recompiled and the resulting image is pushed to
 
 When you select *Prometheus* in the IOTstack menu, the *template service definition* is copied into the *Compose* file.
 
-> Under old menu, it is also copied to the *working service definition* and then not really used.
-
 ### IOTstack first run { #iotstackFirstRun }
 
 On a first install of IOTstack, you run the menu, choose *Prometheus* as one of your containers, and are told to do this:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
-`docker-compose` reads the *Compose* file. When it arrives at the `prometheus` fragment, it finds:
+`docker compose ` reads the *Compose* file. When it arrives at the `prometheus` fragment, it finds:
 
 ```yaml
 prometheus:
@@ -177,13 +175,14 @@ prometheus:
   build: ./.templates/prometheus/.
 ```
 
-The `build` statement tells `docker-compose` to look for:
+The `build` statement tells `docker compose ` to look for:
 
 ```
 ~/IOTstack/.templates/prometheus/Dockerfile
 ```
 
-> The *Dockerfile* is in the `.templates` directory because it is intended to be a common build for **all** IOTstack users. This is different to the arrangement for Node-RED where the *Dockerfile* is in the `services` directory because it is how each individual IOTstack user's version of Node-RED is customised.
+??? note "about the Dockerfile"
+	* The *Dockerfile* is in the `.templates` directory because it is intended to be a common build for **all** IOTstack users. This is different to the arrangement for Node-RED where the *Dockerfile* is in the `services` directory because it is how each individual IOTstack user's version of Node-RED is customised.
 
 The *Dockerfile* begins with:
 
@@ -191,11 +190,13 @@ The *Dockerfile* begins with:
 FROM prom/prometheus:latest
 ```
 
-> If you need to pin to a particular version of *Prometheus*, the *Dockerfile* is the place to do it. See [*Prometheus* version pinning](#versionPinning).
+!!! note
+	* If you need to pin to a particular version of *Prometheus*, the *Dockerfile* is the place to do it. See [*Prometheus* version pinning](#versionPinning).
 
 The `FROM` statement tells the build process to pull down the ***base image*** from [*DockerHub*](https://hub.docker.com).
 
-> It is a ***base*** image in the sense that it never actually runs as a container on your Raspberry Pi.
+!!! note
+	* It is a ***base*** image in the sense that it never actually runs as a container on your Raspberry Pi.
 
 The remaining instructions in the *Dockerfile* customise the *base image* to produce a ***local image***. The customisations are:
 
@@ -223,11 +224,12 @@ prom/prometheus      latest      3f9575991a6c   3 days ago       169MB
 
 You *may* see the same pattern in Portainer, which reports the *base image* as "unused". You should not remove the *base* image, even though it appears to be unused.
 
-> Whether you see one or two rows depends on the version of `docker-compose` you are using and how your version of `docker-compose` builds local images.
+!!! note
+	* Whether you see one or two rows depends on the version of `docker compose ` you are using and how your version of `docker compose ` builds local images.
 
 ### Dependencies: *CAdvisor* and *Node Exporter* { #dependencies }
 
-The *CAdvisor* and *Node Exporter* are included in the *Prometheus* service definition as dependent containers. What that means is that each time you start *Prometheus*, `docker-compose` ensures that *CAdvisor* and *Node Exporter* are already running, and keeps them running.
+The *CAdvisor* and *Node Exporter* are included in the *Prometheus* service definition as dependent containers. What that means is that each time you start *Prometheus*, `docker compose ` ensures that *CAdvisor* and *Node Exporter* are already running, and keeps them running.
 
 The [default configuration](#activeConfig) for *Prometheus* assumes *CAdvisor* and *Node Exporter* are running and starts scraping information from those targets as soon as it launches.
 
@@ -272,13 +274,13 @@ To cause a running instance of *Prometheus* to notice a change to this file:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose restart prometheus
+$ docker compose restart prometheus
 $ docker logs prometheus
 ```
 
 Note:
 
-* The YAML parser used by *Prometheus* seems to be ***exceptionally*** sensitive to syntax errors (far less tolerant than `docker-compose`). For this reason, you should **always** check the *Prometheus* log after any configuration change.
+* The YAML parser used by *Prometheus* seems to be ***exceptionally*** sensitive to syntax errors (far less tolerant than `docker compose `). For this reason, you should **always** check the *Prometheus* log after any configuration change.
 
 #### Reference configuration file { #referenceConfig }
 
@@ -294,7 +296,7 @@ Editing `prometheus.yml` has no effect. It is provided as a convenience to help 
 $ cd ~/IOTstack/volumes/prometheus/data/config
 $ cp prometheus.yml config.yml
 $ cd ~/IOTstack
-$ docker-compose restart prometheus
+$ docker compose restart prometheus
 $ docker logs prometheus
 ```
 
@@ -326,7 +328,8 @@ Under this implementation of *Prometheus*, the configuration file has moved to:
 ~/IOTstack/volumes/prometheus/data/config/config.yml
 ```
 
-> The change of location is one of the things that allows self-repair to work properly. 
+!!! note
+	* The change of location is one of the things that allows self-repair to work properly. 
 
 Some of the assumptions behind the default configuration file have changed. In particular, instead of the entire `scrape_configs` block being commented-out, it is active and defines `localhost`, `cadvisor` and `nodeexporter` as targets.
 
@@ -335,7 +338,7 @@ You should compare the old and new versions and decide which settings need to be
 If you change the configuration file, restart *Prometheus* and then check the log for errors:
 
 ``` console
-$ docker-compose restart prometheus
+$ docker compose restart prometheus
 $ docker logs prometheus
 ```
 
@@ -349,15 +352,15 @@ You can update `cadvisor` and `nodeexporter` like this:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose pull cadvisor nodeexporter
-$ docker-compose up -d
+$ docker compose pull cadvisor nodeexporter
+$ docker compose up -d
 $ docker system prune
 ```
 
 In words:
 
-* `docker-compose pull` downloads any newer images;
-* `docker-compose up -d` causes any newly-downloaded images to be instantiated as containers (replacing the old containers); and
+* `docker compose pull` downloads any newer images;
+* `docker compose up -d` causes any newly-downloaded images to be instantiated as containers (replacing the old containers); and
 * the `prune` gets rid of the outdated images.
 
 This "simple pull" strategy doesn't work when a *Dockerfile* is used to build a *local image* on top of a *base image* downloaded from [*DockerHub*](https://hub.docker.com). The *local image* is what is running so there is no way for the `pull` to sense when a newer version becomes available.
@@ -368,8 +371,8 @@ Once a new version appears on *DockerHub*, you can upgrade *Prometheus* like thi
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose build --no-cache --pull prometheus
-$ docker-compose up -d prometheus
+$ docker compose build --no-cache --pull prometheus
+$ docker compose up -d prometheus
 $ docker system prune
 $ docker system prune
 ```
@@ -381,11 +384,12 @@ Breaking it down into parts:
 * `--pull` tells the *Dockerfile* process to actually check with [*DockerHub*](https://hub.docker.com) to see if there is a later version of the *base image* and, if so, to download it before starting the build;
 * `prometheus ` is the named container argument required by the `build` command.
 
-Your existing *Prometheus* container continues to run while the rebuild proceeds. Once the freshly-built *local image* is ready, the `up` tells `docker-compose` to do a new-for-old swap. There is barely any downtime for your service.
+Your existing *Prometheus* container continues to run while the rebuild proceeds. Once the freshly-built *local image* is ready, the `up` tells `docker compose` to do a new-for-old swap. There is barely any downtime for your service.
 
 The `prune` is the simplest way of cleaning up. The first call removes the old *local image*. The second call cleans up the old *base image*.
 
-> Whether an old *base image* exists depends on the version of `docker-compose` you are using and how your version of `docker-compose` builds local images.
+!!! note
+	* Whether an old *base image* exists depends on the version of `docker compose` you are using and how your version of `docker compose` builds local images.
 
 ### *Prometheus* version pinning { #versionPinning }
 
@@ -409,11 +413,11 @@ If you need to pin *Prometheus* to a particular version:
 	FROM prom/prometheus:2.30.2
 	```
 
-4. Save the file and tell `docker-compose` to rebuild the local image:
+4. Save the file and tell `docker compose` to rebuild the local image:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d --build prometheus
+	$ docker compose up -d --build prometheus
 	$ docker system prune
 	``` 
 

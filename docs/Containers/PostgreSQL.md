@@ -48,7 +48,8 @@ You can interact with the PostgreSQL Relational Database Management System runni
 $ docker exec -it postgres bash -c 'PGPASSWORD=$POSTGRES_PASSWORD psql $POSTGRES_DB $POSTGRES_USER'
 ```
 
-> Because of the single quotes (<kbd>'</kbd>) surrounding everything after the `-c`, expansion of the environment variables is deferred until the command is executed *inside* the container.
+!!! note
+	* Because of the single quotes (<kbd>'</kbd>) surrounding everything after the `-c`, expansion of the environment variables is deferred until the command is executed *inside* the container.
 
 You can use any of the following methods to exit `psql`:
 
@@ -302,9 +303,10 @@ If you need to start over, proceed like this:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down postgres
+$ docker compose down postgres
 $ sudo rm -rf ./volumes/postgres
-$ docker-compose up -d postgres
+$ docker compose up -d postgres
 ```
 
-> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
+!!! note
+	* see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)

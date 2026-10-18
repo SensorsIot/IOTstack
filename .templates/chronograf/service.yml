@@ -1,17 +1,17 @@
 chronograf:
   container_name: chronograf
-  build:
-    context: ./.templates/chronograf/.
+  image: chronograf
   restart: unless-stopped
+  user: "0"
   environment:
-    - TZ=${TZ:-Etc/UTC}
+    TZ: ${TZ:-Etc/UTC}
     # see https://docs.influxdata.com/chronograf/v1.9/administration/config-options/
-    - INFLUXDB_URL=http://influxdb:8086
-    # - INFLUXDB_USERNAME=
-    # - INFLUXDB_PASSWORD=
-    # - INFLUXDB_ORG=
-    # - KAPACITOR_URL=http://kapacitor:9092
-    # - CHRONOGRAF_AS_ROOT=true
+    INFLUXDB_URL: http://influxdb:8086
+    # INFLUX_USERNAME: ${INFLUXDB1_USERNAME:-dba}
+    # INFLUX_PASSWORD: ${INFLUXDB1_PASSWORD:?eg echo INFLUXDB1_PASSWORD=supremo >>~/IOTstack/.env}
+    # INFLUXDB_ORG:
+    KAPACITOR_URL: http://kapacitor:9092
+    CHRONOGRAF_AS_ROOT: true
   ports:
     - "8888:8888"
   volumes:

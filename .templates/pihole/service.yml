@@ -7,12 +7,12 @@ pihole:
     - "53:53/udp"
     - "67:67/udp"
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - WEBPASSWORD=
+    TZ: ${TZ:-Etc/UTC}
+    WEBPASSWORD:
     # see https://sensorsiot.github.io/IOTstack/Containers/Pi-hole/#adminPassword
-    - INTERFACE=eth0
-    - FTLCONF_MAXDBDAYS=365
-    - PIHOLE_DNS_=8.8.8.8;8.8.4.4
+    INTERFACE: eth0
+    FTLCONF_MAXDBDAYS: 365
+    PIHOLE_DNS_: 8.8.8.8;8.8.4.4
     # see https://github.com/pi-hole/docker-pi-hole#environment-variables
   volumes:
     - ./volumes/pihole/etc-pihole:/etc/pihole

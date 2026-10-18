@@ -1,0 +1,10 @@
+{
+   "configure": null,
+   "dependencies": ["prometheus-cadvisor", "prometheus-nodeexporter"],
+   "description": "Applications, systems and services monitoring",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "prometheus"
+}

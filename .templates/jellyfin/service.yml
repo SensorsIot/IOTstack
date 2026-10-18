@@ -1,0 +1,17 @@
+jellyfin:
+  image: jellyfin/jellyfin
+  container_name: jellyfin
+  restart: unless-stopped
+  environment:
+    TZ: ${TZ:-Etc/UTC}
+  # JELLYFIN_PublishedServerUrl: http://example.com
+  ports:
+    - "8096:8096/tcp"
+    - "7359:7359/udp"
+  volumes:
+    - ./volumes/jellyfin/config:/config
+    - ./volumes/jellyfin/cache:/cache
+    - ./volumes/jellyfin/media:/media
+    - ./volumes/jellyfin/media2:/media2:ro
+  # - ./volumes/jellyfin/fonts:/usr/local/share/fonts/custom:ro
+

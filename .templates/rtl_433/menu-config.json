@@ -1,0 +1,11 @@
+{
+   "configure": null,
+   "dependencies": ["mosquitto"],
+   "description": "Generic data receiver for SDR",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true },
+      { "template": "example-override.yml", "service": "override.yml", "tracked": false }
+   ],
+   "service": "rtl_433"
+}

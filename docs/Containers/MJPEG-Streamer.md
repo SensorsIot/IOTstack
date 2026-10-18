@@ -8,7 +8,8 @@ Using `mjpg-streamer` to handle your video streams gives you a consistent approa
 
 ## Raspberry Pi Ribbon Camera
 
-> This section is only relevant if you are trying to use a camera that connects to your Raspberry Pi via a ribbon cable.
+!!! note
+	* This section is only relevant if you are trying to use a camera that connects to your Raspberry Pi via a ribbon cable.
 
 Beginning with Raspberry Pi OS Bullseye, the Raspberry Pi Foundation introduced the [LibCamera](https://www.raspberrypi.com/documentation/computers/camera_software.html) subsystem and withdrew support for the earlier `raspistill` and `raspivid` mechanisms which then became known as the *legacy* camera system.
 
@@ -171,28 +172,29 @@ To initialise your environment, begin by using a text editor (eg `vim`, `nano`) 
 
 Tip:
 
-* Do **not** use quote marks (either single or double quotes) to surround the values of your environment variables. This is because docker-compose treats the quotes as part of the string. If you used quotes, please go back and remove them.
+* Do **not** use quote marks (either single or double quotes) to surround the values of your environment variables. This is because docker compose treats the quotes as part of the string. If you used quotes, please go back and remove them.
 
 ### alternative approach
 
 It is still a good idea to define `TZ` in your `.env` file. Most IOTstack containers now use the `TZ=${TZ:-Etc/UTC}` syntax so a single entry in your `.env` sets the timezone for all of your containers.
 
-However, if you prefer to keep most of your environment variables inline in your `docker-compose.yml` rather than in `.env`, you can do that. Example:
+However, you can also use an [override file](../Basic_setup/Custom.md#custom-service) at the path:
 
-``` yaml
-environment:
-  - TZ=${TZ:-Etc/UTC}
-  - MJPG_STREAMER_USERNAME=streamer
-  - MJPG_STREAMER_PASSWORD=oNfDG-d1kgzC
-  - MJPG_STREAMER_SIZE=1152x648
-  - MJPG_STREAMER_FPS=5
+```
+~/IOTstack/services/mjpg-streamer/override.yml
 ```
 
-Similarly for the camera device mapping:
+The content below has the same effect as the `.env` file approach above
 
 ``` yaml
-devices:
-  - "/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920-video-index:/dev/video0"
+mjpg-streamer:
+  environment:
+	MJPG_STREAMER_USERNAME: streamer
+	MJPG_STREAMER_PASSWORD: oNfDG-d1kgzC
+	MJPG_STREAMER_SIZE: 1152x648
+    MJPG_STREAMER_FPS: 30
+  devices:
+    - "/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920-video-index:/dev/video0"
 ```
 
 ### about variable substitution syntax
@@ -200,7 +202,7 @@ devices:
 If you're wondering about the syntax used for environment variables:
 
 ``` yaml
-  - MJPG_STREAMER_USERNAME=${MJPG_STREAMER_USERNAME:-}
+  MJPG_STREAMER_USERNAME: ${MJPG_STREAMER_USERNAME:-}
 ```
 
 it means that `.env` will be checked for the presence of `MJPG_STREAMER_USERNAME=value`. If the key is found, its value will be used. If the key is not found, the value will be set to a null string. Then, inside the container, a null string is used as the trigger to apply the defaults listed in the table above.
@@ -213,7 +215,7 @@ In the case of the camera device mapping, this syntax:
 
 means that `.env` will be checked for the presence of `MJPG_STREAMER_EXTERNAL_DEVICE=path`. If the key is found, the path will be used. If the key is not found, the path will be set to `/dev/video0` on the assumption that a camera is present and the device exists.
 
-Regardless of whether a device path comes from `.env`, or is defined inline, or defaults to `/dev/video0`, if the device does not actually exist then `docker-compose` will refuse to start the container with the following error:
+Regardless of whether a device path comes from `.env`, or is defined inline, or defaults to `/dev/video0`, if the device does not actually exist then `docker compose` will refuse to start the container with the following error:
 
 ```
 Error response from daemon: error gathering device information while adding custom device "«path»": no such file or directory
@@ -225,7 +227,8 @@ Error response from daemon: error gathering device information while adding cust
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d mjpg-streamer
+	$ ./iotstack-menu.sh build
+	$ docker compose up -d mjpg-streamer
 	```
 
 	The first time you do this triggers a fairly long process. First, a basic operating system image is downloaded from DockerHub, then a Dockerfile is run to add the streamer software and construct a local image, after which the local image is instantiated as your running container. Subsequent launches use the local image so the container starts immediately. See also [container maintenance](#maintenance).
@@ -321,8 +324,8 @@ Because it is built from a local Dockerfile, the `mjpg-streamer` does not get up
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose build --no-cache --pull mjpg-streamer
-$ docker-compose up -d mjpg-streamer
+$ docker compose build --no-cache --pull mjpg-streamer
+$ docker compose up -d mjpg-streamer
 $ docker system prune -f
 ```
 

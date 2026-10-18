@@ -16,9 +16,9 @@ esphome:
   image: esphome/esphome
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - USERNAME=${ESPHOME_USERNAME:-esphome}
-    - PASSWORD=${ESPHOME_PASSWORD:?eg echo ESPHOME_PASSWORD=ChangeMe >>~/IOTstack/.env}
+    TZ: ${TZ:-Etc/UTC}
+    USERNAME: ${ESPHOME_USERNAME:-esphome}
+    PASSWORD: ${ESPHOME_PASSWORD:?eg echo ESPHOME_PASSWORD=ChangeMe >>~/IOTstack/.env}
   network_mode: host
   x-ports:
     - "6052:6052"
@@ -33,61 +33,24 @@ Notes:
 1. The container runs in "host" mode, meaning it binds to the host port 6052.
 2. The `x-` prefix on the `x-ports` clause has the same effect as commenting-out lines 10 and 11. It serves the twin purposes of documenting the fact that the ESPHome container uses port 6052 and minimising the risk of port number collisions.
 
-## Container installation
+## Container installation { #containerInstall }
 
-### via the IOTstack menu
+When you install ESPHome the menu performs some additional steps:
 
-If you select ESPHome in the IOTstack menu, as well as adding the [service definition](#serviceDefinition) to your compose file, the menu:
-
-1. Copies a rules file into `/etc/udev/rules.d`.
+1. Copies a rules file `./services/esphome/88-tty-iotstack-esphome.rules`
 2. Checks `~/IOTstack/.env` for the presence of the `ESPHOME_USERNAME` and initialises it to the value `esphome` if it is not found.
 3. Checks `~/IOTstack/.env` for the presence of the `ESPHOME_PASSWORD` and initialises it to a random value if it is not found.
 
-### manual installation {#manualInstall}
+The menu does **not** activate the rules file. This is because there is always some risk of unintended consequences. It is something you should do yourself:
 
-If you prefer to avoid the menu, you can install ESPHome like this:
+``` console
+$ sudo cp ~/IOTstack/services/esphome/88-tty-iotstack-esphome.rules /etc/udev/rules.d/
+$ sudo chmod 644 /etc/udev/rules.d/88-tty-iotstack-esphome.rules
+```
 
-1. Be in the correct directory:
+Note:
 
-	``` console
-	$ cd ~/IOTstack
-	```
-
-2. If you are on the "master" branch, add the service definition like this:
-
-	``` console
-	$ sed -e "s/^/  /" ./.templates/esphome/service.yml >>docker-compose.yml
-	```
-
-	Alternatively, if you are on the "old-menu" branch, do this:
-
-	``` console
-	$ cat ./.templates/esphome/service.yml >>docker-compose.yml
-	```
-
-3. Replace `«username»` and `«password»` in the following commands with values of your choice and then run the commands:
-
-	``` console
-	$ echo "ESPHOME_USERNAME=«username»” >>.env
-	$ echo "ESPHOME_PASSWORD=«password»" >>.env
-	```
-
-	This initialises the required environment variables. Although the username defaults to `esphome`, there is no default for the password. If you forget to set a password, `docker-compose` will remind you when you try to start the container:
-
-	```
-	error while interpolating services.esphome.environment.[]: \
-	  required variable ESPHOME_PASSWORD is missing a value: \
-	  eg echo ESPHOME_PASSWORD=ChangeMe >>~/IOTstack/.env
-	```
-
-	The values of the username and password variables are applied each time you start the container. In other words, if you decide to change these credentials, all you need to do is edit the `.env` file and “up” the container.
-
-4. Copy the UDEV rules file into place and ensure it has the correct permissions:
-
-	``` console
-	$ sudo cp ./.templates/esphome/88-tty-iotstack-esphome.rules /etc/udev/rules.d/
-	$ sudo chmod 644 /etc/udev/rules.d/88-tty-iotstack-esphome.rules
-	```
+* If an update to the rules file comes down from GitHub, you will need to re-activate the new file as above. You will know when a change has been made because the old rules file will be renamed with a `.save` extension.
 
 ## A quick tour
 
@@ -99,7 +62,7 @@ To start the container:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d esphome
+$ docker compose up -d esphome
 ```
 
 Tip:
@@ -194,9 +157,9 @@ If ESPHome misbehaves or your early experiments leave a lot of clutter behind, a
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down esphome
+$ docker compose down esphome
 $ sudo rm -rf ./volumes/esphome
-$ docker-compose up -d esphome
+$ docker compose up -d esphome
 ```
 
 Notes:
@@ -227,7 +190,7 @@ Those lines assume the presence of a rules file at:
 /etc/udev/rules.d/88-tty-iotstack-esphome.rules
 ```
 
-That file is copied into place automatically if you use the IOTstack menu to select ESPHome. It should also have been copied if you [installed ESPHome manually](#manualInstall).
+The [Container installation](#containerInstall) instructions explain how to install that rules file on your system.
 
 What the rules file does is to wait for you to connect any USB device which maps to a major device number of 188. That includes most (hopefully all) USB-to-serial adapters that are found on ESP dev boards, or equivalent standalone adapters such as those made by Future Technology Devices International (FTDI) and Silicon Laboratories Incorporated where you typically connect jumper wires to the GPIO pins which implement the ESP's primary serial interface.
 
@@ -270,7 +233,7 @@ If you encounter difficulties, you can consider trying this instead:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d esphome
+	$ docker compose up -d esphome
 	```
 
 The `privileged` flag gives the container unrestricted access to **all** of `/dev`. The container runs as root so this is the same as granting any process running inside the ESPHome container full and unrestricted access to **all** corners of your hardware platform, including your mass storage devices (SD, HD, SSD). You should use privileged mode *sparingly* and in full knowledge that it is entirely at your own risk! 
@@ -281,8 +244,8 @@ You can keep ESPHome up-to-date with routine “pull” commands:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose pull
-$ docker-compose up -d
+$ docker compose pull
+$ docker compose up -d
 $ docker system prune -f
 ```
 
@@ -290,6 +253,7 @@ If a `pull` downloads a more-recent image for ESPHome, the subsequent `up` will 
 
 The same will happen if you “down” and “up” the ESPHome container, or reboot the Raspberry&nbsp;Pi, while an ESP device is physically connected to the Raspberry&nbsp;Pi.
 
-> In every case, the device will still be known to the Raspberry&nbsp;Pi, just not the ESPHome container. In a logical sense, the container is “out of sync” with the host system.
+!!! note
+	* In every case, the device will still be known to the Raspberry&nbsp;Pi, just not the ESPHome container. In a logical sense, the container is “out of sync” with the host system.
 
 If this happens, disconnect and reconnect the device. The [UDEV rule](#udevRules) will “fire” and propagate the device back into the running container.

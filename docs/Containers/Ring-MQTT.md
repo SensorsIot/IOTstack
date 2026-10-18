@@ -14,29 +14,31 @@
 	$ cd ~/IOTstack
 	```
 
-2. Run the IOTstack menu and choose `ring-mqtt`. An alternative to running the menu is to append the service definition template to your compose file like this:
+2. Run the IOTstack menu:
+
+	* Select "Services"
+	* Select "ring-mqtt"
+	* Select "Install"
+	* Select "Return"
+	* Select "Build"
+	* Select "Exit" (twice)
+
+	You can also do this from the command line:
 
 	``` console
-	$ sed -e "s/^/  /" ./.templates/ring-mqtt/service.yml >>docker-compose.yml
+	$ ./iotstack-menu.sh install ring-mqtt
+	$ ./iotstack-menu.sh build
 	```
 
-	> The `sed` command is required because service definition templates are left-shifted by two spaces.
-
-3. This step is optional. Use a text editor to open your `docker-compose.yml` file:
-
-	- find the `ring-mqtt` service definition;
-	- change the `TZ` environment variable to your time-zone;
-	- save your work.
-
-4. Bring up the container:
+3. Bring up the container:
 
 	``` console
-	$ docker-compose up -d ring-mqtt
+	$ docker compose up -d ring-mqtt
 	```
 
 	This pulls the image from DockerHub, instantiates the container, and initialises its persistent storage.
 
-5. Use `sudo` and a text editor to open the configuration file at the path. For example:
+4. Use `sudo` and a text editor to open the configuration file at the path. For example:
 
 	``` console
 	$ sudo vi ./volumes/ring-mqtt/data/config.json
@@ -81,10 +83,10 @@
 	Save your work then restart the container:
 
 	``` console
-	$ docker-compose restart ring-mqtt
+	$ docker compose restart ring-mqtt
 	```
 
-6. Launch your browser (eg Chrome, Firefox, Safari) and open the following URL:
+5. Launch your browser (eg Chrome, Firefox, Safari) and open the following URL:
 
 	```
 	http://«ip-or-name»:55123
@@ -102,7 +104,7 @@
 
 	Follow the instructions on the screen to generate your refresh token.
 
-7. Check the logs:
+6. Check the logs:
 
 	``` console
 	$ docker logs ring-mqtt
@@ -110,27 +112,44 @@
 
 	Unless you see errors being reported, your `ring-mqtt` container should be ready.
 
-## Environment variables
+## Debugging
 
-The default service definition includes two environment variables:
+To enable debugging, create an [override file](../Basic_setup/Custom.md#custom-service) at the path:
 
-``` yaml
-environment:
-- TZ=Etc/UTC
-- DEBUG=ring-*
+```
+~/IOTstack/services/ring-mqtt/override.yml
 ```
 
-* `TZ=` should be set to your local time zone (explained above).
-* `DEBUG=ring-*` ("all debugging options enabled") is the default for `ring-mqtt` when running in a container. It is included as a placeholder if you want to tailor debugging output. Refer to the [Ring-MQTT Wiki](https://github.com/tsightler/ring-mqtt/wiki#debugging).
+with the content:
 
-Whenever you change an environment variable, run:
+``` yaml
+ring-mqtt:
+  environment:
+    DEBUG: ring-*
+```
+
+> Refer to the [Ring-MQTT Wiki](https://github.com/tsightler/ring-mqtt/wiki#debugging).
+
+To apply the change:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d ring-mqtt
+$ ./iotstack-menu.sh build
+$ docker compose up -d ring-mqtt
 ```
 
-The "up" causes docker-compose to notice the configuration change and re-create the container.
+To undo this change, **either**:
+
+1. Delete the override file; **or**
+2. Edit the override file to disable the `environment` section, like this:
+
+	``` yaml
+	ring-mqtt:
+	  x-environment:
+	    DEBUG: ring-*
+	```
+
+and then re-apply the change as above.
 
 ## Configuration
 
@@ -142,13 +161,13 @@ Periodically:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose pull ring-mqtt
+$ docker compose pull ring-mqtt
 ```
 
 If a new image comes down from DockerHub:
 
 ``` console
-$ docker-compose up -d ring-mqtt
+$ docker compose up -d ring-mqtt
 $ docker system prune -f
 ```
 

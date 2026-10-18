@@ -3,11 +3,11 @@ nextcloud:
   image: nextcloud
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - MYSQL_HOST=nextcloud_db
-    - MYSQL_PASSWORD=${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=%randomMySqlPassword% >>~/IOTstack/.env}
-    - MYSQL_DATABASE=${NEXTCLOUD_DB_NAME:-nextcloud}
-    - MYSQL_USER=${NEXTCLOUD_DB_USER:-nextcloud}
+    TZ: ${TZ:-Etc/UTC}
+    MYSQL_HOST: nextcloud_db
+    MYSQL_PASSWORD: ${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=%randomMySqlPassword% >>~/IOTstack/.env}
+    MYSQL_DATABASE: ${NEXTCLOUD_DB_NAME:-nextcloud}
+    MYSQL_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
   ports:
     - "9321:80"
     - "9343:443"
@@ -17,23 +17,25 @@ nextcloud:
     - nextcloud_db
   networks:
     - default
-    - nextcloud
+    - database
 
 nextcloud_db:
   container_name: nextcloud_db
   build: ./.templates/mariadb/.
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - PUID=1000
-    - PGID=1000
-    - MYSQL_ROOT_PASSWORD=${NEXTCLOUD_DB_ROOT_PASSWORD:?eg echo NEXTCLOUD_DB_ROOT_PASSWORD=%randomPassword% >>~/IOTstack/.env}
-    - MYSQL_PASSWORD=${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=%randomMySqlPassword% >>~/IOTstack/.env}
-    - MYSQL_DATABASE=${NEXTCLOUD_DB_NAME:-nextcloud}
-    - MYSQL_USER=${NEXTCLOUD_DB_USER:-nextcloud}
+    TZ: ${TZ:-Etc/UTC}
+    PUID: 1000
+    PGID: 1000
+    MYSQL_ROOT_PASSWORD: ${NEXTCLOUD_DB_ROOT_PASSWORD:?eg echo NEXTCLOUD_DB_ROOT_PASSWORD=%randomPassword% >>~/IOTstack/.env}
+    MYSQL_PASSWORD: ${NEXTCLOUD_DB_USER_PASSWORD:?eg echo NEXTCLOUD_DB_USER_PASSWORD=%randomMySqlPassword% >>~/IOTstack/.env}
+    MYSQL_DATABASE: ${NEXTCLOUD_DB_NAME:-nextcloud}
+    MYSQL_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
   volumes:
     - ./volumes/nextcloud/db:/config
     - ./volumes/nextcloud/db_backup:/backup
   networks:
-    - nextcloud
+    - database
+  x-ports:
+    - "3306:3306"
 

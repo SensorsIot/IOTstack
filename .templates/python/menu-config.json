@@ -1,0 +1,13 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Python 3 development container",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true },
+      { "template": "Dockerfile", "service": "Dockerfile", "tracked": false },
+      { "template": "docker-entrypoint.sh", "service": "docker-entrypoint.sh", "tracked": false },
+      { "template": "app/", "service": "app", "tracked": false }
+   ],
+   "service": "python"
+}

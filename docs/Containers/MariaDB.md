@@ -21,14 +21,22 @@ Before starting the stack, edit the `docker-compose.yml` file and check your env
 
 ```yaml
   environment:
-    - TZ=Etc/UTC
-    - MYSQL_ROOT_PASSWORD=
-    - MYSQL_DATABASE=default
-    - MYSQL_USER=mariadbuser
-    - MYSQL_PASSWORD=
+    TZ: ${TZ:-Etc/UTC}
+    PUID: 1000
+    PGID: 1000
+    MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:?eg echo MARIADB_ROOT_PASSWORD=%randomAdminPassword% >>~/IOTstack/.env}
+    MYSQL_DATABASE: ${MARIADB_DATABASE:-default}
+    MYSQL_USER: ${MARIADB_USER:-mariadbuser}
+    MYSQL_PASSWORD: ${MARIADB_USER_PASSWORD:?eg echo MARIADB_USER_PASSWORD=%randomPassword% >>~/IOTstack/.env}
 ```
 
-If you are running old-menu, you will have to set both passwords. Under new-menu, the menu may have allocated random passwords for you but you can change them if you like.
+The menu will have generated both the "root" and "user" passwords for you. For example:
+
+``` console
+$ grep "^MARIADB_" .env
+MARIADB_ROOT_PASSWORD=IOT-ouphi-eX7y-eikee
+MARIADB_USER_PASSWORD=IOT-AiT9x-ahsh-ei7ei
+```
 
 You only get the opportunity to change the `MQSL_` prefixed environment variables before you bring up the container for the first time. If you decide to change these values after initialisation, you will either have to:
 
@@ -38,7 +46,7 @@ You only get the opportunity to change the `MQSL_` prefixed environment variable
 
 		``` console
 		$ cd ~/IOTstack
-		$ docker-compose down mariadb
+		$ docker compose down mariadb
 		$ sudo rm -rf ./volumes/mariadb
 		```
 		
@@ -48,7 +56,7 @@ You only get the opportunity to change the `MQSL_` prefixed environment variable
 	* Bring up the container:
 
 		``` console
-		$ docker-compose up -d mariadb
+		$ docker compose up -d mariadb
 		```
 
 2. Open a terminal window within the container (see below) and change the values by hand.
@@ -134,26 +142,23 @@ You can customise the operation of the health-check agent by editing the `mariad
 1. By default, the `mysqld` daemon listens to **internal** port 3306. If you need change that port, you also need to inform the health-check agent via an environment variable. For example, suppose you changed the **internal** port to 12345:
 
 	```yaml
-	    environment:
-	      - MYSQL_TCP_PORT=12345
+	mariadb:
+	  environment:
+	    MYSQL_TCP_PORT: 12345
 	```
 
-	Notes:
+	Note:
 
 	* The `MYSQL_TCP_PORT` variable is [defined by MariaDB](https://mariadb.com/kb/en/mariadb-environment-variables/), not IOTstack, so changing this variable affects more than just the health-check agent.
-	* If you are running "old menu", this change should be made in the file:
-
-		```
-		~/IOTstack/services/mariadb/mariadb.env
-		```
 
 2. The `mysqladmin ping` command relies on the root password supplied via the `MYSQL_ROOT_PASSWORD` environment variable in the *Compose* file. The command will not succeed if the root password is not correct, and the agent will return "unhealthy". 
 
 3. If the health-check agent misbehaves in your environment, or if you simply don't want it to be active, you can disable all health-checking for the container by adding the following lines to its service definition:
 
 	```yaml
-	    healthcheck:
-	      disable: true
+	mariadb:
+	  healthcheck:
+	    disable: true
 	```
 
 	Note:
@@ -161,8 +166,9 @@ You can customise the operation of the health-check agent by editing the `mariad
 	* The mere presence of a `healthcheck:` clause in the `mariadb` service definition overrides the supplied agent. In other words, the following can't be used to re-enable the supplied agent:
 
 		```yaml
-		    healthcheck:
-		      disable: false
+		mariadb:
+		  healthcheck:
+		    disable: false
 		```
 
 		You must remove the entire `healthcheck:` clause.
@@ -173,8 +179,8 @@ To update the `mariadb` container:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose build --no-cache --pull mariadb
-$ docker-compose up -d mariadb
+$ docker compose build --no-cache --pull mariadb
+$ docker compose up -d mariadb
 $ docker system prune
 $ docker system prune
 ```

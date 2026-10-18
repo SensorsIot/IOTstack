@@ -18,58 +18,59 @@ InfluxDB has configurable aggregation and retention policies allowing measuremen
 
 Note:
 
-* 	IOTstack uses the `influxdb:1.x` image. Substituting the `:latest` tag will get you InfluxDB version 2 and *will* create a mess.
+* IOTstack uses the `influxdb:1.x` image. Substituting the `:latest` tag will get you InfluxDB version 2 and *will* create a mess.
 
-## Configuration { #configuration }
+## Override file { #overrides }
 
-All InfluxDB [settings](https://docs.influxdata.com/influxdb/v1/administration/config) can be applied using environment variables. Environment variables override any settings in the [InfluxDB configuration file](#configFile):
+References to an "[override file](../Basic_setup/Custom.md#custom-service)" should be taken to mean the file at the following path, which you should create and edit as required:
 
-* Under "new menu" (master branch), environment variables are stored inline in
+```
+~/IOTstack/services/influxdb/override.yml
+```
 
-	```
-	~IOTstack/docker-compose.yml
-	```
-
-* Under "old menu", environment variables are stored in:
-
-	```
-	~/IOTstack/services/influxdb/influxdb.env
-	```
-
-Whenever you change an environment variable, you activate it like this:
+Whenever you create, or make a change to, an override file, you should apply the changes like this:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d influxdb
+$ iotstack-menu.sh build
+$ docker compose up -d influxdb
 ```
+
+## Configuration { #configuration }
+
+All InfluxDB [settings](https://docs.influxdata.com/influxdb/v1/administration/config) can be applied using environment variables. Environment variables override any settings in the [InfluxDB configuration file](#configFile).
+
+You should set environment variables using an [override file](#overrides).
+
+### Defined variables { #definedVars }
 
 The default service definition provided with IOTstack exposes the following environment variables:
 
-- `TZ=Etc/UTC` set this to your local timezone. Do **not** use quote marks!
-- `INFLUXDB_HTTP_FLUX_ENABLED=false` set this `true` if you wish to use Flux queries rather than InfluxQL:
+- `TZ: ${TZ:-Etc/UTC}` sets the container's timezone to whatever value is defined in `~/IOTstack/.env`. Typically, this is the timezone for your host. Defaults to `Etc/UTC`.
 
-	> At the time of writing, Grafana queries use InfluxQL.
-	 
-- `INFLUXDB_REPORTING_DISABLED=false` InfluxDB activates *phone-home* reporting by default. This variable disables it for IOTstack. You can activate it if you want your InfluxDB instance to send reports to the InfluxDB developers.
-- `INFLUXDB_MONITOR_STORE_ENABLED=FALSE` disables automatic creation of the `_internal` database. This database stores metrics about InfluxDB itself. The database is *incredibly* busy. Side-effects of enabling this feature include increased wear and tear on SD cards and, occasionally, driving CPU utilisation through the roof and generally making your IOTstack unstable.
+- `INFLUXDB_HTTP_FLUX_ENABLED: false` set this `true` if you wish to use Flux queries rather than InfluxQL. Note that Grafana queries use InfluxQL.
+
+- `INFLUXDB_REPORTING_DISABLED: false` InfluxDB activates *phone-home* reporting by default. This variable disables it for IOTstack. You can activate it if you want your InfluxDB instance to send reports to the InfluxDB developers.
+
+- `INFLUXDB_MONITOR_STORE_ENABLED: FALSE` disables automatic creation of the `_internal` database. This database stores metrics about InfluxDB itself. The database is *incredibly* busy. Side-effects of enabling this feature include increased wear and tear on SD cards and, occasionally, driving CPU utilisation through the roof and generally making your IOTstack unstable.
 
 	> To state the problem in a nutshell: *do you want Influx self-metrics, or do you want a usable IOTstack?* You really can't have both. See also [issue 19543](https://github.com/influxdata/influxdb/issues/19543).
 
-- Authentication variables:
+### Authentication variables { #authVars }
  
-	- `INFLUXDB_HTTP_AUTH_ENABLED=false`
-	- `INFLUX_USERNAME=dba`
-	- `INFLUX_PASSWORD=supremo`
+- `INFLUXDB_HTTP_AUTH_ENABLED: false`
+- `# INFLUX_USERNAME: ${INFLUXDB1_USERNAME:-dba}`
+- `# INFLUX_PASSWORD: ${INFLUXDB1_PASSWORD:?eg echo INFLUXDB1_PASSWORD=supremo >>~/IOTstack/.env}`
 
-	Misunderstanding the purpose and scope of these variables is a common mistake made by new users. Please do not guess! Please read [Authentication](#authentication) **before** you enable or change any of these variables. In particular, `dba` and `supremo` are **not** defaults for database access.
+Misunderstanding the purpose and scope of these variables is a common mistake made by new users. Please do not guess! Please read [Authentication](#authentication) **before** you enable or change any of these variables. In particular, `dba` and `supremo` are **not** defaults for database access.
 
-- UDP data acquisition variables:
+### UDP data acquisition variables { #udpVars }
 
-	- `INFLUXDB_UDP_ENABLED=false`
-	- `INFLUXDB_UDP_BIND_ADDRESS=0.0.0.0:8086`
-	- `INFLUXDB_UDP_DATABASE=udp`
+- `# INFLUXDB_UDP_ENABLED: false`
+- `# INFLUXDB_UDP_BIND_ADDRESS: 0.0.0.0:8086`
+- `# INFLUXDB_UDP_DATABASE: udp`
 
-	Read [UDP support](#udpSupport) before making any decisions on these variables.
+Read [UDP support](#udpSupport) before making any decisions on these variables.
 
 ### about `influxdb.conf` { #configFile }
 
@@ -87,18 +88,21 @@ However, if you believe that you have a use case that absolutely demands the use
 	$ docker cp influxdb:/etc/influxdb/influxdb.conf .
 	```
 
-3. Edit `docker-compose.yml`, find the `influxdb` service definition, and add the following line to the `volumes:` directive:
-
+3. Create or edit an [override file](#overrides): with the content:
+	
 	``` yaml
-	- ./volumes/influxdb/config:/etc/influxdb
+	influxdb:
+	  volumes:
+	    - ./volumes/influxdb/config:/etc/influxdb
 	```
 
 4. Execute the following commands:
 
 	``` console
-	$ docker-compose up -d influxdb
+	$ ./iotstack-menu.sh build
+	$ docker compose up -d influxdb
 	$ sudo mv influxdb.conf ./volumes/influxdb/config/
-	$ docker-compose restart influxdb
+	$ docker compose restart influxdb
 	```
 
 At this point, you can start making changes to:
@@ -231,7 +235,8 @@ $ influx
 > CREATE DATABASE "mydatabase2"
 ```
 
-> Typing `influx` didn't work? See [useful alias](#usefulAlias) above. 
+!!! note
+	* Typing `influx` didn't work? See [useful alias](#usefulAlias) above. 
 
 ### define users { #authStep2 }
 
@@ -279,19 +284,19 @@ $
 Make sure you read the [warning](#authWarning) above, then edit the InfluxDB environment variables to enable this key:
 
 ``` yaml
-- INFLUXDB_HTTP_AUTH_ENABLED=true
+INFLUXDB_HTTP_AUTH_ENABLED: true
 ```
 
 Put the change into effect by "upping" the container:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d influxdb
+$ docker compose up -d influxdb
 
 Recreating influxdb ... done
 ```
 
-The `up` causes `docker-compose` to notice that the environment has changed, and to rebuild the container with the new settings.
+The `up` causes `docker compose` to notice that the environment has changed, and to rebuild the container with the new settings.
 
 * Note: You should always wait for 30 seconds after a rebuild for InfluxDB to become available. Any time you see a message like this:
 
@@ -444,7 +449,7 @@ time                          somefield
 1. Some inferences to draw from the above:
 
 	* user definitions are **global** rather than per-database. Grants are what tie users to particular databases.
-	* setting `INFLUXDB_HTTP_AUTH_ENABLED=true` is how authentication is activated and enforced. If it is false, all enforcement goes away (a handy thing to know if you lose passwords or need to recover from a mess).
+	* setting `INFLUXDB_HTTP_AUTH_ENABLED: true` is how authentication is activated and enforced. If it is false, all enforcement goes away (a handy thing to know if you lose passwords or need to recover from a mess).
 	* as the "HTTP" in `INFLUXDB_HTTP_AUTH_ENABLED` suggests, it applies to access via HTTP. This includes the influx CLI and processes like Node-Red and Grafana.
 
 2. Always keep in mind that the InfluxDB log is your friend:
@@ -464,8 +469,8 @@ $ influx -database mydatabase1 -username dba -password supremo
 but this is probably sub-optimal because of the temptation to hard-code your dba password into scripts. An alternative is to enable these environment variables:
 
 ``` yaml
-- INFLUX_USERNAME=dba
-- INFLUX_PASSWORD=supremo
+- INFLUX_USERNAME: dba
+- INFLUX_PASSWORD: supremo
 ```
 
 and then "up" the container as explained above to apply the changes.
@@ -495,7 +500,7 @@ That is **all** the `INFLUX_USERNAME` and `INFLUX_PASSWORD` variables do.
 
 ### cleaning up { #authCleanup }
 
-To undo the steps in this tutorial, first set `INFLUXDB_HTTP_AUTH_ENABLED=false` and then "up" influxdb. Then:
+To undo the steps in this tutorial, first set `INFLUXDB_HTTP_AUTH_ENABLED: false` and then "up" influxdb. Then:
 
 ``` console
 $ influx
@@ -564,15 +569,14 @@ $ influx
 
 ### define a UDP port mapping  { #udpStep3 }
 
+HEREHERE
+
 Edit `docker-compose.yml` to define a UDP port mapping (the second line in the `ports` grouping below):
 
 ``` yaml
 influxdb:
-  …
   ports:
-    - "8086:8086"
     - "8086:8086/udp"
-  …
 ```
 
 ### enable UDP support  { #udpStep4 }
@@ -581,9 +585,9 @@ Edit your `docker-compose.yml` and change the InfluxDB environment variables to 
 
 ``` yaml
 environment:
-  - INFLUXDB_UDP_DATABASE=udp
-  - INFLUXDB_UDP_ENABLED=true
-  - INFLUXDB_UDP_BIND_ADDRESS=0.0.0.0:8086
+  INFLUXDB_UDP_DATABASE: udp
+  INFLUXDB_UDP_ENABLED: true
+  INFLUXDB_UDP_BIND_ADDRESS: 0.0.0.0:8086
 ```
 
 In this context, the IP address "0.0.0.0" means "this host" (analogous to the way "255.255.255.255" means "all hosts").
@@ -592,12 +596,12 @@ In this context, the IP address "0.0.0.0" means "this host" (analogous to the wa
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose up -d influxdb
+$ docker compose up -d influxdb
 
 Recreating influxdb ... done
 ```
 
-The `up` causes `docker-compose` to notice that the environment has changed, and to rebuild the container with the new settings.
+The `up` causes `docker compose` to notice that the environment has changed, and to rebuild the container with the new settings.
 
 ### confirm that UDP is enabled  { #udpStep6 }
 
@@ -656,8 +660,8 @@ SSD-drives have pretty good controllers spreading out writes, so this isn't a th
 * All InfluxDB queries are logged by default and logs are written to the SD-card. To disable this, add into docker-compose.yml, next to the other INFLUXDB_\* entries:
 
   ```yaml
-      - INFLUXDB_DATA_QUERY_LOG_ENABLED=false
-      - INFLUXDB_HTTP_LOG_ENABLED=false
+  INFLUXDB_DATA_QUERY_LOG_ENABLED: false
+  INFLUXDB_HTTP_LOG_ENABLED: false
   ```
 
   This is especially important if you plan on having Grafana or Chronograf displaying up-to-date data on a dashboard, making queries all the time.
@@ -679,7 +683,7 @@ influxdb:
 Recreate the container using the new entrypoint:
 
 ``` console
-$ docker-compose up -d influxdb
+$ docker compose up -d influxdb
 Recreating influxdb ... done
 ```
 

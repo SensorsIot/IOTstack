@@ -1,0 +1,12 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Time-series DBMS",
+   "environment": [
+      { "variable": "TIMESCALEDB_INITIAL_PASSWORD", "preset": "$(random_password)" }
+   ],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "timescaledb"
+}

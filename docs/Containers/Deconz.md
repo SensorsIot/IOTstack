@@ -6,35 +6,84 @@
 
 ## Setup
 
-### Old menu (old menu branch)
+The service definition shipped with IOTstack contains the following lines:
 
-If you use "old menu", you may get an error message similar to the following on first launch:
-
-```
-parsing ~/IOTstack/docker-compose.yml: error while interpolating services.deconz.devices.[]: required variable DECONZ_DEVICE_PATH is missing a value: eg echo DECONZ_DEVICE_PATH=/dev/serial0 >>~/IOTstack/.env
-```
-
-The message is telling you that you need to define the path to your deCONZ device. Common examples are:
-
-- Raspbee at `/dev/serial0`
-- Conbee at `/dev/ttyUSB0`
-- Conbee II at `/dev/ttyACM0`
-
-Once you have identified the appropriate device path, you can define it like this:
-
-```console
-$ echo DECONZ_DEVICE_PATH=/dev/serial0 >>~/IOTstack/.env
+``` yaml
+devices:
+  - "${DECONZ_DEVICE_PATH:?eg echo DECONZ_DEVICE_PATH=/dev/ttyUSB0 >>~/IOTstack/.env}:/dev/ttyUSB0"
 ```
 
-This example uses `/dev/serial0`. Substitute your actual device path if it is different. 
+The second line decomposes about the colon separator like this:
 
-### New menu (master branch)
+* External device: `${DECONZ_DEVICE_PATH:?eg echo DECONZ_DEVICE_PATH=/dev/ttyUSB0 >>~/IOTstack/.env}`
+* Internal device: `/dev/ttyUSB0`
 
-New menu offers a sub-menu (place the cursor on `deconz` and press the right arrow) where you can select the appropriate device path.
+In words, the external device is interpreted like this:
+
+* If the environment variable `DECONZ_DEVICE_PATH` is defined in `~/IOTstack/.env` then use that value. For example, if `~/IOTstack/.env` contains:
+
+	```
+	DECONZ_DEVICE_PATH=/dev/ttyUSB0
+	```
+	
+	then the whole clause is interpreted as:
+	
+	``` yaml
+	devices:
+	  - "/dev/ttyUSB0:/dev/ttyUSB0"
+	```
+
+* Otherwise, display a long-winded and not particularly informative message which will have this buried in the middle:
+
+	```
+	eg echo DECONZ_DEVICE_PATH=/dev/ttyUSB0 >>~/IOTstack/.env
+	```
+	
+	That's a hint telling you that `DECONZ_DEVICE_PATH` is not defined in `~/IOTstack/.env` and that you should define it by running the command:
+	
+	``` console
+	$ echo DECONZ_DEVICE_PATH=/dev/ttyUSB0 >>~/IOTstack/.env
+	```
+	
+	That command assumes your Conbee/Conbee II/RaspBee attaches to your host as `/dev/ttyUSB0`. If your adapter attaches as a different device, substitute accordingly.
+
+Note that the right hand side (the internal device path) is fixed. It doesn't matter how your Conbee/Conbee II/RaspBee is attached to the host, the **container** will always treat it as being `/dev/ttyUSB0`.
+
+If your Conbee/Conbee II/RaspBee adapter attaches as a different device, you can do any of the following:
+
+1. Edit `~/IOTstack/.env`; or
+	
+2. Configure the deconz service from the command line by running:
+
+	``` console
+	$ cd ~/IOTstack
+	$ ./iotstack-menu.sh configure deconz
+	```
+	
+3. Configure deconz service from the menu by running:
+
+	``` console
+	$ cd ~/IOTstack
+	$ ./iotstack-menu.sh
+	```
+	Then choose:
+	
+	* Services
+	* deconz
+	* Configure
+	
+There is no difference in the two approaches. All write into the `.env` file.
+
+Whenever you change devices, you need to tell the container to take notice:
+
+``` console
+$ cd ~/IOTstack
+$ docker compose up -d deconz
+```
 
 ## Dialout group
 
-Before running `docker-compose up -d`, make sure your Linux user is part of the dialout group, which allows the user access to serial devices (i.e. Conbee/Conbee II/RaspBee). If you are not certain, simply add your user to the dialout group by running the following command (username "pi" being used as an example):
+Before running `docker compose up -d`, make sure your Linux user is part of the dialout group, which allows the user access to serial devices (i.e. Conbee/Conbee II/RaspBee). If you are not certain, simply add your user to the dialout group by running the following command (username "pi" being used as an example):
 
 ```console
 $ sudo usermod -a -G dialout pi

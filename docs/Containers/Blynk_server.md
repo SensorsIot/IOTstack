@@ -66,18 +66,16 @@ Periodically, the source code is updated and a new version is released. You can 
 
 When you select Blynk Server in the IOTstack menu, the *template service definition* is copied into the *Compose* file.
 
-> Under old menu, it is also copied to the *working service definition* and then not really used.
-
 ### IOTstack first run  { #iotstackFirstRun }
 
 On a first install of IOTstack, you run the menu, choose your containers, and are told to do this:
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
-`docker-compose` reads the *Compose* file. When it arrives at the `blynk_server` fragment, it finds:
+`docker compose` reads the *Compose* file. When it arrives at the `blynk_server` fragment, it finds:
 
 ```yaml
   blynk_server:
@@ -87,7 +85,7 @@ $ docker-compose up -d
         - BLYNK_SERVER_VERSION=0.41.16
 ```
 
-The `build` statement tells `docker-compose` to look for:
+The `build` statement tells `docker compose` to look for:
 
 ```
 ~/IOTstack/.templates/blynk_server/Dockerfile
@@ -95,7 +93,8 @@ The `build` statement tells `docker-compose` to look for:
 
 The `BLYNK_SERVER_VERSION` argument is passed into the build process. This implicitly pins each build to the version number in the *Compose* file (eg 0.41.16). If you need to update to a  
 
-> The *Dockerfile* is in the `.templates` directory because it is intended to be a common build for **all** IOTstack users. This is different to the arrangement for Node-RED where the *Dockerfile* is in the `services` directory because it is how each individual IOTstack user's version of Node-RED is customised.
+??? note "about the Dockerfile"
+	* The *Dockerfile* is in the `.templates` directory because it is intended to be a common build for **all** IOTstack users. This is different to the arrangement for Node-RED where the *Dockerfile* is in the `services` directory because it is how each individual IOTstack user's version of Node-RED is customised.
 
 The *Dockerfile* begins with:
 
@@ -105,7 +104,8 @@ FROM ubuntu
 
 The `FROM` statement tells the build process to pull down the ***base image*** from [*DockerHub*](https://hub.docker.com).
 
-> It is a ***base*** image in the sense that it never actually runs as a container on your Raspberry Pi.
+!!! note
+	* It is a ***base*** image in the sense that it never actually runs as a container on your Raspberry Pi.
 
 The remaining instructions in the *Dockerfile* customise the ***base image*** to produce a ***local image***. The customisations are:
 
@@ -129,7 +129,8 @@ ubuntu                  latest   897590a6c564   7 days ago      49.8MB
 
 You *may* see the same pattern in *Portainer*, which reports the ***base image*** as "unused". You should not remove the ***base*** image, even though it appears to be unused.
 
-> Whether you see one or two rows depends on the version of `docker-compose` you are using and how your version of `docker-compose` builds local images.
+!!! note
+	* Whether you see one or two rows depends on the version of `docker compose` you are using and how your version of `docker compose` builds local images.
 
 ## Logging { #logging }
 
@@ -155,7 +156,7 @@ The two `.properties` files can be used to alter Blynk Server's configuration. W
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose restart blynk_server
+$ docker compose restart blynk_server
 ```
 
 ## Getting a clean slate { #cleanSlate }
@@ -164,9 +165,9 @@ Erasing Blynk Server's persistent storage area triggers self-healing and restore
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose down blynk_server
+$ docker compose down blynk_server
 $ sudo rm -rf ./volumes/blynk_server
-$ docker-compose up -d blynk_server
+$ docker compose up -d blynk_server
 ```
 Notes:
 
@@ -175,7 +176,7 @@ Notes:
 	```console
 	$ cd ~/IOTstack
 	$ rm volumes/blynk_server/config/server.properties
-	$ docker-compose restart blynk_server
+	$ docker compose restart blynk_server
 	```
 	
 * See also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
@@ -186,27 +187,36 @@ To find out when a new version has been released, you need to visit the [Blynk-S
 
 At the time of writing, version 0.41.16 was the most up-to-date. Suppose that version 0.41.17 has been released and that you decide to upgrade:
 
-1. Edit your *Compose* file to change the version nuumber:
+1. Use an [override file](../Basic_setup/Custom.md#custom-service) to change the version number:
 
-	```yaml
-	  blynk_server:
-	    build:
-	      context: ./.templates/blynk_server/.
-	      args:
-	        - BLYNK_SERVER_VERSION=0.41.17
-	```
+	* path: `~/IOTstack/services/blynk_server/override.yml`
+	* contents:
+
+		```yaml
+		blynk_server:
+		  build:
+		    args:
+		      - BLYNK_SERVER_VERSION=0.41.17
+		```
 
 	Note:
 
 	- You can use this method to pin Blynk Server to any available version.
 
-2. You then have two options:
+2. Regenerate your stack:
+
+	``` console
+	$ cd ~/IOTstack
+	$ ./iotstack_menu.sh build
+	```
+
+3. You then have two options:
 
 	- If you only want to reconstruct the **local** image:
 
 		```console
 		$ cd ~/IOTstack
-		$ docker-compose up --build -d blynk_server
+		$ docker compose up --build -d blynk_server
 		$ docker system prune -f
 		```
 
@@ -214,13 +224,13 @@ At the time of writing, version 0.41.16 was the most up-to-date. Suppose that ve
 
 		```console
 		$ cd ~/IOTstack
-		$ docker-compose build --no-cache --pull blynk_server
-		$ docker-compose up -d blynk_server
+		$ docker compose build --no-cache --pull blynk_server
+		$ docker compose up -d blynk_server
 		$ docker system prune -f
 		$ docker system prune -f
 		```
 
-		The second `prune` will only be needed if there is an old *base image* and that, in turn, depends on the version of `docker-compose` you are using and how your version of `docker-compose` builds local images.
+		The second `prune` will only be needed if there is an old *base image* and that, in turn, depends on the version of `docker compose` you are using and how your version of `docker compose` builds local images.
 
 ## Using Blynk Server { #usingBlynkServer }
 
@@ -247,7 +257,7 @@ You may encounter browser security warnings which you will have to acknowledge i
 
 	```console
 	$ cd ~/IOTstack
-	$ docker-compose restart blynk_server
+	$ docker compose restart blynk_server
 	```
 
 ### Setup gmail { #gmailSetup }

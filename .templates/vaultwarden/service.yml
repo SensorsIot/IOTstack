@@ -1,0 +1,14 @@
+vaultwarden:
+  image: vaultwarden/server:latest
+  container_name: vaultwarden
+  restart: unless-stopped
+  environment:
+    TZ: ${TZ:-Etc/UTC}
+    DOMAIN: ${VAULTWARDEN_DOMAIN:-https://password.home.arpa}
+    ADMIN_TOKEN: ${VAULTWARDEN_ADMIN_TOKEN:-}
+    ENABLE_WEBSOCKET: true
+  ports:
+    - "8085:80"
+    - "3012:3012"
+  volumes:
+    - ./volumes/vaultwarden/data:/data

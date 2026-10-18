@@ -2,7 +2,8 @@
 
 This document discusses an IOTstack-specific version of Mosquitto built on top of [Eclipse/Mosquitto](https://github.com/eclipse/mosquitto) using a *Dockerfile*.
 
-> If you want the documentation for the original implementation of Mosquitto (just "as it comes" from *DockerHub*) please see [Mosquitto.md](https://github.com/SensorsIot/IOTstack/blob/old-menu/docs/Containers/Mosquitto.md) on the old-menu branch.
+??? note "Original documentation"
+	* If you want the documentation for the original implementation of Mosquitto (just "as it comes" from *DockerHub*) please see [Mosquitto.md](https://github.com/SensorsIot/IOTstack/blob/old-menu/docs/Containers/Mosquitto.md) on the old-menu branch.
  
 <hr>
 
@@ -31,6 +32,7 @@ This document discusses an IOTstack-specific version of Mosquitto built on top o
 │               └── pwfile
 ├── services
 │   └── mosquitto
+│       ├── override.yml
 │       └── service.yml ❺
 ├── docker-compose.yml ❻
 └── volumes
@@ -71,20 +73,19 @@ Periodically, the source code is recompiled and the resulting image is pushed to
 
 When you select Mosquitto in the IOTstack menu, the *template service definition* is copied into the *Compose* file.
 
-> Under old menu, it is also copied to the *working service definition* and then not really used.
-
 ### IOTstack first run
 
 On a first install of IOTstack, you run the menu, choose Mosquitto as one of your containers, and are told to do this:
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
-> See also the [Migration considerations](#migration) (below).
+!!! note
+	* See also the [Migration considerations](#migration) (below).
 
-`docker-compose` reads the *Compose* file. When it arrives at the `mosquitto` fragment, it finds:
+`docker compose` reads the *Compose* file. When it arrives at the `mosquitto` fragment, it finds:
 
 ```yaml
   mosquitto:
@@ -109,13 +110,14 @@ Note:
 
 	The single-line `build` produces *exactly* the same result as the four-line `build`, save that the single-line form does not support [pinning Mosquitto to a specific version](#versionPinning).
 
-The `./.templates/mosquitto/.` path associated with the `build` tells `docker-compose` to look for:
+The `./.templates/mosquitto/.` path associated with the `build` tells `docker compose` to look for:
 
 ```
 ~/IOTstack/.templates/mosquitto/Dockerfile
 ```
 
-> The *Dockerfile* is in the `.templates` directory because it is intended to be a common build for **all** IOTstack users. This is different to the arrangement for Node-RED where the *Dockerfile* is in the `services` directory because it is how each individual IOTstack user's version of Node-RED is customised.
+??? note "about the Dockerfile"
+	* The *Dockerfile* is in the `.templates` directory because it is intended to be a common build for **all** IOTstack users. This is different to the arrangement for Node-RED where the *Dockerfile* is in the `services` directory because it is how each individual IOTstack user's version of Node-RED is customised.
 
 The *Dockerfile* begins with:
 
@@ -126,7 +128,8 @@ FROM $MOSQUITTO_BASE
 
 The `FROM` statement tells the build process to pull down the ***base image*** from [*DockerHub*](https://hub.docker.com).
 
-> It is a ***base*** image in the sense that it never actually runs as a container on your Raspberry Pi.
+!!! note
+	* It is a ***base*** image in the sense that it never actually runs as a container on your Raspberry Pi.
 
 The remaining instructions in the *Dockerfile* customise the *base image* to produce a ***local image***. The customisations are:
 
@@ -157,7 +160,8 @@ eclipse-mosquitto               latest      46ad1893f049   4 weeks ago    8.31MB
 
 You *may* see the same pattern in Portainer, which reports the *base image* as "unused". You should not remove the *base* image, even though it appears to be unused.
 
-> Whether you see one or two rows depends on the version of `docker-compose` you are using and how your version of `docker-compose` builds local images.
+!!! note
+	* Whether you see one or two rows depends on the version of `docker compose` you are using and how your version of `docker compose` builds local images.
 
 ### Migration considerations { #migration }
 
@@ -175,7 +179,8 @@ Under this implementation of Mosquitto, the configuration files have moved to:
 ~/IOTstack/volumes/mosquitto/config/filter.acl
 ```
 
-> The change of location is one of the things that allows self-repair to work properly. 
+!!! note
+	* The change of location is one of the things that allows self-repair to work properly. 
 
 The default versions of each configuration file are the **same**. Only the **locations** have changed. If you did not alter either file when you were running the original IOTstack implementation of Mosquitto, there will be no change in Mosquitto's behaviour when it is built from a *Dockerfile*.
 
@@ -186,7 +191,8 @@ $ cd ~/IOTstack
 $ diff ./services/mosquitto/mosquitto.conf ./volumes/mosquitto/config/mosquitto.conf 
 ```
 
-> You can also use the `-y` option on the `diff` command to see a side-by-side comparison of the two files.
+!!! note
+	* You can also use the `-y` option on the `diff` command to see a side-by-side comparison of the two files.
 
 Using `mosquitto.conf` as the example, assume you wish to use your existing file instead of the default:
 
@@ -208,7 +214,7 @@ Using `mosquitto.conf` as the example, assume you wish to use your existing file
 3. Restart Mosquitto:
 
 	```console
-	$ docker-compose restart mosquitto
+	$ docker compose restart mosquitto
 	```
 
 4. Check your work:
@@ -254,7 +260,7 @@ and then restart Mosquitto:
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose restart mosquitto
+$ docker compose restart mosquitto
 ```
 
 The path `/mosquitto/log/mosquitto.log` is an **internal** path. When this style of logging is active, you inspect Mosquitto's logs using the **external** path like this:
@@ -263,7 +269,8 @@ The path `/mosquitto/log/mosquitto.log` is an **internal** path. When this style
 $ sudo tail ~/IOTstack/volumes/mosquitto/log/mosquitto.log
 ```
 
-> You need to use `sudo` because the log is owned by userID 1883 and Mosquitto creates it without "world" read permission.
+!!! note
+	* You need to use `sudo` because the log is owned by userID 1883 and Mosquitto creates it without "world" read permission.
 
 Logs written to `mosquitto.log` persist until you take action to prune the file.
 
@@ -365,7 +372,7 @@ There are several ways to reset the password file. Your options are:
 	```console
 	$ cd ~/IOTstack
 	$ sudo rm ./volumes/mosquitto/pwfile/pwfile
-	$ docker-compose restart mosquitto 
+	$ docker compose restart mosquitto 
 	```
 
 	The result is an empty password file.
@@ -427,7 +434,7 @@ There are several ways to reset the password file. Your options are:
 
 	```console
 	$ cd ~/IOTstack
-	$ docker-compose restart mosquitto
+	$ docker compose restart mosquitto
 	```
 
 ### Testing Mosquitto security
@@ -619,15 +626,15 @@ You can update most containers like this:
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose pull
-$ docker-compose up -d
+$ docker compose pull
+$ docker compose up -d
 $ docker system prune
 ```
 
 In words:
 
-* `docker-compose pull` downloads any newer images;
-* `docker-compose up -d` causes any newly-downloaded images to be instantiated as containers (replacing the old containers); and
+* `docker compose pull` downloads any newer images;
+* `docker compose up -d` causes any newly-downloaded images to be instantiated as containers (replacing the old containers); and
 * the `prune` gets rid of the outdated images.
 
 This strategy doesn't work when a *Dockerfile* is used to build a *local image* on top of a *base image* downloaded from [*DockerHub*](https://hub.docker.com). The *local image* is what is running so there is no way for the `pull` to sense when a newer version becomes available.
@@ -638,8 +645,8 @@ Once a new version appears on *DockerHub*, you can upgrade Mosquitto like this:
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose build --no-cache --pull mosquitto
-$ docker-compose up -d mosquitto
+$ docker compose build --no-cache --pull mosquitto
+$ docker compose up -d mosquitto
 $ docker system prune
 $ docker system prune
 ```
@@ -651,86 +658,36 @@ Breaking it down into parts:
 * `--pull` tells the *Dockerfile* process to actually check with [*DockerHub*](https://hub.docker.com) to see if there is a later version of the *base image* and, if so, to download it before starting the build;
 * `mosquitto` is the named container argument required by the `build` command.
 
-Your existing Mosquitto container continues to run while the rebuild proceeds. Once the freshly-built *local image* is ready, the `up` tells `docker-compose` to do a new-for-old swap. There is barely any downtime for your MQTT broker service.
+Your existing Mosquitto container continues to run while the rebuild proceeds. Once the freshly-built *local image* is ready, the `up` tells `docker compose` to do a new-for-old swap. There is barely any downtime for your MQTT broker service.
 
-The `prune` is the simplest way of cleaning up. The first call removes the old *local image*. The second call cleans up the old *base image*. Whether an old *base image* exists depends on the version of `docker-compose` you are using and how your version of `docker-compose` builds local images.
+The `prune` is the simplest way of cleaning up. The first call removes the old *local image*. The second call cleans up the old *base image*. Whether an old *base image* exists depends on the version of `docker compose` you are using and how your version of `docker compose` builds local images.
 
 ### Mosquitto version pinning { #versionPinning }
 
-If an update to Mosquitto introduces a breaking change, you can revert to an earlier know-good version by pinning to that version. Here's how:
+If an update to Mosquitto introduces a breaking change, you can revert to an earlier know-good version by pinning to that version using an override file at:
 
-1. Use your favourite text editor to open:
+```
+~/IOTstack/services/mosquitto/override.yml
+```
 
-	```
-	~/IOTstack/docker-compose.yml
-	```
+with content:
 
-2. Find the Mosquitto service definition. If your service definition contains this line:
+``` yaml
+mosquitto:
+  build:
+    args:
+      - MOSQUITTO_BASE=eclipse-mosquitto:2.0.13
+```
 
-	```yaml
-	build: ./.templates/mosquitto/.
-	```
+Implement the change like this:
 
-	then replace that line with the following four lines:
-
-	```yaml
-	build:
-	  context: ./.templates/mosquitto/.
-	  args:
-	    - MOSQUITTO_BASE=eclipse-mosquitto:latest
-	```
-
-	Notes:
-
-	* The four-line form of the `build` directive is now the default for Mosquitto so those lines may already be present in your compose file.
-	* Remember to use spaces, not tabs, when editing compose files.
-
-3. Replace `latest` with the version you wish to pin to. For example, to pin to version 2.0.13:
-
-	```yaml
-	    - MOSQUITTO_BASE=eclipse-mosquitto:2.0.13
-	```
-
-4. Save the file and tell `docker-compose` to rebuild the local image:
-
-	```console
-	$ cd ~/IOTstack
-	$ docker-compose build --no-cache --pull mosquitto
-	$ docker-compose up -d mosquitto
-	$ docker system prune
-	``` 
-
-	The new *local image* is built, then the new container is instantiated based on that image. The `prune` deletes the old *local image*.
-
-5. Images built in this way will always be tagged with "latest", as in:
-
-	```console
-	$ docker images iotstack_mosquitto
-	REPOSITORY           TAG       IMAGE ID       CREATED              SIZE
-	iotstack_mosquitto   latest    8c0543149b9b   About a minute ago   16.2MB
-	```
-
-	You may find it useful to assign an explicit tag to help you remember the version number used for the build. For example:
-
-	```console
-	$ docker tag iotstack_mosquitto:latest iotstack_mosquitto:2.0.13
-	$ docker images iotstack_mosquitto
-	REPOSITORY           TAG       IMAGE ID       CREATED              SIZE
-	iotstack_mosquitto   2.0.13    8c0543149b9b   About a minute ago   16.2MB
-	iotstack_mosquitto   latest    8c0543149b9b   About a minute ago   16.2MB
-	```
-
-	You can also query the image metadata to discover version information:
-
-	```console
-	$ docker image inspect iotstack_mosquitto:latest | jq .[0].Config.Labels
-	{
-	  "com.github.SensorsIot.IOTstack.Dockerfile.based-on": "https://github.com/eclipse/mosquitto",
-	  "com.github.SensorsIot.IOTstack.Dockerfile.build-args": "eclipse-mosquitto:2.0.13",
-	  "description": "Eclipse Mosquitto MQTT Broker",
-	  "maintainer": "Roger Light <roger@atchoo.org>"
-	}
-	```
+``` console
+$ cd ~/IOTstack
+$ ./iotstack-menu.sh build
+$ docker compose build --no-cache --pull mosquitto
+$ docker compose up -d mosquitto
+$ docker system prune -f
+```
 
 ## About Port 9001
 
@@ -751,10 +708,12 @@ On that basis, the mapping for port 9001 was removed from `service.yml`.
 
 If you have a use-case that needs port 9001, you can re-enable support by:
 
-1. Inserting the port mapping under the `mosquitto` definition in `docker-compose.yml`:
+1. Inserting the port mapping using an [override file](../Basic_setup/Custom.md#custom-service):
 
 	```yaml
-	- "9001:9001"
+	mosquitto:
+	  ports:
+	    - "9001:9001"
 	```
 
 2. Inserting the additional listener in `mosquitto.conf`:
@@ -766,11 +725,12 @@ If you have a use-case that needs port 9001, you can re-enable support by:
 
 	You need **both** lines. If you omit 1883 then Mosquitto will stop listening to port 1883 and will only listen to port 9001.
 
-3. Restarting the container:
+3. Recreating the container:
 
 	```console
 	$ cd ~/IOTstack
-	$ docker-compose restart mosquitto
+	$ ./iotstack-menu.sh build
+	$ docker compose up -d mosquitto
 	```
 
 Please consider raising an issue to document your use-case. If you think your use-case has general application then please also consider creating a pull request to make the changes permanent.

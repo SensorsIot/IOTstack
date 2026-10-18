@@ -10,6 +10,9 @@ import re
 
 # Setup columns & print service names, mode, and default ports.
 
+print("# Default Ports")
+print("")
+
 print("| Service Name | Mode | Port(s)<br> *External:Internal* |")
 print("| ------------ | -----| --------------- |")
 

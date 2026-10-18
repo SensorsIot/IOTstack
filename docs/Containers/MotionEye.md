@@ -27,7 +27,7 @@ motioneye:
     - "8765:8765"
     - "8766:8081"
   environment:
-    - TZ=${TZ:-Etc/UTC}
+    TZ: ${TZ:-Etc/UTC}
   volumes:
     - ./volumes/motioneye/etc_motioneye:/etc/motioneye
     - ./volumes/motioneye/var_lib_motioneye:/var/lib/motioneye
@@ -109,7 +109,7 @@ Although it depends on your exact settings, MotionEye's video storage can repres
 2. Terminate the motioneye container:
 
 	``` bash
-	$ docker-compose down motioneye
+	$ docker compose down motioneye
 	```
 	
 	> see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
@@ -137,7 +137,7 @@ Although it depends on your exact settings, MotionEye's video storage can repres
 5. Start the container again:
 
 	``` bash
-	$ docker-compose up -d motioneye
+	$ docker compose up -d motioneye
 	```
 
 This change places video storage outside of the usual `~/IOTstack/volumes` path, where IOTstack backup scripts will not see it.

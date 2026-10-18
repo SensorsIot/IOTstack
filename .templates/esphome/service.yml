@@ -3,9 +3,9 @@ esphome:
   image: esphome/esphome
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - USERNAME=${ESPHOME_USERNAME:-esphome}
-    - PASSWORD=${ESPHOME_PASSWORD:?eg echo ESPHOME_PASSWORD=ChangeMe >>~/IOTstack/.env}
+    TZ: ${TZ:-Etc/UTC}
+    USERNAME: ${ESPHOME_USERNAME:-esphome}
+    PASSWORD: ${ESPHOME_PASSWORD:?eg echo ESPHOME_PASSWORD=ChangeMe >>~/IOTstack/.env}
   network_mode: host
   x-ports:
     - "6052:6052"

@@ -3,14 +3,14 @@ wireguard:
   image: ghcr.io/linuxserver/wireguard
   restart: unless-stopped
   environment:
-    - PUID=1000
-    - PGID=1000
-    - TZ=${TZ:-Etc/UTC}
-    - SERVERURL=${WIREGUARD_SERVERURL:-your.dynamic.dns.name}
-    - SERVERPORT=51820
-    - PEERS=${WIREGUARD_PEERS:-laptop,phone,tablet}
-    - PEERDNS=auto
-    - ALLOWEDIPS=0.0.0.0/0
+    PUID: 1000
+    PGID: 1000
+    TZ: ${TZ:-Etc/UTC}
+    SERVERURL: ${WIREGUARD_SERVERURL:-your.dynamic.dns.name}
+    SERVERPORT: 51820
+    PEERS: ${WIREGUARD_PEERS:-laptop,phone,tablet}
+    PEERDNS: auto
+    ALLOWEDIPS: 0.0.0.0/0
   extra_hosts:
     - "host.docker.internal:host-gateway"
   ports:

@@ -17,7 +17,8 @@
 
 *Portainer CE* (Community Edition) is an application for managing Docker. It is a successor to *Portainer*. According to [the *Portainer CE* documentation](https://www.portainer.io/2020/08/portainer-ce-2-0-what-to-expect/)
 
-> Portainer 1.24.x will continue as a separate code branch, released as portainer/portainer:latest, and will receive ongoing security updates until at least 1st Sept 2021. No new features will be added beyond what was available in 1.24.1.
+??? note "about Portainer 1.24"
+	* Portainer 1.24.x will continue as a separate code branch, released as portainer/portainer:latest, and will receive ongoing security updates until at least 1st Sept 2021. No new features will be added beyond what was available in 1.24.1.
 
 From that it should be clear that *Portainer* is deprecated and that *Portainer CE* is the way forward.
 
@@ -33,7 +34,7 @@ $ ./menu.sh
 Choose "Build Stack", select "Portainer-ce", press [TAB] then "\<Ok\>" and follow through to the end of the menu process, typically choosing "Do not overwrite" for any existing services. When the menu finishes:
 
 ```console
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
 Ignore any message like this:
@@ -67,7 +68,8 @@ To fix that problem, proceed as shown below:
 	- The IP address of your Raspberry Pi (eg `192.168.1.10`)
 4. Click "Update environment".
 
-> To remove the Public IP address, repeat the above steps but clear the "Public IP" field in step 3.
+!!! note
+	* To remove the Public IP address, repeat the above steps but clear the "Public IP" field in step 3.
 
 The reason why you have to tell *Portainer CE* which Public IP address to use is because an instance of *Portainer CE* does not necessarily have to be running on the **same** Raspberry Pi as the Docker containers it is managing.
 
@@ -77,7 +79,8 @@ Keep in mind that clicking on a "Published Port" does not guarantee that your br
 * Port 8089 for PiHole will respond to HTTP but PiHole may reject or mis-handle your attempt.
 * Port 1880 for NodeRed will respond normally.
 
-> All things considered, you will get more consistent behaviour if you simply bookmark the URLs you want to use for your IOTstack services.
+!!! note
+	* All things considered, you will get more consistent behaviour if you simply bookmark the URLs you want to use for your IOTstack services.
 
 Notes:
 
@@ -90,9 +93,9 @@ If you forget the password you created for *Portainer CE*, you can recover by do
 
 ```console
 $ cd ~/IOTstack
-$ docker-compose stop portainer-ce
+$ docker compose down portainer-ce
 $ sudo rm -r ./volumes/portainer-ce
-$ docker-compose start portainer-ce
+$ docker compose up -d portainer-ce
 ```
 
 Then, follow the steps in:

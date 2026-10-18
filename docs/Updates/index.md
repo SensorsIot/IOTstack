@@ -1,208 +1,385 @@
-# Updating the project
+# Stack maintenance
 
-There are two different update sources: the IOTstack project (github.com) and
-Docker image registries (e.g. hub.docker.com). Both the initial stack creation
-and updates use both of these. Initial creation is a bit simpler, as the
-intermediate steps are done automatically. For a full update they need to be
-performed explicitly. To illustrate the steps and artifacts of the *update*
-process:
+Your stack is constructed from two primary sources:
 
-``` mermaid
-flowchart TD
-  GIT[github.com/sensorsiot/IOTstack.git]
-  GIT       --- GITPULL([$ git pull -r])
-  GITPULL   --> TEMPLATES["~/IOTstack/.templates"]
-  TEMPLATES --- MENU([$ ./menu.sh -> Build stack])
-  MENU      --> COMPOSE["~/IOTstack/docker-compose.yml
-                         ~/IOTstack/.templates/*/Dockerfile
-                         ~/IOTstack/services/*/Dockerfile"]
-  COMPOSE   --- UP(["$ docker-compose up --build -d"])
+* the [IOTstack](https://github.com/SensorsIot/IOTstack) project on github.com; and
+* Docker image registries, such as [hub.docker.com](https://hub.docker.com).
 
-  HUB[hub.docker.com images and tags]
-  HUB       --- PULL([$ docker-compose pull\n$ docker-compose build --pull --no-cache])
-  COMPOSE   --- PULL
-  PULL      --> CACHE[local Docker image cache]
-  CACHE     --- UP
+Initial stack creation is straightforward because all the Docker-related steps are handled automatically. Thereafter, the menu adopts a philosophy of leaving you in control. It does not force you to update anything. It may *remind* you that something needs to be done but, in general, lets you proceed at your own pace, which means you need to perform the various steps explicitly.
 
-  UP        --> CONTAINER[recreated Docker containers based on the latest cached images]
+## operating system { #maint-os }
 
-  classDef command fill:#9996,stroke-width:0px
-  class GITPULL,MENU,UP,PULL command
-```
-
-??? note "Minor details fudged in the graph"
-
-    In order to keep the graph simple, some minor details were left unprecise:
-
-    -   `$ docker-compose pull` will read `docker-compose.yml`, in order to know
-        what image tags to check for updates.
-    -   `$ docker-compose build --pull --no-cache` will use `docker-compose.yml`
-        to find which of the "build:" sources are in use:
-
-        * `~/IOTstack/.templates/*/Dockerfile`
-        * `~/IOTstack/services/*/Dockerfile`
-        * remote repositories with Dockerfiles
-
-        and pull Docker images referenced in these while building.
-    -   `$ docker-compose up --build -d` may not require the "--build"-flag,
-        but having it won't hurt (and may help keep some corner-case problems
-        away, docker may be a bit finicky).
-
-## Backup and rollback
-
-The usual way of backing up just your `~/IOTstack` contents isn't sufficient
-for a 100% identical restore. Some containers may have local ephemeral
-modifications that will be lost when they're recreated. Currently running
-containers may be based on now outdated images. Recreating a container using an
-old image is tricky. The local Docker image cache can't easily be restored to
-the same state with old images and old tag references. The `docker pull` will
-fetch the latest images, but it's not unheard of that the latest image may
-break [something](
-https://github.com/node-red/node-red/issues/3461#issuecomment-1076348639).
-
-Thus to *guarantee* a successful rollback to the pre-update state, you have to
-shutdown your RPi and save a complete disk image backup of its storage using
-another machine.
-
-For a hobby project, not having a perfect rollback may be a risk you're willing
-to take. Usually image problems will have fixes/workarounds within a day.
-
-## Update Raspberry Pi OS
-
-You should keep your Raspberry Pi up-to-date. Despite the word "container"
-suggesting that containers are fully self-contained, they sometimes depend on
-operating system components (WireGuard is an example).
+You should keep your host's operating system up-to-date. Despite the word "container" suggesting that *containers* are fully self-contained, they sometimes depend on operating system components.
 
 ``` console
 $ sudo apt update
 $ sudo apt upgrade -y
+$ sudo apt autoremove -y
 ```
 
-## Recommended: Update only Docker images
+## GitHub { #maint-github }
 
-When you built the stack using the menu, it created the Docker Compose file
-`docker-compose.yml`. This file and any used build instructions
-(`Dockerfile`s), use image name and tag references to images on hub.docker.com
-or other registries. An undefined tag defaults to `:latest`. When Docker is
-told to pull updated images, it will download the images into the local
-cache, based upon what is currently stored at the registry for the used names
-and tags.
+If you want to check whether the master version of IOTstack on GitHub has changed, run:
 
-Updating the IOTstack project templates and recreating your
-`docker-compose.yml` isn't usually necessary. Doing so isn't likely to provide
-much benefits, and may actually break something. A full update is only
-recommended when there is a new feature or change you need.
+``` console
+$ cd ~/IOTstack
+$ git fetch
+$ git status
+```
 
-!!! tip "Recommended update procedure"
+If the response to the `status` command says "Your branch is behind" by some number of commits then, providing it is convenient for you to do so, you can synchronise your local clone with GitHub by running:
 
-    1. Shutdown your RPi, remove the storage medium and do a full backup
-       [image](https://www.howtogeek.com/341944/how-to-clone-your-raspberry-pi-sd-card-for-foolproof-backup/)
-       of the storage to another machine. Reattach the storage back and power
-       up your RPi.<br />
-       NOTE: To skip this step may cause days of downtime as you debug a
-       problem or wait for fixes.
-    2. Get latest images from the web:
-       ``` console
-       $ docker-compose pull
-       ```
-    3. Rebuild localy created images based on new parent images:
-       ``` console
-       $ docker-compose build --pull --no-cache
-       ```
-       Note: this may not do anything, depending on your selected services.
-    4. Update(recreate) containers that have new images:
-       ``` console
-       $ docker-compose up --build -d
-       ```
+``` console
+$ cd ~/IOTstack
+$ git pull
+```
 
-If a service fails to start after it's updated, especially if you are updating
-frequently, wait for a few hours and repeat the update procedure. Sometimes bad
-releases are published to hub.docker.com, but they are usually fixed in under
-half a day. Of course you are always welcome to report the problem to our
-[Discord](https://discord.gg/ZpKHnks) server. Usually someone else has
-encountered the same problem and reported the fix.
+## IOTstack installer { #maint-install }
 
-## Full update
+On each launch, the menu checks whether the installer script should be re-run. In general, this will only happen after an initial installation or following a `git pull`.
 
-Periodically updates are made to project which include new or updated container
-template, changes to backups or additional features. To evaluate if this is
-really needed, see the [changelog](Changelog.md) or [merged pull requests](
-https://github.com/SensorsIot/IOTstack/pulls?q=is%3Amerged). To apply all these
-changes all service definitions are recreated. As a drawback, this will wipe
-any custom changes to docker-compose.yml, may change semantics or even require
-manual migration steps.
+As well as setting up the basic scaffolding for *Docker*, the installer script is the primary delivery vehicle for ensuring dependencies are in place so, as a general statement, it is prudent to let the installer run when necessary.
 
-!!! danger "Breaking update"
-    A change done 2022-01-18 will require [manual steps](
-    ../Updates/migration-network-change.md)
-    or you may get an error like:  
-    `ERROR: Service "influxdb" uses an undefined network "iotstack_nw"`
+In menu mode, the menu will offer you a choice:
 
-Full update steps:
+| <a name="figure1"></a> Figure 1: Installer Update menu      |
+|:-----------------------------------------------------------:|
+|![Installer Update menu](./images/installer-update-menu.png) |
 
-1. Shutdown your RPi, remove the storage medium and do a [full backup
-   image](https://www.howtogeek.com/341944/how-to-clone-your-raspberry-pi-sd-card-for-foolproof-backup/)
-   of the storage to another machine. Reattach the storage back and power up
-   your RPi.<br />
-   NOTE: To skip this step may cause days of downtime as you debug a problem or
-   wait for fixes.
-2.  check `git status --untracked-files no` for any local changes you may have
-    made to project files. For any listed changes, either:
+In command-line mode, a reminder message is written to `stderr`:
 
-    1. Save and preserve your change by doing a local commit: `git commit -m
-       "local customization" -- path/to/changed_file`, or
-    2. Revert it using: `git checkout -- path/to/changed_file`
+```
+Warning: /home/pi/IOTstack/install.sh needs to be re-run.
+```
 
-3. Update project files from github: `git pull -r origin master`
-4. Save your current compose file: `cp docker-compose.yml
-   docker-compose.yml.bak`. NOTE: this is really useful, as the next step will
-   overwrite all your previous manual changes to docker-compose.yml.
-5. Recreate the compose file and Dockerfile:s: `./menu.sh`, select Build Stack,
-   for each of your selected services: de- and re-select it, press enter to
-   build, and then exit.
-6. check the changes for obvious errors (e.g. passwords): `diff
-   docker-compose.yml docker-compose.yml.bak`
-7. Perform the Docker image update procedure: 
-   ``` console 
-   $ docker-compose pull
-   $ docker-compose build --pull --no-cache 
-   $ docker-compose up --build -d 
-   ```
+To run the installer by hand:
 
-### Troubleshooting: if a container fails to start after update
+``` console
+$ cd ~/IOTstack
+$ ./install.sh
+```
 
-* try restarting the whole stack: `docker-compose restart`
-* Check log output of the failing service: `docker-compose logs *service-name*`
-    * try googling and fixing problems in docker-compose.yml manually.
-* check how the container definitions have changed: `diff docker-compose.yml
-    docker-compose.yml.bak`
-* try rebuilding your complete stack from scratch:
-    1. check that you have a backup.
-    2. stop and remove Docker containers: `docker-compose down`
-    3. remove all menu generated files: `rm -r docker-compose.yml services`
-    4. recreate the stack: `./menu.sh`, select Build Stack, select all your
-       services, press enter to build, and then exit.
-    5. try starting: `docker-compose up -d`
-* Go to the [IOTstack Discord](https://discord.gg/ZpKHnks) and describe your
-  problem. We're happy to help.
+Note:
 
-## Old-menu
+* The installer can only do so much. In particular, if you have fairly ancient installations of *Docker* and/or *docker&nbsp;compose*, you might need to use some brute force. You may find it helpful to read [Maintaining docker + docker compose](https://github.com/Paraphraser/PiBuilder/blob/master/docs/reinstallation.md) which is part of [PiBuilder](https://github.com/Paraphraser/PiBuilder).
 
-!!! warning
-    If you ran `git checkout -- 'git ls-files -m'` as suggested in the old wiki entry then please check your duck.sh because it removed your domain and token
+Tip:
 
-Git offers build in functionality to fetch the latest changes.
+* If you have a good reason for not wanting to run the installer, you can silence the reminders like this:
 
-`git pull origin master` will fetch the latest changes from GitHub without overwriting files that you have modified yourself. If you have done a local commit then your project may to handle a merge conflict.
+	``` console
+	$ ./install.sh version >.new_install
+	```
 
-This can be verified by running `git status`. You can ignore if it reports duck.sh as being modified.
+	This fakes your system into believing that the updated version of the installer has already run.
 
-![image](https://user-images.githubusercontent.com/46672225/68645804-d42d0000-0521-11ea-842f-fd0b2d22cd0e.png)
+## internal database { #maint-database }
 
-Should you have any modified scripts or templates they can be reset to the latest version with `git checkout -- scripts/ .templates/`
+The menu reloads its internal database automatically when either of the following is true:
 
-With the new latest version of the project you can now use the menu to build your stack. If there is a particular container you would like to update its template then you can select that at the overwrite option for your container. You have the choice to not to overwrite, preserve env files or to completely overwrite any changes (passwords)
+1. The internal database does not exist; or
+2. The commit&nbsp;ID of the *templates* directory changes.
 
-![image](https://user-images.githubusercontent.com/46672225/68646024-8fee2f80-0522-11ea-8b6e-f1d439a5be7f.png)
+Those events cover the following use-cases:
 
-After your stack had been rebuild you can run `docker-compose up -d` to pull in the latest changes. If you have not update your images in a while consider running the `./scripts/update.sh` to get the latest version of the image from Docker hub as well
+1. When you clone IOTstack for the first time;
+2. When you have an existing IOTstack but use `iotstack-menu.sh` for the first time; and
+3. When you have done a `git pull`, which has caused a change somewhere in the *templates* directory.
+
+You can also reload the internal database manually by running:
+
+``` console
+$ cd ~/IOTstack
+$ ./iotstack-menu.sh reload
+```
+
+See also [Internal Database](../Developers/Internal-Database.md).
+
+## structure vs contents { #structure-vs-contents }
+
+Think of a house. You have the building's *structure* and the *contents* within. The menu makes similar distinctions:
+
+* The *structural* components are the items grouped in the upper part of [Figure&nbsp;2](#figure2):
+
+	- the menu script itself;
+	- the `.templates` **directory** (as distinct from the sub-directories and files contained within it); and
+	- the header and trailer files which are copied from the *templates* directory into the top level of the *services* directory.
+
+* The *contents* components are the files that define the *services* you install. Installation of a service involves copying one or more files from the service's *template* into the service's sub-directory of the *services* directory. The lower part of [Figure&nbsp;2](#figure2) uses Node-RED as its example where three files are copied when that service is installed.
+
+| <a name="figure2"></a> Figure 2: File structures |
+|:------------------------------------------------:|
+|![File structures](./images/file-structures.png)  |
+
+If you need to do some work on the structure of your home, you usually talk about *renovations*. If an item of contents needs some work, you typically talk in terms of repairs or replacing the old item with a newer model (ie an *upgrade*). The menu adopts the same terminology. If a change from GitHub that needs to be propagated into your working stack affects:
+
+* a *structural* component, the relevant concept is *renovate*.
+
+* a *contents* (service) component, the relevant concept is *upgrade*.
+
+The menu distinguishes between *structure* and *contents* to minimise risk. Although *renovate* and *upgrade* serve similar purposes (propagating changes made on GitHub into your working stack), changes to *structural* components affect your whole stack so there's a greater chance of a foul-up than there is if you're only upgrading a service.
+
+### tracked files { #tracked-files }
+
+A file is said to be *tracked* if its Git commit&nbsp;ID is recorded in the menu's internal database at the time when the menu makes a copy of that file. [Figure&nbsp;2](#figure2) summarises which files are *tracked*. 
+
+If a *tracked* file's Git commit&nbsp;ID changes subsequently, it signals that the content of the original file has changed, and it implies that the copy of the file made by the menu when the commit&nbsp;ID was recorded is now out of date.
+
+The reason the menu makes copies of files (typically by copying from the *templates* directory into the *services* directory) is so that the destination copies (which are **not** under Git control) can be customised, by you, without affecting the originals (which **are** under Git control). It follows that, while a copy always starts out being identical to its original, it does not necessarily stay that way.
+
+When you tell the menu to "Renovate" the header/footer structural components or "Upgrade" a service, the menu only considers *tracked* files. If the newly-updated version of a *tracked* file differs from an existing file, the existing file is renamed with a `.save` extension before the updated version is installed. This gives you the opportunity to compare the old and new files, and decide whether it is necessary to re-apply any customisations.
+
+Developer guide references:
+
+* The [components table](../Developers/Internal-Database.md#theory-db-components) records Git commit&nbsp;IDs for structural files;
+* The [tracking table](../Developers/Internal-Database.md#theory-db-tracking) records Git commit&nbsp;IDs for services ("contents") files while the [`"install":` array](../Developers/Add-Service.md#json_install) in each service's `menu-config.json` defines which files are *tracked*.
+
+## renovation { #maint-structural }
+
+On first launch, the menu copies the four header and trailer files shown in [Figure&nbsp;2](#figure2) into your *services* directory. On subsequent launches, those four files are replaced if they go missing but they are never normally overwritten.
+
+The first two files in the list are tracked. If the master version of one of those files changes, the menu will propose a *renovation*. In menu mode, the menu signals that a renovation is needed by adding the "Renovate" option to the Main menu:
+
+| <a name="figure3"></a> Figure 3: Main menu – Renovate command   |
+|:---------------------------------------------------------------:|
+|![Main menu – Renovate command](./images/main-menu-renovate.png) |
+
+In command-line mode, the menu displays:
+
+```
+Warning: headers/footers need renovation. Recommend running:
+           ./iotstack-menu.sh renovate
+         then compare any .save files (your versions) with newer
+         replacements, and re-apply your customisations.
+```
+
+This includes a hint for the command you should run:
+
+``` console
+$ cd ~/IOTstack
+$ ./iotstack-menu.sh renovate
+```
+
+Choosing either approach will trigger the renovation. The menu will only replace a structural file if it **differs** from the master version, in which case the older file will be renamed with a `.save` extension. The menu summarises its activities like this:
+
+| <a name="figure4"></a> Figure 4: Renovation Summary |
+|:---------------------------------------------------:|
+|![Renovation Summary](./images/renovate-menu.png)    |
+
+In this example, the "`>fc`" rsync flags indicate that the header file has been replaced so you can infer the existence of a `.save` file. To answer the question "what did the renovation change?" you can (and probably should):
+
+``` console
+$ cd ~/IOTstack/services
+$ diff -y docker-compose-header.yml.save docker-compose-header.yml
+```
+
+This produces a side-by-side display which makes it relatively easy to see if any of your customisations (from the `.save` file) need to be re-applied to the replacement file.
+
+## services { #maint-services }
+
+Please refer back to [Figure&nbsp;2](#figure2) and assume you have installed Node-RED.
+
+When you ask the menu to install a service, the installation process fetches the `.install` array from the service's `menu-config.json` <!--A-->&#x1F150;. In the case of Node-RED, that array contains:
+
+``` console
+$ jq -c <.templates/nodered/menu-config.json .install 
+[
+ {"template":"default-addon-nodes.txt","service":"installed-addon-nodes.txt","tracked":false},
+ {"template":"Dockerfile","service":"Dockerfile","tracked":true},
+ {"template":"service.yml","service":"service.yml","tracked":true}
+]
+```
+
+That tells the menu to copy three files:
+
+* `default-addon-nodes.txt` <!--B-->&#x1F151; to `installed-addon-nodes.txt` <!--C-->&#x1F152; (an implied rename);
+* `Dockerfile` from <!--D-->&#x1F153; to <!--E-->&#x1F154;; and
+* `service.yml` from <!--F-->&#x1F155; to <!--G-->&#x1F156;.
+
+Most services only need `service.yml` to be copied. Node-RED is a fairly special case being used in this example because it copies multiple tracked and untracked files.
+
+The value of `true` for the *tracked* keyword tells the menu to note the Git commit&nbsp;IDs of <!--D-->&#x1F153; and <!--F-->&#x1F155; at the time the copies are made.
+
+If you need to customise Node-RED, you can:
+
+1. Edit `service.yml` <!--G-->&#x1F156;; or
+2. Create then edit `override.yml` <!--H-->&#x1F157;; or
+3. Do both.
+
+Now, let's suppose <!--D-->&#x1F153; and/or <!--F-->&#x1F155; change on GitHub. Sometime later, you follow the steps in [synchronise with GitHub](#maint-github). Among other things, the Git commit&nbsp;IDs of <!--D-->&#x1F153; and/or <!--F-->&#x1F155; in your local clone of IOTstack will change. Any change of a commit&nbsp;ID for a tracked file causes the menu to conclude that the service has "changed" and is a candidate for being upgraded.
+
+### update check { #maint-services-update }
+
+To check if any of your **installed** services are candidates for upgrading:
+
+1. Either launch the menu and choose the "Update" command:
+
+	| <a name="figure5"></a> Figure 5: Main menu – Update command |
+	|:-----------------------------------------------------------:|
+	|![Main menu – Update command](./images/main-menu-update.png) |
+
+2. Or run:
+
+	``` console
+	$ cd ~/IOTstack
+	$ ./iotstack-menu update
+	```
+
+If no services are candidates for upgrading, the menu will report:
+
+```
+All installed services are up-to-date!
+```
+
+Otherwise any services that can be upgraded will be listed:
+
+| <a name="figure6"></a> Figure 6: Update summary |
+|:-----------------------------------------------:|
+|![Update summary](./images/update-menu.png)      |
+
+If you're wondering why the Services menu doesn't contain some indication of the upgradability of all services, it is because it is a relatively expensive operation. Checking every installed service every time the Services menu is rebuilt imposes an unacceptable performance penalty, particularly on low-end systems. That's why a separate "Update" command is provided in the Main menu.
+
+### upgrade service { #maint-services-upgrade }
+
+If the response from the "Update" command suggests that a service has changed, you can upgrade it. For example, if Node-RED has changed, you can upgrade it by either by:
+
+* In menu mode:
+
+	1. Choose "Services" from the Main menu;
+	2. Choose "nodered" in the Services menu;
+	3. Choose the "Upgrade" command:
+
+	| <a name="figure7"></a> Figure 7: Upgrade Node-RED – command        |
+	|:------------------------------------------------------------------:|
+	|![Upgrade Node-RED – command](./images/nodered-upgrade-command.png) |
+
+* In command line mode:
+
+	``` console
+	$ cd ~/IOTstack
+	$ ./iotstack-menu upgrade nodered
+	```
+
+During an upgrade, all tracked files (<!--D-->&#x1F153; and <!--F-->&#x1F155;) are compared with their installed counterparts (<!--E-->&#x1F154; and <!--G-->&#x1F156;). If the *upgraded* version of a tracked file differs from its *existing* counterpart then the existing file will be saved with a `.save` extension before the upgraded version is copied into place.
+
+For example, if <!--F-->&#x1F155;; differed from <!--G-->&#x1F156; then the menu would display:
+
+| <a name="figure8"></a> Figure 8: Upgrade Node-RED – summary        |
+|:------------------------------------------------------------------:|
+|![Upgrade Node-RED – summary](./images/nodered-upgrade-summary.png) |
+
+To see exactly what changes from GitHub were brought in during the update, you could run:
+
+``` console
+$ cd ~/IOTstack/services/nodered
+$ diff -y service.yml.save service.yml
+```
+
+The `diff -y` command gives a side-by-side view of changes. If you have customised the older version, you can re-apply the changes to the newer version (or move your customisations to an `override.yml` file).
+
+If you never changed <!--G-->&#x1F156; then it is probably safe to accept the new version of <!--F-->&#x1F155; replacing <!--G-->&#x1F156; "as is". Conversely, if you did change <!--G-->&#x1F156; then there's a solid risk that simply accepting the new version of <!--F-->&#x1F155; will lose your customisations. This latter situation is why `override.yml` files are the preferred approach.
+
+## images and containers { #maint-images }
+
+Running *containers* are instantiated from *images*. IOTstack supports two kinds of images:
+
+* a ***base*** image: The container is instantiated from an image that is downloaded from DockerHub or another repository, and is used "as is".
+
+* a ***local*** image: A *base* image is downloaded from DockerHub or another repository, and then a local `Dockerfile` is run to customise that *base* image to produce a *local* image. The *local* image is used to instantiate the container.
+
+There are two easy ways to work out whether a container is instantiated from a *base* or *local* image:
+
+1. Inspect its service definition (`service.yml`). If it contains an `image:` clause then the container is using a *base* image, whereas the presence of a `build:` clause is the signature of a container using a *local* image. Here are two examples:
+
+	* Grafana is instantiated from a base image:
+
+		``` console
+		$ cd ~/IOTstack
+		$ docker compose config grafana | grep -e "image:" -e "build:"
+		image: grafana/grafana
+		```
+
+	* Moquitto is instantiated from a local image:
+
+		``` console
+		$ cd ~/IOTstack
+		$ docker compose config mosquitto | grep -e "image:" -e "build:"
+		build:
+		```
+
+2. Use docker's `images` command:
+
+	``` console
+	$ docker images
+	IMAGE                          ID             DISK USAGE
+	grafana/grafana:latest         f8a787bf1600       1.01GB    
+	influxdb:1.12                  03b8de319bf5        311MB    
+	iotstack-mosquitto:latest      2259353e98bd       27.1MB    
+	iotstack-nodered:latest        bbfad5db4f91        759MB    
+	```
+	
+	If the image name is prefixed with `iotstack-` then the image is a *local* image; otherwise it is a *base* image. In the above, Grafana and InfluxDB are *base* images while Mosquitto and Node-RED are *local* images.
+
+### maintaining base images { #maint-base-images }
+
+To maintain containers instantiated from *base* images:
+
+``` console
+$ cd ~/IOTstack
+$ docker compose pull { «container» ... }
+$ docker compose up -d { «container» ... }
+$ docker system prune -f
+```
+
+The [IOTstackAliases](https://github.com/Paraphraser/IOTstackAliases) equivalents are:
+
+``` console
+$ PULL { «container» ... }
+$ UP { «container» ... }
+$ PRUNE
+```
+
+Irrespective of whether you use the commands or aliases, if you omit the `«container»` arguments then all *base* images are pulled and instantiated. The `prune` command cleans up the old images.
+
+### maintaining local images { #maint-local-images }
+
+When it comes to maintaining containers instantiated from *local* images, there are two scenarios to consider:
+
+1. You have made a change to one of the inputs into the `Dockerfile` process. At the time of writing, only two containers are candidates for this:
+
+	* Node-RED; and
+	* RTL433
+
+	In the case of Node-RED, `installed-addon-nodes.txt` holds the list of add-on nodes and typically changes when you use the menu's "Configuration" command. For RTL433, you might edit the `Dockerfile` to install additional packages.
+
+	Using Node-RED as the example, to apply *local* changes you run:
+
+	``` console
+	$ cd ~/IOTstack
+	$ docker compose up --build -d nodered
+	$ docker system prune -f
+	``` 
+
+	The [IOTstackAliases](https://github.com/Paraphraser/IOTstackAliases) equivalents are:
+
+	``` console
+	$ BUILD nodered
+	$ PRUNE
+	```
+
+2. You become aware of a later release of the *base* image which underpins the *local* image, so you want to construct a new *local* image. Using Mosquitto as the example, you run:
+
+	``` console
+	$ cd ~/IOTstack
+	$ docker compose build --no-cache --pull mosquitto
+	$ docker compose up -d mosquitto
+	$ docker system prune -f
+	```
+
+	The [IOTstackAliases](https://github.com/Paraphraser/IOTstackAliases) equivalents are:
+
+	``` console
+	$ REBUILD mosquitto
+	$ UP mosquitto
+	$ PRUNE
+	```

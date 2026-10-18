@@ -49,6 +49,20 @@ Although most of Pi-hole's options can be set through its web GUI, there are two
 
 The service definition provided with IOTstack defines four environment variables which are discussed next.
 
+If you decide to change environment variables, you should use an [override file](../Basic_setup/Custom.md#custom-service) at the path:
+
+```
+~/IOTstack/services/pihole6/override.yml
+```
+
+Whenever you change the override file, you implement the changes like this:
+
+``` console
+$ cd ~/IOTstack
+$ ./iotstack-menu.sh build
+$ docker compose up -d pihole6
+```
+
 ### Admin password { #adminPassword }
 
 The IOTstack implementations of Pi-hole do not have an administrator password by default. This is because the relevant *IOTstack-defined* environment variable defaults to a null string.
@@ -58,7 +72,7 @@ If you wish to define a password to protect Pi-hole's web interface, you do it l
 ``` console
 $ cd ~/IOTstack
 $ echo "PIHOLE_ADMIN_PASSWORD=«YourPasswordHere»" >>./.env
-$ docker-compose up -d pihole6
+$ docker compose up -d pihole6
 ```
 
 Each time the Pi-hole container is launched, it checks for the presence or absence of a password, then reacts like this:
@@ -315,7 +329,7 @@ devices, provided they too have static IPs.
 Your Pi-hole *system* does not have to use the Pi-hole *container* for its own DNS services and, in many ways, it is better if it does not. That's because the arrangement creates some chicken-and-egg situations. Examples:
 
 * If the Pi-hole *system* needs DNS services at boot time before the Pi-hole *container* is running, the boot may stall;
-* If the Pi-hole container is down when another process (eg `apt` or `docker-compose`) needs to do something that depends on DNS services being available.
+* If the Pi-hole container is down when another process (eg `apt` or `docker compose`) needs to do something that depends on DNS services being available.
 
 If you decide to use the Pi-hole *container* to provide DNS services to your Pi-hole *system* then you should also set up a fall-back to at least one well-known public DNS server that will kick in whenever your Pi-hole *container* is down.
 
@@ -750,9 +764,9 @@ The recommended approach is:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose down pihole6
+	$ docker compose down pihole6
 	$ sudo rm -rf ./volumes/pihole6
-	$ docker-compose up -d pihole6
+	$ docker compose up -d pihole6
 	```
 
 5. Login to Pi-hole's web GUI and navigate to Settings » Teleporter.

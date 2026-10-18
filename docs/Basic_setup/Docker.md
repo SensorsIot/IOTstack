@@ -6,10 +6,8 @@ output produced by this command is logged by Docker. By default Docker stores
 logs internally together with other data associated to the container image.
 
 This has the effect that when recreating or updating a container, logs shown by
-`docker-compose logs` won't show anything associated with the previous
-instance. Use `docker system prune` to remove old instances and free up disk
-space. Keeping logs only for the latest instance is helpful when testing, but
-may not be desirable for production.
+`docker compose logs` won't show anything associated with the previous
+instance.
 
 By default there is no limit on the log size. Surprisingly, when using a
 SD-card this is exactly what you want. If a runaway container floods the log
@@ -58,3 +56,5 @@ released images, build and recreate containers. Do note that using this will
 result in a broken containers from time to time, as upstream may release faulty
 docker images. Have proper backups, or be prepared to manually pin a previous
 release build by editing `docker-compose.yml`.
+
+See also: [IOTstackAliases](https://github.com/Paraphraser/IOTstackAliases)

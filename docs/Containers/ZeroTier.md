@@ -47,7 +47,8 @@ ZeroTier offers both free and paid accounts. A free account offers enough for th
 
 Go to the [Zerotier downloads](https://www.zerotier.com/download/) page. If you wait a little while, a popup window will appear with a "Start here" link which triggers a wizard to guide you through the registration and setup process. At the end, you will have an account plus an initial ZeroTier Network ID.
 
-> Tip: Make a note of your ZeroTier network ID - you will need it!
+!!! note
+	* Make a note of your ZeroTier network ID - you will need it!
 
 You should take the time to work through the configuration page for your newly-created ZeroTier network. At the very least:
 
@@ -176,7 +177,7 @@ Now that you understand what the ZeroTier-client will and won't do, if you want 
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d zerotier-client
+	$ docker compose up -d zerotier-client
 	```
 
 3. Tell the container to join your ZeroTier network by replacing «NetworkID» with your ZeroTier Network ID:
@@ -209,10 +210,8 @@ The ZeroTier-router container is just the ZeroTier-client container with some `i
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose down zerotier-client
+	$ docker compose down zerotier-client
 	```
-	
-	> See also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
 
 2. Remove the existing service definition, either by:
 
@@ -229,25 +228,23 @@ Keeping the configuration also means you won't need to authorise the ZeroTier-ro
 
 To install Zerotier-router:
 
-1. Run the IOTstack menu and choose "Zerotier-router".
+1. Run the IOTstack menu and choose "Zerotier-router". From the command line:
 
-2. Use a text editor to open your `docker-compose.yml`. Find the ZeroTier service definition and the environment variables it contains: 
-
-	``` yaml linenums="5"
-	  environment:
-	  - TZ=${TZ:-Etc/UTC}
-	  - PUID=1000
-	  - PGID=1000
-	# - ZEROTIER_ONE_NETWORK_IDS=yourNetworkID
-	  - ZEROTIER_ONE_LOCAL_PHYS=eth0 wlan0
-	  - ZEROTIER_ONE_USE_IPTABLES_NFT=true
-	  - ZEROTIER_ONE_GATEWAY_MODE=both
+	``` console
+	$ cd ~/IOTstack
+	$ ./iotstack-menu.sh install zerotier-router
+	$ ./iotstack-menu.sh build
 	```
 
-	You should:
+2. Configure the following environment variables:
 
-	1. Set your timezone.
-	2. Uncomment line 9 and replace "yourNetworkID" with your ZeroTier Network ID. This variable only has an effect the first time ZeroTier is launched. It is an alternative to executing the following command after the container has come up the first time:
+	1. Define your ZeroTier Network ID. Replace `«NetworkID»` in the following with your Network ID:
+
+		``` console
+		$ echo "ZEROTIER_ONE_NETWORK_IDS=«NetworkID»" >>~/IOTstack/.env
+		```
+
+	 	This variable only has an effect the first time ZeroTier is launched. It is an alternative to executing the following command after the container has come up the first time:
 
 		``` console
 		$ docker exec zerotier zerotier-cli join «NetworkID»
@@ -255,29 +252,55 @@ To install Zerotier-router:
 
 		The reason for the plural variable name ("IDS") is because it supports joining multiple networks on first launch. Network IDs are space-separated, like this:
 	
-		``` yaml linenums="9"
-		- ZEROTIER_ONE_NETWORK_IDS=3926d64e8ff148b3 ef7a364a687c45e0
+		``` console
+		$ echo "ZEROTIER_ONE_NETWORK_IDS=3926d64e8ff148b3 ef7a364a687c45e0" >>~/IOTstack/.env
 		```
 
-	3. If necessary, change line 10 to represent your active local interfaces. Examples:
+	2. The service definition assumes that the container is running on a Raspberry Pi with both Ethernet (`eth0`) and WiFi (`wlan0`) interfaces active, and that the container should be able to reach the local network via **both** interfaces. If this is not appropriate, you should override the arrangement:
 
-		- if your Raspberry Pi only connects to WiFi, you would use:
+		- if your Raspberry Pi only connects to WiFi:
 
-			``` yaml linenums="10"
-			- ZEROTIER_ONE_LOCAL_PHYS=wlan0
+			``` console
+			$ echo "ZEROTIER_ONE_LOCAL_PHYS=wlan0" >>~/IOTstack/.env
 			```
 
-		- if both Ethernet and WiFi are active, use:
+		- if your Raspberry Pi only connects to Ethernet:
 
-			``` yaml linenums="10"
-			- ZEROTIER_ONE_LOCAL_PHYS=eth0 wlan0
+			``` console
+			$ echo "ZEROTIER_ONE_LOCAL_PHYS=eth0" >>~/IOTstack/.env
+			```
+			
+		If you are using a different host (eg a Proxmox VE guest) you should set the correct network interface. For example:
+		
+		``` console
+		$ echo "ZEROTIER_ONE_LOCAL_PHYS=ens18" >>~/IOTstack/.env
+		```
+
+	3. The service definition assumes that you want full routing (why else would you install a "router" container). However, the container can actually operate in three modes:
+
+		- `both` permit bi-directional traffic between the local physical interfaces and the ZeroTier cloud:
+
+			``` console
+			$ echo "ZEROTIER_ONE_GATEWAY_MODE=both" >>~/IOTstack/.env
+			```
+
+		- `inbound` only permit traffic *from* the ZeroTier cloud *to* the local physical interfaces:
+
+			``` console
+			$ echo "ZEROTIER_ONE_GATEWAY_MODE=both" >>~/IOTstack/.env
+			```
+
+		- `outbound` only permit traffic *from* the local physical interfaces *to* the ZeroTier cloud:
+
+			``` console
+			$ echo "ZEROTIER_ONE_GATEWAY_MODE=both" >>~/IOTstack/.env
 			```
 
 3. Launch the container:
 
 	``` console
 	$ cd ~/IOTstack
-	$ docker-compose up -d zerotier-router
+	$ docker compose up -d zerotier-router
 	```
 
 4. If the Raspberry Pi running the service has not previously been authorised in [ZeroTier Central](https://my.zerotier.com), authorise it. Make a note of the IP address assigned to the device in ZeroTier Central. In [Topology&nbsp;2](#topology2) it is 10.244.0.1.
@@ -570,7 +593,8 @@ Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 192.168.203.0   0.0.0.0         255.255.255.0   U         0 0          0 eth0
 ```
 
-> To all network gurus following along: please remember this is a *contrived* example.
+??? note "for network gurus"
+	* please remember this is a *contrived* example.
 
 Study the last two lines. You should be able to see that both lines will match when the IP stack searches this table whenever <mark>A</mark> needs to send a packet to <mark>B</mark>. This results in a tie.
 
@@ -673,7 +697,8 @@ The default service definition for ZeroTier-router contains the following lines:
 
 Line 13 tells ZeroTier to run in Docker's "host mode". This means the processes running inside the container bind to the Raspberry Pi's network ports.
 
-> Processes running inside non-host-mode containers bind to the container's ports, and then use Network Address Translation (NAT) to reach the Raspberry Pi's ports.
+!!! note
+	* Processes running inside non-host-mode containers bind to the container's ports, and then use Network Address Translation (NAT) to reach the Raspberry Pi's ports.
 
 The `x-` prefix on line 14 has the effect of commenting-out the entire clause. In other words, the single `x-` has exactly the same meaning as:
 
@@ -684,9 +709,10 @@ The `x-` prefix on line 14 has the effect of commenting-out the entire clause. I
 
 The `x-ports` clause is included to document the fact that ZeroTier uses the Raspberry Pi's port 9993.
 
-> Documenting the ports in use for host-mode containers helps IOTstack's maintainers avoid port conflicts when adding new containers.
+!!! note
+	* Documenting the ports in use for host-mode containers helps IOTstack's maintainers avoid port conflicts when adding new containers.
 
-You should **not** remove the `x-` prefix. If docker-compose complains about the `x-ports` clause, the message is actually telling you that your copy of docker-compose is obsolete and that you should upgrade.
+You should **not** remove the `x-` prefix. If docker compose complains about the `x-ports` clause, the message is actually telling you that your copy of docker compose is obsolete and that you should upgrade.
 
 ## The Domain Name System { #dnsConsiderations }
 
@@ -756,19 +782,19 @@ networks:
     ipam:
       driver: default
 
-  nextcloud:
+  database:
     driver: bridge
     internal: true
     ipam:
       driver: default
 ```
 
-That structure tells docker-compose that it should construct two networks:
+That structure tells docker compose that it should construct two networks:
 
 * `iotstack_default`
-* `iotstack_nextcloud`
+* `iotstack_database`
 
-but leaves it up to docker-compose to work out the details. If you need more control, you can tell docker-compose to use specific subnets by adding two lines to each network definition:
+but leaves it up to docker compose to work out the details. If you need more control, you can tell docker compose to use specific subnets by adding two lines to each network definition:
 
 ``` yaml
 networks:
@@ -780,7 +806,7 @@ networks:
       config:
         - subnet: 172.30.0.0/22
 
-  nextcloud:
+  database:
     driver: bridge
     internal: true
     ipam:
@@ -791,12 +817,10 @@ networks:
 
 A /22 is sufficient for 1,021 containers. That may seem like overkill but it doesn't really affect anything. Nevertheless, no part of those subnet prefixes is any kind of "magic number". You should feel free to use whatever subnet definitions are appropriate to your needs.
 
-Note:
+??? note "Advanced"
+	* The `172.30.0.0/22` and `172.30.4.0/22` subnets (or whatever alternative ranges you choose) are *private* to the host where IOTstack is installed. That means you can re-use these same subnets on multiple hosts (Raspberry Pis or other supported platforms), irrespective of whether those hosts are at the same site (like <mark>A</mark> and <mark>B</mark>) or distributed across multiple sites (like <mark>A</mark> and <mark>F</mark>).
 
-* If you are never going to run NextCloud on your Raspberry Pi, you can omit that network definition entirely. Doing so will silence unnecessary messages from docker-compose.
-* The `172.30.0.0/22` and `172.30.4.0/22` subnets (or whatever alternative ranges you choose) are *private* to the host where IOTstack is installed. That means you can re-use these same subnets on multiple hosts (Raspberry Pis or other supported platforms), irrespective of whether those hosts are at the same site (like <mark>A</mark> and <mark>B</mark>) or distributed across multiple sites (like <mark>A</mark> and <mark>F</mark>).
-
-	> The only time you would need to consider adjusting the subnet ranges is if you happened to be running two or more instances of IOTstack on the same host, simultaneously.
+	* The only time you would need to consider adjusting the subnet ranges is if you happened to be running two or more instances of IOTstack on the same host, simultaneously.
 
 ## Global addressing { #globalAddressing }
 
@@ -978,14 +1002,13 @@ You can erase ZeroTier's persistent storage area like this:
 
 ``` console
 $ cd ~/IOTstack
-$ docker-compose down {zerotier-client | zerotier-router}
+$ docker compose down {zerotier-client | zerotier-router}
 $ sudo rm -rf ./volumes/zerotier-one
 ```
 
-Tips:
+Tip:
 
-1. always double-check `sudo` commands **before** hitting <kbd>Enter</kbd>.
-2. see also [if downing a container doesn't work](../Basic_setup/index.md/#downContainer)
+* always double-check `sudo` commands **before** hitting <kbd>Enter</kbd>.
 
 Erasing persistent storage destroys the client's authorisation (cryptographic credentials). If you start the container again, it will construct a new identity and you will need to re-authorise the client in ZeroTier Central. You should also delete the obsolete client authorisation.
 
@@ -995,8 +1018,8 @@ ZeroTier (either -client or -router) can be kept up-to-date with routine "pulls"
 
 ```
 $ cd ~/IOTstack
-$ docker-compose pull
-$ docker-compose up -d
+$ docker compose pull
+$ docker compose up -d
 $ docker system prune -f
 ```
 
@@ -1004,6 +1027,7 @@ $ docker system prune -f
 
 On iOS, you must decide whether to select "Custom DNS"  when you define the VPN. If you want to change your mind, you need to delete the connection and start over.
 
-> Providing you don't delete the Zerotier app, the client's identity remains unchanged so you won't need to re-authorise the client in ZeroTier Central.
+!!! note
+	* Providing you don't delete the Zerotier app, the client's identity remains unchanged so you won't need to re-authorise the client in ZeroTier Central.
 
 An example of when you might want to enable Custom DNS is if you want your remote clients to use PiHole for name services. If PiHole is running on the same Raspberry Pi as your Zerotier instance, you should use the IP address associated with the Raspberry Pi's interface to the ZeroTier Cloud (ie 10.244.0.1 in the example topologies).

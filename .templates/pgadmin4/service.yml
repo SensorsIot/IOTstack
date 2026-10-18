@@ -1,13 +1,17 @@
 pgadmin4:
   container_name: pgadmin4
-  image: gpongelli/pgadmin4-arm:latest-armv7
-  platform: linux/arm/v7
-  # image: gpongelli/pgadmin4-arm:latest-armv8
+  build:
+    context: ./.templates/pgadmin4/.
+    args:
+      - DOCKERHUB_TAG=latest
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
+    TZ: ${TZ:-Etc/UTC}
+    PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:?eg echo PGADMIN_DEFAULT_EMAIL=user@your.home.arpa >>~/IOTstack/.env}
+    PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?eg echo PGADMIN_DEFAULT_PASSWORD=somePassword >>~/IOTstack/.env}
   ports:
-    - "5050:5050"
+    - "5050:80"
+    - "5051:443"
   volumes:
-    - ./volumes/pgadmin4:/pgadmin4
-
+    - ./volumes/pgadmin4/pgadmin:/var/lib/pgadmin
+    - ./volumes/pgadmin4/pgadmin4:/pgadmin4

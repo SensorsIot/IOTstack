@@ -3,9 +3,9 @@ domoticz:
   image: domoticz/domoticz:stable
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    # - LOG_PATH=/opt/domoticz/userdata/domoticz.log
-    # - EXTRA_CMD_ARG=
+    TZ: ${TZ:-Etc/UTC}
+    # LOG_PATH: /opt/domoticz/userdata/domoticz.log
+    # EXTRA_CMD_ARG:
   ports:
     - "8083:8080"
     - "1443:443"

@@ -30,10 +30,10 @@ You can expect Nginx to work out of the box without any special configuration. T
 
 ``` yaml
 environment:
-  - TZ=${TZ:-Etc/UTC}
-  - INITIAL_ADMIN_EMAIL=admin@example.com
-  - INITIAL_ADMIN_PASSWORD=changeme
-  - DISABLE_IPV6=true
+  TZ: ${TZ:-Etc/UTC}
+  INITIAL_ADMIN_EMAIL: admin@example.com
+  INITIAL_ADMIN_PASSWORD: changeme
+  DISABLE_IPV6: true
 ```
 
 Although you can change them if you wish, the email address and password only have effect on first launch, and only up until your first login when you are guided through the process of defining the first user and a (hopefully) stronger password.

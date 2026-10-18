@@ -1,0 +1,10 @@
+{
+   "configure": null,
+   "dependencies": ["influxdb", "mosquitto"],
+   "description": "Collects time series data",
+   "environment": [],
+   "install": [
+      { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "telegraf"
+}

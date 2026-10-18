@@ -5,20 +5,20 @@ gitea:
   depends_on:
     - gitea_db
   environment:
-    - USER_UID=1000
-    - USER_GID=1000
-    - GITEA__database__DB_TYPE=mysql
-    - GITEA__database__HOST=gitea_db:3306
-    - GITEA__database__NAME=${GITEA_DB_NAME:-gitea}
-    - GITEA__database__USER=${GITEA_DB_USER:-gitea}
-    - GITEA__database__PASSWD=${GITEA_DB_PASSWORD:?eg echo GITEA_DB_PASSWORD=userPassword >>~/IOTstack/.env}
-    - GITEA__server__PROTOCOL=${GITEA_WEB_PROTOCOL:-http}
-    - GITEA__server__ROOT_URL=${GITEA_ROOT_URL}
-  # - GITEA__server__KEY_FILE=/data/git/key.pem
-  # - GITEA__server__CERT_FILE=/data/git/cert.pem
-    - GITEA__security__INSTALL_LOCK=true
-    - GITEA__security__SECRET_KEY=${GITEA_SECRET_KEY}
-    - GITEA__security__INTERNAL_TOKEN=${GITEA_INTERNAL_TOKEN}
+    USER_UID: 1000
+    USER_GID: 1000
+    GITEA__database__DB_TYPE: mysql
+    GITEA__database__HOST: gitea_db:3306
+    GITEA__database__NAME: ${GITEA_DB_NAME:-gitea}
+    GITEA__database__USER: ${GITEA_DB_USER:-gitea}
+    GITEA__database__PASSWD: ${GITEA_DB_PASSWORD:?eg echo GITEA_DB_PASSWORD=userPassword >>~/IOTstack/.env}
+    GITEA__server__PROTOCOL: ${GITEA_WEB_PROTOCOL:-http}
+    GITEA__server__ROOT_URL: ${GITEA_ROOT_URL}
+  # GITEA__server__KEY_FILE: /data/git/key.pem
+  # GITEA__server__CERT_FILE: /data/git/cert.pem
+    GITEA__security__INSTALL_LOCK: true
+    GITEA__security__SECRET_KEY: ${GITEA_SECRET_KEY}
+    GITEA__security__INTERNAL_TOKEN: ${GITEA_INTERNAL_TOKEN}
   healthcheck:
     test: ["CMD-SHELL", "curl -sf4 -o /dev/null http://gitea:3000"]
   # test: ["CMD-SHELL", "curl -sf4 --cacert $$GITEA__server__CERT_FILE -o /dev/null https://gitea:3000"]
@@ -32,22 +32,24 @@ gitea:
     - ./volumes/gitea/data:/data
   networks:
     - default
-    - nextcloud
+    - database
 
 gitea_db:
   container_name: gitea_db
   build: ./.templates/mariadb/.
   restart: unless-stopped
   environment:
-    - TZ=${TZ:-Etc/UTC}
-    - PUID=1000
-    - PGID=1000
-    - MYSQL_ROOT_PASSWORD=${GITEA_DB_ROOT_PASSWORD:?eg echo GITEA_DB_ROOT_PASSWORD=rootPassword >>~/IOTstack/.env}
-    - MYSQL_DATABASE=${GITEA_DB_NAME:-gitea}
-    - MYSQL_USER=${GITEA_DB_USER:-gitea}
-    - MYSQL_PASSWORD=${GITEA_DB_PASSWORD:?eg echo GITEA_DB_PASSWORD=userPassword >>~/IOTstack/.env}
+    TZ: ${TZ:-Etc/UTC}
+    PUID: 1000
+    PGID: 1000
+    MYSQL_ROOT_PASSWORD: ${GITEA_DB_ROOT_PASSWORD:?eg echo GITEA_DB_ROOT_PASSWORD=rootPassword >>~/IOTstack/.env}
+    MYSQL_DATABASE: ${GITEA_DB_NAME:-gitea}
+    MYSQL_USER: ${GITEA_DB_USER:-gitea}
+    MYSQL_PASSWORD: ${GITEA_DB_PASSWORD:?eg echo GITEA_DB_PASSWORD=userPassword >>~/IOTstack/.env}
   volumes:
     - ./volumes/gitea/db:/config
     - ./volumes/gitea/db_backup:/backup
   networks:
-    - nextcloud
+    - database
+  x-ports:
+    - "3306:3306"
