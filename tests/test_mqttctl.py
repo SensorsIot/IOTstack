@@ -59,7 +59,7 @@ try:
     assert "mosquitto" in config["services"]
     assert all("mcp" not in name for name in config["services"])
     for name in ("mqttctl", "mqttctl-init", "mqttctl-broker-agent"):
-        assert config["services"][name]["image"].endswith(":v0.0.8-d90b7f4d7c4b")
+        assert config["services"][name]["image"].endswith(":v0.0.8-264ca1e6585c")
     menu("deactivate", "mqttctl")
     assert "Warning: mqttctl and mosquitto" in menu("activate", "mqttctl")
     menu("deactivate", "mosquitto")

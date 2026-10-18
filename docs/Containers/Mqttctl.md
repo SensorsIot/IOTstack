@@ -2,9 +2,9 @@
 
 [mqttctl](https://github.com/Slyke/mqttctl) provides a browser UI for managing its own Mosquitto broker: users, roles, ACLs, broker configuration, snapshots, audit history and MQTT exploration.
 
-Selecting **mqttctl** installs the UI, a broker-agent containing Mosquitto, and a one-shot initializer. The initializer runs inside the mqttctl image using its bundled Node.js; no host Node.js installation is required. Both application images are pinned to `v0.0.8-d90b7f4d7c4b`. No MCP service or MCP configuration is included.
+Selecting **mqttctl** installs the UI, a broker-agent containing Mosquitto, and a one-shot initializer. The initializer runs inside the mqttctl image using its bundled Node.js; no host Node.js installation is required. Both application images are pinned to `v0.0.8-264ca1e6585c`. No MCP service or MCP configuration is included.
 
-The pinned images currently target **linux/amd64** only. Native Raspberry Pi/ARM deployment requires ARM images to be published; this service does not force emulation.
+The pinned images support **linux/amd64** and **linux/arm64**. Raspberry Pi requires a **64-bit operating system**; 32-bit ARM is not included. Docker selects the matching image automatically.
 
 ## Getting started
 
@@ -49,7 +49,7 @@ The existing **mosquitto** service remains available. Selecting both displays a 
 
 Containers in this stack connect to `mqttctl-broker-agent:1883`; devices outside Docker use `<IOTstack-host>:1884`. Existing integrations pointing to `mosquitto:1883` continue to use the old broker until you change their settings. To use mqttctl alone on standard host port 1883, stop/deactivate Mosquitto and set `MQTTCTL_MQTT_PORT=1883`.
 
-The broker-agent's management API is not published to the host. Only public certificates are shared with the UI. Certificates initially cover the internal service name and localhost. For external MQTT TLS clients, configure certificates covering your actual hostname/IP and trust the CA; see [mqttctl TLS documentation](https://github.com/Slyke/mqttctl/blob/main/docs/CERTS.md). HTTP and plain MQTT defaults are intended for a trusted local network.
+The broker-agent's management API is not published to the host. Only public certificates are shared with the UI. Certificates initially cover the internal service name and localhost. For external MQTT TLS clients, configure certificates covering your actual hostname/IP and trust the CA; see [mqttctl TLS documentation](https://github.com/Slyke/mqttctl/blob/master/docs/CERTS.md). HTTP and plain MQTT defaults are intended for a trusted local network.
 
 ## Persistence and customization
 
