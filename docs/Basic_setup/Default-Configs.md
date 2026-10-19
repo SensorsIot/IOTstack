@@ -29,6 +29,7 @@
 | matterbridge | host | |
 | mjpg-streamer | non-host | 8980:80 <br> |
 | mosquitto | non-host | 1883:1883 <br> |
+| mqttctl | non-host | 3002:3000 <br> 1883:1883 <br> 8883:8883 <br> 9001:9001 <br> |
 | motioneye | non-host | 8765:8765 <br> 8766:8081 <br> |
 | n8n | non-host | 5678:5678 <br> 3306:3306 <br> |
 | nextcloud | non-host | 9321:80 <br> 9343:443 <br> 3306:3306 <br> |

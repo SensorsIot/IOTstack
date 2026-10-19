@@ -1,0 +1,33 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "MQTT broker and mqttctl management UI",
+   "environment": [
+      {
+         "variable": "MQTTCTL_ADMIN_PASSWORD",
+         "preset": "$(random_password)"
+      },
+      {
+         "variable": "MQTTCTL_PUBLIC_URL",
+         "preset": "$(.templates/mqttctl/default-public-url.sh)"
+      }
+   ],
+   "install": [
+      {
+         "template": "service.yml",
+         "service": "service.yml",
+         "tracked": true
+      },
+      {
+         "template": "initialize.mjs",
+         "service": "initialize.mjs",
+         "tracked": true
+      },
+      {
+         "template": "mosquitto.conf",
+         "service": "mosquitto.conf",
+         "tracked": true
+      }
+   ],
+   "service": "mqttctl"
+}
