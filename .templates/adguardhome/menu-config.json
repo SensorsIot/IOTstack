@@ -3,6 +3,7 @@
    "dependencies": [],
    "description": "Ad-blocker and personal DNS",
    "environment": [],
+   "excluded_by": ["pihole", "pihole6"],
    "install": [
       { "template": "service.yml", "service": "service.yml", "tracked": true }
    ],

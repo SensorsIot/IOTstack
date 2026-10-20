@@ -12,6 +12,7 @@
          "preset": "$(.templates/mqttctl/default-public-url.sh)"
       }
    ],
+   "excluded_by": ["mosquitto"],
    "install": [
       {
          "template": "service.yml",

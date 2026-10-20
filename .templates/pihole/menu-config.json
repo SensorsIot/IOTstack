@@ -3,6 +3,7 @@
    "dependencies": [],
    "description": "Ad-blocker (deprecated)",
    "environment": [],
+   "excluded_by": ["adguardhome", "pihole6"],
    "install": [
       { "template": "service.yml", "service": "service.yml", "tracked": true }
    ],
