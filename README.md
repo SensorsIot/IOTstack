@@ -88,7 +88,6 @@ I've long wanted a menu system with the following characteristics:
 
 	- [rsync flags](#rsync-flags)
 
-- [user testing](#user-testing)
 - [see also](#references)
 
 <hr>
@@ -694,149 +693,36 @@ To put this another way, if a renovation or upgrade produces a summary line but 
 1. The destination file did not exist when the copy occurred (ie there was nothing to rename as `.save`).
 2. The contents of the source and destination files were the same but some other attributes, such as modification times or permissions did not match. Harmonising attributes does not involve replacing the destination file so `rsync` doesn't create a `.save` file.
 
-<a name="user-testing"></a>
-## user testing
-
-I am publishing this on GitHub at [Paraphraser/IOTstack](https://github.com/Paraphraser/IOTstack). I don't want to turn it into a pull request for [SensorsIot/IOTstack](https://github.com/SensorsIot/IOTstack) until the maker community has had a chance to try it out, report bugs, raise issues, and otherwise provide me with some feedback.
-
-If you'd like to test this new menu system on your own equipment, this is how you can do it.
-
-### initial setup
-
-``` console
-$ cd ~/IOTstack
-$ git remote add paraphraser https://github.com/Paraphraser/IOTstack.git
-$ git fetch paraphraser iotstack-menu
-$ git switch iotstack-menu
-```
-
-Next, launch the menu:
-
-``` console
-$ ./iotstack-menu.sh
-```
-
-Feel free to explore the menu system but please don't "build" your stack until you have read [Migration](./docs/Updates/Migration.md) so that you understand:
-
-1. What happened during [auto-migration](./docs/Updates/Migration.md#auto-migration); and
-2. What [manual migration](./docs/Updates/Migration.md#user-migration) steps might need to be undertaken by you.
-
-### GitHub sync
-
-If you've done the initial setup but I subsequently respond to suggestions or bug reports by pushing some more changes to GitHub and you want to try those out too:
-
-``` console
-$ cd ~/IOTstack
-$ git fetch paraphraser iotstack-menu
-$ git switch iotstack-menu
-$ git pull
-```
-
-### switching menus
-
-If you want to switch between menus:
-
-* "new menu": `git switch master`
-* "old menu": `git switch old-menu`
-* `iotstack-menu`: `git switch iotstack-menu`
-
-### cleaning up
-
-If you decide that you don't want to continue testing, you can clean up like this:
-
-``` console
-$ git switch master
-$ git branch -D iotstack-menu
-$ git remote remove paraphraser
-```
-
 <a name="references"></a>
 ## see also
 
 This section contains links to the IOTstack documentation, as amended for this menu. This avoids the need to create a separate version of the IOTstack Wiki. The need for this section will go away if this menu gains sufficient popularity to take it mainstream.
 
+* [Wiki (top level)](https://sensorsiot.github.io/IOTstack/) where you will also find a list of containers and their documentation.
+
 * Basics:
 
-	- [Getting Started](./docs/Basic_setup/index.md)
-	- [Accessing your device from the Internet](./docs/Basic_setup/Accessing-your-Device-from-the-internet.md)
-	- [Backing up and restoring IOTstack](./docs/Basic_setup/Backup-and-Restore.md)
-	- [Customisation](./docs/Basic_setup/Custom.md)
-	- [Default ports](./docs/Basic_setup/Default-Configs.md)
-	- [Logging](./docs/Basic_setup/Docker.md)
-	- [Miscellaneous](./docs/Basic_setup/Miscellaneous.md)
-	- [Networking](./docs/Basic_setup/Networking.md)
-	- [Troubleshooting](./docs/Basic_setup/Troubleshooting.md)
-	- [What is Docker?](./docs/Basic_setup/Understanding-Containers.md)
-	- [What is sudo?](./docs/Basic_setup/What-is-sudo.md)
+	- [Getting Started](https://sensorsiot.github.io/IOTstack/Basic_setup/)
+	- [Accessing your device from the Internet](https://sensorsiot.github.io/IOTstack/Basic_setup/Accessing-your-Device-from-the-internet/)
+	- [Backing up and restoring IOTstack](https://sensorsiot.github.io/IOTstack/Basic_setup/Backup-and-Restore/)
+	- [Customisation](https://sensorsiot.github.io/IOTstack/Basic_setup/Custom/)
+	- [Default ports](https://sensorsiot.github.io/IOTstack/Basic_setup/Default-Configs/)
+	- [Logging]([./docs/Basic_setup/Docker.md](https://sensorsiot.github.io/IOTstack/Basic_setup/Docker/))
+	- [Miscellaneous](https://sensorsiot.github.io/IOTstack/Basic_setup/Miscellaneous/)
+	- [Networking](https://sensorsiot.github.io/IOTstack/Basic_setup/Networking/)
+	- [Troubleshooting](https://sensorsiot.github.io/IOTstack/Basic_setup/Troubleshooting/)
+	- [What is Docker?](https://sensorsiot.github.io/IOTstack/Basic_setup/Understanding-Containers/)
+	- [What is sudo (and why you should be careful with it)?]([./docs/Basic_setup/What-is-sudo.md](https://sensorsiot.github.io/IOTstack/Basic_setup/What-is-sudo/))
 
 * Updates:
 
-	- [Stack Maintenance](./docs/Updates/index.md)
-	- [Migration](./docs/Updates/Migration.md)
+	- [Stack Maintenance](https://sensorsiot.github.io/IOTstack/Updates/)
+	- [Migration](https://sensorsiot.github.io/IOTstack/Updates/Migration/)
 
 * Developers:
 
-	- [Contributing](./docs/Developers/index.md)
-	- [Defining a new service](./docs/Developers/Add-Service.md)
-	- [Build Services](./docs/Developers/BuildStack-Services.md)
-	- [How to set up Git](./docs/Developers/Git-Setup.md)
-	- [Internal database](./docs/Developers/Internal-Database.md)
-
-* Containers:
-
-	- [AdGuardHome](docs/Containers/AdGuardHome.md)
-	- [Adminer](docs/Containers/Adminer.md)
-	- [APTCacherNG](docs/Containers/APTCacherNG.md)
-	- [Blynk_server](docs/Containers/Blynk_server.md)
-	- [Chronograf](docs/Containers/Chronograf.md)
-	- [DashMachine](docs/Containers/DashMachine.md)
-	- [Deconz](docs/Containers/Deconz.md)
-	- [DiyHue](docs/Containers/DiyHue.md)
-	- [Domoticz](docs/Containers/Domoticz.md)
-	- [Dozzle](docs/Containers/Dozzle.md)
-	- [Duckdns](docs/Containers/Duckdns.md)
-	- [ESPHome](docs/Containers/ESPHome.md)
-	- [EspruinoHub](docs/Containers/EspruinoHub.md)
-	- [Gitea](docs/Containers/Gitea.md)
-	- [Grafana](docs/Containers/Grafana.md)
-	- [Heimdall](docs/Containers/Heimdall.md)
-	- [Home-Assistant](docs/Containers/Home-Assistant.md)
-	- [Homebridge](docs/Containers/Homebridge.md)
-	- [Homer](docs/Containers/Homer.md)
-	- [InfluxDB](docs/Containers/InfluxDB.md)
-	- [InfluxDB2](docs/Containers/InfluxDB2.md)
-	- [Jellyfin](docs/Containers/Jellyfin.md)
-	- [Kapacitor](docs/Containers/Kapacitor.md)
-	- [MariaDB](docs/Containers/MariaDB.md)
-	- [MJPEG-Streamer](docs/Containers/MJPEG-Streamer.md)
-	- [Mosquitto](docs/Containers/Mosquitto.md)
-	- [MotionEye](docs/Containers/MotionEye.md)
-	- [NextCloud](docs/Containers/NextCloud.md)
-	- [Nginx](docs/Containers/Nginx.md)
-	- [Node-RED](docs/Containers/Node-RED.md)
-	- [Octoprint](docs/Containers/Octoprint.md)
-	- [OpenHab](docs/Containers/OpenHab.md)
-	- [PgAdmin4](docs/Containers/PgAdmin4.md)
-	- [Pi-hole](docs/Containers/Pi-hole.md)
-	- [Pi-hole6](docs/Containers/Pi-hole6.md)
-	- [Portainer-agent](docs/Containers/Portainer-agent.md)
-	- [Portainer-ce](docs/Containers/Portainer-ce.md)
-	- [PostgreSQL](docs/Containers/PostgreSQL.md)
-	- [Prometheus](docs/Containers/Prometheus.md)
-	- [Python](docs/Containers/Python.md)
-	- [Ring-MQTT](docs/Containers/Ring-MQTT.md)
-	- [RTL_433](docs/Containers/RTL_433-docker.md)
-	- [Scrypted](docs/Containers/Scrypted.md)
-	- [Syncthing](docs/Containers/Syncthing.md)
-	- [Tailscale](docs/Containers/Tailscale.md)
-	- [TasmoAdmin](docs/Containers/TasmoAdmin.md)
-	- [Telegraf](docs/Containers/Telegraf.md)
-	- [Timescaledb](docs/Containers/Timescaledb.md)
-	- [Vaultwarden](docs/Containers/Vaultwarden.md)
-	- [WireGuard](docs/Containers/WireGuard.md)
-	- [WordPress](docs/Containers/WordPress.md)
-	- [X2go](docs/Containers/X2go.md)
-	- [ZeroTier-vs-WireGuard](docs/Containers/ZeroTier-vs-WireGuard.md)
-	- [ZeroTier](docs/Containers/ZeroTier.md)
-	- [Zigbee2MQTT](docs/Containers/Zigbee2MQTT.md)
-	- [Zigbee2mqttassistant](docs/Containers/Zigbee2mqttassistant.md)
+	- [Contributing](https://sensorsiot.github.io/IOTstack/Developers/)
+	- [Defining a new service](https://sensorsiot.github.io/IOTstack/Developers/Add-Service/)
+	- [Build Services](https://sensorsiot.github.io/IOTstack/Developers/BuildStack-Services/)
+	- [How to set up Git](https://sensorsiot.github.io/IOTstack/Developers/Git-Setup/)
+	- [Internal database](https://sensorsiot.github.io/IOTstack/Developers/Internal-Database/)
