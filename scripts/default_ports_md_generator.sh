@@ -49,7 +49,10 @@ for template in sorted(templates):
         # Search for ports used by each service. findall is split into 2 groups to deal with #'s in some service.yml's.
         # Keep only the ports and not the whitespace or "-"
         
-        portSearchResult = re.findall(r'^(\s*[-]\s*"*)(\d{2,5}[:]\d{2,5})', fileInput,re.M)
+        # Document numeric Compose defaults (${VAR:-1883} or ${VAR-1883}),
+        # regardless of the developer's environment or local .env settings.
+        portInput = re.sub(r'\$\{[A-Za-z_][A-Za-z0-9_]*:?-([0-9]+)\}', r'\1', fileInput)
+        portSearchResult = re.findall(r'^(\s*[-]\s*"*)(\d{2,5}[:]\d{2,5})', portInput,re.M)
         ports = []
         for result in portSearchResult:
             ports.append(result[1])
