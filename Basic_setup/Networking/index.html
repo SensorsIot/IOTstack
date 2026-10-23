@@ -1,0 +1,3630 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="../Miscellaneous/">
+      
+      
+        <link rel="next" href="../Troubleshooting/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Networking - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#networking" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Networking
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Containers/APTCacherNG/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Developers/" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Updates/" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default Ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Miscellaneous/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Miscellaneous
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#non-host-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        non-host mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="non-host mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#port-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        port mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        container port
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-port-explicit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        host port (explicit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generalisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generalisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        host mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="host mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#x-ports-clause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        x-ports: clause
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-port-implied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        host port (implied)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-port-3000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        about port 3000
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        port conflicts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        client processes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#localhost-depends-on-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        localhost depends on context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duplicating-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        duplicating the model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#broadcast-domains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        broadcast domains
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#private-database-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        private database network
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="private database network">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#privateContainerPorts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        private container ports
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reverse-proxy-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reverse-proxy considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-1270011" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        about 127.0.0.11
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/APTCacherNG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    APT-cacher-NG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/InfluxDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Jellyfin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jellyfin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/MJPEG-Streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Mqttctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    mqttctl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Node-RED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Pi-hole6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Tailscale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tailscale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vaultwarden
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/ZeroTier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Zigbee2MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Add-Service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Defining a new service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Developers/Internal-Database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack maintenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/Migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#non-host-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        non-host mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="non-host mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#port-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        port mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        container port
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-port-explicit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        host port (explicit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generalisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generalisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        host mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="host mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#x-ports-clause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        x-ports: clause
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-port-implied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        host port (implied)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-port-3000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        about port 3000
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        port conflicts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        client processes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#localhost-depends-on-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        localhost depends on context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duplicating-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        duplicating the model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#broadcast-domains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        broadcast domains
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#private-database-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        private database network
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="private database network">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#privateContainerPorts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        private container ports
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reverse-proxy-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reverse-proxy considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-1270011" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        about 127.0.0.11
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h1>
+<p>As a general statement, <em>containers</em> are <em>contained</em> which means that pretty much the only way containers can communicate is via TCP/IP. Consequently, it is useful to have a reasonable appreciation for how data-communications works in a Docker environment.</p>
+<p>Please refer to Figure&nbsp;1. The outermost box is labelled "Host system". This could be a physical computer like a Raspberry Pi or a virtual computer such as a Debian guest running on a Proxmox-VE system.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure1"></a> Figure 1: Docker networking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Docker networking" src="../images/networking-reference-model.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>The host can be reached using any or all of the following:</p>
+<ul>
+<li>its IPv4 address 192.168.0.10</li>
+<li>its hostname "iot-hub"</li>
+<li>its fully-qualified domain name (FQDN) "iot-hub.home.arpa"</li>
+<li>
+<p>its multicast domain name system (mDNS) name "iot-hub.local".</p>
+<blockquote>
+<p>The diagram depicts a single network interface but it's fairly common to have more than one, such as a Raspberry Pi connected to both Ethernet and WiFi.</p>
+</blockquote>
+</li>
+</ul>
+<p>This host is running three Docker <em>containers</em> named "kai", "sam" and "mia".</p>
+<p>TCP/IP is a client-server model: clients initiate "connections" and servers respond. Although processes running inside containers can be both <em>clients</em> and <em>servers</em>, our focus here is on <em>server processes</em>.</p>
+<p>Each container is running a single server process named for its container. The blue boxes with white lettering rotated 90° represent those server processes. It's important to realise that a <em>container</em> and a server <em>process</em> running inside a container are not the same thing, irrespective of whether they have the same or different names.</p>
+<p>Server processes (not containers) bind to network ports where they listen for incoming requests and take some appropriate action in response (eg a web server receiving an HTTP request and responding with HTML for a browser to interpret and display to a user).</p>
+<h2 id="non-host-mode">non-host mode<a class="headerlink" href="#non-host-mode" title="Permanent link">&para;</a></h2>
+<p>Two of the containers ("kai" and "sam") are running in what is called <em>non-host mode</em>. This is the result of the <strong>absence</strong> of a <code>network_mode: host</code> clause from each container's service definition.</p>
+<h3 id="port-mapping">port mapping<a class="headerlink" href="#port-mapping" title="Permanent link">&para;</a></h3>
+<p>In non-host mode, <code>ports:</code> clauses come into play. Here is the one for "kai":</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">ports</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"3001:3000"</span>
+</code></pre></div>
+<p>The second line is called a <em>port mapping</em> and the general syntax is:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"«hostPort»:«containerPort»"</span>
+</code></pre></div>
+<details class="info">
+<summary>(advanced) extended forms</summary>
+<p>Ports can be described using both <em>short syntax</em> and <em>long syntax</em>. Refer <a href="https://docs.docker.com/reference/compose-file/services/#ports">docker compose ports</a> documentation.</p>
+<p>IOTstack uses short syntax because, thus far, there has never been a need for a feature that demands the use of long syntax. The general form of short syntax is:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="s">"{«interface»:}«hostPort»:«containerPort»{/«protocol»}"</span>
+</code></pre></div>
+<p>where:</p>
+<ul>
+<li><code>«interface»</code> defaults to "0.0.0.0" (meaning "all interfaces on this host")</li>
+<li><code>«hostPort»</code> and <code>«containerPort»</code> are port numbers</li>
+<li><code>«protocol»</code> defaults to "tcp"</li>
+</ul>
+<p>Thus the short-syntax form <code>"3001:3000"</code> is actually a contraction of:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"0.0.0.0:3001:3000/tcp"</span>
+</code></pre></div>
+<p>The only times you will need to specify an <code>«interface»</code> is:</p>
+<ul>
+<li>If you want to prevent a container from receiving traffic on a particular interface. For example, if you don't want traffic arriving over WiFi but you still want WiFi to be active, you would specify the IP address of the Ethernet interface.</li>
+<li>If you don't want the service to be reachable from beyond the host on which it is running, in which case you use 127.0.0.1 (not "localhost").</li>
+</ul>
+<p>Similarly, the only time you will need to specify "udp" for the protocol is if the service expects it. If a service expects both, it is best to be explicit. For example:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"53:53/tcp"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"53:53/udp"</span>
+</code></pre></div>
+</details>
+<h3 id="container-port">container port<a class="headerlink" href="#container-port" title="Permanent link">&para;</a></h3>
+<p>The number on the right hand side of the port mapping (3000) is called the <em>container port</em>, also sometimes known as the <em>internal port</em>.</p>
+<p>The container port sets an <strong>expectation</strong>, for both Docker and human readers, that the "kai" server process binds to container port 3000. It does not, however, either force the server process to bind to that port or check that the port is bound once the container starts. The server process actually has no idea that it is running inside a container. It will bind to whatever port (or ports) it wants. Sometimes a port number will be hard-coded into the process' source code. Sometimes it can be controlled via an environment variable. Other times the process may consult a "config" file to determine which port to use.</p>
+<details class="note">
+<summary>(note) additional information</summary>
+<p>I don't want to leave you with the impression that there's a kind of Wild West where the actual ports claimed by server processes frequently differ from the expectations set by <code>ports:</code> clauses. Almost always everything is properly aligned and "just works". It is, however, important to understand what a <code>ports:</code> clause does and does not do. If you are developing a new service definition or if you have a good reason for telling a server process to bind to a different container port, you need to follow through and make sure that port mappings accurately reflect what the server process is actually doing.  </p>
+</details>
+<h3 id="host-port-explicit">host port (explicit)<a class="headerlink" href="#host-port-explicit" title="Permanent link">&para;</a></h3>
+<p>The number on the left hand side of the port mapping ("3001") is called the <em>host port</em>, also sometimes known as the <em>external port</em>.</p>
+<p>The port mapping "3001:3000" causes Docker to set up a port-forwarding rule such that traffic arriving on host port 3001 is forwarded to port 3000 of the "kai" container.</p>
+<p><a name="other-host-perspective"></a>
+Traffic passing between host port 3001 and container port 3000 is also subject to Network Address Translation (NAT). What this means is that, from the perspective of <em>another</em> host, the "kai" server process is reachable at any of the following:</p>
+<ul>
+<li><code>192.168.0.10:3001</code></li>
+<li><code>iot-hub:3001</code> <sup>†</sup></li>
+<li><code>iot-hub.home.arpa:3001</code> <sup>†</sup></li>
+<li>
+<p><code>iot-hub.local:3001</code> <sup>†</sup></p>
+<p><sup>†</sup> assuming the other host can resolve the hostname, fully-qualified domain name, or multicast domain name.</p>
+</li>
+</ul>
+<details class="info">
+<summary>(advanced) iptables</summary>
+<p>Docker uses <code>iptables</code> to set up both the NAT and port-forwarding rules. Once you have a stack up and running, you can see these rules by running: </p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>iptables<span class="w"> </span>-t<span class="w"> </span>nat<span class="w"> </span>-L<span class="w"> </span>-n
+</code></pre></div>
+</details>
+<h3 id="generalisation">generalisation<a class="headerlink" href="#generalisation" title="Permanent link">&para;</a></h3>
+<p>Thus far we've only discussed the "kai" container but the same applies to the "sam" container, save that its host port is "3002".</p>
+<h2 id="host-mode">host mode<a class="headerlink" href="#host-mode" title="Permanent link">&para;</a></h2>
+<p>The "mia" container, on the other hand, is running in <em>host mode</em>. This is the result of the <strong>presence</strong> of the <code>network_mode: host</code> clause in its service definition.</p>
+<p>When a container is running in host mode, port mappings are irrelevant. Indeed, if you include a <code>ports:</code> clause, docker compose will complain and tell you to remove it.</p>
+<h3 id="x-ports-clause"><code>x-ports:</code> clause<a class="headerlink" href="#x-ports-clause" title="Permanent link">&para;</a></h3>
+<p>For host-mode containers, IOTstack follows the convention of using an <code>x-ports:</code> clause. This example is from ESPHome:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">network_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span>
+<span class="nt">x-ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"6052:6052"</span>
+</code></pre></div>
+<p>The <code>x-</code> prefix has the effect of commenting-out both the header and body of the entire clause. IOTstack also follows the convention of writing whichever port(s) the server process binds to on each side of the pseudo port mapping. Together, these conventions both document which host port(s) are likely to be claimed when a host-mode container is brought up, and also facilitate maintenance of the <a href="../Default-Configs/">default ports</a> list.</p>
+<p>However, as with a port mapping for a non-host mode container, nothing in an <code>x-ports:</code> clause forces a process running within a host-mode container to bind to a particular port.</p>
+<p>A related IOTstack convention is this example from Pi-hole v6:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">x-network_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span>
+<span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8089:80/tcp"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"53:53/tcp"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"53:53/udp"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"67:67/udp"</span>
+</code></pre></div>
+<p>This pattern means that the service definition, as shipped, expects that container will normally be run in non-host mode but that the container is also capable of running in host mode. In the case of Pi-hole, non-host mode is appropriate if you only need DNS and ad-blocking services. If and only if you also need Pi-hole to provide DHCP services on your network should it be run in host mode. To activate host mode, you would "move the <code>x-</code> prefix", like this:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">network_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span>
+<span class="nt">x-ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8089:80/tcp"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"53:53/tcp"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"53:53/udp"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"67:67/udp"</span>
+</code></pre></div>
+<p>See also <a href="#privateContainerPorts">private container ports</a> for another convention where <code>x-ports:</code> is used for a non-host mode container. </p>
+<h3 id="host-port-implied">host port (implied)<a class="headerlink" href="#host-port-implied" title="Permanent link">&para;</a></h3>
+<p>The "mia" process running within the host-mode container binds directly to host port 3000. No port-forwarding and no Network Address Translation is involved. Another host can reach the "mia" process at port 3000 in the same way as the "kai" and "sam" processes are reachable at ports 3001 and 3002, respectively.</p>
+<h2 id="about-port-3000">about port 3000<a class="headerlink" href="#about-port-3000" title="Permanent link">&para;</a></h2>
+<p>The port number 3000 used in <a href="#figure1">Figure&nbsp;1</a> has no significance in and of itself. It could have been any number. The example is artificial and was deliberately constructed so that all three server processes ("kai", "sam" and "mia") were listening to the same port. That said, this design would actually work in practice because of the distinction between <em>host</em> and <em>container</em> ports:</p>
+<ul>
+<li>
+<p>A non-host mode container is best visualised as a small self-contained computer with its own ports and processes running "within" it; whereas</p>
+</li>
+<li>
+<p>A host-mode container binds to the ports of the host on which it is running. It is best understood as being no different to a native installation of the same process.</p>
+<details class="info">
+<summary>(definition) native installation</summary>
+<p>If the term "native installation" doesn't make sense, think of it like this. When you install a process <em>natively</em> you typically use the <code>apt install</code> command, keep the package up-to-date using <code>apt upgrade</code>, and usually manage the process with <code>systemctl</code>.</p>
+<p>Running the same process in a container is accomplished using docker compose, which handles everything to do with installation, management and upgrade.</p>
+</details>
+</li>
+</ul>
+<p>Any number of non-host mode containers can use the same container port because <em>containerName:containerPort</em> syntax provides all necessary disambiguation. Conversely, host ports must be unique.</p>
+<p>Any host-mode container must take priority when claiming a particular port, which is why "mia" gets host port 3000. Any non-host mode containers using the same port number must be port-mapped, which is why "kia" and "sam" take 3001 and 3002, respectively (or, indeed, any other host port numbers that haven't been claimed by something else).</p>
+<h2 id="port-conflicts">port conflicts<a class="headerlink" href="#port-conflicts" title="Permanent link">&para;</a></h2>
+<p>Which brings us to another IOTstack convention. IOTstack makes a best-efforts attempt at resolving potential port conflicts in advance. To this end, IOTstack uses a "first come, first served" approach, meaning that a newer container wanting a particular host port number must yield to any existing container that has already claimed that port number. </p>
+<p>The only known exceptions to this rule are Pi-hole and AdGuardHome, which utilise the same ports. For those, you can only run one container, not both.</p>
+<h2 id="client-processes">client processes<a class="headerlink" href="#client-processes" title="Permanent link">&para;</a></h2>
+<p>Thus far, this discussion has focused on how an external host reaches the three server processes. It is, however, frequently the case that a process running in a container will also need to be a client. Some very good examples are:</p>
+<ul>
+<li>
+<p>The Node-RED container needs to be able to:</p>
+<ul>
+<li>subscribe to topics managed by the Mosquitto broker</li>
+<li>tell the InfluxDB container to insert data into a time-series</li>
+</ul>
+</li>
+<li>
+<p>The Grafana container needs to be able to query the InfluxDB container to retrieve time-series data which it then formats into charts and tables.</p>
+</li>
+</ul>
+<p>For precision, the rules below apply to any pair of containers running on the <strong>same</strong> host, providing that if <strong>both</strong> containers are running in non-host mode, they must also share a common internal bridged network. For IOTstack, this is always the default condition.</p>
+<p>The rules are:</p>
+<ol>
+<li>
+<p>Two non-host mode containers = <em>containerName:containerPort</em> syntax:</p>
+<p>If a client process in a non-host mode container needs to be able to reach a server process in another non-host mode container, it uses the name of the container where the server process is running, plus the container port. For example, a client process running in the "kai" container reaches the "sam" server process as:</p>
+<div class="language-text highlight"><pre><span></span><code>sam:3000
+</code></pre></div>
+<details class="info">
+<summary>(advanced) container name to IP address lookup</summary>
+<p>The mapping between container names like "sam", and the (random) IPv4 address Docker allocates to each container when it is instantiated, are all managed by Docker. You do not need to worry about it.</p>
+</details>
+</li>
+<li>
+<p>Non-host mode to host mode container = <em>magicName:hostPort</em> syntax:</p>
+<p>If a client process in a non-host mode container needs to be able to reach a server process in a host-mode container, it needs an "assist" in the form of an <code>extra_hosts:</code> clause in its service definition. By convention, that is:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">extra_hosts</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"host.docker.internal:host-gateway"</span>
+</code></pre></div>
+<p>Assume that clause has been added to the service definition for "kai". A client process running within the "kai" container can then reach the "mia" server process using:</p>
+<div class="language-text highlight"><pre><span></span><code>host.docker.internal:3000
+</code></pre></div>
+<details class="info">
+<summary>(advanced) other uses of <code>extra_hosts</code></summary>
+<p>Suppose you have Node-RED and Mosquitto running on the same host. Node-RED flows will be subscribing to MQTT topics using <code>mosquitto:1883</code> (<em>containerName:containerPort</em> syntax). Now suppose you need to move one of the containers to a different host. This means <code>mosquitto:1883</code> will no longer work. You have two choices:</p>
+<ol>
+<li>Edit your flows to replace <code>mosquitto</code> with either the IP address or the fully-qualified domain name of the host where the Mosquitto container is running; or</li>
+<li>
+<p>Add an <code>extra_hosts:</code> clause to Node-RED's service definition:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">extra_hosts</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mosquitto:«ipAddress»</span>
+</code></pre></div>
+<p>You <strong>must</strong> use the IP address of the host where the Mosquitto container is running. Once that is in place, your Node-RED flows will continue to work without modification.</p>
+</li>
+</ol>
+</details>
+</li>
+<li>
+<p>Host-mode container to anything = <em>localhost:hostPort</em> syntax:</p>
+<p>If a client process in a host-mode container needs to reach any other server process on the same host, irrespective of whether the server process is running natively, or in a host-mode container, or in a non-host mode container, it uses <code>localhost</code> plus the host port associated with the server process. For example, a client process running within "mia" can reach any of the three server processes like this:</p>
+<ul>
+<li><code>localhost:3000</code> refers to the "mia" server process (ie a self-reference)</li>
+<li><code>localhost:3001</code> refers to the "kai" server process</li>
+<li><code>localhost:3002</code> refers to the "sam" server process</li>
+</ul>
+</li>
+<li>
+<p>Self-references = <em>localHost:serverPort</em> syntax:</p>
+<p>If a client process running within any container needs to refer to a server process running in the <strong>same</strong> container, it can use <code>localhost</code> plus whatever port the server process is bound to. In <a href="#figure1">Figure&nbsp;1</a>, all three server processes are bound to port 3000 so <code>localhost:3000</code> has the following meanings:</p>
+<ul>
+<li>for a client process running in the "kai" container, it means the "kai" server process;</li>
+<li>for a client process running in the "sam" container, it means the "sam" server process;</li>
+<li>for a client process running in the "mia" container, it means the "mia" server process.</li>
+</ul>
+</li>
+</ol>
+<h2 id="localhost-depends-on-context">localhost depends on context<a class="headerlink" href="#localhost-depends-on-context" title="Permanent link">&para;</a></h2>
+<p>To put rules 3 and 4 more simply:</p>
+<ul>
+<li>If a container is running in non-host mode, <code>localhost</code> means "this container".</li>
+<li>If a container is running in host mode, <code>localhost</code> means "this host".</li>
+</ul>
+<h2 id="duplicating-the-model">duplicating the model<a class="headerlink" href="#duplicating-the-model" title="Permanent link">&para;</a></h2>
+<p>Imagine duplicating the host in <a href="#figure1">Figure&nbsp;1</a> so that you have two hosts where the only differences are the IP address assigned to the second host (eg 192.168.0.11) plus a distinct host name (eg <code>iot-two</code>).</p>
+<p>That second host (<code>iot-two</code>) and the containers it is running <strong>all</strong> have the <a href="#other-host-perspective">"perspective of another host"</a> mentioned earlier. Whether a client process is running natively, or in a host-mode container, or in a non-host mode container, is irrelevant.</p>
+<p>The server processes running on <code>iot-hub</code> are reached using its IP address, host-, domain- or multicast-name plus the host port associated with the server process. Ditto in the other direction for client processes running on <code>iot-hub</code> reaching server processes on <code>iot-two</code>.</p>
+<h2 id="broadcast-domains">broadcast domains<a class="headerlink" href="#broadcast-domains" title="Permanent link">&para;</a></h2>
+<p>In <a href="#figure1">Figure&nbsp;1</a>, please notice the software-defined router on the left hand side which forwards traffic between the host's network and the internal bridged network. The purpose of <em>routers</em> is to separate networks into <em>broadcast domains</em> (aka "subnets"). A broadcast domain limits the extent to which non-unicast packets can flood throughout interconnected network segments.</p>
+<p>This explains why Pi-hole needs to run in host mode if you want it to act as the DHCP server for your network. It is because "DHCP request" frames are broadcast. If Pi-hole is running in non-host mode (like "kai") then the software router will prevent broadcast frames from reaching it. Placing Pi-hole into host mode (like "mia") enables it to receive broadcast frames and construct replies.</p>
+<p>Similar comments apply to multicast traffic. Although it is possible to program routers to relay multicast frames, that does not happen with Docker (at least not at the moment). The result is that resolving multicast DNS names like <code>iot-hub.local</code> does not work in non-host mode containers.</p>
+<p>You should also keep in mind that both the IP subnets allocated to the internal bridged networks and the IP addresses allocated to containers when they launch are (essentially) random. You can't rely on a non-host mode container's IP address being invariant.</p>
+<h2 id="private-database-network">private database network<a class="headerlink" href="#private-database-network" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure2"></a> Figure 2: Private Database Network</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Private Database Network" src="../images/networking-private-database.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>Figure&nbsp;2 removes much of the clutter and focuses on the arrangement where a user-facing service like NextCloud works in conjunction with a private database server (in this case, MariaDB):</p>
+<ul>
+<li>
+<p>An external client wanting to reach the NextCloud service references host port 9321, which is port-forwarded to the "nextcloud" container port 80, where the "nextcloud" process is listening.</p>
+</li>
+<li>
+<p>When the "nextcloud" process wants to communicate with its MariaDB back-end, it uses the <em>containerName:containerPort</em> syntax:</p>
+<div class="language-text highlight"><pre><span></span><code>nextcloud_db:3306
+</code></pre></div>
+<p>Although it does not happen in practice, if the MariaDB engine wanted to initiate communications in the other direction, it would use the same syntax:</p>
+<div class="language-text highlight"><pre><span></span><code>nextcloud:80
+</code></pre></div>
+</li>
+<li>
+<p>The "nexcloud_db" container is only exposed to containers that are attached to the <code>iotstack_database</code> internal bridged network. The same is true in reverse in that the "nexcloud_db" container can only reach containers that are attached to the <code>iotstack_database</code> network.</p>
+<details class="info">
+<summary>(advanced) network names</summary>
+<p>The <code>iotstack_</code> prefix on both <code>iotstack_default</code> and <code>iotstack_database</code> is the docker compose <em>project name</em>, which is the all-lower-case representation of the directory holding the compose file.</p>
+</details>
+</li>
+</ul>
+<h3 id="privateContainerPorts">private container ports<a class="headerlink" href="#privateContainerPorts" title="Permanent link">&para;</a></h3>
+<p><a href="#figure2">Figure&nbsp;2</a> also reveals another IOTstack convention. The <code>nextcloud_db</code> container runs in non-host mode yet its service definition includes:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">x-ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"3306:3306"</span>
+</code></pre></div>
+<p>In this case, the container port the server process binds to is written on each side of the port mapping. The <code>x-</code> prefix makes the clause inactive but it still serves the purpose of documenting which port MariaDB is listening on.</p>
+<h2 id="reverse-proxy-considerations">reverse-proxy considerations<a class="headerlink" href="#reverse-proxy-considerations" title="Permanent link">&para;</a></h2>
+<p>Suppose you wanted to set up a reverse proxy service such as Nginx on the host shown in <a href="#figure1">Figure&nbsp;1</a>. Nginx is a non-host mode container. You would need proxy-host rules like this:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>https://mia.home.arpa</td>
+<td>http://host.docker.internal:3000</td>
+</tr>
+<tr>
+<td>https://kai.home.arpa</td>
+<td>http://kai:3000</td>
+</tr>
+<tr>
+<td>https://sam.home.arpa</td>
+<td>http://sam:3000</td>
+</tr>
+<tr>
+<td>https://nextcloud.home.arpa</td>
+<td>http://nextcloud:80</td>
+</tr>
+</tbody>
+</table>
+<p>This also makes the point that, where a container offers a web front end or other interface which is commonly associated with Transport Layer Security (TLS), <strong>most</strong> containers default to HTTP. Some, but by no means all containers support HTTPS, either in parallel or as an alternative. If you intend to go down the path of enabling HTTPS everywhere, you will have to get comfortable figuring out where you need SSL certificates and how to deploy them. I don't think it's an overstatement to say that it can seem like the designers of every container adopted different approaches to doing this. It's quite the minefield. </p>
+<h2 id="about-1270011">about 127.0.0.11<a class="headerlink" href="#about-1270011" title="Permanent link">&para;</a></h2>
+<p>If you are nosing around inside a non-host mode container, you may come across the IPv4 address <code>127.0.0.11</code>. This is a special address managed by Docker which provides name-resolution services for containers.</p>
+<p>In a formal sense, a container name is an unqualified domain name, such as <code>fred</code>, as distinct from a fully-qualified domain name like <code>fred.home.arpa</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li>The difference between an unqualified and fully-qualified domain name comes down to "dots". By default, if a string contains at least one period then it is considered to be fully-qualified.</li>
+</ul>
+</div>
+<p>Outside <em>Dockerspace</em> you may be used to seeing unqualified domain names first being treated as hostnames (being looked-up in <code>/etc/hosts</code>) and then having a search domain appended to form a fully-qualified domain name which is passed to the Domain Name System (DNS) for resolution.</p>
+<p>Inside <em>Dockerspace</em>, unqualified domain names are treated as container names. If no container of that name is running, resolution fails. There is no concept of appending a search domain. Fully-qualified domain names, on the other hand, are relayed to whatever the host is using for its DNS resolution. This is something you may need to be aware of when provisioning containers.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>

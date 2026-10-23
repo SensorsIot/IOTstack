@@ -1,0 +1,3582 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="../Developers/Internal-Database/">
+      
+      
+        <link rel="next" href="Migration/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Stack maintenance - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../style.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#stack-maintenance" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Stack maintenance
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../Basic_setup/" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../Containers/APTCacherNG/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../Developers/" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default Ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/Miscellaneous/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Miscellaneous
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/Networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Basic_setup/What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/APTCacherNG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    APT-cacher-NG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/InfluxDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Jellyfin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jellyfin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/MJPEG-Streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Mqttctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    mqttctl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Node-RED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Pi-hole6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Tailscale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tailscale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vaultwarden
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/ZeroTier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Zigbee2MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Containers/Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/Add-Service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Defining a new service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Developers/Internal-Database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack maintenance
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack maintenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#maint-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operating system
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IOTstack installer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        internal database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structure-vs-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        structure vs contents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="structure vs contents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tracked-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tracked files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-structural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        renovation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        services
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maint-services-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maint-services-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        upgrade service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        images and containers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="images and containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maint-base-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        maintaining base images
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maint-local-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        maintaining local images
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#maint-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operating system
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IOTstack installer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        internal database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structure-vs-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        structure vs contents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="structure vs contents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tracked-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tracked files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-structural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        renovation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        services
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maint-services-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maint-services-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        upgrade service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maint-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        images and containers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="images and containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maint-base-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        maintaining base images
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maint-local-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        maintaining local images
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="stack-maintenance">Stack maintenance<a class="headerlink" href="#stack-maintenance" title="Permanent link">&para;</a></h1>
+<p>Your stack is constructed from two primary sources:</p>
+<ul>
+<li>the <a href="https://github.com/SensorsIot/IOTstack">IOTstack</a> project on github.com; and</li>
+<li>Docker image registries, such as <a href="https://hub.docker.com">hub.docker.com</a>.</li>
+</ul>
+<p>Initial stack creation is straightforward because all the Docker-related steps are handled automatically. Thereafter, the menu adopts a philosophy of leaving you in control. It does not force you to update anything. It may <em>remind</em> you that something needs to be done but, in general, lets you proceed at your own pace, which means you need to perform the various steps explicitly.</p>
+<h2 id="maint-os">operating system<a class="headerlink" href="#maint-os" title="Permanent link">&para;</a></h2>
+<p>You should keep your host's operating system up-to-date. Despite the word "container" suggesting that <em>containers</em> are fully self-contained, they sometimes depend on operating system components.</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>upgrade<span class="w"> </span>-y
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>autoremove<span class="w"> </span>-y
+</code></pre></div>
+<h2 id="maint-github">GitHub<a class="headerlink" href="#maint-github" title="Permanent link">&para;</a></h2>
+<p>If you want to check whether the master version of IOTstack on GitHub has changed, run:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>git<span class="w"> </span>fetch
+<span class="gp">$ </span>git<span class="w"> </span>status
+</code></pre></div>
+<p>If the response to the <code>status</code> command says "Your branch is behind" by some number of commits then, providing it is convenient for you to do so, you can synchronise your local clone with GitHub by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>git<span class="w"> </span>pull
+</code></pre></div>
+<h2 id="maint-install">IOTstack installer<a class="headerlink" href="#maint-install" title="Permanent link">&para;</a></h2>
+<p>On each launch, the menu checks whether the installer script should be re-run. In general, this will only happen after an initial installation or following a <code>git pull</code>.</p>
+<p>As well as setting up the basic scaffolding for <em>Docker</em>, the installer script is the primary delivery vehicle for ensuring dependencies are in place so, as a general statement, it is prudent to let the installer run when necessary.</p>
+<p>In menu mode, the menu will offer you a choice:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure1"></a> Figure 1: Installer Update menu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Installer Update menu" src="images/installer-update-menu.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>In command-line mode, a reminder message is written to <code>stderr</code>:</p>
+<div class="language-text highlight"><pre><span></span><code>Warning: /home/pi/IOTstack/install.sh needs to be re-run.
+</code></pre></div>
+<p>To run the installer by hand:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>./install.sh
+</code></pre></div>
+<p>Note:</p>
+<ul>
+<li>The installer can only do so much. In particular, if you have fairly ancient installations of <em>Docker</em> and/or <em>docker&nbsp;compose</em>, you might need to use some brute force. You may find it helpful to read <a href="https://github.com/Paraphraser/PiBuilder/blob/master/docs/reinstallation.md">Maintaining docker + docker compose</a> which is part of <a href="https://github.com/Paraphraser/PiBuilder">PiBuilder</a>.</li>
+</ul>
+<p>Tip:</p>
+<ul>
+<li>
+<p>If you have a good reason for not wanting to run the installer, you can silence the reminders like this:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>./install.sh<span class="w"> </span>version<span class="w"> </span>&gt;.new_install
+</code></pre></div>
+<p>This fakes your system into believing that the updated version of the installer has already run.</p>
+</li>
+</ul>
+<h2 id="maint-database">internal database<a class="headerlink" href="#maint-database" title="Permanent link">&para;</a></h2>
+<p>The menu reloads its internal database automatically when either of the following is true:</p>
+<ol>
+<li>The internal database does not exist; or</li>
+<li>The commit&nbsp;ID of the <em>templates</em> directory changes.</li>
+</ol>
+<p>Those events cover the following use-cases:</p>
+<ol>
+<li>When you clone IOTstack for the first time;</li>
+<li>When you have an existing IOTstack but use <code>iotstack-menu.sh</code> for the first time; and</li>
+<li>When you have done a <code>git pull</code>, which has caused a change somewhere in the <em>templates</em> directory.</li>
+</ol>
+<p>You can also reload the internal database manually by running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>./iotstack-menu.sh<span class="w"> </span>reload
+</code></pre></div>
+<p>See also <a href="../Developers/Internal-Database/">Internal Database</a>.</p>
+<h2 id="structure-vs-contents">structure vs contents<a class="headerlink" href="#structure-vs-contents" title="Permanent link">&para;</a></h2>
+<p>Think of a house. You have the building's <em>structure</em> and the <em>contents</em> within. The menu makes similar distinctions:</p>
+<ul>
+<li>
+<p>The <em>structural</em> components are the items grouped in the upper part of <a href="#figure2">Figure&nbsp;2</a>:</p>
+<ul>
+<li>the menu script itself;</li>
+<li>the <code>.templates</code> <strong>directory</strong> (as distinct from the sub-directories and files contained within it); and</li>
+<li>the header and trailer files which are copied from the <em>templates</em> directory into the top level of the <em>services</em> directory.</li>
+</ul>
+</li>
+<li>
+<p>The <em>contents</em> components are the files that define the <em>services</em> you install. Installation of a service involves copying one or more files from the service's <em>template</em> into the service's sub-directory of the <em>services</em> directory. The lower part of <a href="#figure2">Figure&nbsp;2</a> uses Node-RED as its example where three files are copied when that service is installed.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure2"></a> Figure 2: File structures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="File structures" src="images/file-structures.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>If you need to do some work on the structure of your home, you usually talk about <em>renovations</em>. If an item of contents needs some work, you typically talk in terms of repairs or replacing the old item with a newer model (ie an <em>upgrade</em>). The menu adopts the same terminology. If a change from GitHub that needs to be propagated into your working stack affects:</p>
+<ul>
+<li>
+<p>a <em>structural</em> component, the relevant concept is <em>renovate</em>.</p>
+</li>
+<li>
+<p>a <em>contents</em> (service) component, the relevant concept is <em>upgrade</em>.</p>
+</li>
+</ul>
+<p>The menu distinguishes between <em>structure</em> and <em>contents</em> to minimise risk. Although <em>renovate</em> and <em>upgrade</em> serve similar purposes (propagating changes made on GitHub into your working stack), changes to <em>structural</em> components affect your whole stack so there's a greater chance of a foul-up than there is if you're only upgrading a service.</p>
+<h3 id="tracked-files">tracked files<a class="headerlink" href="#tracked-files" title="Permanent link">&para;</a></h3>
+<p>A file is said to be <em>tracked</em> if its Git commit&nbsp;ID is recorded in the menu's internal database at the time when the menu makes a copy of that file. <a href="#figure2">Figure&nbsp;2</a> summarises which files are <em>tracked</em>. </p>
+<p>If a <em>tracked</em> file's Git commit&nbsp;ID changes subsequently, it signals that the content of the original file has changed, and it implies that the copy of the file made by the menu when the commit&nbsp;ID was recorded is now out of date.</p>
+<p>The reason the menu makes copies of files (typically by copying from the <em>templates</em> directory into the <em>services</em> directory) is so that the destination copies (which are <strong>not</strong> under Git control) can be customised, by you, without affecting the originals (which <strong>are</strong> under Git control). It follows that, while a copy always starts out being identical to its original, it does not necessarily stay that way.</p>
+<p>When you tell the menu to "Renovate" the header/footer structural components or "Upgrade" a service, the menu only considers <em>tracked</em> files. If the newly-updated version of a <em>tracked</em> file differs from an existing file, the existing file is renamed with a <code>.save</code> extension before the updated version is installed. This gives you the opportunity to compare the old and new files, and decide whether it is necessary to re-apply any customisations.</p>
+<p>Developer guide references:</p>
+<ul>
+<li>The <a href="../Developers/Internal-Database/#theory-db-components">components table</a> records Git commit&nbsp;IDs for structural files;</li>
+<li>The <a href="../Developers/Internal-Database/#theory-db-tracking">tracking table</a> records Git commit&nbsp;IDs for services ("contents") files while the <a href="../Developers/Add-Service/#json_install"><code>"install":</code> array</a> in each service's <code>menu-config.json</code> defines which files are <em>tracked</em>.</li>
+</ul>
+<h2 id="maint-structural">renovation<a class="headerlink" href="#maint-structural" title="Permanent link">&para;</a></h2>
+<p>On first launch, the menu copies the four header and trailer files shown in <a href="#figure2">Figure&nbsp;2</a> into your <em>services</em> directory. On subsequent launches, those four files are replaced if they go missing but they are never normally overwritten.</p>
+<p>The first two files in the list are tracked. If the master version of one of those files changes, the menu will propose a <em>renovation</em>. In menu mode, the menu signals that a renovation is needed by adding the "Renovate" option to the Main menu:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure3"></a> Figure 3: Main menu – Renovate command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Main menu – Renovate command" src="images/main-menu-renovate.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>In command-line mode, the menu displays:</p>
+<div class="language-text highlight"><pre><span></span><code>Warning: headers/footers need renovation. Recommend running:
+           ./iotstack-menu.sh renovate
+         then compare any .save files (your versions) with newer
+         replacements, and re-apply your customisations.
+</code></pre></div>
+<p>This includes a hint for the command you should run:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>./iotstack-menu.sh<span class="w"> </span>renovate
+</code></pre></div>
+<p>Choosing either approach will trigger the renovation. The menu will only replace a structural file if it <strong>differs</strong> from the master version, in which case the older file will be renamed with a <code>.save</code> extension. The menu summarises its activities like this:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure4"></a> Figure 4: Renovation Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Renovation Summary" src="images/renovate-menu.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>In this example, the "<code>&gt;fc</code>" rsync flags indicate that the header file has been replaced so you can infer the existence of a <code>.save</code> file. To answer the question "what did the renovation change?" you can (and probably should):</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack/services
+<span class="gp">$ </span>diff<span class="w"> </span>-y<span class="w"> </span>docker-compose-header.yml.save<span class="w"> </span>docker-compose-header.yml
+</code></pre></div>
+<p>This produces a side-by-side display which makes it relatively easy to see if any of your customisations (from the <code>.save</code> file) need to be re-applied to the replacement file.</p>
+<h2 id="maint-services">services<a class="headerlink" href="#maint-services" title="Permanent link">&para;</a></h2>
+<p>Please refer back to <a href="#figure2">Figure&nbsp;2</a> and assume you have installed Node-RED.</p>
+<p>When you ask the menu to install a service, the installation process fetches the <code>.install</code> array from the service's <code>menu-config.json</code> <!--A-->&#x1F150;. In the case of Node-RED, that array contains:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>jq<span class="w"> </span>-c<span class="w"> </span>&lt;.templates/nodered/menu-config.json<span class="w"> </span>.install<span class="w"> </span>
+<span class="go">[</span>
+<span class="go"> {"template":"default-addon-nodes.txt","service":"installed-addon-nodes.txt","tracked":false},</span>
+<span class="go"> {"template":"Dockerfile","service":"Dockerfile","tracked":true},</span>
+<span class="go"> {"template":"service.yml","service":"service.yml","tracked":true}</span>
+<span class="go">]</span>
+</code></pre></div>
+<p>That tells the menu to copy three files:</p>
+<ul>
+<li><code>default-addon-nodes.txt</code> <!--B-->&#x1F151; to <code>installed-addon-nodes.txt</code> <!--C-->&#x1F152; (an implied rename);</li>
+<li><code>Dockerfile</code> from <!--D-->&#x1F153; to <!--E-->&#x1F154;; and</li>
+<li><code>service.yml</code> from <!--F-->&#x1F155; to <!--G-->&#x1F156;.</li>
+</ul>
+<p>Most services only need <code>service.yml</code> to be copied. Node-RED is a fairly special case being used in this example because it copies multiple tracked and untracked files.</p>
+<p>The value of <code>true</code> for the <em>tracked</em> keyword tells the menu to note the Git commit&nbsp;IDs of <!--D-->&#x1F153; and <!--F-->&#x1F155; at the time the copies are made.</p>
+<p>If you need to customise Node-RED, you can:</p>
+<ol>
+<li>Edit <code>service.yml</code> <!--G-->&#x1F156;; or</li>
+<li>Create then edit <code>override.yml</code> <!--H-->&#x1F157;; or</li>
+<li>Do both.</li>
+</ol>
+<p>Now, let's suppose <!--D-->&#x1F153; and/or <!--F-->&#x1F155; change on GitHub. Sometime later, you follow the steps in <a href="#maint-github">synchronise with GitHub</a>. Among other things, the Git commit&nbsp;IDs of <!--D-->&#x1F153; and/or <!--F-->&#x1F155; in your local clone of IOTstack will change. Any change of a commit&nbsp;ID for a tracked file causes the menu to conclude that the service has "changed" and is a candidate for being upgraded.</p>
+<h3 id="maint-services-update">update check<a class="headerlink" href="#maint-services-update" title="Permanent link">&para;</a></h3>
+<p>To check if any of your <strong>installed</strong> services are candidates for upgrading:</p>
+<ol>
+<li>
+<p>Either launch the menu and choose the "Update" command:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure5"></a> Figure 5: Main menu – Update command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Main menu – Update command" src="images/main-menu-update.png" /></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Or run:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>./iotstack-menu<span class="w"> </span>update
+</code></pre></div>
+</li>
+</ol>
+<p>If no services are candidates for upgrading, the menu will report:</p>
+<div class="language-text highlight"><pre><span></span><code>All installed services are up-to-date!
+</code></pre></div>
+<p>Otherwise any services that can be upgraded will be listed:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure6"></a> Figure 6: Update summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Update summary" src="images/update-menu.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>If you're wondering why the Services menu doesn't contain some indication of the upgradability of all services, it is because it is a relatively expensive operation. Checking every installed service every time the Services menu is rebuilt imposes an unacceptable performance penalty, particularly on low-end systems. That's why a separate "Update" command is provided in the Main menu.</p>
+<h3 id="maint-services-upgrade">upgrade service<a class="headerlink" href="#maint-services-upgrade" title="Permanent link">&para;</a></h3>
+<p>If the response from the "Update" command suggests that a service has changed, you can upgrade it. For example, if Node-RED has changed, you can upgrade it by either by:</p>
+<ul>
+<li>
+<p>In menu mode:</p>
+<ol>
+<li>Choose "Services" from the Main menu;</li>
+<li>Choose "nodered" in the Services menu;</li>
+<li>Choose the "Upgrade" command:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure7"></a> Figure 7: Upgrade Node-RED – command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Upgrade Node-RED – command" src="images/nodered-upgrade-command.png" /></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>In command line mode:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>./iotstack-menu<span class="w"> </span>upgrade<span class="w"> </span>nodered
+</code></pre></div>
+</li>
+</ul>
+<p>During an upgrade, all tracked files (<!--D-->&#x1F153; and <!--F-->&#x1F155;) are compared with their installed counterparts (<!--E-->&#x1F154; and <!--G-->&#x1F156;). If the <em>upgraded</em> version of a tracked file differs from its <em>existing</em> counterpart then the existing file will be saved with a <code>.save</code> extension before the upgraded version is copied into place.</p>
+<p>For example, if <!--F-->&#x1F155;; differed from <!--G-->&#x1F156; then the menu would display:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a name="figure8"></a> Figure 8: Upgrade Node-RED – summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Upgrade Node-RED – summary" src="images/nodered-upgrade-summary.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>To see exactly what changes from GitHub were brought in during the update, you could run:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack/services/nodered
+<span class="gp">$ </span>diff<span class="w"> </span>-y<span class="w"> </span>service.yml.save<span class="w"> </span>service.yml
+</code></pre></div>
+<p>The <code>diff -y</code> command gives a side-by-side view of changes. If you have customised the older version, you can re-apply the changes to the newer version (or move your customisations to an <code>override.yml</code> file).</p>
+<p>If you never changed <!--G-->&#x1F156; then it is probably safe to accept the new version of <!--F-->&#x1F155; replacing <!--G-->&#x1F156; "as is". Conversely, if you did change <!--G-->&#x1F156; then there's a solid risk that simply accepting the new version of <!--F-->&#x1F155; will lose your customisations. This latter situation is why <code>override.yml</code> files are the preferred approach.</p>
+<h2 id="maint-images">images and containers<a class="headerlink" href="#maint-images" title="Permanent link">&para;</a></h2>
+<p>Running <em>containers</em> are instantiated from <em>images</em>. IOTstack supports two kinds of images:</p>
+<ul>
+<li>
+<p>a <strong><em>base</em></strong> image: The container is instantiated from an image that is downloaded from DockerHub or another repository, and is used "as is".</p>
+</li>
+<li>
+<p>a <strong><em>local</em></strong> image: A <em>base</em> image is downloaded from DockerHub or another repository, and then a local <code>Dockerfile</code> is run to customise that <em>base</em> image to produce a <em>local</em> image. The <em>local</em> image is used to instantiate the container.</p>
+</li>
+</ul>
+<p>There are two easy ways to work out whether a container is instantiated from a <em>base</em> or <em>local</em> image:</p>
+<ol>
+<li>
+<p>Inspect its service definition (<code>service.yml</code>). If it contains an <code>image:</code> clause then the container is using a <em>base</em> image, whereas the presence of a <code>build:</code> clause is the signature of a container using a <em>local</em> image. Here are two examples:</p>
+<ul>
+<li>
+<p>Grafana is instantiated from a base image:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>config<span class="w"> </span>grafana<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-e<span class="w"> </span><span class="s2">"image:"</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"build:"</span>
+<span class="go">image: grafana/grafana</span>
+</code></pre></div>
+</li>
+<li>
+<p>Moquitto is instantiated from a local image:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>config<span class="w"> </span>mosquitto<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-e<span class="w"> </span><span class="s2">"image:"</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"build:"</span>
+<span class="go">build:</span>
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>Use docker's <code>images</code> command:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>docker<span class="w"> </span>images
+<span class="go">IMAGE                          ID             DISK USAGE</span>
+<span class="go">grafana/grafana:latest         f8a787bf1600       1.01GB    </span>
+<span class="go">influxdb:1.12                  03b8de319bf5        311MB    </span>
+<span class="go">iotstack-mosquitto:latest      2259353e98bd       27.1MB    </span>
+<span class="go">iotstack-nodered:latest        bbfad5db4f91        759MB    </span>
+</code></pre></div>
+<p>If the image name is prefixed with <code>iotstack-</code> then the image is a <em>local</em> image; otherwise it is a <em>base</em> image. In the above, Grafana and InfluxDB are <em>base</em> images while Mosquitto and Node-RED are <em>local</em> images.</p>
+</li>
+</ol>
+<h3 id="maint-base-images">maintaining base images<a class="headerlink" href="#maint-base-images" title="Permanent link">&para;</a></h3>
+<p>To maintain containers instantiated from <em>base</em> images:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>pull<span class="w"> </span><span class="o">{</span><span class="w"> </span>«container»<span class="w"> </span>...<span class="w"> </span><span class="o">}</span>
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span><span class="o">{</span><span class="w"> </span>«container»<span class="w"> </span>...<span class="w"> </span><span class="o">}</span>
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-f
+</code></pre></div>
+<p>The <a href="https://github.com/Paraphraser/IOTstackAliases">IOTstackAliases</a> equivalents are:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>PULL<span class="w"> </span><span class="o">{</span><span class="w"> </span>«container»<span class="w"> </span>...<span class="w"> </span><span class="o">}</span>
+<span class="gp">$ </span>UP<span class="w"> </span><span class="o">{</span><span class="w"> </span>«container»<span class="w"> </span>...<span class="w"> </span><span class="o">}</span>
+<span class="gp">$ </span>PRUNE
+</code></pre></div>
+<p>Irrespective of whether you use the commands or aliases, if you omit the <code>«container»</code> arguments then all <em>base</em> images are pulled and instantiated. The <code>prune</code> command cleans up the old images.</p>
+<h3 id="maint-local-images">maintaining local images<a class="headerlink" href="#maint-local-images" title="Permanent link">&para;</a></h3>
+<p>When it comes to maintaining containers instantiated from <em>local</em> images, there are two scenarios to consider:</p>
+<ol>
+<li>
+<p>You have made a change to one of the inputs into the <code>Dockerfile</code> process. At the time of writing, only two containers are candidates for this:</p>
+<ul>
+<li>Node-RED; and</li>
+<li>RTL433</li>
+</ul>
+<p>In the case of Node-RED, <code>installed-addon-nodes.txt</code> holds the list of add-on nodes and typically changes when you use the menu's "Configuration" command. For RTL433, you might edit the <code>Dockerfile</code> to install additional packages.</p>
+<p>Using Node-RED as the example, to apply <em>local</em> changes you run:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d<span class="w"> </span>nodered
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-f
+</code></pre></div>
+<p>The <a href="https://github.com/Paraphraser/IOTstackAliases">IOTstackAliases</a> equivalents are:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>BUILD<span class="w"> </span>nodered
+<span class="gp">$ </span>PRUNE
+</code></pre></div>
+</li>
+<li>
+<p>You become aware of a later release of the <em>base</em> image which underpins the <em>local</em> image, so you want to construct a new <em>local</em> image. Using Mosquitto as the example, you run:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>~/IOTstack
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>build<span class="w"> </span>--no-cache<span class="w"> </span>--pull<span class="w"> </span>mosquitto
+<span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>mosquitto
+<span class="gp">$ </span>docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-f
+</code></pre></div>
+<p>The <a href="https://github.com/Paraphraser/IOTstackAliases">IOTstackAliases</a> equivalents are:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>REBUILD<span class="w"> </span>mosquitto
+<span class="gp">$ </span>UP<span class="w"> </span>mosquitto
+<span class="gp">$ </span>PRUNE
+</code></pre></div>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>

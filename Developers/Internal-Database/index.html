@@ -1,0 +1,3661 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker stack for getting started on IOT on the Raspberry PI">
+      
+      
+      
+      
+        <link rel="prev" href="../Git-Setup/">
+      
+      
+        <link rel="next" href="../../Updates/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../stack-24.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Internal Database - IOTstack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#internal-database" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="IOTstack" class="md-header__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IOTstack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Internal Database
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Basic_setup/" class="md-tabs__link">
+          
+  
+  
+  Basic setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Containers/APTCacherNG/" class="md-tabs__link">
+          
+  
+  
+  Containers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Updates/" class="md-tabs__link">
+          
+  
+  
+  Updates
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IOTstack" class="md-nav__button md-logo" aria-label="IOTstack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.063 1.456a1.75 1.75 0 0 1 1.874 0l8.383 5.316a1.75 1.75 0 0 1 0 2.956l-8.383 5.316a1.75 1.75 0 0 1-1.874 0L2.68 9.728a1.75 1.75 0 0 1 0-2.956Zm1.071 1.267a.25.25 0 0 0-.268 0L3.483 8.039a.25.25 0 0 0 0 .422l8.383 5.316a.25.25 0 0 0 .268 0l8.383-5.316a.25.25 0 0 0 0-.422Z"/><path d="M1.867 12.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/><path d="M1.867 16.324a.75.75 0 0 1 1.035-.232l8.964 5.685a.25.25 0 0 0 .268 0l8.964-5.685a.75.75 0 0 1 .804 1.267l-8.965 5.685a1.75 1.75 0 0 1-1.874 0l-8.965-5.685a.75.75 0 0 1-.231-1.035"/></svg>
+
+    </a>
+    IOTstack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SensorsIot/IOTstack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SensorsIot/IOTstack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basic setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Accessing-your-Device-from-the-internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accessing your device from the internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Backup-and-Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing up and restoring IOTstack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Default-Configs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default Ports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Miscellaneous/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Miscellaneous
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/Understanding-Containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Docker?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Basic_setup/What-is-sudo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is sudo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/APTCacherNG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    APT-cacher-NG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/AdGuardHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AdGuard Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Adminer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adminer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Blynk_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blynk server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Chronograf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chronograf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/DashMachine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DashMachine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Deconz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deCONZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/DiyHue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DIY hue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Domoticz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domoticz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Dozzle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dozzle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Duckdns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duck DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/ESPHome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESPHome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/EspruinoHub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Espruinohub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Gitea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gitea
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Heimdall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heimdall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Home-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Homebridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homebridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Homer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Homer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/InfluxDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/InfluxDB2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Jellyfin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jellyfin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Kapacitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kapacitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/MJPEG-Streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion JPEG Streamer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/MariaDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MariaDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Mosquitto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mosquitto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/MotionEye/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MotionEye
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Mqttctl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    mqttctl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/NextCloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nextcloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Nginx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Node-RED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Octoprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Octoprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/OpenHab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    openHAB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/PgAdmin4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pgAdmin4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Pi-hole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Pi-hole6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi-hole version 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Portainer-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Portainer-ce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portainer CE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/PostgreSQL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/RTL_433-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RTL_433 Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Ring-MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Scrypted/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scrypted
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Tailscale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tailscale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/TasmoAdmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TasmoAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Telegraf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegraf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Timescaledb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timescaledb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vaultwarden
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/WordPress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WordPress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/X2go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    x2go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/ZeroTier-vs-WireGuard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier vs WireGuard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/ZeroTier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZeroTier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Zigbee2MQTT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2MQTT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Containers/Zigbee2mqttassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zigbee2Mqtt Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Add-Service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Defining a new service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BuildStack-Services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Stack Services system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Git-Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Database
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#database-location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        database location
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-repair" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        database repair
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#theory-db-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        components table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theory-db-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        services table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theory-db-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        status table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theory-db-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tracking table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quoting-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        quoting strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interesting-query-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interesting query functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="interesting query functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#queries-returning-simple-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        queries returning simple values
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="queries returning simple values">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-returning-a-single-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        query returning a single value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-returning-a-list-of-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        query returning a list of values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#queries-returning-tuples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        queries returning tuples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="queries returning tuples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-returning-a-single-tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        query returning a single tuple
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-returning-a-list-of-tuples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        query returning a list of tuples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sqlite-vs-jq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        why SQLite?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Updates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Updates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack maintenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Updates/Migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#database-location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        database location
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-repair" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        database repair
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#theory-db-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        components table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theory-db-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        services table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theory-db-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        status table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theory-db-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tracking table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quoting-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        quoting strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interesting-query-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interesting query functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="interesting query functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#queries-returning-simple-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        queries returning simple values
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="queries returning simple values">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-returning-a-single-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        query returning a single value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-returning-a-list-of-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        query returning a list of values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#queries-returning-tuples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        queries returning tuples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="queries returning tuples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-returning-a-single-tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        query returning a single tuple
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-returning-a-list-of-tuples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        query returning a list of tuples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sqlite-vs-jq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        why SQLite?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="internal-database">Internal Database<a class="headerlink" href="#internal-database" title="Permanent link">&para;</a></h1>
+<p>The "internal database" is managed by SQLite. The primary reference for the SQLite3 Relational Database Management System (RDBMS) is:</p>
+<ul>
+<li><a href="https://www.sqlite.org">www.sqlite.org</a></li>
+</ul>
+<p>If you want to understand this design choice, please see <a href="#sqlite-vs-jq">why SQLite?</a></p>
+<h2 id="database-location">database location<a class="headerlink" href="#database-location" title="Permanent link">&para;</a></h2>
+<p>The internal database is located at:</p>
+<div class="language-text highlight"><pre><span></span><code>~/IOTstack/services/.menu.db
+</code></pre></div>
+<p>The database is created automatically if it is not present when the menu launches.</p>
+<h2 id="database-repair">database repair<a class="headerlink" href="#database-repair" title="Permanent link">&para;</a></h2>
+<p>If you suspect a problem with the internal database (eg you have made a change to a JSON file and the database is out of sync), try running:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>./iotstack-menu<span class="w"> </span>reload
+</code></pre></div>
+<p>It is also safe to remove the internal database. It will be recreated the next time the menu runs.</p>
+<h2 id="tables">tables<a class="headerlink" href="#tables" title="Permanent link">&para;</a></h2>
+<h3 id="theory-db-components">components table<a class="headerlink" href="#theory-db-components" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>component</th>
+<th>commitID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>«component»</td>
+<td>«commitID»</td>
+</tr>
+</tbody>
+</table>
+<p>This table tracks structural changes:</p>
+<ul>
+<li>
+<p>The <code>menu</code> component refers to <code>./iotstack-menu.sh</code>. This is the menu tracking changes to itself. At present, this is implemented but behaves as a no-op reserved for future expansion.</p>
+</li>
+<li>
+<p>The <code>templates</code> component refers to the <em>templates</em> directory as a whole. Any changes within this directory will show up as a change of commit&nbsp;ID and trigger a database reload. The associated <code>«commitID»</code> is updated whenever the internal database is reloaded.</p>
+</li>
+<li>
+<p>The names of the tracked structural files (header and trailer). Any change on GitHub that affects a structural file will show up as a change of commit&nbsp;ID, and that will cause the menu to recommend a <em>renovation</em>.</p>
+</li>
+</ul>
+<h3 id="theory-db-services">services table<a class="headerlink" href="#theory-db-services" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>stateID</th>
+<th>config</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>«service»</td>
+<td>«stateID»</td>
+<td>«menu-config.json»</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>«service»</code> is the name of the service (eg <code>nodered</code>)</li>
+<li><code>«stateID»</code> has the same definition as the <code>stateID</code> column in the <code>status</code> table (below)</li>
+<li><code>«menu-config.json»</code> is the raw contents of the service's <code>menu-config.json</code> as a text string.</li>
+</ul>
+<h3 id="theory-db-status">status table<a class="headerlink" href="#theory-db-status" title="Permanent link">&para;</a></h3>
+<p>This is an internal lookup table which should be treated as read-only. It is used in JOIN operations. The literal contents are:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">stateID</th>
+<th style="text-align: center;">abbrev</th>
+<th>state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">–</td>
+<td>uninstalled</td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">A</td>
+<td>active</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">I</td>
+<td>inactive</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">U</td>
+<td>unknown</td>
+</tr>
+</tbody>
+</table>
+<h3 id="theory-db-tracking">tracking table<a class="headerlink" href="#theory-db-tracking" title="Permanent link">&para;</a></h3>
+<p>This table tracks changes to files within a service's template. Only files associated with installed services (active or inactive) are tracked. If Git reports a different commit&nbsp;ID for a file than the one stored in the internal database, the menu concludes that the service is a candidate for being upgraded. The <code>«commitID»</code> is updated each time the associated file is copied from the service's template into its <em>services</em> sub-directory.</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>template</th>
+<th>commitID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>«service»</td>
+<td>«file»</td>
+<td>«commitID»</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>«service»</code> is the name of the service (eg <code>nodered</code>)</li>
+<li><code>«file»</code> is the name of a file within the service's template directory</li>
+<li><code>«commitID»</code> is the Git commit&nbsp;ID of <code>«file»</code> when the file was last copied.</li>
+</ul>
+<p>Note:</p>
+<ul>
+<li><code>«service»</code>+<code>«file»</code> has a UNIQUE constraint. In other tables the left-most column is the primary key.</li>
+</ul>
+<h2 id="quoting-strings">quoting strings<a class="headerlink" href="#quoting-strings" title="Permanent link">&para;</a></h2>
+<p>The menu is a <code>bash</code> script where calls to SQLite are embedded in <code>bash</code> functions. As a result, you will see a both single and double quote marks.</p>
+<p>The basic rules are that SQLite requires string literals to be enclosed in single quotes, whereas <code>bash</code> will peer inside and interpolate within double-quoted strings but will leave single-quoted strings alone.</p>
+<p>Consider this function:</p>
+<div class="language-bash highlight"><pre><span></span><code>version_for_component<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="si">${</span><span class="nv">SQLITE3</span><span class="si">}</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">DB</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s">&lt;&lt;-SQL</span>
+<span class="s">        SELECT</span>
+<span class="s">            commitID</span>
+<span class="s">        FROM</span>
+<span class="s">            components</span>
+<span class="s">        WHERE</span>
+<span class="s">            component = '${1}'</span>
+<span class="s">        ;</span>
+<span class="s">    SQL</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>The "heredoc" (<code>&lt;&lt;-</code>) section is evaluated by <code>bash</code>, which sees:</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="si">${</span><span class="nv">SQLITE3</span><span class="si">}</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">DB</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s">&lt;&lt;-SQL</span>
+<span class="s">    «body»</span>
+<span class="s">SQL</span>
+</code></pre></div>
+<p>The double quotes on <code>"${DB}"</code> allow <code>bash</code> to peer inside and replace <code>${DB}</code> with the path to the internal database. The quotes are protective against embedded spaces in the path.</p>
+<p>The <em>absence</em> of quotes around the <code>SQL</code> <em>heredoc delimiter</em> means <code>bash</code> can also peer inside the <code>«body»</code> where it (mostly) completely ignores quotes. It will replace <code>${1}</code> with the <em>component</em> argument while leaving the surrounding single quotes in place. When the completed <code>«body»</code> is passed to SQLite3, it will see the single quotes surrounding the literal string and be happy.</p>
+<p>Most of the time you can simply follow this pattern of double
+quotes outside <code>«body»</code>, single quotes inside. But there are exceptions. Here are two opposing examples:</p>
+<div class="language-bash highlight"><pre><span></span><code>add_record_for_service<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="si">${</span><span class="nv">SQLITE3</span><span class="si">}</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">DB</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s">&lt;&lt;-SQL</span>
+<span class="s">        INSERT INTO services</span>
+<span class="s">            (name, config)</span>
+<span class="s">        VALUES (</span>
+<span class="s">            '${1}',</span>
+<span class="s">            json(readfile('${2}'))</span>
+<span class="s">        );</span>
+<span class="s">    SQL</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$?</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>That follows the rules given above. Single quotes are used because both <code>json()</code> and <code>readfile()</code> are SQLite functions. On the other hand, the excerpt below comes from <code>initialise_database()</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code>initialise_database<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+
+<span class="w">    </span><span class="c1"># sense database already exists</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">DB</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="nv">EXISTS</span><span class="o">=</span><span class="nv">$?</span>
+
+<span class="w">    </span><span class="si">${</span><span class="nv">SQLITE3</span><span class="si">}</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">DB</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s">&lt;&lt;-SCHEMA</span>
+
+<span class="s">        ...</span>
+
+<span class="s">        /* seed structural components table */</span>
+<span class="s">        INSERT OR IGNORE INTO components VALUES (</span>
+<span class="s">          'menu', '$(commitID_for_path "${PROJECT_DIR}/${SCRIPT}")'</span>
+<span class="s">        );</span>
+
+<span class="s">        ...</span>
+
+<span class="s">    SCHEMA</span>
+
+<span class="w">    </span>...
+
+<span class="o">}</span>
+</code></pre></div>
+<p>In this case, the interesting line is:</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="s1">'menu'</span>,<span class="w"> </span><span class="s1">'$(commitID_for_path "${PROJECT_DIR}/${SCRIPT}")'</span>
+</code></pre></div>
+<p>The <code>$(«expression»)</code> construction is processed by <code>bash</code>. The <code>${PROJECT_DIR}/${SCRIPT}</code> argument is enclosed in double quotes so that the path can be expanded by <code>bash</code>, then passed to <code>commitID_for_path()</code> which is a <code>bash</code> function.</p>
+<p>The result of the <code>$(«expression»)</code> construction is a literal string which needs to be passed to SQLite, so the whole thing is encapsulated in single quotes.</p>
+<p>It makes sense once you get the hang of it. But here's the problem any wary developer needs to consider. Older versions of SQLite mostly allow either single or double quotes to wrap literal strings. It is only recent versions that are strict about single quotes. Thus, if you change anything, please test it on the most-recent release of SQLite. PiBuilder has a <a href="https://github.com/Paraphraser/PiBuilder/blob/master/boot/scripts/helpers/install_sqlite.sh">helper script</a> which will allow you to install the current release of SQLite3 in parallel with whatever version was supplied via <code>apt</code>. At the time of writing:</p>
+<ul>
+<li>the <code>apt</code> version on Bookworm was 3.40.1 2022-12-28;</li>
+<li>the <code>apt</code> version on Trixie was 3.46.1 2024-08-13; and</li>
+<li>the latest release was 3.51.2 2026-01-09.</li>
+</ul>
+<h2 id="interesting-query-functions">interesting query functions<a class="headerlink" href="#interesting-query-functions" title="Permanent link">&para;</a></h2>
+<p>These functions are "interesting" because of their <em>structure</em>, not because of what they do.</p>
+<h3 id="queries-returning-simple-values">queries returning simple values<a class="headerlink" href="#queries-returning-simple-values" title="Permanent link">&para;</a></h3>
+<h4 id="query-returning-a-single-value">query returning a single value<a class="headerlink" href="#query-returning-a-single-value" title="Permanent link">&para;</a></h4>
+<p>Example function: <code>configuration_script_for_service()</code></p>
+<p>This function takes takes the service name as an argument and returns either the name of the configuration script, or a null string if no configuration script is defined for the service.</p>
+<p>The result can be used directly:</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>configuration_script_for_service<span class="w"> </span><span class="s2">"example"</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"example is configurable"</span>
+<span class="k">fi</span>
+</code></pre></div>
+<h4 id="query-returning-a-list-of-values">query returning a list of values<a class="headerlink" href="#query-returning-a-list-of-values" title="Permanent link">&para;</a></h4>
+<p>Example function: <code>all_services()</code></p>
+<p>This function takes no arguments and returns an ordered list of service names that are known to the database. The result can be used directly:</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>S<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>all_services<span class="k">)</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$S</span><span class="s2">"</span>
+<span class="k">done</span>
+</code></pre></div>
+<p>If the result is empty, the <code>for</code> loop is skipped.</p>
+<h3 id="queries-returning-tuples">queries returning tuples<a class="headerlink" href="#queries-returning-tuples" title="Permanent link">&para;</a></h3>
+<p>For the menu, a <em>tuple</em> is an ordered series of values separated using the "»" character (Unicode U+00BB aka <em>right guillemet</em>).</p>
+<p>The tuple structure is used for efficiency because it avoids running multiple queries to fetch related values.</p>
+<h4 id="query-returning-a-single-tuple">query returning a single tuple<a class="headerlink" href="#query-returning-a-single-tuple" title="Permanent link">&para;</a></h4>
+<p>Example function: <code>status()</code></p>
+<p>This function takes the service name as an argument and returns a single tuple:</p>
+<div class="language-text highlight"><pre><span></span><code>STATUS»DESCRIPTION»CONFIGURABLE
+</code></pre></div>
+<p>where:</p>
+<ul>
+<li>
+<p><code>STATUS</code> is one of {"uninstalled", "active", "inactive"}</p>
+</li>
+<li>
+<p><code>DESCRIPTION</code> is the <a href="../Add-Service/#json_description">descriptive text</a> for the service; and</p>
+</li>
+<li>
+<p><code>CONFIGURABLE</code> is one of {"yes", "no"}.</p>
+</li>
+</ul>
+<p>To make use of a tuple, <code>bash</code> needs to split it into its component fields. The pattern is:</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># crack the tuple</span>
+<span class="nv">IFS</span><span class="o">=</span><span class="s2">"»"</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span>--<span class="w"> </span><span class="nv">$ITEM</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nb">unset</span><span class="w"> </span>IFS
+
+<span class="c1"># extract tuple components</span>
+<span class="nv">STATUS</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nv">DESCRIPTION</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nv">CONFIGURABLE</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">3</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="c1"># do something with the components ...</span>
+</code></pre></div>
+<h4 id="query-returning-a-list-of-tuples">query returning a list of tuples<a class="headerlink" href="#query-returning-a-list-of-tuples" title="Permanent link">&para;</a></h4>
+<p>Example function: <code>installable_items_for_service()</code></p>
+<p>This function takes the service name as an argument and returns a list of tuples, arranged as one tuple per item to be installed.</p>
+<p>Consider the following directory structure for an example service:</p>
+<div class="language-text highlight"><pre><span></span><code>└── .templates
+    └── example
+        ├── menu-config.json
+        └── service.yml
+</code></pre></div>
+<p>We can assume that that structure was created when IOTstack was cloned from GitHub. Next, assume that <a href="../Add-Service/#json_install"><code>menu-config.json</code></a> contains:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="nt">"install"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"service.yml"</span><span class="p">,</span><span class="w"> </span><span class="nt">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"service.yml"</span><span class="p">,</span><span class="w"> </span><span class="nt">"tracked"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span>
+<span class="p">],</span>
+</code></pre></div>
+<p>Invoking this function for the "example" service returns:</p>
+<div class="language-text highlight"><pre><span></span><code>service.yml»service.yml»1
+</code></pre></div>
+<p>It is better to think of that data structure using its JSON labels:</p>
+<div class="language-text highlight"><pre><span></span><code>TEMPLATE»SERVICE»TRACKED
+</code></pre></div>
+<p>where:</p>
+<ul>
+<li>
+<p><code>TEMPLATE</code> is a field containing the name of the file, relative to the service's template directory:</p>
+<div class="language-text highlight"><pre><span></span><code>./.templates/example/service.yml
+</code></pre></div>
+</li>
+<li>
+<p><code>SERVICE</code> is a field containing the name of the file, relative to the service's services directory:</p>
+<div class="language-text highlight"><pre><span></span><code>./services/example/service.yml
+</code></pre></div>
+</li>
+<li>
+<p><code>TRACKED</code> is a field containing a (traditional) Boolean concept where <code>0</code> (false) means "not tracked" and <code>1</code> (true) means "tracked".</p>
+</li>
+</ul>
+<p>To make use of a tuple, <code>bash</code> needs to split it into its component fields. The pattern is:</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># fetch the list of tuples</span>
+<span class="nv">ITEMS</span><span class="o">=</span><span class="k">$(</span>installable_items_for_service<span class="w"> </span><span class="s2">"example"</span><span class="k">)</span>
+
+<span class="c1"># iterate the list of tuples</span>
+<span class="k">for</span><span class="w"> </span>ITEM<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$ITEMS</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+
+<span class="w">    </span><span class="c1"># crack the tuple</span>
+<span class="w">    </span><span class="nv">IFS</span><span class="o">=</span><span class="s2">"»"</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span>--<span class="w"> </span><span class="nv">$ITEM</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nb">unset</span><span class="w"> </span>IFS
+
+<span class="w">    </span><span class="c1"># extract tuple components</span>
+<span class="w">    </span><span class="nv">TNAME</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nv">SNAME</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nv">TRACKED</span><span class="o">=</span><span class="si">${</span><span class="nv">3</span><span class="si">}</span>
+
+<span class="w">    </span><span class="c1"># do things with the extracted fields ...</span>
+
+<span class="k">done</span>
+</code></pre></div>
+<p>If <code>ITEMS</code> is a null string, the <code>for</code> loop is skipped.</p>
+<h2 id="sqlite-vs-jq">why SQLite?<a class="headerlink" href="#sqlite-vs-jq" title="Permanent link">&para;</a></h2>
+<p>The astute reader may be asking the question:</p>
+<blockquote>
+<p>If the internal database is just storing the JSON as TEXT, why bother with SQLite? Why not just use <code>jq</code>?</p>
+</blockquote>
+<p>Answer: performance! The first incarnation of this menu used <code>jq</code> but it proved to be horrendously <strong><em>slow</em></strong> on Debian systems. Consider the following test scenarios:</p>
+<ol>
+<li>
+<p>A <code>bash</code> script which uses SQLite3 to create and populate a database containing the contents of a single <code>menu-config.json</code> file, then runs iterations of a (<code>bash</code>) for-loop where each iteration executes:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>sqlite3<span class="w"> </span>db<span class="w"> </span><span class="s2">"SELECT json_extract(config,'</span>$<span class="s2">.description') FROM services WHERE service = 'example';"</span>
+</code></pre></div>
+</li>
+<li>
+<p>A <code>bash</code> script running iterations of a (<code>bash</code>) for-loop where each iteration executes:</p>
+<div class="language-console highlight"><pre><span></span><code><span class="gp">$ </span>jq<span class="w"> </span>-r<span class="w"> </span>.description<span class="w"> </span>&lt;menu-config.json
+</code></pre></div>
+</li>
+</ol>
+<p>Test 1 incurs the small overhead of creating the database but it stores the JSON "as is" (ie it is not pre-parsed by SQLite in some way). Test 2 does not have any pre-loop overheads. Test 1 needs to open the database on each iteration whereas Test 2 needs to open the JSON file on each iteration. Other than that, both tests are fetching the same value from the same JSON on each iteration. All other things being equal, these two tests should consume approximately the same compute resources.</p>
+<p>IOTstack currently has about 60 service definitions so 60 iterations of each for-loop approximates the workload that is required to load the list of services for display in the Services menu.</p>
+<p>On a Raspberry Pi 4 running Bookworm, the results were:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Test</th>
+<th style="text-align: left;">Engine</th>
+<th style="text-align: right;">milliseconds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">sqlite3 3.50.2</td>
+<td style="text-align: right;">346</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">jq-1.6</td>
+<td style="text-align: right;">6,321</td>
+</tr>
+</tbody>
+</table>
+<p>This is neither a typo nor a joke. It is a fair apples-v-apples test. It takes <code>jq</code> 6&nbsp;<strong>seconds</strong> vs <!--1third-->&#x2153; of a second for <code>sqlite3</code> to perform the same task. That's a ratio of around 18:1. It's a little better on a Pi5 (130&nbsp;ms vs 2&nbsp;seconds) but still around 18:1.</p>
+<p>Why is <code>jq</code> so slow? Research suggest's there's a two-part problem:</p>
+<ul>
+<li>
+<p>The intrinsic slowness appears to have been the result of a change introduced in <code>jq</code> v1.6, and which is discussed in <a href="https://github.com/jqlang/jq/issues/1826">issue 1826</a>; plus</p>
+</li>
+<li>
+<p>It seems that nobody in the <code>jq</code> distribution chain has taken responsibility for submitting later releases of the <code>jq</code> binary to the <code>apt</code> repositories. The <code>apk</code> repositories for Alpine etc are up-to-date so it isn't clear why Debian-lineage distros are missing out.</p>
+</li>
+</ul>
+<p>In other words, pre-Trixie Debian systems seem to be stuck with <code>jq</code> version 1.6 which was released on 2018-11-02. Trixie fares slightly better with version 1.7 which was released on 2023-09-07. At the time of writing, v1.8.1 is the latest version of <code>jq</code> and was released on 2025-07-01. It is, of course, possible to install later versions manually. Repeating the second test:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Test</th>
+<th style="text-align: left;">Engine</th>
+<th style="text-align: right;">milliseconds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">jq-1.7</td>
+<td style="text-align: right;">484</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">jq-1.8.1</td>
+<td style="text-align: right;">422</td>
+</tr>
+</tbody>
+</table>
+<p>If Debian had been getting v1.8.1 by default, I doubt that I would ever have considered refactoring the code around SQLite. Now that it's done, I'm not going back. While this may be my SQL experience speaking, I actually find the current approach easier to understand.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "tabs", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascript/fix-codeblock-console-copy-button.js"></script>
+      
+    
+  </body>
+</html>

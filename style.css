@@ -1,0 +1,32 @@
+/* vim: set sw=2: */
+
+/* hide "Made with Material" footer */
+.md-footer-meta {
+    display: none;
+}
+
+/* prevent selection of prefix and output for console syntax */
+.language-console .gp, .language-console .go {
+  user-select: none;
+  -webkit-user-select: none; /* Chrome/Safari */
+  -ms-user-select: none; /* IE10+ */
+}
+
+@media screen and (max-width:76.25em) {
+  .show-when-wide-layout {
+    display:none
+  }
+}
+@media screen and (min-width:76.25em) {
+  .show-when-narrow-layout {
+    display:none
+  }
+}
+
+/* Make dark-mode links just a tiny bit lighter, for better contrast
+   on low brightness screens. */
+@media screen {
+  [data-md-color-scheme="slate"] {
+    --md-typeset-a-color: var(--md-primary-fg-color--light) !important;
+  }
+}
