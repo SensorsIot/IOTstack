@@ -1,6 +1,6 @@
 mqttctl:
   container_name: mqttctl
-  image: slyke/mqttctl:v0.0.8-264ca1e6585c
+  image: slyke/mqttctl:v0.0.9-30f38f3100fd
   restart: unless-stopped
   depends_on:
     mqttctl-broker-agent:
@@ -23,7 +23,7 @@ mqttctl:
     - ./volumes/mqttctl/public-certs:/mosquitto/config/certs:ro
 mqttctl-broker-agent:
   container_name: mqttctl-broker-agent
-  image: slyke/mqttctl-broker-agent:v0.0.8-264ca1e6585c
+  image: slyke/mqttctl-broker-agent:v0.0.9-30f38f3100fd
   restart: unless-stopped
   depends_on:
     mqttctl-init:
@@ -50,7 +50,7 @@ mqttctl-broker-agent:
     start_period: 10s
 mqttctl-init:
   container_name: mqttctl-init
-  image: slyke/mqttctl:v0.0.8-264ca1e6585c
+  image: slyke/mqttctl:v0.0.9-30f38f3100fd
   restart: "no"
   network_mode: none
   command: ["node", "/iotstack/initialize.mjs"]

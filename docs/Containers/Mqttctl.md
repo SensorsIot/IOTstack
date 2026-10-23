@@ -2,9 +2,9 @@
 
 [mqttctl](https://github.com/Slyke/mqttctl) provides a browser UI for managing its own Mosquitto broker: users, roles, ACLs, broker configuration, snapshots, audit history and MQTT exploration.
 
-Selecting **mqttctl** installs the UI, a broker-agent containing Mosquitto, and a one-shot initializer. The initializer runs inside the mqttctl image using its bundled Node.js; no host Node.js installation is required. Both application images are pinned to `v0.0.8-264ca1e6585c`. No MCP service or MCP configuration is included.
+Selecting **mqttctl** installs the UI, a broker-agent containing Mosquitto, and a one-shot initializer. The initializer runs inside the mqttctl image using its bundled Node.js; no host Node.js installation is required. Both application images are pinned to `v0.0.9-30f38f3100fd`. This release updates the UI and initializer to Node.js 24.22.1 LTS, including the [latest Node.js 24 security fixes](https://nodejs.org/en/blog/release/v24.22.1). No MCP service or MCP configuration is included.
 
-The pinned images support **linux/amd64** and **linux/arm64**. Raspberry Pi requires a **64-bit operating system**; 32-bit ARM is not included. Docker selects the matching image automatically.
+The `v0.0.9-30f38f3100fd` images currently support **linux/amd64** only. ARM64 users, including Raspberry Pi users with a 64-bit operating system, should keep both images pinned to `v0.0.8-264ca1e6585c` until ARM64 builds of the new release are published. 32-bit ARM is not included.
 
 ## Getting started
 
