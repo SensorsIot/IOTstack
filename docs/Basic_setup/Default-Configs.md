@@ -29,9 +29,9 @@
 | matterbridge | host | |
 | mjpg-streamer | non-host | 8980:80 <br> |
 | mosquitto | non-host | 1883:1883 <br> |
-| mqttctl | non-host | 3002:3000 <br> 1883:1883 <br> 8883:8883 <br> 9001:9001 <br> |
 | motioneye | non-host | 8765:8765 <br> 8766:8081 <br> |
-| n8n | non-host | 5678:5678 <br> 3306:3306 <br> |
+| mqttctl | non-host | 3002:3000 <br> 1883:1883 <br> 8883:8883 <br> 9001:9001 <br> |
+| n8n | non-host | 5678:5678 <br> |
 | nextcloud | non-host | 9321:80 <br> 9343:443 <br> 3306:3306 <br> |
 | nginx | non-host | 80:80 <br> 81:81 <br> 443:443 <br> |
 | nodered | non-host | 1880:1880 <br> |
@@ -57,7 +57,7 @@
 | tailscale | host | 3478:3478 <br> 41641:41641 <br> |
 | tasmoadmin | non-host | 8088:80 <br> |
 | telegraf | non-host | 8092:8092 <br> 8094:8094 <br> 8125:8125 <br> |
-| timescaledb | non-host | |
+| timescaledb | non-host | 5433:5432 <br> |
 | transmission | non-host | 9091:9091 <br> 51413:51413 <br> |
 | vaultwarden | non-host | 8085:80 <br> 3012:3012 <br> |
 | webthingsio_gateway | host | 4060:4060 <br> 4061:4061 <br> |
