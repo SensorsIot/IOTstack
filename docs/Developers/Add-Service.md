@@ -38,6 +38,7 @@ JSON files underpin the menu. For a newly-defined service, the menu creates a sh
    "dependencies": [],
    "description": "«name»",
    "environment": [],
+   "excluded_by": [],
    "install": [
      { "template": "service.yml", "service": "service.yml", "tracked": true }
    ],
@@ -128,6 +129,10 @@ This structure is a JSON dictionary containing the following keys:
 	That is the **only** indication you get that an error has occurred.
 
 	See also [environment variable passwords](#password-vars).
+
+* `"excluded_by":` <a name="json_mutex"></a>
+
+	is either an empty array (`[]`) or an array of strings which are the names of other services which, if active, prevent this service from being made active. A good example is the three services AdGuardHome, PiHole, and PiHole6. All provide DNS services and all use the same ports so they can't run together.
 
 * `"install":` <a name="json_install"></a>
 

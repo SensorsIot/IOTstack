@@ -104,6 +104,7 @@ J_CONFIGURE="configure"
 J_DEPENDENCIES="dependencies"
 J_DESCRIPTION="description"
 J_ENVIRONMENT="environment"
+J_EXCLUDED_BY="excluded_by"
 J_INSTALL="install"
 J_SERVICE="service"
 J_TEMPLATE="template"
@@ -193,6 +194,39 @@ set_version_for_component() {
 			components (component, commitID)
 		VALUES
 			('${1}', '${2}')
+		;
+	SQL
+}
+
+
+# ----------------------------------------------------------------------
+# active_exclusions_for_service
+# ----------------------------------------------------------------------
+#
+# Arguments:
+#    $1 component
+# Returns:
+#    either a null string (which indicates that the component is not
+#    excluded by another active service) or the name of another active
+#    service with which this component is mutually exclusive.
+#
+active_exclusions_for_service() {
+	${SQLITE3} "${DB}" <<-SQL
+		SELECT
+			name
+		FROM
+			services
+		WHERE
+			stateID = ${S_ACTIVE}
+		AND
+			name in (
+				SELECT
+					value
+				FROM
+					services, json_each(config,'$.${J_EXCLUDED_BY}')
+				WHERE
+					name = '${1}'
+			)
 		;
 	SQL
 }
@@ -1377,19 +1411,6 @@ install_completions_command() {
 # Command functions that take a service name as an argument
 # ======================================================================
 
-# Both brokers are supported; warn without changing either selection.
-warn_if_multiple_mqtt_brokers() {
-	if is_service_active mqttctl && is_service_active mosquitto ; then
-		local MESSAGE="mqttctl and mosquitto are both active. They are independent brokers with separate users and messages. Both use host MQTT port 1883 by default and cannot start together with those mappings. Change one broker's host port (for example, MQTTCTL_MQTT_PORT=1884 in .env), or stop/deactivate one broker before starting the stack. Keep any TLS and WebSocket host ports distinct too."
-		if [ "${RUN_MODE}" = "menu" ] ; then
-			"${CLIMENU}" --title "Multiple MQTT brokers" --msgbox "${MESSAGE}" 12 "${MENU_COLUMNS}"
-		else
-			echo "Warning: ${MESSAGE}" >&2
-		fi
-	fi
-	return 0
-}
-
 # ----------------------------------------------------------------------
 # activate
 # ----------------------------------------------------------------------
@@ -1404,8 +1425,12 @@ warn_if_multiple_mqtt_brokers() {
 #
 activate() {
 	if is_service_inactive "${1}" ; then
-		set_state_for_service "${1}" ${S_ACTIVE}
-		case "${1}" in mqttctl|mosquitto) warn_if_multiple_mqtt_brokers ;; esac
+		local MUTEX=$(active_exclusions_for_service ${1})
+		if [ -z "${MUTEX}" ] ; then
+			set_state_for_service "${1}" ${S_ACTIVE}
+		else
+			echo "Error: can't make ${1} active while ${MUTEX} is active" >&2
+		fi
 	else
 		echo "Warning: ${1} is not inactive" >&2
 	fi
@@ -1611,9 +1636,13 @@ install() {
 
 	done
 
-	# a newly-installed service is always active
-	set_state_for_service "${SERVICE}" ${S_ACTIVE}
-	case "${SERVICE}" in mqttctl|mosquitto) warn_if_multiple_mqtt_brokers ;; esac
+	# check for mutually-exclusive service
+	local MUTEX=$(active_exclusions_for_service "${SERVICE}")
+	if [ -z "${MUTEX}" ] ; then
+		set_state_for_service "${SERVICE}" ${S_ACTIVE}
+	else
+		set_state_for_service "${SERVICE}" ${S_INACTIVE}
+	fi
 
 	# iterate to install any dependencies
 	local D
@@ -2093,8 +2122,6 @@ run_command_for_service() {
 #
 build() {
 
-	warn_if_multiple_mqtt_brokers
-
 	# create a temporary directory and define temporary files.
 	local WORKSPACE=$(mktemp -d)
 	local EFILE="${WORKSPACE}/edits.sed"
@@ -2325,6 +2352,7 @@ discover_services() {
 				   "${J_DEPENDENCIES}": [],
 				   "${J_DESCRIPTION}": "${SERVICE}",
 				   "${J_ENVIRONMENT}": [],
+				   "${J_EXCLUDED_BY}": [],
 				   "${J_INSTALL}": [
 				     { "${J_TEMPLATE}": "service.yml", "${J_SERVICE}": "service.yml", "${J_TRACKED}": true }
 				   ],
@@ -2516,7 +2544,13 @@ migrate() {
 
 	done
 
-	# make service active
+	# is the intention to make the service active?
+	if [ ${STATE} -eq ${S_ACTIVE} ] ; then
+		# yes! check for mutual exclusion
+		local MUTEX=$(active_exclusions_for_service "${SERVICE}")
+		# override if there would be a conflict
+		[ -n "${MUTEX}" ] && STATE=${S_INACTIVE}
+	fi
 	set_state_for_service "${SERVICE}" ${STATE}
 
 }
@@ -3253,10 +3287,21 @@ unimplemented() {
 # Returns:
 #    nothing
 # Note:
-#    invokes CLI command to do the work
+#    no check for is_service_inactive because Activate command
+#    will only be in the menu if service is inactive
 #
 Activate() {
-	activate "${1}"
+	# check for mutual exclusion
+	local MUTEX=$(active_exclusions_for_service "${1}")
+	if [ -z "${MUTEX}" ] ; then
+		set_state_for_service "${1}" ${S_ACTIVE}
+	else
+		# display message (8 < $MENU_LINES)
+		${CLIMENU} \
+			--title "Service conflict" \
+			--msgbox "Error: can't make ${1} active while ${MUTEX} is active" \
+			8 $MENU_COLUMNS
+	fi
 }
 
 

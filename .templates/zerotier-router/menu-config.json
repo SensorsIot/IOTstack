@@ -3,6 +3,7 @@
    "dependencies": [],
    "description": "Personal VPN (client+routing)",
    "environment": [],
+   "excluded_by": ["zerotier-client"],
    "install": [
       { "template": "service.yml", "service": "service.yml", "tracked": true }
    ],

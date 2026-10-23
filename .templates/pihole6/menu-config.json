@@ -5,6 +5,7 @@
    "environment": [
       { "variable": "PIHOLE_ADMIN_PASSWORD", "preset": "$(random_password)" }
    ],
+   "excluded_by": ["adguardhome", "pihole"],
    "install": [
       { "template": "service.yml", "service": "service.yml", "tracked": true }
    ],
