@@ -65,30 +65,45 @@ $ docker compose up -d pihole6
 
 ### Admin password { #adminPassword }
 
-The IOTstack implementations of Pi-hole do not have an administrator password by default. This is because the relevant *IOTstack-defined* environment variable defaults to a null string.
+Definitions:
 
-If you wish to define a password to protect Pi-hole's web interface, you do it like this:
+* Environment File: `~/IOTstack/.env`
+* Password Key: `PIHOLE_ADMIN_PASSWORD`
+* Random Value: `IOT-mae4a-iChi-ecoo9` (example)
 
-``` console
-$ cd ~/IOTstack
-$ echo "PIHOLE_ADMIN_PASSWORD=«YourPasswordHere»" >>./.env
-$ docker compose up -d pihole6
+Each time you ask the menu to `build` your compose file, the menu checks your *Environment File* to see whether the *Password Key* is defined. If the key doesn't exist, a *Random Value* is generated. For example:
+
+```
+$ grep PIHOLE_ADMIN_PASSWORD ~/IOTstack/.env
+PIHOLE_ADMIN_PASSWORD=IOT-mae4a-iChi-ecoo9
 ```
 
-Each time the Pi-hole container is launched, it checks for the presence or absence of a password, then reacts like this:
+You can either leave the *Environment File* alone (and accept the *Random Value*), or you can edit the file to:
 
-* If a password is *defined* but is a null string (the default for IOTstack):
+- change the *Random Value* to a null string:
 
-	- No admin password is set;
-	- Any previous admin password is cleared;
-	- You will be able to [connect to Pi-hole's web interface](#connectGUI) without providing a password (you won't even see the login screen); and
-	- The main menu (≡) will not contain a logout command.
+	```
+	PIHOLE_ADMIN_PASSWORD=""
+	```
+- change the *Random Value* to a value of your choice:
 
-* If a password is *defined* **and** has a non-null value, that value will become the admin password.
+	```
+	PIHOLE_ADMIN_PASSWORD=mySuperSecure99
+	```
 
-* If you don't define a password (either an explicit null string or an actual password value) then Pi-hole behaves like this:
+- remove the *Password Key* entirely.
 
-	- If this is the first time Pi-hole has been launched, a random password is generated. Pi-hole senses "first launch" if it has to initialise its persistent storage area. See also [getting a clean slate](#cleanSlate). You can discover the password by running:
+If you remove the *Password Key* entirely then a new *Random Value* will be added by the menu the next time you ask it to `build` your compose file. However, until you do that, no password will be defined.
+
+Rolling all that together, there are three possibilities each time you launch the `pihole6` container:
+
+1. A password is defined:
+
+	The value becomes the admin password. Any time you change the value in the *Environment File*, it takes effect the next time you launch the container.
+
+2. No password is defined:
+
+	- If this is the first time Pi-hole has been launched, a random password is generated **by the container**. Pi-hole senses "first launch" if it has to initialise its persistent storage area. See also [getting a clean slate](#cleanSlate). You can discover the password by running:
 
 		``` console
 		$ docker logs pihole6 | grep random
@@ -96,17 +111,98 @@ Each time the Pi-hole container is launched, it checks for the presence or absen
 
 		Docker logs are cleared each time a container is terminated or re-created so you need to run that command before the log disappears!
 
-	- Otherwise, whatever password was set on the previous launch will be re-used.
+	- Otherwise, whatever password was set on the previous launch will be re-used and you'll be stuck if you forget it.
 
-??? info "changing the password via the command line"
+3. The password is a null string:
 
-	Some Pi-hole documentation on the web recommends a command like the following to change Pi-hole's admin password:
+	- No admin password is set;
+	- Any previous admin password is cleared; but
+	- You may encounter a 403 error when attempting to connect to the Pi-hole GUI. If that happens, please see [going passwordless](#passwordless) below.
 
-	``` console
-	$ docker exec pihole6 pihole setpassword '«yourPasswordHere»'
+#### about `setpassword`
+
+Some Pi-hole documentation on the web recommends a command like the following to change Pi-hole's admin password:
+
+``` console
+$ docker exec pihole6 pihole setpassword '«yourPasswordHere»'
+```
+
+The `setpassword` command is really intended for "native" installations of Pi-hole. It is not really appropriate to use it when Pi-hole is running in a Docker container. In particular, the command will be rejected if a password is already being set via an environment variable.
+
+### going passwordless { passwordless }
+
+Rightly ("appropriate security-consciousness") or wrongly ("inappropriate nannying"), the folks at Pi-hole feel very strongly that all Pi-hole instances should have strong passwords.
+
+Up until v2026.09.0, you could run without an admin password simply by setting:
+
+```
+PIHOLE_ADMIN_PASSWORD=""
+```
+
+From v2026.10.0, doing that results in a 403 error when you attempt to connect to the Pi-hole GUI.
+
+Fairly obviously, the simplest solution is just to define a non-null password and get on with your life.
+
+However, **if** your Pi-hole instance isn't exposed to the Internet **and** you believe that your firewall already offers adequate protection **and** you *really* want to run Pi-hole without an admin password, this is how to achieve that goal:
+
+1. Edit the file:
+
+	```
+	~/IOTstack/services/pihole6/override.yml
 	```
 
-	The `setpassword` command is really intended for "native" installations of Pi-hole. It is not really appropriate to use it when Pi-hole is running in a Docker container. In particular, the command will be rejected if a password is already being set via an environment variable.
+	and define the following environment variable:
+
+	```
+	FTLCONF_webserver_domain: «your.domain.here»
+	```
+
+	The value of `«your.domain.here»` should be whatever you use when accessing the Pi-hole GUI in your web browser. This is the general URL pattern:
+
+	```
+	http://«your.domain.here»:8089/admin
+	```
+
+2. Rebuild your compose file:
+
+	``` console
+	$ cd ~/IOTstack
+	$ ./iotstack-menu.sh build
+	```
+	
+	That makes the new environment variable active.
+
+3. Start the Pi-hole6 container:
+
+	``` console
+	$ docker compose up -d pihole6
+	```
+	
+	Docker compose senses the change (the presence of the new environment variable) and recreates the container.
+
+4. Attempt to connect to Pi-hole with your browser. If you still get a 403 error, check your work and consider other problem-solving techniques such as restarting your browser.
+
+5. Once you are able to connect, you will not be prompted for a password, and the main menu (<!--hamburger-->&#x2630; icon) will not contain a logout command. 
+
+6. You may, however, see a master alert at the top of the main screen which directs you to:
+
+	* Tools » Pi-hole diagnosis:
+
+		```
+		CERTIFICATE_DOMAIN_MISMATCH
+		```
+
+	What this means is that the *domain* you defined earlier is not baked into the TLS certificates which are managed by Pi-hole. You need to force those to be regenerated:
+
+	``` console
+	$ cd ~IOTstack
+	$ rm ./volumes/pihole6/etc-pihole/tls*
+	$ docker compose restart pihole6
+	```
+
+	Reload the web page and the alert should disappear.
+
+Please keep in mind that this may only be a stop-gap measure. It may stop working if the folks at Pi-hole tighten their restrictions further.
 
 ### Logging
 
