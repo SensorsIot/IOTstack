@@ -1,0 +1,20 @@
+stirling-pdf:
+  container_name: stirling-pdf
+  image: stirlingtools/stirling-pdf:latest
+  restart: unless-stopped
+  ports:
+    - '8090:8080'
+  environment:
+    TZ: ${TZ:-Etc/UTC}
+    SECURITY_ENABLELOGIN: true
+    SECURITY_INITIALLOGIN_USERNAME: ${STIRLING_PDF_USERNAME:-admin}
+    SECURITY_INITIALLOGIN_PASSWORD: ${STIRLING_PDF_PASSWORD:?eg echo STIRLING_PDF_PASSWORD=stirling >>~/IOTstack/.env}
+  volumes:
+    - ./volumes/stirling-pdf/configs:/configs
+    - ./volumes/stirling-pdf/logs:/logs
+    - ./volumes/stirling-pdf/customFiles:/customFiles
+    - ./volumes/stirling-pdf/pipeline:/pipeline
+    - ./volumes/stirling-pdf/storage:/storage
+    - ./volumes/stirling-pdf/tessdata:/usr/share/tessdata
+  mem_limit: 4g
+
