@@ -25,6 +25,7 @@
 | influxdb2 | non-host | 8087:8086 <br> |
 | jellyfin | non-host | 8096:8096 <br> 7359:7359 <br> |
 | kapacitor | non-host | 9092:9092 <br> |
+| layerling | non-host | 3050:3000 <br> |
 | mariadb | non-host | 3306:3306 <br> |
 | matterbridge | host | |
 | mjpg-streamer | non-host | 8980:80 <br> |

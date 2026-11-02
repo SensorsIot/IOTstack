@@ -1,0 +1,18 @@
+layerling:
+  container_name: layerling
+  image: henmedia/layerling:latest
+  restart: unless-stopped
+  user: "0"
+  ports:
+    - "3050:3000"
+  environment:
+    TZ: ${TZ:-Etc/UTC}
+    PORT: "3000"
+    HOSTNAME: "0.0.0.0"
+    NEXT_TELEMETRY_DISABLED: "1"
+    LAYERLING_SHARED_PROJECTS_DIR: "/shared-projects"
+    LAYERLING_NEW_DESIGNS_ON_SERVER: "always"
+    LAYERLING_DEFAULT_THEME: "graphite"
+  volumes:
+    - ./volumes/layerling/shared-projects:/shared-projects
+
