@@ -53,6 +53,7 @@
 | ring-mqtt | non-host | 8554:8554 <br> 55123:55123 <br> |
 | rtl_433 | non-host | |
 | scrypted | host | 10443:10443 <br> |
+| stirling-pdf | non-host | |
 | syncthing | host | 8384:8384 <br> 22000:22000 <br> 21027:21027 <br> |
 | tailscale | host | 3478:3478 <br> 41641:41641 <br> |
 | tasmoadmin | non-host | 8088:80 <br> |

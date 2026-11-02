@@ -1,0 +1,14 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "private PDF editing service",
+   "environment": [
+      { "variable": "STIRLING_PDF_PASSWORD", "preset": "$(random_password)" }
+   ],
+   "excluded_by": [],
+   "install": [
+     { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "stirling-pdf"
+}
+
