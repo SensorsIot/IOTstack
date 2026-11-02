@@ -1,0 +1,10 @@
+{
+   "configure": null,
+   "dependencies": [],
+   "description": "Easy 3D CAD for 3D printing",
+   "environment": [],
+   "install": [
+     { "template": "service.yml", "service": "service.yml", "tracked": true }
+   ],
+   "service": "layerling"
+}
